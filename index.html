@@ -27,53 +27,319 @@ button,input,select,textarea{font:inherit}
   transition: all 0.2s ease;
 }
 
+/* TOPBAR */
 .topbar{
   background:linear-gradient(135deg,#673de6,#9b5cff);
   color:white;
   border-radius:20px;
-  padding:12px 18px;
+  padding:10px 16px;
   box-shadow:0 8px 22px rgba(0,0,0,0.15);
   position:sticky;
   top:6px;
-  z-index:100;
-}
-
-.brand{
+  z-index:90;
   display:flex;
   align-items:center;
   justify-content:space-between;
-  gap:10px;
 }
 
-.brand h1{
+.topbar-left{
+  display:flex;
+  align-items:center;
+  gap:12px;
+}
+
+.menu-toggle-btn{
+  background: rgba(255,255,255,0.22);
+  border: 2px solid rgba(255,255,255,0.4);
+  color: white;
+  border-radius: 14px;
+  width: 44px;
+  height: 44px;
+  font-size: 1.5rem;
+  font-weight: 900;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+  transition: all 0.15s ease;
+}
+
+.menu-toggle-btn:hover{
+  background: rgba(255,255,255,0.35);
+  transform: scale(1.05);
+}
+
+.menu-toggle-btn:active{
+  transform: scale(0.92);
+}
+
+.brand-info h1{
   margin:0;
-  font-size:clamp(1.2rem,4vw,1.9rem);
+  font-size:clamp(1.1rem,3.5vw,1.6rem);
   font-weight:900;
+  letter-spacing:0.3px;
 }
 
-.brand small{opacity:.9; font-weight:700;}
+.brand-info small{
+  opacity:.9; 
+  font-weight:700;
+  font-size: clamp(0.72rem, 2vw, 0.82rem);
+  display: block;
+}
+
+.topbar-right{
+  display:flex;
+  align-items:center;
+  gap:8px;
+}
 
 .student-tag {
   display: inline-flex;
   align-items: center;
   gap: 6px;
   background: rgba(255, 255, 255, 0.22);
-  padding: 4px 10px;
+  padding: 5px 12px;
   border-radius: 14px;
-  font-size: 0.82rem;
+  font-size: 0.84rem;
   font-weight: 800;
   border: 1px solid rgba(255,255,255,0.4);
   cursor: pointer;
 }
 
-.nav{
-  display:flex;
-  gap:6px;
-  flex-wrap:wrap;
-  margin-top:8px;
+.cloud-pill {
+  display: inline-flex;
   align-items: center;
+  gap: 5px;
+  background: rgba(255,255,255,0.2);
+  color: white;
+  padding: 5px 10px;
+  border-radius: 16px;
+  font-size: 0.78rem;
+  font-weight: bold;
+  border: 1px solid rgba(255,255,255,0.4);
 }
 
+.cloud-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #ffb31a;
+}
+.cloud-dot.connected {
+  background: #00ff88;
+  box-shadow: 0 0 8px #00ff88;
+}
+
+/* 🥧 DYNAMIC FRACTION PIE STYLES */
+.fraction-stage-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  max-width: 650px;
+  margin: 0 auto;
+}
+
+.fraction-pies-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  justify-content: center;
+  align-items: center;
+  margin-top: 10px;
+}
+
+.fraction-pie-card {
+  background: #1e293b;
+  border: 3px solid #475569;
+  border-radius: 20px;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+  transition: transform 0.25s ease, border-color 0.25s ease;
+  cursor: pointer;
+}
+
+.fraction-pie-card:hover, .fraction-pie-card.active-pie {
+  transform: scale(1.08);
+  border-color: #ffeb3b;
+}
+
+.fraction-svg-pie {
+  width: 160px;
+  height: 160px;
+  overflow: visible;
+}
+
+.pie-slice {
+  cursor: pointer;
+  transition: transform 0.3s cubic-bezier(0.18, 0.89, 0.32, 1.28), fill 0.2s;
+  transform-origin: 80px 80px;
+}
+
+.pie-slice.shaded {
+  filter: drop-shadow(0 4px 6px rgba(0,0,0,0.3));
+}
+
+.pie-slice.detached {
+  transform: scale(1.08) translate(8px, -8px);
+}
+
+.fraction-label-text {
+  font-family: inherit;
+  font-weight: 900;
+  fill: #000;
+  pointer-events: none;
+}
+
+body.tv-mode .fraction-svg-pie {
+  width: 220px;
+  height: 220px;
+}
+
+/* ☰ SIDEBAR SLIDE-IN DRAWER */
+.sidebar-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(10, 15, 28, 0.65);
+  backdrop-filter: blur(4px);
+  z-index: 10000;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.28s ease, visibility 0.28s ease;
+}
+
+.sidebar-backdrop.open {
+  opacity: 1;
+  visibility: visible;
+}
+
+.sidebar-drawer {
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: 320px;
+  max-width: 85vw;
+  background: #ffffff;
+  z-index: 10001;
+  transform: translateX(-100%);
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  display: flex;
+  flex-direction: column;
+  box-shadow: 8px 0 32px rgba(0,0,0,0.3);
+  overflow-y: auto;
+}
+
+.sidebar-drawer.open {
+  transform: translateX(0);
+}
+
+.sidebar-header {
+  background: linear-gradient(135deg, #673de6, #8b5cf6);
+  color: white;
+  padding: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.sidebar-header h3 {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 900;
+}
+
+.sidebar-close-btn {
+  background: rgba(255,255,255,0.25);
+  border: 0;
+  color: white;
+  font-size: 1.3rem;
+  font-weight: 900;
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.15s;
+}
+
+.sidebar-close-btn:hover {
+  background: rgba(255,255,255,0.4);
+}
+
+.sidebar-student-card {
+  padding: 12px 16px;
+  background: #f7f3ff;
+  border-bottom: 2px solid #ede5ff;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.sidebar-nav {
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex: 1;
+}
+
+.sidebar-link {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  border-radius: 14px;
+  border: 2px solid #eef2f6;
+  background: #fcfdfe;
+  color: #2b1f4d;
+  font-weight: 800;
+  font-size: 1rem;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.sidebar-link .icon {
+  font-size: 1.4rem;
+}
+
+.sidebar-link:hover {
+  background: #f3edff;
+  border-color: #c4b5fd;
+  color: #5b21b6;
+  transform: translateX(4px);
+}
+
+.sidebar-link.active {
+  background: #673de6;
+  color: white;
+  border-color: #673de6;
+  box-shadow: 0 4px 12px rgba(103, 61, 230, 0.3);
+}
+
+.sidebar-link.warn {
+  background: #fffbeb;
+  border-color: #fde68a;
+  color: #92400e;
+}
+
+.sidebar-footer {
+  padding: 14px;
+  border-top: 1px solid #e2e8f0;
+  background: #fafbfc;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* GENERAL BUTTONS */
 .btn{
   border:0;
   border-radius:12px;
@@ -135,30 +401,6 @@ button,input,select,textarea{font:inherit}
 .btn:disabled{
   opacity:0.45;
   cursor:not-allowed;
-}
-
-.cloud-pill {
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-  background: rgba(255,255,255,0.2);
-  color: white;
-  padding: 4px 9px;
-  border-radius: 16px;
-  font-size: 0.78rem;
-  font-weight: bold;
-  border: 1px solid rgba(255,255,255,0.4);
-}
-
-.cloud-dot {
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
-  background: #ffb31a;
-}
-.cloud-dot.connected {
-  background: #00ff88;
-  box-shadow: 0 0 8px #00ff88;
 }
 
 .screen{
@@ -423,6 +665,79 @@ h2{margin-top:0}
   margin: auto 0;
 }
 
+/* ➖ SUBTRACTION REMOVE-FROM-TRAY STAGE STYLES */
+.subtraction-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  max-width: 620px;
+  margin: 0 auto;
+}
+
+.sub-stage-row {
+  display: flex;
+  gap: 14px;
+  justify-content: center;
+  width: 96%;
+  max-width: 580px;
+  margin-top: 4px;
+}
+
+.sub-tray-card {
+  flex: 1.2;
+  background: #182333;
+  border: 3px solid #22c55e;
+  border-radius: 20px;
+  padding: 12px 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  min-height: 190px;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.35);
+  transition: all 0.25s ease;
+}
+
+.sub-taken-card {
+  flex: 0.9;
+  background: #25161c;
+  border: 3px dashed #ef4444;
+  border-radius: 20px;
+  padding: 12px 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  min-height: 190px;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.35);
+  transition: all 0.25s ease;
+}
+
+.sub-card-header {
+  font-size: 0.85rem;
+  font-weight: 900;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+}
+
+.sub-items-area {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  flex: 1;
+  padding: 8px 4px;
+  min-height: 70px;
+}
+
+.sub-counter {
+  font-size: clamp(1rem, 3.2vw, 1.25rem);
+  font-weight: 900;
+  color: #ffffff;
+}
+
 /* DIVISION STAGE */
 .division-container {
   display: flex;
@@ -546,7 +861,7 @@ h2{margin-top:0}
   justify-content: center;
   cursor: pointer;
   position: relative;
-  transition: transform 0.15s ease;
+  transition: transform 0.15s ease, opacity 0.3s ease;
   line-height: 1;
   padding: 2px;
 }
@@ -726,21 +1041,21 @@ h2{margin-top:0}
   color: white;
   border: 2px solid white;
   border-radius: 50px;
-  padding: 8px 16px;
-  font-size: 1rem;
+  padding: 9px 20px;
+  font-size: 1.05rem;
   font-weight: 900;
   cursor: pointer;
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  margin-top: 8px;
+  gap: 8px;
+  margin-top: 6px;
   transition: transform 0.2s, background 0.2s, box-shadow 0.2s;
 }
 
 .checkpoint-mic-btn.listening {
   background: #00e676;
   color: #0b3d1b;
-  box-shadow: 0 0 15px #00e676;
+  box-shadow: 0 0 18px #00e676;
   animation: micPulse 1s infinite alternate;
 }
 
@@ -778,8 +1093,8 @@ body.tv-mode .topbar {
   border: 3px solid rgba(255,255,255,0.25);
 }
 
-body.tv-mode .brand h1 {
-  font-size: 2.3rem;
+body.tv-mode .brand-info h1 {
+  font-size: 2.2rem;
 }
 
 body.tv-mode .btn {
@@ -810,32 +1125,22 @@ body.tv-mode .div-prompt-subtitle {
   font-weight: 900;
 }
 
-body.tv-mode .div-pool-card {
-  max-width: 580px;
-  padding: 16px 20px;
-  border-width: 3px;
-}
-
-body.tv-mode .div-pool-header {
-  font-size: 1.2rem;
-}
-
-body.tv-mode .div-groups-row {
-  max-width: 680px;
+body.tv-mode .sub-stage-row {
+  max-width: 780px;
   gap: 20px;
 }
 
-body.tv-mode .div-group-box {
-  min-height: 250px;
+body.tv-mode .sub-tray-card, body.tv-mode .sub-taken-card {
+  min-height: 240px;
   border-width: 4px;
 }
 
-body.tv-mode .div-group-header {
-  font-size: 1.45rem;
+body.tv-mode .sub-card-header {
+  font-size: 1.2rem;
 }
 
-body.tv-mode .div-group-counter {
-  font-size: 1.6rem;
+body.tv-mode .sub-counter {
+  font-size: 1.55rem;
 }
 
 body.tv-mode .stage-title {
@@ -1180,39 +1485,96 @@ footer{
 
 <canvas id="confettiCanvas"></canvas>
 
+<!-- ☰ SIDEBAR BACKDROP & DRAWER -->
+<div id="sidebarBackdrop" class="sidebar-backdrop" onclick="closeSidebar()"></div>
+
+<aside id="sidebarDrawer" class="sidebar-drawer">
+  <div class="sidebar-header">
+    <div style="display:flex; align-items:center; gap:8px;">
+      <span style="font-size:1.6rem;">📚</span>
+      <div>
+        <h3 style="margin:0; line-height:1.2;">Academy Menu</h3>
+        <small style="opacity:0.9; font-weight:bold;">Classroom Navigation</small>
+      </div>
+    </div>
+    <button class="sidebar-close-btn" onclick="closeSidebar()" aria-label="Close Menu">✕</button>
+  </div>
+
+  <div class="sidebar-student-card" onclick="openRegistrationModal(); closeSidebar();">
+    <div>
+      <div style="font-size:0.75rem; color:#6b7280; font-weight:bold;">ACTIVE LEARNER</div>
+      <b class="student-name-display" style="font-size:1.05rem; color:#4c1d95;">Superstar</b>
+      <span id="sidebarStudentClass" class="badge class-badge" style="margin-left:4px;">Primary 1</span>
+    </div>
+    <span style="font-size:1.1rem; cursor:pointer;">✏️</span>
+  </div>
+
+  <nav class="sidebar-nav">
+    <button class="sidebar-link active" id="nav-home" onclick="showScreen('home'); closeSidebar();">
+      <span class="icon">🏠</span>
+      <span>Home Classroom</span>
+    </button>
+    <button class="sidebar-link" id="nav-topics" onclick="showScreen('topics'); closeSidebar();">
+      <span class="icon">📚</span>
+      <span>Topics &amp; Subjects</span>
+    </button>
+    <button class="sidebar-link" id="nav-ask" onclick="showScreen('ask'); closeSidebar();">
+      <span class="icon">❓</span>
+      <span>Ask The Teacher</span>
+    </button>
+    <button class="sidebar-link" id="nav-attendance" onclick="showScreen('attendance'); closeSidebar();">
+      <span class="icon">📅</span>
+      <span>Attendance Clock</span>
+    </button>
+    <button class="sidebar-link warn" id="nav-parent" onclick="openParentGateModal(); closeSidebar();">
+      <span class="icon">👨‍👩‍👧</span>
+      <span>Parent Monitor Hub</span>
+    </button>
+    <button class="sidebar-link" id="nav-import" onclick="showScreen('import'); closeSidebar();">
+      <span class="icon">📥</span>
+      <span>Import &amp; Cloud Sync</span>
+    </button>
+    <button class="sidebar-link" id="nav-progress" onclick="showScreen('progress'); closeSidebar();">
+      <span class="icon">🏆</span>
+      <span>Learning Progress</span>
+    </button>
+  </nav>
+
+  <div class="sidebar-footer">
+    <button class="btn tv-btn" onclick="toggleTVMode()" style="width:100%; padding:10px;">
+      <span id="sidebarTvLabel">📺 Toggle TV / Jumbo View</span>
+    </button>
+    <div style="text-align:center; font-size:0.75rem; color:#888; font-weight:bold;">
+      Connected to kids-school-accademy
+    </div>
+  </div>
+</aside>
+
+<!-- MAIN APP CONTAINER -->
 <div class="app">
 
+<!-- STREAMLINED TOPBAR WITH HAMBURGER -->
 <header class="topbar">
-  <div class="brand">
-    <div>
+  <div class="topbar-left">
+    <button class="menu-toggle-btn" onclick="toggleSidebar()" aria-label="Open Navigation Menu">
+      ☰
+    </button>
+    <div class="brand-info">
       <h1>📚 Kids Learning Academy</h1>
       <small>Nursery • Primary • Secondary Digital Class</small>
     </div>
-    <div style="display:flex; flex-direction:column; align-items:flex-end; gap:4px;">
-      <div id="studentProfilePill" class="student-tag" onclick="openRegistrationModal()">
-        <span>👤</span>
-        <span id="topStudentName">Guest Student</span>
-        <span id="topStudentClass" class="badge class-badge">Primary 1</span>
-        <span style="font-size:0.75rem;">✏️</span>
-      </div>
-      <div style="display:flex; gap:6px; align-items:center;">
-        <button id="tvModeBtnTop" class="btn tv-btn btn-sm" onclick="toggleTVMode()">📺 TV Mode: OFF</button>
-        <div class="cloud-pill" id="topCloudStatus">
-          <span class="cloud-dot" id="topCloudDot"></span>
-          <span id="topCloudText">☁️ Firestore Live</span>
-        </div>
-      </div>
-    </div>
   </div>
 
-  <div class="nav">
-    <button class="btn" onclick="showScreen('home')">🏠 Home</button>
-    <button class="btn" onclick="showScreen('topics')">📚 Topics &amp; Classes</button>
-    <button class="btn" onclick="showScreen('ask')">❓ Ask Teacher</button>
-    <button class="btn" onclick="showScreen('attendance')">📅 Attendance</button>
-    <button class="btn warn" onclick="openParentGateModal()">👨‍👩‍👧 Parent Hub</button>
-    <button class="btn" onclick="showScreen('import')">📥 Import &amp; Cloud</button>
-    <button class="btn" onclick="showScreen('progress')">🏆 My Progress</button>
+  <div class="topbar-right">
+    <div id="studentProfilePill" class="student-tag" onclick="openRegistrationModal()">
+      <span>👤</span>
+      <span id="topStudentName">Guest Student</span>
+      <span id="topStudentClass" class="badge class-badge">Primary 1</span>
+    </div>
+    <div class="cloud-pill" id="topCloudStatus">
+      <span class="cloud-dot" id="topCloudDot"></span>
+      <span id="topCloudText">☁️ Firestore Live</span>
+    </div>
   </div>
 </header>
 
@@ -1222,13 +1584,13 @@ footer{
     <div class="emoji">👩‍🏫🎓🎒</div>
     <h2>Welcome to Class, <span class="student-name-display">Superstar</span>!</h2>
     <p>
-      Explore personalized lessons curated for <b id="homeClassDisplay">Primary 1</b>. Watch objects count live on your digital board!
+      Explore personalized lessons curated for <b id="homeClassDisplay">Primary 1</b>. Tap <b>☰ Menu</b> anytime to navigate classes!
     </p>
     <div style="display:flex; justify-content:center; gap:8px; flex-wrap:wrap;">
       <button class="btn primary" onclick="showScreen('topics')">🚀 Open My Class Topics</button>
       <button class="btn purple" onclick="showScreen('ask')">❓ Ask Teacher a Question</button>
       <button class="btn warn" onclick="openRegistrationModal()">👤 Change Student / Class</button>
-      <button class="btn tv-btn" onclick="toggleTVMode()">📺 Toggle Television Big Screen</button>
+      <button class="btn tv-btn" onclick="toggleTVMode()">📺 Toggle TV Mode</button>
     </div>
   </div>
 
@@ -1341,7 +1703,7 @@ footer{
           <div id="checkpointOverlay" class="checkpoint-overlay hidden">
             <div style="font-size:2.8rem; margin-bottom:4px;">🙋‍♀️✨</div>
             <h3 style="color:#ffeb3b; margin:0 0 6px 0;">Quick Question for You!</h3>
-            <p id="checkpointQuestionText" style="font-size:1.2rem; color:#fff; margin-bottom:10px; font-weight:bold;">What is 6 ÷ 2?</p>
+            <p id="checkpointQuestionText" style="font-size:1.2rem; color:#fff; margin-bottom:10px; font-weight:bold;">What is 5 - 2?</p>
             
             <div style="display:flex; flex-direction:column; align-items:center; gap:8px; max-width:360px; width:100%;">
               <button id="checkpointVoiceBtn" class="checkpoint-mic-btn" onclick="toggleVoiceAnswering()">
@@ -1402,7 +1764,7 @@ footer{
       <div id="speechStatus" class="status">Press Play or toggle Auto-Play to start the continuous lesson!</div>
     </div>
 
-    <!-- INLINE PRACTICE QUIZ (PRESERVED) -->
+    <!-- INLINE PRACTICE QUIZ -->
     <div id="stepQuizArea" class="quiz-section hidden"></div>
   </div>
 </section>
@@ -1433,17 +1795,18 @@ footer{
     </div>
 
     <div style="display:flex; gap:6px; margin-top:10px;">
-      <input type="text" id="askQuestionInput" placeholder="e.g., What is division? What is multiplication? What is a noun?" style="font-size:1rem; font-weight:bold;">
+      <input type="text" id="askQuestionInput" placeholder="e.g., What is subtraction? What is a fraction? What is division?" style="font-size:1rem; font-weight:bold;">
       <button class="btn primary" onclick="submitStudentQuestion()">🗣️ Ask Now</button>
     </div>
 
     <div style="margin-top:12px;">
       <span class="meta" style="font-weight:bold;">💡 Quick Sample Questions to Try:</span>
       <div style="display:flex; gap:6px; flex-wrap:wrap; margin-top:6px;">
+        <button class="btn btn-sm" onclick="askPresetQuestion('What is a fraction?')">🥧 What is a fraction?</button>
+        <button class="btn btn-sm" onclick="askPresetQuestion('What is subtraction?')">➖ What is subtraction?</button>
         <button class="btn btn-sm" onclick="askPresetQuestion('What is division?')">➗ What is division?</button>
         <button class="btn btn-sm" onclick="askPresetQuestion('What is multiplication?')">✖️ What is multiplication?</button>
         <button class="btn btn-sm" onclick="askPresetQuestion('What is addition?')">➕ What is addition?</button>
-        <button class="btn btn-sm" onclick="askPresetQuestion('What is a noun?')">🔤 What is a noun?</button>
       </div>
     </div>
   </div>
@@ -1616,7 +1979,9 @@ footer{
     <div style="display:flex; flex-wrap:wrap; gap:5px;">
       <button class="btn primary btn-sm" onclick="importPastedJSON()">💾 Save Topic to Target Class</button>
       <button class="btn btn-sm" onclick="exportCurrentEditorJSON()">💾 Download JSON File</button>
-      <button class="btn warn btn-sm" onclick="loadSampleDivisionLesson()">➗ Load Sample Division (6 ÷ 2)</button>
+      <button class="btn purple btn-sm" onclick="loadSampleFractionLesson()">🥧 Load Sample Fractions (1/2, 1/4)</button>
+      <button class="btn warn btn-sm" onclick="loadSampleSubtractionLesson()">➖ Load Sample Subtraction (5 - 2)</button>
+      <button class="btn btn-sm" onclick="loadSampleDivisionLesson()">➗ Load Sample Division (6 ÷ 2)</button>
       <button class="btn btn-sm" onclick="loadSampleMultiplicationLesson()">✖️ Load Sample Multiplication</button>
       <button class="btn danger btn-sm" onclick="clearImportedLessons()">🗑️ Delete All</button>
     </div>
@@ -1707,12 +2072,12 @@ import {
   serverTimestamp 
 } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
-const STORAGE_KEY = "kids_learning_academy_lessons_v28";
-const PROGRESS_KEY = "kids_learning_academy_progress_v28";
-const STUDENT_KEY = "kids_learning_academy_student_v28";
-const ATTENDANCE_KEY = "kids_learning_academy_attendance_v28";
-const PARENT_LOGS_KEY = "kids_learning_academy_parent_logs_v28";
-const TV_MODE_KEY = "kids_learning_academy_tv_mode_v28";
+const STORAGE_KEY = "kids_learning_academy_lessons_v30";
+const PROGRESS_KEY = "kids_learning_academy_progress_v30";
+const STUDENT_KEY = "kids_learning_academy_student_v30";
+const ATTENDANCE_KEY = "kids_learning_academy_attendance_v30";
+const PARENT_LOGS_KEY = "kids_learning_academy_parent_logs_v30";
+const TV_MODE_KEY = "kids_learning_academy_tv_mode_v30";
 
 const formalFirebaseConfig = {
   apiKey: "AIzaSyCRL0nXwiqQk4isamyt1UkGWyQ50t3DjYo",
@@ -1736,13 +2101,26 @@ const EMOJI_SPEECH_MAP = {
   "🐟": "fish", "🌸": "flower", "🍪": "cookie", "🍬": "candy", "🧁": "cupcake"
 };
 
-const WORD_TO_NUMBER_MAP = {
-  "zero": "0", "one": "1", "two": "2", "to": "2", "too": "2",
-  "three": "3", "four": "4", "for": "4", "fore": "4",
-  "five": "5", "six": "6", "seven": "7", "eight": "8", "ate": "8",
-  "nine": "9", "ten": "10", "eleven": "11", "twelve": "12",
-  "thirteen": "13", "fourteen": "14", "fifteen": "15", "sixteen": "16",
-  "seventeen": "17", "eighteen": "18", "nineteen": "19", "twenty": "20"
+/* 🎙️ EXPANDED KIDS' PHONETICS & HOMOPHONE RESOLVER */
+const EXTENDED_NUMBER_WORDS = {
+  "zero": "0", "oh": "0", "naught": "0", "nil": "0",
+  "one": "1", "won": "1", "wan": "1",
+  "two": "2", "to": "2", "too": "2", "tu": "2", "do": "2",
+  "three": "3", "tree": "3", "free": "3", "tri": "3", "thri": "3",
+  "four": "4", "for": "4", "fore": "4", "ford": "4", "fur": "4",
+  "five": "5", "hive": "5", "fiv": "5", "faiv": "5",
+  "six": "6", "sex": "6", "sicks": "6", "seex": "6",
+  "seven": "7", "sevn": "7", "seben": "7",
+  "eight": "8", "ate": "8", "ait": "8", "eit": "8",
+  "nine": "9", "nein": "9", "nain": "9",
+  "ten": "10", "tin": "10",
+  "eleven": "11", "twelve": "12", "twelv": "12",
+  "thirteen": "13", "fourteen": "14", "fifteen": "15",
+  "sixteen": "16", "seventeen": "17", "eighteen": "18",
+  "nineteen": "19", "twenty": "20",
+  "half": "half", "one half": "half",
+  "quarter": "quarter", "one quarter": "quarter",
+  "third": "third", "one third": "third"
 };
 
 function formatItemCountSpeech(count, baseWord) {
@@ -1758,7 +2136,111 @@ function formatItemCountSpeech(count, baseWord) {
   return `${count} ${baseWord}s`;
 }
 
-/* DIVISION CURRICULUM SAMPLE */
+/* 🥧 FRACTIONS CURRICULUM SAMPLE */
+const sampleFractionData = {
+  id: "fractions-parts-of-a-whole",
+  classLevel: "Primary 1",
+  subject: "Mathematics",
+  topic: "Fractions: Parts of a Whole",
+  intro: {
+    title: "FRACTIONS: PARTS OF A WHOLE",
+    board: "1/2, 1/3, 1/4\n\nA fraction represents an equal part of a whole circle or object.",
+    speech: "Hello, my dear friend! Welcome to Mathematics class! Today we are exploring Fractions. A fraction is a part of a whole object that has been divided into equal pieces. Tap any fraction pie on the screen to pop out the slice!",
+    visual: {
+      type: "fraction_circle",
+      denominators: [1, 2, 3, 4],
+      title: "Exploring Fractions: 1 Whole, 1/2, 1/3, 1/4"
+    }
+  },
+  examples: [
+    {
+      board: "EXAMPLE 1/2\n\n1/2 = One Half",
+      speech: "Look at the second circle: it is divided into 2 equal parts. The green slice is 1 part out of 2. We call this 1/2, or one half! When you share something equally between two friends, each friend gets one half.",
+      visual: {
+        type: "fraction_circle",
+        denominators: [2],
+        title: "1/2 = One Half"
+      },
+      checkpoint: {
+        q: "If a circle is cut into 2 equal parts, what do we call 1 part? Say half or two.",
+        expectedAnswer: "half"
+      },
+      quiz: {
+        q: "How many halves make up one complete whole?",
+        options: ["2 halves", "1 half", "3 halves", "4 halves"],
+        answer: 0,
+        hint: "Two equal halves fit together to make a full circle.",
+        explanation: "Two halves (1/2 + 1/2) make 1 whole."
+      }
+    },
+    {
+      board: "EXAMPLE 2/2\n\n1/4 = One Quarter",
+      speech: "Now look at the circle cut into 4 equal slices! The red slice is 1 part out of 4. We call this 1/4, or one quarter. Exactly 4 quarters make one whole circle!",
+      visual: {
+        type: "fraction_circle",
+        denominators: [4],
+        title: "1/4 = One Quarter"
+      },
+      checkpoint: {
+        q: "How many equal slices is a circle divided into for 1/4? Say 4 or four.",
+        expectedAnswer: "4"
+      },
+      quiz: {
+        q: "What fraction represents 1 slice of a circle cut into 4 equal parts?",
+        options: ["1/4 (One quarter)", "1/2 (One half)", "1/3 (One third)", "1/1 (One whole)"],
+        answer: 0,
+        hint: "Count how many total slices make the whole circle.",
+        explanation: "1 part out of 4 equal parts is 1/4, also called one quarter."
+      }
+    }
+  ]
+};
+
+/* ➖ SUBTRACTION CURRICULUM SAMPLE */
+const sampleSubtractionData = {
+  id: "subtraction-taking-away",
+  classLevel: "Primary 1",
+  subject: "Mathematics",
+  topic: "Subtraction (Taking Away)",
+  intro: {
+    title: "SUBTRACTION FOUNDATION",
+    board: "5 - 2 = 3\n\nSubtraction means taking away items from a tray to find out how many are left.",
+    speech: "Hello, my dear friend! Welcome to Mathematics class! Today we are learning Subtraction. Subtraction means taking away items. When we subtract, we remove items from the tray and count how many are left. Let's watch how taking away works together!",
+    visual: {
+      type: "subtraction",
+      total: 5,
+      subtract: 2,
+      emoji: "🍎",
+      title: "5 - 2 = ?"
+    }
+  },
+  examples: [
+    {
+      board: "EXAMPLE 1/2\n\n5 - 2 = 3",
+      speech: "Let's solve: 5 - 2 = ?. We start with 5 🍎 inside our active tray. Let's count them: 1🍎... 2🍎🍎... 3🍎🍎🍎... 4🍎🍎🍎🍎... 5🍎🍎🍎🍎🍎. Now, let's take away 2 🍎! One, two. Look at the tray: 2 🍎 were removed to the side, and exactly 3 🍎 remain! Let's count what is left: 1🍎... 2🍎🍎... 3🍎🍎🍎! We have 3 🍎 left in the tray. Therefore, 5 - 2 = 3. Excellent work!",
+      visual: {
+        type: "subtraction",
+        total: 5,
+        subtract: 2,
+        emoji: "🍎",
+        title: "5 - 2 = ?"
+      },
+      checkpoint: {
+        q: "If you have 5 apples in the tray and take away 2, what is 5 - 2?",
+        expectedAnswer: "3"
+      },
+      quiz: {
+        q: "What is 5 - 2?",
+        options: ["3", "2", "4", "5"],
+        answer: 0,
+        hint: "Start with 5 apples in the tray and remove 2.",
+        explanation: "5 apples take away 2 apples leaves 3 apples in the tray."
+      }
+    }
+  ]
+};
+
+/* 📸 DIVISION CURRICULUM SAMPLE */
 const sampleDivisionData = {
   id: "division-equal-sharing",
   classLevel: "Primary 1",
@@ -1778,7 +2260,7 @@ const sampleDivisionData = {
   },
   examples: [
     {
-      board: "EXAMPLE 1/3\n\n6 ÷ 2 = 3",
+      board: "EXAMPLE 1/2\n\n6 ÷ 2 = 3",
       speech: "Let's solve: 6 ÷ 2 = ?. We have 6 🍎 displayed in our tray, and 2 empty groups below. Let's share them equally! First, we put 2 🍎 into Group 1, and 2 🍎 into Group 2. Look at the tray: we have 2 🍎 left! Now let's share the rest: 1 🍎 to Group 1, and 1 🍎 to Group 2. Look: 0 🍎 left! Group 1 has 3 🍎 and Group 2 has 3 🍎. Both groups have the exact same amount! Therefore, 6 ÷ 2 = 3. Excellent work!",
       visual: {
         type: "division",
@@ -1797,50 +2279,6 @@ const sampleDivisionData = {
         answer: 0,
         hint: "Count how many apples are inside Group 1 or Group 2.",
         explanation: "6 apples shared equally between 2 groups gives 3 apples in each group."
-      }
-    },
-    {
-      board: "EXAMPLE 2/3\n\n8 ÷ 2 = 4",
-      speech: "Now let's solve: 8 ÷ 2 = ?. We start with 8 🍪 in our tray and 2 empty groups. Let's share equally! First, we put 2 🍪 into Group 1, and 2 🍪 into Group 2. Look at the tray: we have 4 🍪 left. Let's share again: we put 2 🍪 into Group 1, and 2 🍪 into Group 2. Look: 0 🍪 left! Each group now has 4 🍪. Therefore, 8 ÷ 2 = 4. Fantastic job!",
-      visual: {
-        type: "division",
-        total: 8,
-        groups: 2,
-        emoji: "🍪",
-        title: "8 ÷ 2 = ?"
-      },
-      checkpoint: {
-        q: "If we share 8 cookies equally between 2 plates, what is 8 ÷ 2?",
-        expectedAnswer: "4"
-      },
-      quiz: {
-        q: "What is 8 ÷ 2?",
-        options: ["2", "4", "3", "5"],
-        answer: 1,
-        hint: "Divide 8 cookies into 2 equal groups.",
-        explanation: "8 divided by 2 equals 4 cookies per group."
-      }
-    },
-    {
-      board: "EXAMPLE 3/3\n\n12 ÷ 3 = 4",
-      speech: "Let's try a bigger challenge: 12 ÷ 3 = ?. We have 12 ⭐ in our tray and 3 empty groups below. Let's share equally! First, we put 2 ⭐ into Group 1, 2 ⭐ into Group 2, and 2 ⭐ into Group 3. Look: we have 6 ⭐ left! Now let's share the rest: 2 ⭐ into Group 1, 2 ⭐ into Group 2, and 2 ⭐ into Group 3. Look: 0 ⭐ left! Every group has 4 ⭐. Therefore, 12 ÷ 3 = 4. You are a math superstar!",
-      visual: {
-        type: "division",
-        total: 12,
-        groups: 3,
-        emoji: "⭐",
-        title: "12 ÷ 3 = ?"
-      },
-      checkpoint: {
-        q: "What is 12 divided by 3?",
-        expectedAnswer: "4"
-      },
-      quiz: {
-        q: "If 12 stars are shared equally into 3 groups, how many stars are in each group?",
-        options: ["3 stars", "6 stars", "4 stars", "2 stars"],
-        answer: 2,
-        hint: "Look at the stars inside each of the 3 groups.",
-        explanation: "12 shared equally into 3 groups gives 4 stars in each group."
       }
     }
   ]
@@ -1874,16 +2312,16 @@ const sampleMultiplicationData = {
         emoji: "🍎",
         title: "2 Groups of 3 🍎 = 6 🍎"
       },
+      checkpoint: {
+        q: "If we have 2 groups of 3 🍎, how many 🍎 altogether?",
+        expectedAnswer: "6"
+      },
       quiz: {
         q: "What is 2 × 3?",
         options: ["6", "5", "4", "3"],
         answer: 0,
         hint: "Count all the 🍎 in both groups.",
         explanation: "There are 2 groups with 3 🍎 in each group. In total, there are 6 🍎."
-      },
-      checkpoint: {
-        q: "If we have 2 groups of 3 🍎, how many 🍎 altogether?",
-        expectedAnswer: "6"
       }
     }
   ]
@@ -1905,6 +2343,8 @@ function loadData() {
   return {
     app: "Kids Learning Academy",
     topics: [ 
+      JSON.parse(JSON.stringify(sampleFractionData)),
+      JSON.parse(JSON.stringify(sampleSubtractionData)),
       JSON.parse(JSON.stringify(sampleDivisionData)),
       JSON.parse(JSON.stringify(sampleMultiplicationData))
     ]
@@ -1954,33 +2394,213 @@ let firebaseApp = null;
 let firestoreDb = null;
 let unsubscribeTopicsListener = null;
 
+/* ☰ SIDEBAR DRAWER CONTROLLER */
+window.toggleSidebar = function() {
+  const drawer = $("sidebarDrawer");
+  const backdrop = $("sidebarBackdrop");
+  const isOpen = drawer.classList.contains("open");
+  if (isOpen) {
+    window.closeSidebar();
+  } else {
+    drawer.classList.add("open");
+    backdrop.classList.add("open");
+    document.body.style.overflow = "hidden";
+  }
+};
+
+window.closeSidebar = function() {
+  const drawer = $("sidebarDrawer");
+  const backdrop = $("sidebarBackdrop");
+  if (drawer) drawer.classList.remove("open");
+  if (backdrop) backdrop.classList.remove("open");
+  document.body.style.overflow = "";
+};
+
+/* ======================================================== */
+/* 🥧 FRACTION CIRCLE PIE RENDERER                          */
+/* ======================================================== */
+const FRACTION_COLOR_MAP = {
+  1: "#eab308", // Whole (Yellow)
+  2: "#16a34a", // Half (Green)
+  3: "#2563eb", // 1/3 (Blue)
+  4: "#dc2626", // 1/4 (Red)
+  5: "#9333ea"  // 1/5 (Purple)
+};
+
+function renderFractionCircleStage(visualData, contextText = "") {
+  const contentEl = $("stageContent");
+  const stageTitleEl = $("stageTitle");
+  stageTitleEl.textContent = "";
+  contentEl.innerHTML = "";
+
+  const container = document.createElement("div");
+  container.className = "fraction-stage-container";
+
+  const title = document.createElement("div");
+  title.className = "div-equation-title";
+  title.textContent = visualData?.title || "Understanding Fractions";
+  container.appendChild(title);
+
+  const subtitle = document.createElement("div");
+  subtitle.className = "div-prompt-subtitle";
+  subtitle.id = "fractionSubtitle";
+  subtitle.textContent = "Tap on any fraction circle to pop out the slice!";
+  container.appendChild(subtitle);
+
+  const piesRow = document.createElement("div");
+  piesRow.className = "fraction-pies-row";
+
+  const denominators = visualData?.denominators || [visualData?.denominator || 2];
+
+  denominators.forEach(den => {
+    const card = document.createElement("div");
+    card.className = "fraction-pie-card active-pie";
+    card.id = `fractionCard-${den}`;
+
+    const svg = createFractionPieSVG(1, den, FRACTION_COLOR_MAP[den] || "#16a34a");
+    card.appendChild(svg);
+
+    const label = document.createElement("div");
+    label.className = "sub-counter";
+    label.style.marginTop = "6px";
+    label.textContent = den === 1 ? "1 Whole" : `1/${den}`;
+    card.appendChild(label);
+
+    card.onclick = () => {
+      popFractionSlice(svg, den);
+    };
+
+    piesRow.appendChild(card);
+  });
+
+  container.appendChild(piesRow);
+  contentEl.appendChild(container);
+}
+
+function createFractionPieSVG(numerator, denominator, sliceColor) {
+  const svgNS = "http://www.w3.org/2000/svg";
+  const svg = document.createElementNS(svgNS, "svg");
+  svg.setAttribute("class", "fraction-svg-pie");
+  svg.setAttribute("viewBox", "0 0 160 160");
+
+  const cx = 80;
+  const cy = 80;
+  const r = 70;
+
+  if (denominator === 1) {
+    const circle = document.createElementNS(svgNS, "circle");
+    circle.setAttribute("cx", cx);
+    circle.setAttribute("cy", cy);
+    circle.setAttribute("r", r);
+    circle.setAttribute("fill", sliceColor);
+    circle.setAttribute("stroke", "#000");
+    circle.setAttribute("stroke-width", "3");
+    svg.appendChild(circle);
+
+    const text = document.createElementNS(svgNS, "text");
+    text.setAttribute("x", cx);
+    text.setAttribute("y", cy + 10);
+    text.setAttribute("text-anchor", "middle");
+    text.setAttribute("class", "fraction-label-text");
+    text.setAttribute("font-size", "34");
+    text.textContent = "1";
+    svg.appendChild(text);
+    return svg;
+  }
+
+  const bg = document.createElementNS(svgNS, "circle");
+  bg.setAttribute("cx", cx);
+  bg.setAttribute("cy", cy);
+  bg.setAttribute("r", r);
+  bg.setAttribute("fill", "#e2e8f0");
+  bg.setAttribute("stroke", "#000");
+  bg.setAttribute("stroke-width", "3");
+  svg.appendChild(bg);
+
+  const angleStep = (2 * Math.PI) / denominator;
+  for (let i = 0; i < denominator; i++) {
+    const a = -Math.PI / 2 + i * angleStep;
+    const x = cx + r * Math.cos(a);
+    const y = cy + r * Math.sin(a);
+    const line = document.createElementNS(svgNS, "line");
+    line.setAttribute("x1", cx);
+    line.setAttribute("y1", cy);
+    line.setAttribute("x2", x);
+    line.setAttribute("y2", y);
+    line.setAttribute("stroke", "#000");
+    line.setAttribute("stroke-width", "2.5");
+    svg.appendChild(line);
+  }
+
+  const startAngle = -Math.PI / 2;
+  const endAngle = startAngle + (2 * Math.PI * (numerator / denominator));
+
+  const x1 = cx + r * Math.cos(startAngle);
+  const y1 = cy + r * Math.sin(startAngle);
+  const x2 = cx + r * Math.cos(endAngle);
+  const y2 = cy + r * Math.sin(endAngle);
+
+  const largeArcFlag = (numerator / denominator) > 0.5 ? 1 : 0;
+  const pathData = `M ${cx} ${cy} L ${x1} ${y1} A ${r} ${r} 0 ${largeArcFlag} 1 ${x2} ${y2} Z`;
+
+  const slice = document.createElementNS(svgNS, "path");
+  slice.setAttribute("d", pathData);
+  slice.setAttribute("fill", sliceColor);
+  slice.setAttribute("stroke", "#000");
+  slice.setAttribute("stroke-width", "3");
+  slice.setAttribute("class", "pie-slice shaded");
+  svg.appendChild(slice);
+
+  const midAngle = (startAngle + endAngle) / 2;
+  const labelDist = r * 0.55;
+  const lx = cx + labelDist * Math.cos(midAngle);
+  const ly = cy + labelDist * Math.sin(midAngle) + 6;
+
+  const text = document.createElementNS(svgNS, "text");
+  text.setAttribute("x", lx);
+  text.setAttribute("y", ly);
+  text.setAttribute("text-anchor", "middle");
+  text.setAttribute("class", "fraction-label-text");
+  text.setAttribute("font-size", denominator <= 3 ? "24" : "20");
+  text.textContent = `${numerator}/${denominator}`;
+  svg.appendChild(text);
+
+  return svg;
+}
+
+function popFractionSlice(svgEl, den) {
+  const slice = svgEl.querySelector(".pie-slice");
+  if (slice) {
+    slice.classList.toggle("detached");
+    playPopTone(den);
+  }
+  const subtitle = $("fractionSubtitle");
+  if (subtitle) {
+    subtitle.innerHTML = `You tapped <b>1/${den}</b>! This is 1 part out of ${den} equal parts.`;
+  }
+}
+
 /* 📺 TV / JUMBO MODE ENGINE */
 let isTVMode = (localStorage.getItem(TV_MODE_KEY) === "true");
 
 function applyTVMode() {
-  const topBtn = $("tvModeBtnTop");
   const toolbarBtn = $("tvModeBtnToolbar");
+  const sidebarLabel = $("sidebarTvLabel");
 
   if (isTVMode) {
     document.body.classList.add("tv-mode");
-    if (topBtn) {
-      topBtn.classList.add("active");
-      topBtn.textContent = "📺 TV Mode: ON";
-    }
     if (toolbarBtn) {
       toolbarBtn.classList.add("active");
       toolbarBtn.textContent = "📺 TV: ON";
     }
+    if (sidebarLabel) sidebarLabel.textContent = "📺 TV Mode: ON (Tap to Disable)";
   } else {
     document.body.classList.remove("tv-mode");
-    if (topBtn) {
-      topBtn.classList.remove("active");
-      topBtn.textContent = "📺 TV Mode: OFF";
-    }
     if (toolbarBtn) {
       toolbarBtn.classList.remove("active");
       toolbarBtn.textContent = "📺 TV View";
     }
+    if (sidebarLabel) sidebarLabel.textContent = "📺 TV Mode: OFF (Tap to Enable)";
   }
   localStorage.setItem(TV_MODE_KEY, isTVMode ? "true" : "false");
 }
@@ -1990,37 +2610,43 @@ window.toggleTVMode = function() {
   applyTVMode();
 };
 
-/* 🎙️ SPEECH RECOGNITION ENGINE FOR KIDS */
+/* 🎙️ ROBUST SPEECH RECOGNITION */
 let recognition = null;
 let isListeningForAnswer = false;
 
 function initSpeechRecognition() {
   const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+  const statusEl = $("checkpointVoiceStatus");
+
   if (!SpeechRecognition) {
-    console.log("Speech recognition not supported on this device/browser.");
+    if (statusEl) {
+      statusEl.textContent = "⚠️ Speech not supported in this browser. Please use Chrome/Edge or type below.";
+    }
     return;
   }
 
   recognition = new SpeechRecognition();
   recognition.continuous = false;
   recognition.interimResults = false;
-  recognition.lang = "en-US";
+  recognition.maxAlternatives = 5;
+  recognition.lang = navigator.language || "en-US";
 
   recognition.onstart = () => {
     isListeningForAnswer = true;
-    updateMicStatusUI(true, "🎙️ Listening... Speak your answer!");
+    updateMicStatusUI(true, "🎙️ Listening... Say your answer out loud!");
   };
 
   recognition.onresult = (event) => {
     isListeningForAnswer = false;
-    const transcript = event.results[0][0].transcript.toLowerCase().trim();
-    console.log("Speech heard from kid:", transcript);
+    let candidates = [];
+    for (let i = 0; i < event.results[0].length; i++) {
+      candidates.push(event.results[0][i].transcript);
+    }
 
-    const interpreted = convertSpokenAnswer(transcript);
+    const interpreted = extractBestSpokenAnswer(candidates);
     $("checkpointInput").value = interpreted;
-    updateMicStatusUI(false, `Heard: "${transcript}" (noted as ${interpreted})`);
+    updateMicStatusUI(false, `✅ Heard: "${candidates[0]}" (Noted as: ${interpreted})`);
 
-    // Automatically check and submit answer
     setTimeout(() => {
       window.submitCheckpointAnswer();
     }, 600);
@@ -2028,7 +2654,13 @@ function initSpeechRecognition() {
 
   recognition.onerror = (event) => {
     isListeningForAnswer = false;
-    updateMicStatusUI(false, "Could not hear clearly. Try clicking the mic or typing!");
+    let errMessage = "Could not hear clearly. Tap mic to try again or type below.";
+    if (event.error === "not-allowed") {
+      errMessage = "🚫 Microphone access blocked! Please enable microphone permissions in your browser.";
+    } else if (event.error === "network") {
+      errMessage = "⚠️ Network issue connecting voice server. Please check internet connection.";
+    }
+    updateMicStatusUI(false, errMessage);
   };
 
   recognition.onend = () => {
@@ -2037,19 +2669,47 @@ function initSpeechRecognition() {
   };
 }
 
-function convertSpokenAnswer(spokenText) {
-  let cleaned = spokenText.toLowerCase().trim();
+function extractBestSpokenAnswer(candidates) {
+  if (!candidates || !candidates.length) return "";
+  
+  const expected = (activeCheckpoint && activeCheckpoint.expectedAnswer) 
+    ? activeCheckpoint.expectedAnswer.toLowerCase().trim() 
+    : "";
 
-  // Extract explicit digits first if spoken
-  const digitMatch = cleaned.match(/\d+/);
+  for (const phrase of candidates) {
+    const parsed = parsePhraseToAnswer(phrase);
+    if (expected && (parsed === expected || phrase.toLowerCase().includes(expected))) {
+      return parsed;
+    }
+  }
+
+  for (const phrase of candidates) {
+    const parsed = parsePhraseToAnswer(phrase);
+    if (parsed && (!isNaN(parsed) || parsed.length > 0)) {
+      return parsed;
+    }
+  }
+
+  return parsePhraseToAnswer(candidates[0]);
+}
+
+function parsePhraseToAnswer(phrase) {
+  if (!phrase) return "";
+  const cleaned = phrase.toLowerCase().trim();
+
+  const digitMatch = cleaned.match(/\b\d+\b/);
   if (digitMatch) return digitMatch[0];
 
-  // Convert words to number
-  for (const [word, num] of Object.entries(WORD_TO_NUMBER_MAP)) {
-    const wordRegex = new RegExp(`\\b${word}\\b`, 'i');
-    if (wordRegex.test(cleaned)) {
-      return num;
+  const words = cleaned.replace(/[^a-z0-9\s]/g, '').split(/\s+/);
+  for (const w of words) {
+    if (EXTENDED_NUMBER_WORDS[w] !== undefined) {
+      return EXTENDED_NUMBER_WORDS[w];
     }
+  }
+
+  for (const [wKey, numVal] of Object.entries(EXTENDED_NUMBER_WORDS)) {
+    const regex = new RegExp(`\\b${wKey}\\b`, 'i');
+    if (regex.test(cleaned)) return numVal;
   }
 
   return cleaned;
@@ -2077,8 +2737,13 @@ function updateMicStatusUI(listening, statusText = "") {
 }
 
 window.toggleVoiceAnswering = function() {
+  if (window.location.protocol === "file:") {
+    alert("Voice recognition requires HTTPS or localhost.\nIt cannot run from a local file (file:///...). Please host the app or use a local server!");
+    return;
+  }
+
   if (!recognition) {
-    alert("Microphone recognition is not supported on this browser. You can type the answer!");
+    alert("Speech recognition is not supported on this browser. Please use Google Chrome, Edge, or Safari.");
     return;
   }
 
@@ -2104,6 +2769,10 @@ window.showScreen = function(screenId) {
     target.classList.add("active");
   }
   window.scrollTo({ top: 0, behavior: 'smooth' });
+
+  document.querySelectorAll(".sidebar-link").forEach(link => link.classList.remove("active"));
+  const activeSidebarLink = $(`nav-${screenId}`);
+  if (activeSidebarLink) activeSidebarLink.classList.add("active");
 
   if (screenId === 'topics') renderTopics();
   if (screenId === 'progress') renderProgress();
@@ -2200,6 +2869,7 @@ function updateStudentUI() {
 
   $("topStudentName").textContent = nameDisplay;
   $("topStudentClass").textContent = classDisplay;
+  if ($("sidebarStudentClass")) $("sidebarStudentClass").textContent = classDisplay;
   $("homeClassDisplay").textContent = classDisplay;
   
   document.querySelectorAll(".student-name-display").forEach(el => el.textContent = nameDisplay);
@@ -2539,10 +3209,11 @@ window.exportCurrentEditorJSON = function() {
 
 /* ASK TEACHER ENGINE */
 const PRESET_ANSWERS = {
+  "what is a fraction": "A fraction represents equal parts of a whole! For example, if you slice a pizza into 4 equal pieces and eat 1, you ate 1/4 (one quarter) of the pizza.",
+  "what is subtraction": "Subtraction means taking away items from a group or tray! When we subtract, we remove some items and count how many are left.",
   "what is division": "Division is fair sharing! It means taking a total number of items and sharing them equally into groups so that each group has the exact same amount.",
   "what is multiplication": "Multiplication is putting equal groups of objects together. Instead of adding again and again, multiplication helps us find the total answer quickly!",
-  "what is addition": "Addition is putting numbers or groups of items together to find the total sum! For example, two apples plus three apples give us five apples altogether.",
-  "what is a noun": "A noun is a naming word! It is the name of any person, place, animal, or object, like Teacher, School, Dog, or Pencil."
+  "what is addition": "Addition is putting numbers or groups of items together to find the total sum! For example, two apples plus three apples give us five apples altogether."
 };
 
 window.submitStudentQuestion = function() {
@@ -2609,7 +3280,7 @@ function speakTextCustom(text, onEnd) {
   }
 }
 
-/* 🎯 ADAPTIVE CHECKPOINTS: ANSWER → PROCEED OR RETURN */
+/* 🎯 ADAPTIVE CHECKPOINTS */
 function checkAndTriggerCheckpoint(example) {
   if (!example || !example.checkpoint) return false;
   
@@ -2625,14 +3296,7 @@ function checkAndTriggerCheckpoint(example) {
   playPopTone(3);
 
   const promptText = `Hey ${studentProfile.name || "Flourish"}! Here is a question for you: ${activeCheckpoint.q}`;
-  speakTextCustom(promptText, () => {
-    // Automatically open mic after teacher asks
-    if (recognition) {
-      try {
-        recognition.start();
-      } catch(e) {}
-    }
-  });
+  speakTextCustom(promptText);
 
   return true;
 }
@@ -2642,16 +3306,15 @@ window.submitCheckpointAnswer = function() {
   const rawInput = $("checkpointInput").value.trim().toLowerCase();
   if (!rawInput) return;
 
-  const normalizedInput = convertSpokenAnswer(rawInput);
+  const normalizedInput = parsePhraseToAnswer(rawInput);
   const expected = (activeCheckpoint.expectedAnswer || "").toLowerCase().trim();
-  const normalizedExpected = convertSpokenAnswer(expected);
+  const normalizedExpected = parsePhraseToAnswer(expected);
   
   const feedback = $("checkpointFeedback");
   const child = studentProfile.name || "Flourish";
   const isCorrect = (normalizedInput === normalizedExpected) || rawInput.includes(expected);
 
   if (isCorrect) {
-    // ✅ KID ANSWERED CORRECTLY: Automatically advance to NEXT EXAMPLE
     triggerConfetti();
     playPopTone(6);
     feedback.style.color = "#00ff88";
@@ -2673,7 +3336,6 @@ window.submitCheckpointAnswer = function() {
     });
 
   } else {
-    // ❌ KID CANNOT ANSWER: Return to EXAMPLE to learn more
     playPopTone(1);
     feedback.style.color = "#ff4757";
     feedback.textContent = `❌ Not quite! Let's return to this example so you can learn it more!`;
@@ -2682,7 +3344,6 @@ window.submitCheckpointAnswer = function() {
       setTimeout(() => {
         $("checkpointOverlay").classList.add("hidden");
         activeCheckpoint = null;
-        // Return to example and re-explain
         window.replayCurrentStep();
       }, 1500);
     });
@@ -3011,21 +3672,219 @@ function detectMathOperation(text, visualData) {
   if (sanitized.includes("÷") || /\bdivided\s*by\b/i.test(sanitized) || /\bdivision\b/i.test(sanitized)) {
     return "division";
   }
+  if (sanitized.includes("-") || sanitized.includes("−") || /\bsubtraction\b/i.test(sanitized) || /\bminus\b/i.test(sanitized) || /\btake\s*away\b/i.test(sanitized)) {
+    return "subtraction";
+  }
   if (sanitized.includes("×") || sanitized.includes("*") || /\bmultiplication\b/i.test(sanitized) || /\btimes\b/i.test(sanitized)) {
     return "multiplication";
   }
   if (sanitized.includes("+") || /\baddition\b/i.test(sanitized) || /\bplus\b/i.test(sanitized)) {
     return "addition";
   }
-  if (sanitized.includes("-") || sanitized.includes("−") || /\bsubtraction\b/i.test(sanitized) || /\bminus\b/i.test(sanitized)) {
-    return "subtraction";
+  if (sanitized.includes("/") || /\bfraction\b/i.test(sanitized) || /\bhalf\b/i.test(sanitized) || /\bquarter\b/i.test(sanitized)) {
+    return "fraction";
   }
   return "other";
 }
 
-/* ======================================================== */
-/* DYNAMIC INTERACTIVE DIVISION SIMULATION ENGINE           */
-/* ======================================================== */
+/* SUBTRACTION SIMULATION ENGINE */
+let currentSubtractionModel = {
+  total: 5,
+  subtract: 2,
+  remaining: 5,
+  takenAway: 0,
+  emoji: "🍎",
+  word: "apple",
+  initialTotal: 5
+};
+
+function renderSubtractionStage(visualData, contextText = "") {
+  const contentEl = $("stageContent");
+  const stageTitleEl = $("stageTitle");
+  stageTitleEl.textContent = "";
+  contentEl.innerHTML = "";
+
+  let emoji = "🍎";
+  let totalItems = 5;
+  let subtractItems = 2;
+
+  if (visualData && visualData.emoji) {
+    emoji = visualData.emoji;
+  } else {
+    const emoMatch = (contextText || "").match(/([\u{1F300}-\u{1F9FF}\u{2600}-\u{27BF}])/u);
+    if (emoMatch) emoji = emoMatch[1];
+  }
+
+  if (visualData && visualData.total && visualData.subtract !== undefined) {
+    totalItems = visualData.total;
+    subtractItems = visualData.subtract;
+  } else {
+    const fullSearchText = (contextText || "") + " " + (visualData && visualData.title ? visualData.title : "");
+    const sanitized = fullSearchText.replace(/\b(example|step)\s*\d+\s*\/\s*\d+/gi, "");
+    const subMatch = sanitized.match(/(\d+)\s*[-−]\s*(\d+)/) || sanitized.match(/(\d+)\s*minus\s*(\d+)/i) || sanitized.match(/(\d+)\s*take\s*away\s*(\d+)/i);
+
+    if (subMatch) {
+      totalItems = parseInt(subMatch[1], 10);
+      subtractItems = parseInt(subMatch[2], 10);
+    }
+  }
+
+  const baseWord = EMOJI_SPEECH_MAP[emoji] || "apple";
+
+  currentSubtractionModel = {
+    total: totalItems,
+    subtract: subtractItems,
+    remaining: totalItems,
+    takenAway: 0,
+    emoji: emoji,
+    word: baseWord,
+    initialTotal: totalItems
+  };
+
+  const container = document.createElement("div");
+  container.className = "subtraction-container";
+
+  const title = document.createElement("div");
+  title.className = "div-equation-title";
+  title.id = "subEquationTitle";
+  title.textContent = `${totalItems} - ${subtractItems} = ?`;
+  container.appendChild(title);
+
+  const subtitle = document.createElement("div");
+  subtitle.className = "div-prompt-subtitle";
+  subtitle.id = "subPromptSubtitle";
+  subtitle.textContent = `${totalItems} ${baseWord}s in the tray. Press "Play" to start taking away!`;
+  container.appendChild(subtitle);
+
+  const row = document.createElement("div");
+  row.className = "sub-stage-row";
+
+  const trayCard = document.createElement("div");
+  trayCard.className = "sub-tray-card";
+  trayCard.id = "subTrayCard";
+
+  const trayHeader = document.createElement("div");
+  trayHeader.className = "sub-card-header";
+  trayHeader.style.color = "#4ade80";
+  trayHeader.textContent = `🛒 IN THE TRAY`;
+  trayCard.appendChild(trayHeader);
+
+  const trayItems = document.createElement("div");
+  trayItems.className = "sub-items-area";
+  trayItems.id = "subTrayItems";
+  trayCard.appendChild(trayItems);
+
+  const trayCounter = document.createElement("div");
+  trayCounter.className = "sub-counter";
+  trayCounter.id = "subTrayCounter";
+  trayCounter.textContent = `${totalItems} ${baseWord}s`;
+  trayCard.appendChild(trayCounter);
+  row.appendChild(trayCard);
+
+  const takenCard = document.createElement("div");
+  takenCard.className = "sub-taken-card";
+  takenCard.id = "subTakenCard";
+
+  const takenHeader = document.createElement("div");
+  takenHeader.className = "sub-card-header";
+  takenHeader.style.color = "#f87171";
+  takenHeader.textContent = `💨 TAKEN AWAY (-${subtractItems})`;
+  takenCard.appendChild(takenHeader);
+
+  const takenItems = document.createElement("div");
+  takenItems.className = "sub-items-area";
+  takenItems.id = "subTakenItems";
+  takenCard.appendChild(takenItems);
+
+  const takenCounter = document.createElement("div");
+  takenCounter.className = "sub-counter";
+  takenCounter.id = "subTakenCounter";
+  takenCounter.textContent = `0 taken away`;
+  takenCard.appendChild(takenCounter);
+  row.appendChild(takenCard);
+
+  container.appendChild(row);
+  contentEl.appendChild(container);
+
+  syncSubtractionVisualUI();
+}
+
+function syncSubtractionVisualUI() {
+  const { remaining, takenAway, emoji, word, total, subtract } = currentSubtractionModel;
+  const trayItemsEl = $("subTrayItems");
+  const takenItemsEl = $("subTakenItems");
+  const trayCounterEl = $("subTrayCounter");
+  const takenCounterEl = $("subTakenCounter");
+  const subtitle = $("subPromptSubtitle");
+  const eqTitle = $("subEquationTitle");
+
+  if (!trayItemsEl) return;
+
+  trayItemsEl.innerHTML = "";
+  for (let i = 0; i < remaining; i++) {
+    const item = document.createElement("span");
+    item.className = "interactive-item";
+    item.id = `sub-item-${i}`;
+    item.textContent = emoji;
+    item.onclick = () => triggerItemBounce(item, i + 1);
+    trayItemsEl.appendChild(item);
+  }
+
+  if (takenItemsEl) {
+    takenItemsEl.innerHTML = "";
+    if (takenAway === 0) {
+      takenItemsEl.innerHTML = `<span style="font-size:0.8rem; color:#888; font-style:italic;">None taken yet</span>`;
+    } else {
+      for (let i = 0; i < takenAway; i++) {
+        const item = document.createElement("span");
+        item.className = "interactive-item";
+        item.style.opacity = "0.75";
+        item.textContent = emoji;
+        takenItemsEl.appendChild(item);
+      }
+    }
+  }
+
+  if (trayCounterEl) {
+    trayCounterEl.textContent = `${remaining} ${word}${remaining !== 1 ? 's' : ''} left`;
+  }
+  if (takenCounterEl) {
+    takenCounterEl.textContent = `${takenAway} taken away`;
+  }
+
+  if (subtitle && eqTitle) {
+    if (takenAway === 0) {
+      subtitle.textContent = `${total} ${word}s in the tray. Press "Play" to start taking away!`;
+      eqTitle.textContent = `${total} - ${subtract} = ?`;
+    } else if (remaining === (total - subtract)) {
+      subtitle.innerHTML = `🎉 <b>Took away ${takenAway} ${word}s!</b> Exactly <b>${remaining} ${word}${remaining !== 1 ? 's' : ''}</b> remain in the tray!`;
+      eqTitle.textContent = `${total} - ${subtract} = ${remaining}`;
+    }
+  }
+}
+
+function executeSubtractionRemove(amount = 1) {
+  const actualTake = Math.min(amount, currentSubtractionModel.remaining);
+  if (actualTake <= 0) return;
+
+  currentSubtractionModel.remaining -= actualTake;
+  currentSubtractionModel.takenAway += actualTake;
+
+  playPopTone(currentSubtractionModel.remaining + 1);
+  syncSubtractionVisualUI();
+
+  const takenCard = $("subTakenCard");
+  if (takenCard) {
+    takenCard.style.transform = "scale(1.06)";
+    setTimeout(() => takenCard.style.transform = "scale(1)", 300);
+  }
+
+  if (currentSubtractionModel.remaining === (currentSubtractionModel.total - currentSubtractionModel.subtract)) {
+    triggerConfetti();
+  }
+}
+
+/* DIVISION SIMULATION ENGINE */
 let currentDivisionModel = {
   total: 6,
   groups: 2,
@@ -3212,10 +4071,20 @@ function flashGroupBox(groupIdx) {
   }
 }
 
-/* MULTIPLICATION & GENERAL STAGE RENDERER */
+/* GENERAL STAGE OBJECTS */
 function renderStageObjects(visualData, contextText = "") {
   const fullSearchText = (contextText || "") + " " + (visualData && visualData.title ? visualData.title : "");
   const op = detectMathOperation(fullSearchText, visualData);
+
+  if (op === "fraction" || (visualData && visualData.type === "fraction_circle")) {
+    renderFractionCircleStage(visualData, contextText);
+    return;
+  }
+
+  if (op === "subtraction" || (visualData && visualData.type === "subtraction")) {
+    renderSubtractionStage(visualData, contextText);
+    return;
+  }
 
   if (op === "division" || (visualData && visualData.type === "division")) {
     renderDivisionEqualGroups(visualData, contextText);
@@ -3259,12 +4128,7 @@ function renderStageObjects(visualData, contextText = "") {
   if (visualData && visualData.title) {
     title = visualData.title;
   } else {
-    const isAddition = fullSearchText.includes("+");
-    if (isAddition) {
-      title = groupCounts.map(c => `${c} ${emoji}`).join(" + ") + ` = ${groupCounts.reduce((a,b)=>a+b, 0)} ${emoji}`;
-    } else {
-      title = `${groupCounts.length} Groups of ${groupCounts[0] || 1} ${emoji} = ${groupCounts.reduce((a,b)=>a+b, 0)} ${emoji}`;
-    }
+    title = `${groupCounts.length} Groups of ${groupCounts[0] || 1} ${emoji} = ${groupCounts.reduce((a,b)=>a+b, 0)} ${emoji}`;
   }
 
   titleEl.textContent = title;
@@ -3351,11 +4215,9 @@ function parseScriptIntoSynchronizedChunks(text, fallbackEmoji = "🍎") {
 
   let cleanText = text.replace(/my dear friend|my friend|student|superstar/gi, studentProfile.name || "Superstar");
   cleanText = cleanText.replace(/[\uFE00-\uFE0F\u200D\u200B-\u200D\uFEFF]/g, '');
-
   cleanText = cleanText.replace(/\b(group\s*\d+|other group)\s*,?\s*and\s+(\d+)/gi, "$1, and $2");
 
   const defaultItemWord = EMOJI_SPEECH_MAP[fallbackEmoji] || "apple";
-
   const rawSegments = cleanText.match(/(\d+[\u{1F300}-\u{1F9FF}\u{2600}-\u{27BF}]+[\.…]*|[^\.!\?…,\n;:]+[\.!\?…,\n;:]*)/gu) || [cleanText];
   const chunks = [];
 
@@ -3369,6 +4231,7 @@ function parseScriptIntoSynchronizedChunks(text, fallbackEmoji = "🍎") {
     let groupTrigger = null;
     let countAllTrigger = false;
     let divisionActions = [];
+    let subtractionActions = [];
 
     const lower = cleanRaw.toLowerCase();
 
@@ -3377,25 +4240,19 @@ function parseScriptIntoSynchronizedChunks(text, fallbackEmoji = "🍎") {
     while ((sm = shareRegex.exec(cleanRaw)) !== null) {
       const amt = parseInt(sm[1], 10) || 1;
       let targetG = 0;
-      if (sm[4].toLowerCase().includes("other")) {
-        targetG = 1;
-      } else if (sm[5]) {
-        targetG = parseInt(sm[5], 10) - 1;
-      }
+      if (sm[4].toLowerCase().includes("other")) targetG = 1;
+      else if (sm[5]) targetG = parseInt(sm[5], 10) - 1;
       divisionActions.push({ targetGroup: targetG, amount: amt });
     }
 
-    if (divisionActions.length === 0) {
-      if (lower.includes("to group 2") || lower.includes("into group 2") || lower.includes("the other group")) {
-        const amtMatch = lower.match(/(\d+)/);
-        divisionActions.push({ targetGroup: 1, amount: amtMatch ? parseInt(amtMatch[1], 10) : 1 });
-      } else if (lower.includes("to group 1") || lower.includes("into group 1")) {
-        const amtMatch = lower.match(/(\d+)/);
-        divisionActions.push({ targetGroup: 0, amount: amtMatch ? parseInt(amtMatch[1], 10) : 1 });
-      } else if (lower.includes("to group 3") || lower.includes("into group 3")) {
-        const amtMatch = lower.match(/(\d+)/);
-        divisionActions.push({ targetGroup: 2, amount: amtMatch ? parseInt(amtMatch[1], 10) : 1 });
+    const subActionRegex = /(?:take\s*away|subtract|remove|eats?|flew\s*away|takes\s*away)\s*(\d+|one|two|three|four|five|six|seven|eight|nine|ten)/gi;
+    let subM;
+    while ((subM = subActionRegex.exec(cleanRaw)) !== null) {
+      let amt = parseInt(subM[1], 10);
+      if (isNaN(amt)) {
+        amt = EXTENDED_NUMBER_WORDS[subM[1].toLowerCase()] ? parseInt(EXTENDED_NUMBER_WORDS[subM[1].toLowerCase()], 10) : 1;
       }
+      subtractionActions.push({ amount: amt });
     }
 
     if (lower.includes("first group") || lower.includes("group 1")) groupTrigger = 0;
@@ -3434,9 +4291,14 @@ function parseScriptIntoSynchronizedChunks(text, fallbackEmoji = "🍎") {
       });
 
       spoken = spoken
+        .replace(/\b1\/2\b/g, "one half")
+        .replace(/\b1\/3\b/g, "one third")
+        .replace(/\b1\/4\b/g, "one quarter")
+        .replace(/\b1\/5\b/g, "one fifth")
         .replace(/×/g, " times ")
         .replace(/\*/g, " times ")
         .replace(/÷/g, " divided by ")
+        .replace(/[-−]/g, " minus ")
         .replace(/=/g, " equals ")
         .replace(/\.{2,}/g, "")
         .replace(/\s+/g, " ")
@@ -3451,7 +4313,8 @@ function parseScriptIntoSynchronizedChunks(text, fallbackEmoji = "🍎") {
         countNum,
         groupTrigger,
         countAllTrigger,
-        divisionActions
+        divisionActions,
+        subtractionActions
       });
     }
   });
@@ -3610,7 +4473,6 @@ function playNextChunk(sessionId) {
     $("speakerStatusText").textContent = "👩‍🏫 Teacher Finished";
     stepCompletedNotify();
 
-    // Trigger immediate question after example
     if (currentStepIndex > 0) {
       const exIndex = currentStepIndex - 1;
       const example = currentTopic.examples[exIndex];
@@ -3652,6 +4514,12 @@ function playNextChunk(sessionId) {
     });
   }
 
+  if (chunk.subtractionActions && chunk.subtractionActions.length > 0) {
+    chunk.subtractionActions.forEach(action => {
+      executeSubtractionRemove(action.amount);
+    });
+  }
+
   if (chunk.groupTrigger !== null) {
     activeTargetGroup = chunk.groupTrigger;
     isCountAllMode = false;
@@ -3677,18 +4545,20 @@ function playNextChunk(sessionId) {
     if (sessionId !== playbackSessionId) return;
 
     if (chunk.isCountBeat && chunk.countNum !== null) {
+      const subItem = document.getElementById(`sub-item-${chunk.countNum - 1}`);
+      if (subItem) {
+        triggerItemBounce(subItem, chunk.countNum);
+        return;
+      }
+
       if (isCountAllMode) {
         const globalIdx = chunk.countNum - 1;
         const targetItem = document.querySelector(`[data-global-idx="${globalIdx}"]`);
-        if (targetItem) {
-          triggerItemBounce(targetItem, chunk.countNum);
-        }
+        if (targetItem) triggerItemBounce(targetItem, chunk.countNum);
       } else {
         const localIdx = chunk.countNum - 1;
         const targetItem = document.getElementById(`item-g${activeTargetGroup}-i${localIdx}`);
-        if (targetItem) {
-          triggerItemBounce(targetItem, chunk.countNum);
-        }
+        if (targetItem) triggerItemBounce(targetItem, chunk.countNum);
       }
     }
   };
@@ -4111,6 +4981,46 @@ window.importPastedJSON = async function(){
   }
 };
 
+window.loadSampleFractionLesson = async function() {
+  const cloned = JSON.parse(JSON.stringify(sampleFractionData));
+  cloned.id = "fractions-parts-of-a-whole";
+  cloned.classLevel = studentProfile.classLevel || "Primary 1";
+  
+  const existingIdx = data.topics.findIndex(t => t.id === cloned.id || slugify(t.topic) === cloned.id);
+  if (existingIdx >= 0) {
+    data.topics[existingIdx] = cloned;
+  } else {
+    data.topics.unshift(cloned);
+  }
+  
+  saveData();
+  await syncTopicToCloud(cloned);
+  updateHomeStats();
+  renderTopics();
+  renderTopicManageList();
+  alert(`Sample Fraction (1/2, 1/4) Lesson loaded successfully!`);
+};
+
+window.loadSampleSubtractionLesson = async function() {
+  const cloned = JSON.parse(JSON.stringify(sampleSubtractionData));
+  cloned.id = "subtraction-taking-away";
+  cloned.classLevel = studentProfile.classLevel || "Primary 1";
+  
+  const existingIdx = data.topics.findIndex(t => t.id === cloned.id || slugify(t.topic) === cloned.id);
+  if (existingIdx >= 0) {
+    data.topics[existingIdx] = cloned;
+  } else {
+    data.topics.unshift(cloned);
+  }
+  
+  saveData();
+  await syncTopicToCloud(cloned);
+  updateHomeStats();
+  renderTopics();
+  renderTopicManageList();
+  alert(`Sample Subtraction (5 - 2 = 3) loaded successfully!`);
+};
+
 window.loadSampleDivisionLesson = async function() {
   const cloned = JSON.parse(JSON.stringify(sampleDivisionData));
   cloned.id = "division-equal-sharing";
@@ -4207,7 +5117,6 @@ if (!studentProfile.registered) {
 
 setTimeout(populateVoices, 500);
 setTimeout(populateVoices, 1500);
-
 </script>
 
 </body>
