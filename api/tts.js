@@ -1,4 +1,3 @@
-// api/tts.js - Free Microsoft Neural Voice (No Azure Card / Key Required)
 import { MsEdgeTTS, OUTPUT_FORMAT } from "msedge-tts";
 
 export default async function handler(req, res) {
@@ -17,16 +16,15 @@ export default async function handler(req, res) {
 
   try {
     const tts = new MsEdgeTTS();
-    // Connects to the natural Nigerian Neural voice without requiring an Azure subscription
     await tts.setMetadata(voice, OUTPUT_FORMAT.AUDIO_24KHZ_48KBITRATE_MONO_MP3);
 
-    const stream = tts.toStream(text);
+    const { audioStream } = tts.toStream(text);
 
     const audioBuffer = await new Promise((resolve, reject) => {
       const chunks = [];
-      stream.on("data", (chunk) => chunks.push(chunk));
-      stream.on("end", () => resolve(Buffer.concat(chunks)));
-      stream.on("error", (err) => reject(err));
+      audioStream.on("data", (chunk) => chunks.push(chunk));
+      audioStream.on("close", () => resolve(Buffer.concat(chunks)));
+      audioStream.on("error", (err) => reject(err));
     });
 
     res.setHeader("Content-Type", "audio/mpeg");
