@@ -1,3 +1,4 @@
+// api/tts.js - Unbroken Nigerian Neural Voice Stream
 import { MsEdgeTTS, OUTPUT_FORMAT } from "msedge-tts";
 
 export default async function handler(req, res) {
@@ -22,9 +23,34 @@ export default async function handler(req, res) {
 
     const audioBuffer = await new Promise((resolve, reject) => {
       const chunks = [];
+      let isFinished = false;
+
+      const done = () => {
+        if (isFinished) return;
+        isFinished = true;
+        resolve(Buffer.concat(chunks));
+      };
+
       audioStream.on("data", (chunk) => chunks.push(chunk));
-      audioStream.on("close", () => resolve(Buffer.concat(chunks)));
-      audioStream.on("error", (err) => reject(err));
+      audioStream.on("end", done);
+      audioStream.on("close", done);
+      audioStream.on("error", (err) => {
+        if (!isFinished) {
+          isFinished = true;
+          reject(err);
+        }
+      });
+
+      // Safety timeout: 15 seconds
+      setTimeout(() => {
+        if (!isFinished) {
+          if (chunks.length > 0) done();
+          else {
+            isFinished = true;
+            reject(new Error("TTS stream timed out"));
+          }
+        }
+      }, 15000);
     });
 
     res.setHeader("Content-Type", "audio/mpeg");
