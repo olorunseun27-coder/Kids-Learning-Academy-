@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Kids Learning Academy - Smart Classroom &amp; Universal Hub</title>
+<title>Kids Learning Academy - Smart Classroom with Interactive Counting</title>
 
 <style>
 *{box-sizing:border-box}
@@ -108,7 +108,7 @@ button,input,select,textarea{font:inherit}
   box-shadow:0 0 8px #00ff88;
 }
 
-/* SIDEBAR DRAWER */
+/* SIDEBAR */
 .sidebar-backdrop{
   position:fixed;
   inset:0;
@@ -287,15 +287,6 @@ button,input,select,textarea{font:inherit}
 .topic-card:hover{
   transform:translateY(-3px);
   box-shadow:0 8px 18px rgba(0,0,0,0.08);
-}
-
-.topic-actions{
-  display:flex;
-  gap:6px;
-  margin-top:10px;
-  border-top:1px solid #eef2f6;
-  padding-top:8px;
-  flex-wrap:wrap;
 }
 
 .badge{
@@ -549,76 +540,126 @@ button,input,select,textarea{font:inherit}
   flex-wrap:wrap;
 }
 
-/* FRACTIONS */
-.fraction-stage-container{
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  width:100%;
-  max-width:650px;
-  margin:0 auto;
-}
+/* ======================================================== */
+/* 🌟 MATH ENGINE STYLES (Addition, Subtraction, Mult, Frac)*/
+/* ======================================================== */
 
-.fraction-pies-row{
+/* OBJECT GROUPS & INTERACTIVE ITEMS */
+.groups-container{
   display:flex;
   flex-wrap:wrap;
-  gap:16px;
   justify-content:center;
   align-items:center;
-  margin-top:10px;
+  gap:12px;
+  width:100%;
+  margin:auto 0;
 }
 
-.fraction-pie-card{
-  background:#1e293b;
-  border:3px solid #475569;
-  border-radius:20px;
-  padding:12px;
+.math-operator-sign{
+  font-size:clamp(2rem, 5vw, 2.8rem);
+  font-weight:900;
+  color:#ffeb3b;
+  padding:0 4px;
+  text-shadow:0 2px 8px rgba(0,0,0,0.5);
+}
+
+.object-group{
+  background:rgba(255, 255, 255, 0.08);
+  border:2.5px dashed rgba(255, 255, 255, 0.45);
+  border-radius:18px;
+  padding:10px 14px;
   display:flex;
   flex-direction:column;
   align-items:center;
+  min-width:90px;
+  transition:border-color 0.25s, background-color 0.25s, transform 0.25s;
+}
+
+.object-group.active-group{
+  border:3px solid #ffcc00;
+  background:rgba(255, 204, 0, 0.22);
+  transform:scale(1.05);
+}
+
+.interactive-item{
+  font-size:clamp(2.3rem, 5.8vw, 3.2rem);
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
   cursor:pointer;
-  transition:transform 0.2s;
+  position:relative;
+  transition:transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.3s;
+  user-select:none;
 }
 
-.fraction-pie-card:hover{transform:scale(1.06)}
+.interactive-item:hover{transform:scale(1.2)}
 
-.fraction-svg-pie{
-  width:160px;
-  height:160px;
-  overflow:visible;
+/* 🌟 POP & BOUNCE COUNT ANIMATION */
+.interactive-item.bounce{
+  animation:popAndBounce 0.65s cubic-bezier(0.28, 0.84, 0.42, 1) forwards;
+  z-index:10;
 }
 
-.pie-slice{
-  cursor:pointer;
-  transition:transform 0.3s cubic-bezier(0.18, 0.89, 0.32, 1.28);
-  transform-origin:80px 80px;
+@keyframes popAndBounce{
+  0%{transform:scale(1) translateY(0)}
+  25%{transform:scale(1.35, 0.75) translateY(3px)}
+  50%{transform:scale(0.95, 1.3) translateY(-24px); filter:drop-shadow(0 12px 10px rgba(255, 204, 0, 0.8))}
+  75%{transform:scale(1.15, 0.9) translateY(-6px)}
+  100%{transform:scale(1) translateY(0)}
 }
 
-.pie-slice.detached{
-  transform:scale(1.08) translate(8px, -8px);
+.interactive-item.dimmed-taken{
+  opacity:0.25;
+  filter:grayscale(1);
+  transform:scale(0.85);
+  text-decoration:line-through;
 }
 
-/* SUBTRACTION */
+.count-indicator{
+  position:absolute;
+  top:-14px;
+  background:#ff4757;
+  color:white;
+  font-size:0.95rem;
+  font-weight:900;
+  border-radius:50%;
+  width:28px;
+  height:28px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  box-shadow:0 3px 6px rgba(0,0,0,0.5);
+  animation:popBadge 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+@keyframes popBadge{
+  from{transform:scale(0); opacity:0}
+  to{transform:scale(1.15); opacity:1}
+}
+
+/* SUBTRACTION ACTIVE TRAY & REMOVAL TRAY */
 .sub-stage-row{
   display:flex;
-  gap:14px;
+  gap:16px;
   justify-content:center;
   width:96%;
-  max-width:580px;
-  margin-top:4px;
+  max-width:620px;
+  margin-top:6px;
+  flex-wrap:wrap;
 }
 
 .sub-tray-card,.sub-taken-card{
   flex:1;
+  min-width:240px;
   background:#182333;
   border:3px solid #22c55e;
   border-radius:20px;
-  padding:12px 10px;
+  padding:14px;
   display:flex;
   flex-direction:column;
   justify-content:space-between;
   align-items:center;
-  min-height:190px;
+  min-height:200px;
 }
 
 .sub-taken-card{
@@ -627,29 +668,125 @@ button,input,select,textarea{font:inherit}
   background:#25161c;
 }
 
+.tray-items-holder{
+  display:flex;
+  flex-wrap:wrap;
+  justify-content:center;
+  align-items:center;
+  gap:8px;
+  min-height:64px;
+  margin:10px 0;
+}
+
+/* MULTIPLICATION ARRAYS */
+.multiplication-stage{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  width:100%;
+}
+
+.mult-repeated-formula{
+  background:rgba(255,255,255,0.1);
+  padding:6px 14px;
+  border-radius:12px;
+  color:#fef08a;
+  font-size:1.15rem;
+  font-weight:900;
+  margin-bottom:10px;
+}
+
+/* FRACTIONS STAGE & FRACTION CARDS */
+.fraction-stage-container{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  width:100%;
+  max-width:700px;
+  margin:0 auto;
+}
+
+.fraction-formula-badge{
+  background:rgba(255, 235, 59, 0.15);
+  border:2px solid #ffeb3b;
+  border-radius:14px;
+  padding:6px 14px;
+  color:#fff;
+  font-size:1.1rem;
+  font-weight:900;
+  margin-bottom:10px;
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+}
+
+.fraction-number-display{
+  display:inline-flex;
+  flex-direction:column;
+  vertical-align:middle;
+  text-align:center;
+  line-height:1;
+  font-size:1.25rem;
+  padding:0 4px;
+}
+
+.fraction-number-display .numerator{border-bottom:2px solid currentColor; padding-bottom:1px;}
+.fraction-number-display .denominator{padding-top:1px;}
+
+.fraction-pies-row{
+  display:flex;
+  flex-wrap:wrap;
+  gap:16px;
+  justify-content:center;
+  align-items:center;
+  margin-top:6px;
+}
+
+.fraction-pie-card{
+  background:#1e293b;
+  border:3px solid #475569;
+  border-radius:20px;
+  padding:12px 16px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  cursor:pointer;
+  transition:transform 0.2s, border-color 0.2s;
+}
+
+.fraction-pie-card:hover{transform:scale(1.05); border-color:#22c55e;}
+
+.fraction-svg-pie{
+  width:150px;
+  height:150px;
+  overflow:visible;
+}
+
+.pie-slice{
+  cursor:pointer;
+  transition:transform 0.3s cubic-bezier(0.18, 0.89, 0.32, 1.28), fill 0.2s;
+  transform-origin:75px 75px;
+}
+
+.pie-slice.detached{
+  transform:scale(1.08) translate(6px, -6px);
+}
+
 /* DIVISION */
 .division-container{
   display:flex;
   flex-direction:column;
   align-items:center;
   width:100%;
-  max-width:580px;
+  max-width:600px;
   margin:0 auto;
 }
 
 .div-equation-title{
-  font-size:clamp(1.9rem, 6vw, 2.8rem);
+  font-size:clamp(1.8rem, 5.5vw, 2.6rem);
   font-weight:900;
   color:#ffffff;
   margin:4px 0 6px 0;
-}
-
-.div-prompt-subtitle{
-  font-size:clamp(0.95rem, 3.2vw, 1.25rem);
-  color:#f1f5f9;
-  font-weight:800;
-  text-align:center;
-  margin-bottom:10px;
 }
 
 .div-pool-card{
@@ -658,27 +795,9 @@ button,input,select,textarea{font:inherit}
   border-radius:20px;
   padding:10px 14px;
   width:94%;
-  max-width:440px;
+  max-width:460px;
   text-align:center;
   margin-bottom:12px;
-}
-
-.div-pool-header{
-  font-size:0.85rem;
-  font-weight:900;
-  color:#cbd5e1;
-  letter-spacing:1px;
-  margin-bottom:6px;
-  text-transform:uppercase;
-}
-
-.div-pool-items{
-  display:flex;
-  flex-wrap:wrap;
-  justify-content:center;
-  align-items:center;
-  gap:8px;
-  min-height:48px;
 }
 
 .div-groups-row{
@@ -686,16 +805,18 @@ button,input,select,textarea{font:inherit}
   gap:12px;
   justify-content:center;
   width:96%;
-  max-width:540px;
+  max-width:560px;
+  flex-wrap:wrap;
 }
 
 .div-group-box{
   flex:1;
-  min-height:180px;
+  min-width:120px;
+  min-height:160px;
   border:3px dashed #64748b;
   border-radius:20px;
-  background:rgba(255, 255, 255, 0.03);
-  padding:10px 6px;
+  background:rgba(255, 255, 255, 0.04);
+  padding:10px 8px;
   display:flex;
   flex-direction:column;
   justify-content:space-between;
@@ -706,78 +827,7 @@ button,input,select,textarea{font:inherit}
 .div-group-box.receiving{
   border-color:#ffeb3b;
   background:rgba(255, 235, 59, 0.18);
-  transform:scale(1.05);
-}
-
-/* OBJECT GROUPS & INTERACTIVE POP-UP ITEMS */
-.groups-container{
-  display:flex;
-  flex-wrap:wrap;
-  justify-content:center;
-  align-items:center;
-  gap:10px;
-  width:100%;
-  margin:auto 0;
-}
-
-.object-group{
-  background:rgba(255, 255, 255, 0.08);
-  border:2.5px dashed rgba(255, 255, 255, 0.45);
-  border-radius:16px;
-  padding:8px 12px;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  min-width:75px;
-  transition:border-color 0.2s, background-color 0.2s, transform 0.2s;
-}
-
-.object-group.active-group{
-  border:3px solid #ffcc00;
-  background:rgba(255, 204, 0, 0.25);
-  transform:scale(1.05);
-}
-
-.interactive-item{
-  font-size:clamp(2.2rem, 5.5vw, 3rem);
-  display:inline-flex;
-  align-items:center;
-  justify-content:center;
-  cursor:pointer;
-  position:relative;
-  transition:transform 0.15s ease;
-  user-select:none;
-}
-
-.interactive-item:hover{transform:scale(1.2)}
-
-.interactive-item.bounce{
-  animation:popAndBounce 0.65s cubic-bezier(0.28, 0.84, 0.42, 1) forwards;
-  z-index:10;
-}
-
-@keyframes popAndBounce{
-  0%{transform:scale(1) translateY(0)}
-  25%{transform:scale(1.35, 0.75) translateY(3px)}
-  50%{transform:scale(0.9, 1.3) translateY(-26px); filter:drop-shadow(0 12px 10px rgba(255, 204, 0, 0.7))}
-  75%{transform:scale(1.15, 0.9) translateY(-6px)}
-  100%{transform:scale(1) translateY(0)}
-}
-
-.count-indicator{
-  position:absolute;
-  top:-16px;
-  background:#ff4757;
-  color:white;
-  font-size:0.92rem;
-  font-weight:900;
-  border-radius:50%;
-  width:26px;
-  height:26px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  box-shadow:0 3px 6px rgba(0,0,0,0.4);
+  transform:scale(1.06);
 }
 
 /* TRANSCRIPT */
@@ -799,6 +849,21 @@ button,input,select,textarea{font:inherit}
   color:#e0f2e9;
   text-align:center;
   font-weight:700;
+}
+
+.chunk{
+  display:inline-block;
+  margin:1px 3px;
+  padding:1px 5px;
+  border-radius:6px;
+  transition:background-color 0.15s, color 0.15s;
+}
+
+.chunk.active{
+  background:#ffe600;
+  color:#8b0000;
+  font-weight:900;
+  border-radius:4px;
 }
 
 /* CHECKPOINT OVERLAY */
@@ -1043,7 +1108,7 @@ footer{
     <button class="sidebar-link" id="nav-ask" onclick="showScreen('ask'); toggleSidebar();"><span>❓</span> Ask The Teacher</button>
     <button class="sidebar-link" id="nav-attendance" onclick="showScreen('attendance'); toggleSidebar();"><span>📅</span> Attendance Clock</button>
     <button class="sidebar-link warn" id="nav-parent" onclick="openParentGateModal(); toggleSidebar();"><span>👨‍👩‍👧</span> Parent Monitor Hub</button>
-    <button class="sidebar-link" id="nav-import" onclick="showScreen('import'); toggleSidebar();"><span>📥</span> Import &amp; Cloud Sync</button>
+    <button class="sidebar-link" id="nav-import" onclick="showScreen('import'); toggleSidebar();"><span>📥</span> Import &amp; Lessons</button>
     <button class="sidebar-link" id="nav-progress" onclick="showScreen('progress'); toggleSidebar();"><span>🏆</span> Learning Progress</button>
   </nav>
 
@@ -1060,7 +1125,7 @@ footer{
     <button class="menu-toggle-btn" onclick="toggleSidebar()">☰</button>
     <div class="brand-info">
       <h1>📚 Kids Learning Academy</h1>
-      <small>Smart Classroom • 🇳🇬 Nigerian Natural Voice Engine</small>
+      <small>Smart Classroom • 🇳🇬 Nigerian AI Teacher Voice</small>
     </div>
   </div>
   <div class="topbar-right">
@@ -1081,7 +1146,7 @@ footer{
   <div class="panel hero">
     <div style="font-size:2.8rem">👩‍🏫🎓🎒🎬</div>
     <h2>Welcome to Class, <span class="student-name-display">Superstar</span>!</h2>
-    <p>Explore lessons with your <b>Natural Nigerian English AI Teacher</b>. Watch counting items jump and count in real time!</p>
+    <p>Explore lessons with your <b>Natural Nigerian English AI Teacher</b>. Watch items pop up and count synchronously!</p>
     <div style="display:flex; justify-content:center; gap:8px; flex-wrap:wrap;">
       <button class="btn primary" onclick="showScreen('topics')">🚀 Open Topics</button>
       <button class="btn purple" onclick="showScreen('ask')">❓ Ask Teacher</button>
@@ -1107,10 +1172,14 @@ footer{
       <div style="display:flex; gap:6px;">
         <select id="topicsClassFilter" onchange="renderTopics()" style="font-weight:bold;">
           <option value="ALL">🌐 All Classes</option>
+          <option value="Nursery">Nursery</option>
           <option value="Primary 1" selected>Primary 1</option>
           <option value="Primary 2">Primary 2</option>
           <option value="Primary 3">Primary 3</option>
-          <option value="JSS 1">JSS 1</option>
+          <option value="Primary 4">Primary 4</option>
+          <option value="Primary 5">Primary 5</option>
+          <option value="JSS 1">JSS 1 (Secondary)</option>
+          <option value="JSS 2">JSS 2 (Secondary)</option>
         </select>
         <button class="btn warn btn-sm" onclick="showScreen('import')">📥 Add Lesson</button>
       </div>
@@ -1319,34 +1388,25 @@ footer{
   </div>
 </section>
 
-<!-- IMPORT & CLOUD -->
+<!-- IMPORT & LESSON CURRICULUM -->
 <section id="import" class="screen">
   <div class="panel">
-    <h2>📥 Import, Edit &amp; Organize Lessons</h2>
-    
-    <div id="editNotice" style="display:none; background:#fffbeb; border-left:4px solid #f59e0b; padding:10px; border-radius:8px; margin-bottom:12px; align-items:center; justify-content:space-between;">
-      <b id="editNoticeText" style="color:#b45309; font-size:0.9rem;">📝 Currently Editing: [Topic Name]</b>
-      <button class="btn btn-sm" onclick="cancelEditing()">Cancel Edit</button>
-    </div>
-
+    <h2>📥 Load Curriculum Subjects &amp; Lessons</h2>
+    <p style="font-size:0.85rem; color:#4b5563;">
+      Load interactive lessons designed from Nursery to Secondary level with synchronized visual counting and natural Nigerian AI Voice.
+    </p>
     <div style="display:flex; gap:6px; flex-wrap:wrap; margin:10px 0;">
-      <button class="btn primary btn-sm" onclick="pushLocalTopicsToCloud()">⬆️ Push All to Firebase</button>
-      <button class="btn btn-sm" onclick="pullTopicsFromCloud()">⬇️ Pull All from Firebase</button>
-      <button class="btn purple btn-sm" onclick="loadSampleEnglishActionLesson()">🐱 Load English Lesson</button>
-      <button class="btn btn-sm" onclick="loadSampleAdditionLesson()">➕ Load Addition</button>
-      <button class="btn warn btn-sm" onclick="loadSampleSubtractionLesson()">➖ Load Subtraction</button>
-      <button class="btn btn-sm" onclick="loadSampleDivisionLesson()">➗ Load Division</button>
-      <button class="btn purple btn-sm" onclick="loadSampleFractionLesson()">🥧 Load Fractions</button>
+      <button class="btn btn-sm primary" onclick="loadSampleAdditionLesson()">➕ 1. Addition (Counting)</button>
+      <button class="btn btn-sm warn" onclick="loadSampleSubtractionLesson()">➖ 2. Subtraction (Take Away)</button>
+      <button class="btn btn-sm purple" onclick="loadSampleMultiplicationLesson()">✖️ 3. Multiplication (Groups)</button>
+      <button class="btn btn-sm primary" onclick="loadSampleDivisionLesson()">➗ 4. Division (Equal Sharing)</button>
+      <button class="btn btn-sm warn" onclick="loadSampleFractionLesson()">🥧 5. Fractions (Parts of Whole)</button>
+      <button class="btn btn-sm purple" onclick="loadSampleEnglishActionLesson()">🐱 6. English Naming &amp; Action</button>
     </div>
-
-    <p style="text-align:center; font-weight:bold; margin:8px 0 4px; font-size:0.85rem;">Edit or Paste Lesson JSON Below</p>
-    <textarea id="jsonText" placeholder="Paste or edit lesson JSON here..."></textarea>
+    <textarea id="jsonText" placeholder="Paste custom lesson JSON here..."></textarea>
     <div style="margin-top:8px;">
-      <button class="btn primary btn-sm" onclick="importPastedJSON()">💾 Save Topic</button>
+      <button class="btn primary btn-sm" onclick="importPastedJSON()">💾 Save and Load Topic</button>
     </div>
-
-    <h3 style="margin-top:20px; font-size:1.05rem;">📚 All Loaded Topics (<span id="loadedCount">0</span>)</h3>
-    <div id="topicManageList" style="overflow-x:auto;"></div>
   </div>
 </section>
 
@@ -1357,15 +1417,19 @@ footer{
     <h2>Student Registration</h2>
     <div style="text-align:left; margin-bottom:12px;">
       <label for="regStudentName">Child / Student Name:</label>
-      <input type="text" id="regStudentName" placeholder="e.g. Flourish, Daniel" style="font-size:1rem; font-weight:bold;">
+      <input type="text" id="regStudentName" placeholder="e.g. Flourish, Daniel, Chidera" style="font-size:1rem; font-weight:bold;">
     </div>
     <div style="text-align:left; margin-bottom:16px;">
       <label for="regStudentClass">Class Level:</label>
       <select id="regStudentClass" style="font-size:0.95rem; font-weight:bold; width:100%;">
+        <option value="Nursery">Nursery</option>
         <option value="Primary 1" selected>Primary 1</option>
         <option value="Primary 2">Primary 2</option>
         <option value="Primary 3">Primary 3</option>
-        <option value="JSS 1">JSS 1</option>
+        <option value="Primary 4">Primary 4</option>
+        <option value="Primary 5">Primary 5</option>
+        <option value="JSS 1">JSS 1 (Secondary)</option>
+        <option value="JSS 2">JSS 2 (Secondary)</option>
       </select>
     </div>
     <div style="display:flex; gap:8px;">
@@ -1394,12 +1458,11 @@ footer{
 window.$ = id => document.getElementById(id);
 const $ = window.$;
 
-const STORAGE_KEY = "kids_learning_v30";
-const PROGRESS_KEY = "kids_prog_v30";
-const STUDENT_KEY = "kids_stud_v30";
-const ATTENDANCE_KEY = "kids_att_v30";
-const VOICE_PREF_KEY = "kids_voice_pref_v30";
-const AUTOPLAY_KEY = "kids_autoplay_pref_v30";
+const STORAGE_KEY = "kids_learning_v31";
+const PROGRESS_KEY = "kids_prog_v31";
+const STUDENT_KEY = "kids_stud_v31";
+const ATTENDANCE_KEY = "kids_att_v31";
+const VOICE_PREF_KEY = "kids_voice_pref_v31";
 
 const formalFirebaseConfig = {
   apiKey: "AIzaSyCRL0nXwiqQk4isamyt1UkGWyQ50t3DjYo",
@@ -1413,7 +1476,7 @@ const formalFirebaseConfig = {
 };
 
 /* ======================================================== */
-/* 💾 LOCAL INDEXEDDB CACHE (VIDEOS & AI AUDIO)            */
+/* 💾 LOCAL INDEXEDDB CACHE (VIDEOS & AZURE AI AUDIO)      */
 /* ======================================================== */
 const DB_NAME = "KidsAcademyMediaDB";
 function openMediaDB() {
@@ -1429,7 +1492,6 @@ function openMediaDB() {
   });
 }
 
-// Videos
 async function saveVideoBlob(k, b) {
   try {
     const db = await openMediaDB();
@@ -1454,7 +1516,6 @@ async function deleteVideoBlob(k) {
   } catch (e) {}
 }
 
-// Audio Cache
 async function getCachedAudioBlob(cacheKey) {
   try {
     const db = await openMediaDB();
@@ -1474,7 +1535,7 @@ async function saveCachedAudioBlob(cacheKey, blob) {
 }
 
 /* ======================================================== */
-/* 🎙️ NIGERIAN AI TEACHER SPEECH ENGINE (/api/tts)         */
+/* 🎙️ NIGERIAN AI TEACHER SPEECH ENGINE (/api/tts & WebSpeech) */
 /* ======================================================== */
 let currentTeacherVoice = localStorage.getItem(VOICE_PREF_KEY) || 'en-NG-EzinneNeural';
 let currentSpeechSpeed = '1.0';
@@ -1502,51 +1563,7 @@ function updateSpeakerIndicator() {
   $('speakerStatusText').textContent = label;
 }
 
-// Extract natural teacher speech from any JSON field
-function extractSpokenText(stepObj) {
-  if (!stepObj) return "";
-  let raw = stepObj.speech ||
-            stepObj.text ||
-            stepObj.narration ||
-            stepObj.explanation ||
-            stepObj.instruction ||
-            stepObj.sentence ||
-            stepObj.content ||
-            stepObj.script ||
-            stepObj.question ||
-            (stepObj.board ? stepObj.board.replace(/EXAMPLE \d+(\/\d+)?|TOPIC FOUNDATION:|CONCEPT \d+(\/\d+)?/gi, '') : "");
-
-  if (typeof raw !== 'string') return "";
-
-  let text = raw.replace(/superstar|my dear friend|student/gi, studentProfile.name || "Superstar");
-
-  // Replace educational emojis with words so the Nigerian voice speaks them naturally
-  text = text
-    .replace(/🍎/g, " apple ")
-    .replace(/🍌/g, " banana ")
-    .replace(/🍊/g, " orange ")
-    .replace(/⭐|🌟|✨/g, " star ")
-    .replace(/🐱|🐈/g, " cat ")
-    .replace(/🐶|🐕/g, " dog ")
-    .replace(/🍪/g, " cookie ")
-    .replace(/🍬/g, " candy ")
-    .replace(/🚗/g, " car ")
-    .replace(/⚡/g, " energy ");
-
-  // Expand math symbols
-  text = text
-    .replace(/÷/g, " divided by ")
-    .replace(/[-−]/g, " minus ")
-    .replace(/\+/g, " plus ")
-    .replace(/=/g, " equals ")
-    .replace(/\b1\/2\b/g, " one half ")
-    .replace(/\b1\/3\b/g, " one third ")
-    .replace(/\b1\/4\b/g, " one quarter ");
-
-  return text.replace(/\s+/g, ' ').trim();
-}
-
-// Fetch complete, fluid audio from /api/tts
+// Nigerian AI Audio Fetch with safe fallback
 async function getAITeacherAudio(text, voice, speed) {
   if (!text || !text.trim()) return null;
 
@@ -1558,20 +1575,53 @@ async function getAITeacherAudio(text, voice, speed) {
   if (cached) return cached;
 
   // Request from backend (/api/tts)
-  const response = await fetch('/api/tts', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ text, voice, speed })
-  });
+  try {
+    const response = await fetch('/api/tts', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ text, voice, speed })
+    });
 
-  if (!response.ok) {
-    const err = await response.json().catch(() => ({ error: response.statusText }));
-    throw new Error(err.error || `TTS failed with status ${response.status}`);
+    if (response.ok) {
+      const audioBlob = await response.blob();
+      await saveCachedAudioBlob(cacheKey, audioBlob);
+      return audioBlob;
+    }
+  } catch (e) {
+    // Falls back to browser speech synthesis seamlessly
   }
+  return null;
+}
 
-  const audioBlob = await response.blob();
-  await saveCachedAudioBlob(cacheKey, audioBlob);
-  return audioBlob;
+function playWebSpeechFallback(text, onEnd) {
+  if(!('speechSynthesis' in window)) {
+    if(onEnd) setTimeout(onEnd, 600);
+    return;
+  }
+  window.speechSynthesis.cancel();
+  const u = new SpeechSynthesisUtterance(text);
+  u.lang = 'en-NG';
+  u.rate = parseFloat(currentSpeechSpeed) || 1.0;
+  
+  const voices = window.speechSynthesis.getVoices();
+  const ngVoice = voices.find(v => v.lang === 'en-NG') || voices.find(v => v.lang.startsWith('en')) || null;
+  if(ngVoice) u.voice = ngVoice;
+
+  u.onstart = () => {
+    requestWakeLock();
+    $('speakerPulseDot').classList.add('speaking');
+    const isFemale = currentTeacherVoice.includes('Ezinne');
+    $('speakerStatusText').textContent = isFemale ? '👩‍🏫 Teacher (🇳🇬 Ezinne)' : '👨‍🏫 Teacher (🇳🇬 Abeo)';
+  };
+  u.onend = () => {
+    $('speakerPulseDot').classList.remove('speaking');
+    if(onEnd) onEnd();
+  };
+  u.onerror = () => {
+    $('speakerPulseDot').classList.remove('speaking');
+    if(onEnd) onEnd();
+  };
+  window.speechSynthesis.speak(u);
 }
 
 function stopActiveNarration() {
@@ -1582,10 +1632,10 @@ function stopActiveNarration() {
   if (currentAudioElement) {
     currentAudioElement.pause();
     currentAudioElement.currentTime = 0;
-    currentAudioElement.onplay = null;
-    currentAudioElement.onended = null;
-    currentAudioElement.onerror = null;
     currentAudioElement = null;
+  }
+  if ('speechSynthesis' in window) {
+    window.speechSynthesis.cancel();
   }
   $('speakerPulseDot').classList.remove('speaking');
   updateSpeakerIndicator();
@@ -1636,7 +1686,7 @@ function playTone(freq, type="triangle", dur=0.25){
 }
 function playGoodTone(){ [523,659,784].forEach((f,i)=>setTimeout(()=>playTone(f,"triangle",0.25),i*90)); }
 function playTryTone(){ playTone(220,"sawtooth",0.35); }
-function playPopTone(p=1){ playTone(340+p*40,"sine",0.12); }
+function playPopTone(p=1){ playTone(340 + (p % 10) * 45, "sine", 0.12); }
 
 function playCatMeowSound(){
   try{
@@ -1728,67 +1778,153 @@ class AnimationManager{
 const animationManager = new AnimationManager();
 
 /* ======================================================== */
-/* 📚 SAMPLE CURRICULUM PACKAGES                            */
+/* 📚 SAMPLE CURRICULUM PACKAGES (Nursery to Secondary)     */
 /* ======================================================== */
-const sampleEnglishNamingActionData = {
-  id: "p1-english-naming-actions", classLevel: "Primary 1", subject: "English", topic: "Naming and Action Words",
-  intro: { title: "NAMING AND ACTION WORDS", board: "THE CAT MEOWS 🐱\n\n• Cat = Naming Word\n• Meows = Action Word", speech: "Hello superstar! Welcome to English class! Today we learn naming words and action words. Cat is a naming word. Meows is an action word!", visual: { type: "english", word: "CAT MEOWS", sentence: "The cat meows.", emoji: "🐱" } },
-  examples: [
-    { board: "EXAMPLE 1\n\nTHE DOG BARKS 🐶\n\nDog = Naming Word\nBarks = Action Word", speech: "Look at the dog! The dog barks! Dog is a naming word, and barks is an action word.", visual: { type: "english", word: "DOG BARKS", sentence: "The dog barks.", emoji: "🐶" }, quizzes: [{ q: "What is the naming word in 'The dog barks'?", options: ["Dog","Barks","Runs"], answer: 0 }] }
-  ]
-};
 
+// 1. ADDITION WITH PRECISE COUNTING
 const sampleAdditionData = {
-  id: "addition-basics", classLevel: "Primary 1", subject: "Mathematics", topic: "Addition Basics",
+  id: "addition-basics", classLevel: "Primary 1", subject: "Mathematics", topic: "Addition: Counting Groups",
   intro: { 
     title: "ADDITION FOUNDATION", 
-    board: "2 + 2 = 4\n\nAddition means putting numbers or objects together.", 
-    speech: "Welcome to Math! Addition means putting groups together to find the total sum. Watch the stars pop up as we count them!", 
-    visual: { title: "2 🌟 + 2 🌟 = 4 🌟", type: "addition", emoji: "🌟", groupCounts: [2, 2] } 
+    board: "2 + 2 = 4\n\nAddition means joining groups together.", 
+    speech: "Welcome to Math! Addition means putting groups together to find the total. Watch the stars pop as we count!", 
+    visual: { type: "addition", groupCounts: [2, 2], emoji: "🌟", title: "2 🌟 + 2 🌟 = 4 🌟" } 
   },
   examples: [
     { 
       board: "EXAMPLE 1\n\n3 + 2 = 5", 
-      speech: "Let's count the first group: 1 star, 2 stars, 3 stars. Now let's count the second group: 1 star, 2 stars. Now let's count all the stars together: 1, 2, 3, 4, 5! We have 5 stars altogether. Therefore, 3 plus 2 equals 5.", 
+      speech: "First group: 1... 2... 3 stars! Now second group: 1... 2 stars! Now altogether: 1... 2... 3... 4... 5! 3 plus 2 equals 5.", 
       visual: { type: "addition", groupCounts: [3, 2], emoji: "🌟", title: "3 🌟 + 2 🌟 = 5 🌟" }, 
+      checkpoint: { q: "What is 3 + 2?", expectedAnswer: "5" }, 
       quiz: { q: "What is 3 + 2?", options: ["5","4","6"], answer: 0 } 
     },
     { 
-      board: "EXAMPLE 2\n\n2 + 2 = 4", 
-      speech: "Let's count: 2 stars in the first group, and 2 stars in the second group. Counting all together gives 4 stars! Therefore, 2 plus 2 equals 4.", 
-      visual: { type: "addition", groupCounts: [2, 2], emoji: "🌟", title: "2 🌟 + 2 🌟 = 4 🌟" }, 
-      quiz: { q: "What is 2 + 2?", options: ["4","3","5"], answer: 0 } 
-    },
-    { 
-      board: "EXAMPLE 3\n\n4 + 1 = 5", 
-      speech: "We have 4 apples in the first group, and 1 apple in the second group. Putting them together gives 5 apples!", 
-      visual: { type: "addition", groupCounts: [4, 1], emoji: "🍎", title: "4 🍎 + 1 🍎 = 5 🍎" }, 
-      quiz: { q: "What is 4 + 1?", options: ["5","6","4"], answer: 0 } 
+      board: "EXAMPLE 2\n\n4 + 3 = 7", 
+      speech: "First group: 1... 2... 3... 4 apples! Second group: 1... 2... 3 apples! Count all together: 1... 2... 3... 4... 5... 6... 7! 4 plus 3 equals 7 apples.", 
+      visual: { type: "addition", groupCounts: [4, 3], emoji: "🍎", title: "4 🍎 + 3 🍎 = 7 🍎" }, 
+      checkpoint: { q: "What is 4 + 3?", expectedAnswer: "7" }, 
+      quiz: { q: "What is 4 + 3?", options: ["7","6","8"], answer: 0 } 
     }
   ]
 };
 
+// 2. SUBTRACTION (Step-by-step taking away)
 const sampleSubtractionData = {
-  id: "subtraction", classLevel: "Primary 1", subject: "Mathematics", topic: "Subtraction (Taking Away)",
-  intro: { title: "SUBTRACTION FOUNDATION", board: "5 - 2 = 3\n\nSubtraction means taking away items from a tray.", speech: "Subtraction means taking away items! We remove items from the tray and see what is left.", visual: { type: "subtraction", total: 5, subtract: 2, emoji: "🍎", title: "5 - 2 = ?" } },
+  id: "subtraction-basics", classLevel: "Primary 1", subject: "Mathematics", topic: "Subtraction: Taking Away",
+  intro: { 
+    title: "SUBTRACTION BASICS", 
+    board: "5 - 2 = 3\n\nSubtraction means taking away items.", 
+    speech: "Subtraction means taking items away! Let us see what is left when we remove items from our tray.", 
+    visual: { type: "subtraction", total: 5, subtract: 2, emoji: "🍎", title: "5 - 2 = ?" } 
+  },
   examples: [
-    { board: "EXAMPLE 1\n\n5 - 2 = 3", speech: "We have 5 apples in the active tray. We take away 2 apples. Exactly 3 apples remain in the tray! Therefore, 5 minus 2 equals 3.", visual: { type: "subtraction", total: 5, subtract: 2, emoji: "🍎", title: "5 - 2 = ?" }, quiz: { q: "What is 5 - 2?", options: ["3","2","4"], answer: 0 } }
+    { 
+      board: "EXAMPLE 1\n\n5 - 2 = 3", 
+      speech: "We have 5 apples in the tray. We take away 2 apples: 1... 2! Look at the tray now: 1... 2... 3 apples remain! Therefore, 5 minus 2 equals 3.", 
+      visual: { type: "subtraction", total: 5, subtract: 2, emoji: "🍎", title: "5 - 2 = 3 🍎" }, 
+      checkpoint: { q: "What is 5 - 2?", expectedAnswer: "3" }, 
+      quiz: { q: "What is 5 minus 2?", options: ["3","2","4"], answer: 0 } 
+    },
+    { 
+      board: "EXAMPLE 2\n\n6 - 3 = 3", 
+      speech: "We start with 6 balls in the tray. Let us take away 3: 1... 2... 3! Exactly 3 balls remain. 6 minus 3 equals 3.", 
+      visual: { type: "subtraction", total: 6, subtract: 3, emoji: "⚽", title: "6 - 3 = 3 ⚽" }, 
+      checkpoint: { q: "What is 6 - 3?", expectedAnswer: "3" }, 
+      quiz: { q: "What is 6 minus 3?", options: ["3","4","2"], answer: 0 } 
+    }
   ]
 };
 
-const sampleDivisionData = {
-  id: "division", classLevel: "Primary 1", subject: "Mathematics", topic: "Division (Equal Sharing)",
-  intro: { title: "DIVISION: EQUAL SHARING", board: "6 ÷ 2 = 3\n\nDivision means fair sharing into groups!", speech: "Welcome to Division! Division means fair sharing into equal groups. We start with items in the tray, and share them equally!", visual: { type: "division", total: 6, groups: 2, emoji: "🍎", title: "6 ÷ 2 = ?" } },
+// 3. MULTIPLICATION (Repeated Addition & Equal Groups)
+const sampleMultiplicationData = {
+  id: "multiplication-basics", classLevel: "Primary 2", subject: "Mathematics", topic: "Multiplication: Equal Groups",
+  intro: { 
+    title: "MULTIPLICATION AS EQUAL GROUPS", 
+    board: "3 × 2 = 6\n\nMultiplication is repeated addition of equal groups.", 
+    speech: "Welcome to Multiplication! Multiplication is a fast way of counting equal groups. 3 times 2 means 3 groups of 2!", 
+    visual: { type: "multiplication", groups: 3, each: 2, emoji: "🎈", title: "3 groups of 2 🎈 = 6 🎈" } 
+  },
   examples: [
-    { board: "EXAMPLE 1\n\n6 ÷ 2 = 3", speech: "We start with 6 apples in our tray. Let's share them equally between 2 groups! Group 1 gets 3 apples, and Group 2 gets 3 apples. Both groups get the exact same amount! 0 apples left in the tray. Therefore, 6 divided by 2 equals 3.", visual: { type: "division", total: 6, groups: 2, emoji: "🍎", title: "6 ÷ 2 = ?" }, quiz: { q: "How many apples does each group get?", options: ["3 apples","2 apples","4 apples"], answer: 0 } }
+    { 
+      board: "EXAMPLE 1\n\n3 × 2 = 6\n(2 + 2 + 2 = 6)", 
+      speech: "Look at the 3 groups! Group 1 has: 1... 2 balloons. Group 2 has: 1... 2 balloons. Group 3 has: 1... 2 balloons. Count them all: 1... 2... 3... 4... 5... 6! 3 times 2 equals 6.", 
+      visual: { type: "multiplication", groups: 3, each: 2, emoji: "🎈", title: "3 × 2 = 6 🎈" }, 
+      checkpoint: { q: "What is 3 times 2?", expectedAnswer: "6" }, 
+      quiz: { q: "What is 3 multiplied by 2?", options: ["6","5","8"], answer: 0 } 
+    },
+    { 
+      board: "EXAMPLE 2\n\n4 × 2 = 8\n(2 + 2 + 2 + 2 = 8)", 
+      speech: "Here are 4 groups with 2 stars in each group. 2 plus 2 plus 2 plus 2 equals 8. So 4 times 2 equals 8!", 
+      visual: { type: "multiplication", groups: 4, each: 2, emoji: "⭐", title: "4 × 2 = 8 ⭐" }, 
+      checkpoint: { q: "What is 4 times 2?", expectedAnswer: "8" }, 
+      quiz: { q: "What is 4 × 2?", options: ["8","6","10"], answer: 0 } 
+    }
   ]
 };
 
+// 4. FRACTIONS (Parts of a Whole)
 const sampleFractionData = {
-  id: "fractions", classLevel: "Primary 1", subject: "Mathematics", topic: "Fractions: Parts of a Whole",
-  intro: { title: "FRACTIONS: PARTS OF A WHOLE", board: "1/2 = One Half\n\nA fraction represents equal parts of a whole circle.", speech: "Welcome to class! A fraction is an equal part of a whole object. Tap any fraction pie to detach the slice!", visual: { type: "fraction_circle", denominators: [1, 2, 4], title: "Exploring Fractions: 1 Whole, 1/2, 1/4" } },
+  id: "fractions-basics", classLevel: "Primary 3", subject: "Mathematics", topic: "Fractions: Parts of a Whole",
+  intro: { 
+    title: "FRACTIONS: NUMERATOR & DENOMINATOR", 
+    board: "1/2 = One Half\n\nNumerator (Top) = Parts counted\nDenominator (Bottom) = Total equal parts", 
+    speech: "A fraction represents equal parts of a whole! The bottom number is the denominator, showing total equal parts. The top number is the numerator, showing parts selected. Tap any slice to detach it!", 
+    visual: { type: "fraction_circle", denominators: [1, 2, 4], activeNumerator: 1, title: "1 Whole, 1/2, and 1/4" } 
+  },
   examples: [
-    { board: "EXAMPLE 1\n\n1/2 = One Half", speech: "Look at the circle divided into 2 equal parts. Each part is one half! Two halves fit together to make one whole circle.", visual: { type: "fraction_circle", denominators: [2], title: "1/2 = One Half" }, quiz: { q: "How many halves make one whole?", options: ["2 halves","1 half","3 halves"], answer: 0 } }
+    { 
+      board: "EXAMPLE 1\n\n1/2 = One Half", 
+      speech: "Look at this circle cut into 2 equal parts. One part is shaded green. That is 1 over 2, or one half! Two halves make one whole circle.", 
+      visual: { type: "fraction_circle", denominators: [2], activeNumerator: 1, title: "1/2 = One Half" }, 
+      checkpoint: { q: "How many halves make a whole?", expectedAnswer: "2" }, 
+      quiz: { q: "How many halves make one whole?", options: ["2","1","4"], answer: 0 } 
+    },
+    { 
+      board: "EXAMPLE 2\n\n3/4 = Three Quarters", 
+      speech: "This circle is divided into 4 equal quarters. 3 parts are shaded green. That represents 3 over 4, or three quarters!", 
+      visual: { type: "fraction_circle", denominators: [4], activeNumerator: 3, title: "3/4 = Three Quarters" }, 
+      checkpoint: { q: "In 3/4, how many parts are shaded?", expectedAnswer: "3" }, 
+      quiz: { q: "What is the numerator in 3/4?", options: ["3","4","1"], answer: 0 } 
+    }
+  ]
+};
+
+// 5. DIVISION (Equal Sharing)
+const sampleDivisionData = {
+  id: "division-basics", classLevel: "Primary 2", subject: "Mathematics", topic: "Division: Equal Sharing",
+  intro: { 
+    title: "DIVISION: FAIR SHARING", 
+    board: "6 ÷ 2 = 3\n\nDivision means sharing into equal groups!", 
+    speech: "Welcome to Division! Division means sharing fairly into equal groups. We share 6 items equally into 2 groups!", 
+    visual: { type: "division", total: 6, groups: 2, emoji: "🍎", title: "6 ÷ 2 = ?" } 
+  },
+  examples: [
+    { 
+      board: "EXAMPLE 1\n\n6 ÷ 2 = 3", 
+      speech: "We have 6 apples. Let us share them equally! Group 1 gets 3 apples. Group 2 gets 3 apples. Both groups have the exact same amount: 3 apples each!", 
+      visual: { type: "division", total: 6, groups: 2, emoji: "🍎", title: "6 ÷ 2 = 3" }, 
+      checkpoint: { q: "What is 6 ÷ 2?", expectedAnswer: "3" }, 
+      quiz: { q: "How many apples does each group get?", options: ["3","2","4"], answer: 0 } 
+    }
+  ]
+};
+
+const sampleEnglishNamingActionData = {
+  id: "p1-english-naming-actions", classLevel: "Primary 1", subject: "English", topic: "Naming and Action Words",
+  intro: { 
+    title: "NAMING AND ACTION WORDS", 
+    board: "THE CAT MEOWS 🐱\n\n• Cat = Naming Word\n• Meows = Action Word", 
+    speech: "Hello superstar! Welcome to English class! Today we learn naming words and action words. Cat is a naming word. Meows is an action word!", 
+    visual: { type: "english", word: "CAT MEOWS", sentence: "The cat meows.", emoji: "🐱" } 
+  },
+  examples: [
+    { 
+      board: "EXAMPLE 1\n\nTHE DOG BARKS 🐶\n\nDog = Naming Word\nBarks = Action Word", 
+      speech: "Look at the dog! The dog barks! Dog is a naming word, and barks is an action word.", 
+      visual: { type: "english", word: "DOG BARKS", sentence: "The dog barks.", emoji: "🐶" }, 
+      quizzes: [{ q: "What is the naming word in 'The dog barks'?", options: ["Dog","Barks","Runs"], answer: 0 }], 
+      checkpoint: { q: "Say the naming word in: The dog barks.", expectedAnswer: "dog" } 
+    }
   ]
 };
 
@@ -1802,11 +1938,12 @@ function loadData(){
   }catch(e){}
   return {
     topics: [
-      JSON.parse(JSON.stringify(sampleEnglishNamingActionData)),
       JSON.parse(JSON.stringify(sampleAdditionData)),
       JSON.parse(JSON.stringify(sampleSubtractionData)),
+      JSON.parse(JSON.stringify(sampleMultiplicationData)),
+      JSON.parse(JSON.stringify(sampleFractionData)),
       JSON.parse(JSON.stringify(sampleDivisionData)),
-      JSON.parse(JSON.stringify(sampleFractionData))
+      JSON.parse(JSON.stringify(sampleEnglishNamingActionData))
     ]
   };
 }
@@ -1814,12 +1951,11 @@ function loadData(){
 function saveData(){ try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(data)); }catch(e){} }
 let data = loadData(), progress = JSON.parse(localStorage.getItem(PROGRESS_KEY) || '{"completedSteps":{},"quizzes":[]}'), studentProfile = JSON.parse(localStorage.getItem(STUDENT_KEY) || '{"name":"Superstar","classLevel":"Primary 1"}'), attendanceLogs = JSON.parse(localStorage.getItem(ATTENDANCE_KEY) || "[]");
 
-let currentTopic = null, currentStepIndex = 0, isPlaying = false, isPaused = false, autoAdvanceTimeout = null, activeStepVideoBlobUrl = null;
-let isAutoPlayEnabled = (localStorage.getItem(AUTOPLAY_KEY) !== "false");
-let currentEditingTopicId = null;
+let currentTopic = null, currentStepIndex = 0, isPlaying = false, isPaused = false, autoAdvanceTimeout = null, activeStepVideoBlobUrl = null, isAutoPlayEnabled = true;
+let activeTargetGroup = 0, isCountAllMode = false, speechChunks = [], currentChunkIndex = 0, playbackSessionId = 0;
 
 /* ======================================================== */
-/* 🔥 FIREBASE CLOUD REAL-TIME SYNC                         */
+/* 🔥 FIREBASE CLOUD REAL-TIME TOPIC & VIDEO SYNC           */
 /* ======================================================== */
 let firebaseApp = null, firestoreDb = null, fbModule = null;
 
@@ -1832,7 +1968,6 @@ async function initEmbeddedFirebase(){
     $("topCloudDot").className = "cloud-dot connected";
     listenToCloudTopics();
   }catch(e){
-    console.warn("Firestore connection notice:", e);
     $("topCloudDot").className = "cloud-dot";
   }
 }
@@ -1843,18 +1978,7 @@ async function syncTopicToCloud(t){
     const tid = t.id || slugify(t.topic);
     const cleanObj = JSON.parse(JSON.stringify(t));
     await fbModule.setDoc(fbModule.doc(firestoreDb, "topics", tid), cleanObj);
-  }catch(e){
-    console.error("Firebase Sync Error:", e);
-  }
-}
-
-async function deleteTopicFromCloud(topicId){
-  if(!firestoreDb || !fbModule) return;
-  try{
-    await fbModule.deleteDoc(fbModule.doc(firestoreDb, "topics", topicId));
-  }catch(e){
-    console.error("Cloud delete error:", e);
-  }
+  }catch(e){}
 }
 
 function listenToCloudTopics(){
@@ -1866,115 +1990,292 @@ function listenToCloudTopics(){
     data.topics = list;
     saveData();
     renderTopics();
-    if(currentTopic){
-      const refreshed = data.topics.find(t => t.id === currentTopic.id);
-      if(refreshed){
-        currentTopic = refreshed;
-        if(!isPlaying){
-          renderDualSceneStage(currentStepData().visual || {}, currentStepIndex);
-        }
-      }
-    }
   }, () => {});
 }
 
 /* ======================================================== */
-/* 🎬 DUAL SCENE & VIDEO MANAGEMENT                         */
+/* 🧩 MATHEMATICS VISUAL RENDERING ENGINES                  */
 /* ======================================================== */
-async function getVideoForStep(topicId, idx, v){
-  const k = `${topicId}_step_${idx}`;
-  let b = await getVideoBlob(k);
-  if(b) return { src: URL.createObjectURL(b), isBlob: true, label: "Local Device Cache" };
-  if(v?.videoUrl) return { src: v.videoUrl, isBlob: false, label: "Cloud Video URL ☁️" };
-  return null;
+
+// 1. ADDITION & BASIC OBJECT GROUPS
+function renderAdditionStage(visualData){
+  const contentEl = $("stageContent");
+  contentEl.innerHTML = "";
+  const groupCounts = visualData?.groupCounts || [2, 2];
+  const emoji = visualData?.emoji || "🌟";
+  const sum = groupCounts.reduce((a, b) => a + b, 0);
+
+  $("stageTitle").textContent = visualData?.title || `${groupCounts.join(" + ")} = ${sum} ${emoji}`;
+
+  let globalIdx = 0;
+  for(let g = 0; g < groupCounts.length; g++){
+    if(g > 0){
+      const plus = document.createElement("div");
+      plus.className = "math-operator-sign";
+      plus.textContent = "+";
+      contentEl.appendChild(plus);
+    }
+
+    const grpDiv = document.createElement("div");
+    grpDiv.className = "object-group";
+    grpDiv.id = `group-${g}`;
+    grpDiv.innerHTML = `<div style="font-size:0.8rem; font-weight:900; background:rgba(0,0,0,0.5); padding:2px 8px; border-radius:8px; color:#ffeb3b; margin-bottom:6px;">Group ${g + 1} (${groupCounts[g]})</div>`;
+    
+    const row = document.createElement("div");
+    row.style.display = "flex"; row.style.flexWrap = "wrap"; row.style.gap = "8px"; row.style.justifyContent = "center";
+    
+    for(let i = 0; i < groupCounts[g]; i++){
+      const span = document.createElement("div");
+      span.className = "interactive-item";
+      span.id = `item-g${g}-i${i}`;
+      span.setAttribute("data-group", g);
+      span.setAttribute("data-local-idx", i);
+      span.setAttribute("data-global-idx", globalIdx++);
+      span.textContent = emoji;
+      span.onclick = () => triggerItemBounce(span, i + 1);
+      row.appendChild(span);
+    }
+    grpDiv.appendChild(row);
+    contentEl.appendChild(grpDiv);
+  }
+
+  const eq = document.createElement("div");
+  eq.className = "math-operator-sign";
+  eq.textContent = "=";
+  contentEl.appendChild(eq);
+
+  const totalCard = document.createElement("div");
+  totalCard.className = "object-group";
+  totalCard.id = "group-total";
+  totalCard.innerHTML = `<div style="font-size:0.85rem; font-weight:900; color:#4ade80;">Total: ${sum}</div><div style="font-size:1.8rem; font-weight:900; color:#fff;">${sum} ${emoji}</div>`;
+  contentEl.appendChild(totalCard);
 }
 
-async function renderDualSceneStage(visualData, stepIdx){
-  const scene = $("sceneContainer"), vBar = $("videoManagerBar");
-  scene.classList.remove("hidden"); vBar.classList.remove("hidden");
-  $("stageContent").innerHTML = "";
+// 2. SUBTRACTION STAGE (Synchronized item crossing/taking away)
+let currentSubModel = { total: 5, subtract: 2, emoji: "🍎", currentTaken: 0 };
 
-  if(activeStepVideoBlobUrl){ URL.revokeObjectURL(activeStepVideoBlobUrl); activeStepVideoBlobUrl = null; }
+function renderSubtractionStage(visualData){
+  const contentEl = $("stageContent");
+  contentEl.innerHTML = "";
+  const total = visualData?.total || 5;
+  const subtract = visualData?.subtract || 2;
+  const emoji = visualData?.emoji || "🍎";
+  const word = getEmojiWord(emoji);
 
-  const vInfo = await getVideoForStep(currentTopic.id || "topic", stepIdx, visualData);
-  if(vInfo?.src){
-    scene.innerHTML = `<video class="stage-video" id="activeStageVideo" src="${vInfo.src}" playsinline controls></video>`;
-    if(vInfo.isBlob) activeStepVideoBlobUrl = vInfo.src;
-    $("videoSourceStatus").innerHTML = `🎥 <b>Video (${vInfo.label})</b>`;
-    $("removeVideoBtn").classList.remove("hidden");
-    return;
-  }
+  currentSubModel = { total, subtract, emoji, currentTaken: 0 };
+  $("stageTitle").textContent = visualData?.title || `${total} - ${subtract} = ${total - subtract} ${emoji}`;
 
-  $("videoSourceStatus").textContent = "🎨 Showing Animated Characters";
-  $("removeVideoBtn").classList.add("hidden");
-  scene.innerHTML = `<div class="scene-ground"></div><div class="action-caption" id="actionCaption">${escapeHTML(visualData.sentence || visualData.word || "Watch carefully!")}</div>`;
-  const span = document.createElement("span");
-  span.className = "emoji-object single";
-  span.textContent = displayEmoji(visualData.emoji || "🐱");
-  scene.appendChild(span);
+  const row = document.createElement("div");
+  row.className = "sub-stage-row";
+
+  row.innerHTML = `
+    <div class="sub-tray-card" id="subActiveTray">
+      <b style="color:#4ade80">ACTIVE TRAY (${total} START)</b>
+      <div class="tray-items-holder" id="subActiveItems"></div>
+      <div style="font-weight:900; font-size:1.05rem;" id="subActiveCount">${total} ${word}s</div>
+    </div>
+    <div class="sub-taken-card" id="subTakenTray">
+      <b style="color:#f87171">TAKEN AWAY (-${subtract})</b>
+      <div class="tray-items-holder" id="subTakenItems"></div>
+      <div style="font-weight:900; font-size:1.05rem; color:#fca5a5;" id="subTakenCount">0 taken</div>
+    </div>
+  `;
+
+  contentEl.appendChild(row);
+  syncSubtractionUI();
 }
 
-window.handleStepVideoUpload = async function(event){
-  const file = event.target.files?.[0]; if(!file) return;
-  const topicId = currentTopic.id || "topic";
-  const k = `${topicId}_step_${currentStepIndex}`;
-  await saveVideoBlob(k, file);
+function syncSubtractionUI(){
+  const activeHolder = $("subActiveItems");
+  const takenHolder = $("subTakenItems");
+  if(!activeHolder || !takenHolder) return;
 
-  const step = currentStepData();
-  if(!step.visual) step.visual = {};
+  activeHolder.innerHTML = "";
+  takenHolder.innerHTML = "";
+  const word = getEmojiWord(currentSubModel.emoji);
 
-  $("videoSourceStatus").innerHTML = "🎥 <b>Video Active</b>";
-  saveData();
-  await syncTopicToCloud(currentTopic);
-  await renderDualSceneStage(step.visual, currentStepIndex);
-  alert("🎉 Video saved! If you want it on other devices, use '🔗 Link URL' to paste a web link.");
-};
+  const remaining = currentSubModel.total - currentSubModel.currentTaken;
 
-window.linkStepVideoUrl = async function(){
-  const step = currentStepData(); if(!step.visual) step.visual = {};
-  const currentUrl = step.visual.videoUrl || "";
-  const inputUrl = prompt("Enter or paste direct MP4 video link (e.g., https://files.catbox.moe/example.mp4):", currentUrl);
-  if(inputUrl === null) return;
-  const trimmed = inputUrl.trim();
+  for(let i = 0; i < currentSubModel.total; i++){
+    const span = document.createElement("div");
+    span.className = "interactive-item";
+    span.id = `sub-item-${i}`;
+    span.textContent = currentSubModel.emoji;
 
-  if(!trimmed){
-    await window.removeStepVideo();
-    return;
+    if(i >= remaining){
+      span.classList.add("dimmed-taken");
+    } else {
+      span.onclick = () => triggerItemBounce(span, i + 1);
+    }
+    activeHolder.appendChild(span);
   }
 
-  step.visual.videoUrl = trimmed;
-  saveData();
-  await syncTopicToCloud(currentTopic);
-  await renderDualSceneStage(step.visual, currentStepIndex);
-  alert("🎉 Video URL synchronized with Firebase across all screens!");
-};
-
-window.removeStepVideo = async function(){
-  const topicId = currentTopic.id || "topic";
-  const k = `${topicId}_step_${currentStepIndex}`;
-  
-  await deleteVideoBlob(k);
-  if(activeStepVideoBlobUrl){
-    URL.revokeObjectURL(activeStepVideoBlobUrl);
-    activeStepVideoBlobUrl = null;
+  for(let j = 0; j < currentSubModel.currentTaken; j++){
+    const takenSpan = document.createElement("div");
+    takenSpan.className = "interactive-item";
+    takenSpan.textContent = currentSubModel.emoji;
+    takenHolder.appendChild(takenSpan);
   }
 
-  const step = currentStepData();
-  if(step && step.visual){
-    delete step.visual.videoUrl;
-    saveData();
-    await syncTopicToCloud(currentTopic);
+  $("subActiveCount").textContent = `${remaining} ${word}${remaining !== 1 ? 's' : ''} left`;
+  $("subTakenCount").textContent = `${currentSubModel.currentTaken} taken away`;
+}
+
+function takeAwayOneItem(){
+  if(currentSubModel.currentTaken < currentSubModel.subtract){
+    currentSubModel.currentTaken++;
+    playPopTone(currentSubModel.currentTaken);
+    syncSubtractionUI();
+  }
+}
+
+// 3. MULTIPLICATION (Equal groups array)
+function renderMultiplicationStage(visualData){
+  const contentEl = $("stageContent");
+  contentEl.innerHTML = "";
+  const groups = visualData?.groups || 3;
+  const each = visualData?.each || 2;
+  const emoji = visualData?.emoji || "🎈";
+  const product = groups * each;
+
+  $("stageTitle").textContent = visualData?.title || `${groups} × ${each} = ${product} ${emoji}`;
+
+  const container = document.createElement("div");
+  container.className = "multiplication-stage";
+
+  // Repeated addition formula
+  const repFormula = Array(groups).fill(each).join(" + ") + ` = ${product}`;
+  const formulaDiv = document.createElement("div");
+  formulaDiv.className = "mult-repeated-formula";
+  formulaDiv.textContent = `Repeated Addition: ${repFormula}`;
+  container.appendChild(formulaDiv);
+
+  const groupsWrapper = document.createElement("div");
+  groupsWrapper.className = "groups-container";
+
+  let globalIdx = 0;
+  for(let g = 0; g < groups; g++){
+    const box = document.createElement("div");
+    box.className = "object-group";
+    box.id = `group-${g}`;
+    box.innerHTML = `<div style="font-size:0.8rem; font-weight:900; background:rgba(0,0,0,0.5); padding:2px 8px; border-radius:8px; color:#ffeb3b; margin-bottom:6px;">Group ${g + 1} (${each})</div>`;
+
+    const row = document.createElement("div");
+    row.style.display = "flex"; row.style.gap = "8px"; row.style.justifyContent = "center";
+    for(let i = 0; i < each; i++){
+      const span = document.createElement("div");
+      span.className = "interactive-item";
+      span.id = `item-g${g}-i${i}`;
+      span.setAttribute("data-group", g);
+      span.setAttribute("data-local-idx", i);
+      span.setAttribute("data-global-idx", globalIdx++);
+      span.textContent = emoji;
+      span.onclick = () => triggerItemBounce(span, i + 1);
+      row.appendChild(span);
+    }
+    box.appendChild(row);
+    groupsWrapper.appendChild(box);
   }
 
-  if($("stepVideoInput")) $("stepVideoInput").value = "";
-  await renderDualSceneStage(step ? (step.visual || {}) : {}, currentStepIndex);
-  $("speechStatus").textContent = "🗑️ Video deleted. Switched back to animated characters.";
-  alert("🗑️ Video removed successfully!");
-};
+  container.appendChild(groupsWrapper);
+  contentEl.appendChild(container);
+}
 
-/* ======================================================== */
-/* 🧩 MATH, FRACTIONS, SUBTRACTION & DIVISION STAGES        */
-/* ======================================================== */
+// 4. FRACTIONS (Simplified & Synchronized)
+function createFractionPieSVG(num, den, color = "#22c55e"){
+  const svgNS = "http://www.w3.org/2000/svg";
+  const svg = document.createElementNS(svgNS, "svg");
+  svg.setAttribute("class", "fraction-svg-pie");
+  svg.setAttribute("viewBox", "0 0 150 150");
+  const cx = 75, cy = 75, r = 66;
+
+  if(den === 1){
+    const circle = document.createElementNS(svgNS, "circle");
+    circle.setAttribute("cx", cx); circle.setAttribute("cy", cy); circle.setAttribute("r", r);
+    circle.setAttribute("fill", color); circle.setAttribute("stroke", "#0f172a"); circle.setAttribute("stroke-width", "3");
+    svg.appendChild(circle);
+    return svg;
+  }
+
+  const bg = document.createElementNS(svgNS, "circle");
+  bg.setAttribute("cx", cx); bg.setAttribute("cy", cy); bg.setAttribute("r", r);
+  bg.setAttribute("fill", "#334155"); bg.setAttribute("stroke", "#0f172a"); bg.setAttribute("stroke-width", "3");
+  svg.appendChild(bg);
+
+  const angleStep = (2 * Math.PI) / den;
+  for(let i = 0; i < den; i++){
+    const startAngle = -Math.PI / 2 + i * angleStep;
+    const endAngle = startAngle + angleStep;
+    const x1 = cx + r * Math.cos(startAngle), y1 = cy + r * Math.sin(startAngle);
+    const x2 = cx + r * Math.cos(endAngle), y2 = cy + r * Math.sin(endAngle);
+    const pathData = `M ${cx} ${cy} L ${x1} ${y1} A ${r} ${r} 0 0 1 ${x2} ${y2} Z`;
+
+    const slice = document.createElementNS(svgNS, "path");
+    slice.setAttribute("d", pathData);
+    slice.setAttribute("fill", i < num ? color : "#1e293b");
+    slice.setAttribute("stroke", "#ffffff");
+    slice.setAttribute("stroke-width", "2");
+    slice.setAttribute("class", "pie-slice");
+    slice.onclick = (e) => {
+      e.stopPropagation();
+      slice.classList.toggle("detached");
+      playPopTone(i + 1);
+    };
+    svg.appendChild(slice);
+  }
+  return svg;
+}
+
+function renderFractionCircleStage(visualData){
+  const contentEl = $("stageContent");
+  contentEl.innerHTML = "";
+  $("stageTitle").textContent = visualData?.title || "Understanding Fractions";
+
+  const container = document.createElement("div");
+  container.className = "fraction-stage-container";
+
+  const dens = visualData?.denominators || [2];
+  const num = visualData?.activeNumerator || 1;
+
+  const formulaBadge = document.createElement("div");
+  formulaBadge.className = "fraction-formula-badge";
+  formulaBadge.innerHTML = `
+    <span>Part over Whole = </span>
+    <span class="fraction-number-display">
+      <span class="numerator">${num} (Parts shaded)</span>
+      <span class="denominator">${dens[0]} (Total equal parts)</span>
+    </span>
+  `;
+  container.appendChild(formulaBadge);
+
+  const piesRow = document.createElement("div");
+  piesRow.className = "fraction-pies-row";
+
+  dens.forEach(den => {
+    const card = document.createElement("div");
+    card.className = "fraction-pie-card";
+    const sliceCount = (dens.length === 1) ? num : 1;
+    const svg = createFractionPieSVG(sliceCount, den, den === 1 ? "#eab308" : "#22c55e");
+    card.appendChild(svg);
+
+    const label = document.createElement("div");
+    label.style.fontWeight = "900"; label.style.marginTop = "8px";
+    label.textContent = den === 1 ? "1 Whole" : `${sliceCount}/${den} (${sliceCount} of ${den} parts)`;
+    card.appendChild(label);
+
+    card.onclick = () => {
+      const slice = svg.querySelector(".pie-slice");
+      if(slice) slice.classList.toggle("detached");
+      playPopTone(den);
+    };
+    piesRow.appendChild(card);
+  });
+
+  container.appendChild(piesRow);
+  contentEl.appendChild(container);
+}
+
+// 5. DIVISION (Equal Sharing)
 let currentDivisionModel = { total: 6, groups: 2, emoji: "🍎", word: "apple", remainingPool: 6, groupAllocations: [0, 0] };
 
 function renderDivisionEqualGroups(visualData){
@@ -1996,10 +2297,9 @@ function renderDivisionEqualGroups(visualData){
 
   container.innerHTML = `
     <div class="div-equation-title">${totalItems} ÷ ${numGroups} = ?</div>
-    <div class="div-prompt-subtitle">Watch the items in the tray share equally into the groups!</div>
     <div class="div-pool-card">
-      <div class="div-pool-header">${word.toUpperCase()}S IN TRAY</div>
-      <div class="div-pool-items" id="divPoolItems"></div>
+      <div style="font-weight:900; font-size:0.85rem; color:#cbd5e1; margin-bottom:6px;">${word.toUpperCase()}S IN TRAY</div>
+      <div style="display:flex; flex-wrap:wrap; justify-content:center; gap:8px; min-height:48px;" id="divPoolItems"></div>
     </div>
     <div class="div-groups-row" id="divGroupsRow"></div>
   `;
@@ -2063,166 +2363,9 @@ function executeDivisionShare(targetGroup, shareAmount = 1){
   }
   playPopTone(currentDivisionModel.groupAllocations[safeTarget]);
   syncDivisionUI();
-  if(currentDivisionModel.remainingPool === 0) triggerConfetti();
 }
 
-function createFractionPieSVG(num, den, color = "#16a34a"){
-  const svgNS = "http://www.w3.org/2000/svg";
-  const svg = document.createElementNS(svgNS, "svg");
-  svg.setAttribute("class", "fraction-svg-pie");
-  svg.setAttribute("viewBox", "0 0 160 160");
-  const cx = 80, cy = 80, r = 70;
-
-  if(den === 1){
-    const circle = document.createElementNS(svgNS, "circle");
-    circle.setAttribute("cx", cx); circle.setAttribute("cy", cy); circle.setAttribute("r", r);
-    circle.setAttribute("fill", color); circle.setAttribute("stroke", "#000"); circle.setAttribute("stroke-width", "3");
-    svg.appendChild(circle);
-    return svg;
-  }
-
-  const bg = document.createElementNS(svgNS, "circle");
-  bg.setAttribute("cx", cx); bg.setAttribute("cy", cy); bg.setAttribute("r", r);
-  bg.setAttribute("fill", "#e2e8f0"); bg.setAttribute("stroke", "#000"); bg.setAttribute("stroke-width", "3");
-  svg.appendChild(bg);
-
-  const angleStep = (2 * Math.PI) / den;
-  for(let i = 0; i < den; i++){
-    const a = -Math.PI / 2 + i * angleStep;
-    const line = document.createElementNS(svgNS, "line");
-    line.setAttribute("x1", cx); line.setAttribute("y1", cy);
-    line.setAttribute("x2", cx + r * Math.cos(a)); line.setAttribute("y2", cy + r * Math.sin(a));
-    line.setAttribute("stroke", "#000"); line.setAttribute("stroke-width", "2.5");
-    svg.appendChild(line);
-  }
-
-  const startAngle = -Math.PI / 2;
-  const endAngle = startAngle + (2 * Math.PI * (num / den));
-  const x1 = cx + r * Math.cos(startAngle), y1 = cy + r * Math.sin(startAngle);
-  const x2 = cx + r * Math.cos(endAngle), y2 = cy + r * Math.sin(endAngle);
-  const largeArc = (num / den) > 0.5 ? 1 : 0;
-  const pathData = `M ${cx} ${cy} L ${x1} ${y1} A ${r} ${r} 0 ${largeArc} 1 ${x2} ${y2} Z`;
-
-  const slice = document.createElementNS(svgNS, "path");
-  slice.setAttribute("d", pathData); slice.setAttribute("fill", color); slice.setAttribute("stroke", "#000");
-  slice.setAttribute("stroke-width", "3"); slice.setAttribute("class", "pie-slice");
-  svg.appendChild(slice);
-  return svg;
-}
-
-function renderFractionCircleStage(visualData){
-  const contentEl = $("stageContent");
-  $("stageTitle").textContent = visualData?.title || "Understanding Fractions";
-  contentEl.innerHTML = "";
-
-  const container = document.createElement("div");
-  container.className = "fraction-stage-container";
-  const piesRow = document.createElement("div");
-  piesRow.className = "fraction-pies-row";
-
-  (visualData?.denominators || [2]).forEach(den => {
-    const card = document.createElement("div");
-    card.className = "fraction-pie-card";
-    const svg = createFractionPieSVG(1, den, den === 1 ? "#eab308" : "#16a34a");
-    card.appendChild(svg);
-    const label = document.createElement("div");
-    label.style.fontWeight = "900"; label.style.marginTop = "6px";
-    label.textContent = den === 1 ? "1 Whole" : `1/${den}`;
-    card.appendChild(label);
-    card.onclick = () => {
-      const slice = svg.querySelector(".pie-slice");
-      if(slice) slice.classList.toggle("detached");
-      playPopTone(den);
-    };
-    piesRow.appendChild(card);
-  });
-  container.appendChild(piesRow);
-  contentEl.appendChild(container);
-}
-
-function renderSubtractionStage(visualData){
-  const contentEl = $("stageContent");
-  contentEl.innerHTML = "";
-  const total = visualData?.total || 5;
-  const subtract = visualData?.subtract || 2;
-  const remaining = total - subtract;
-  const emoji = visualData?.emoji || "🍎";
-  const word = getEmojiWord(emoji);
-
-  $("stageTitle").textContent = `${total} - ${subtract} = ${remaining} ${emoji}`;
-  contentEl.innerHTML = `
-    <div class="sub-stage-row">
-      <div class="sub-tray-card">
-        <b style="color:#4ade80">IN TRAY</b>
-        <div style="font-size:2.4rem; padding:8px;" id="subTrayItems">${emoji.repeat(remaining)}</div>
-        <div style="font-weight:900" id="subTrayCounter">${remaining} ${word}s left</div>
-      </div>
-      <div class="sub-taken-card">
-        <b style="color:#f87171">TAKEN AWAY (-${subtract})</b>
-        <div style="font-size:2.4rem; padding:8px; opacity:0.65;" id="subTakenItems">${emoji.repeat(subtract)}</div>
-        <div style="font-weight:900">${subtract} taken away</div>
-      </div>
-    </div>
-  `;
-}
-
-async function renderStageObjects(visualData, contextText = ""){
-  const vType = visualData?.type || "";
-  const scene = $("sceneContainer");
-  const videoBar = $("videoManagerBar");
-
-  if(vType === "english" || visualData.sentence || visualData.videoUrl){
-    await renderDualSceneStage(visualData, currentStepIndex);
-    return;
-  }
-
-  scene.classList.add("hidden");
-  videoBar.classList.add("hidden");
-
-  if(vType === "fraction_circle"){
-    renderFractionCircleStage(visualData);
-    return;
-  }
-  if(vType === "subtraction"){
-    renderSubtractionStage(visualData);
-    return;
-  }
-  if(vType === "division"){
-    renderDivisionEqualGroups(visualData);
-    return;
-  }
-
-  // ADDITION & OBJECT GROUPS
-  const contentEl = $("stageContent");
-  contentEl.innerHTML = "";
-  const groupCounts = visualData?.groupCounts || [2, 2];
-  const emoji = visualData?.emoji || "🌟";
-  $("stageTitle").textContent = visualData?.title || `${groupCounts.join(" + ")} = ${groupCounts.reduce((a,b)=>a+b, 0)} ${emoji}`;
-
-  let globalIdx = 0;
-  for(let g = 0; g < groupCounts.length; g++){
-    const grpDiv = document.createElement("div");
-    grpDiv.className = "object-group";
-    grpDiv.id = `group-${g}`;
-    grpDiv.innerHTML = `<div style="font-size:0.8rem; font-weight:900; background:rgba(0,0,0,0.5); padding:2px 6px; border-radius:6px; color:#fff;">Group ${g + 1}</div>`;
-    const row = document.createElement("div");
-    row.style.display = "flex"; row.style.flexWrap = "wrap"; row.style.gap = "6px"; row.style.justifyContent = "center";
-    for(let i = 0; i < groupCounts[g]; i++){
-      const span = document.createElement("div");
-      span.className = "interactive-item";
-      span.id = `item-g${g}-i${i}`;
-      span.setAttribute("data-group", g);
-      span.setAttribute("data-local-idx", i);
-      span.setAttribute("data-global-idx", globalIdx++);
-      span.textContent = emoji;
-      span.onclick = () => triggerItemBounce(span, i + 1);
-      row.appendChild(span);
-    }
-    grpDiv.appendChild(row);
-    contentEl.appendChild(grpDiv);
-  }
-}
-
+// 🌟 ITEM BOUNCE WITH COUNT BADGE & AUDIO POP
 function triggerItemBounce(itemEl, num = 1){
   if(!itemEl) return;
   itemEl.classList.remove("bounce");
@@ -2239,11 +2382,206 @@ function triggerItemBounce(itemEl, num = 1){
   playPopTone(num);
   setTimeout(() => { 
     if(badge && badge.parentNode === itemEl) itemEl.removeChild(badge); 
-  }, 1000);
+  }, 950);
 }
 
 /* ======================================================== */
-/* 🏃 PLAYBACK ENGINE & STEP NAVIGATION                     */
+/* 🎬 DUAL SCENE & VIDEO MANAGEMENT                         */
+/* ======================================================== */
+async function getVideoForStep(topicId, idx, v){
+  const k = `${topicId}_step_${idx}`;
+  let b = await getVideoBlob(k);
+  if(b) return { src: URL.createObjectURL(b), isBlob: true, label: "Local Device Cache" };
+  if(v?.videoUrl) return { src: v.videoUrl, isBlob: false, label: "Cloud Video URL ☁️" };
+  return null;
+}
+
+async function renderDualSceneStage(visualData, stepIdx){
+  const scene = $("sceneContainer"), vBar = $("videoManagerBar");
+  scene.classList.remove("hidden"); vBar.classList.remove("hidden");
+  $("stageContent").innerHTML = "";
+
+  if(activeStepVideoBlobUrl){ URL.revokeObjectURL(activeStepVideoBlobUrl); activeStepVideoBlobUrl = null; }
+
+  const vInfo = await getVideoForStep(currentTopic.id || "topic", stepIdx, visualData);
+  if(vInfo?.src){
+    scene.innerHTML = `<video class="stage-video" id="activeStageVideo" src="${vInfo.src}" playsinline controls></video>`;
+    if(vInfo.isBlob) activeStepVideoBlobUrl = vInfo.src;
+    $("videoSourceStatus").innerHTML = `🎥 <b>Video (${vInfo.label})</b>`;
+    $("removeVideoBtn").classList.remove("hidden");
+    return;
+  }
+
+  $("videoSourceStatus").textContent = "🎨 Showing Animated Characters";
+  $("removeVideoBtn").classList.add("hidden");
+  scene.innerHTML = `<div class="scene-ground"></div><div class="action-caption" id="actionCaption">${escapeHTML(visualData.sentence || visualData.word || "Watch carefully!")}</div>`;
+  const span = document.createElement("span");
+  span.className = "emoji-object single";
+  span.textContent = displayEmoji(visualData.emoji || "🐱");
+  scene.appendChild(span);
+}
+
+window.handleStepVideoUpload = async function(event){
+  const file = event.target.files?.[0]; if(!file) return;
+  const topicId = currentTopic.id || "topic";
+  const k = `${topicId}_step_${currentStepIndex}`;
+  await saveVideoBlob(k, file);
+
+  const step = currentStepData();
+  if(!step.visual) step.visual = {};
+  step.visual.videoKey = k;
+  saveData();
+  await renderDualSceneStage(step.visual, currentStepIndex);
+  alert("🎉 Video uploaded for this step!");
+};
+
+window.linkStepVideoUrl = async function(){
+  const step = currentStepData(); if(!step.visual) step.visual = {};
+  const currentUrl = step.visual.videoUrl || "";
+  const inputUrl = prompt("Enter direct MP4 video link:", currentUrl);
+  if(inputUrl === null) return;
+  const trimmed = inputUrl.trim();
+  if(!trimmed){
+    await window.removeStepVideo();
+    return;
+  }
+  step.visual.videoUrl = trimmed;
+  saveData();
+  await renderDualSceneStage(step.visual, currentStepIndex);
+};
+
+window.removeStepVideo = async function(){
+  const topicId = currentTopic.id || "topic";
+  const k = `${topicId}_step_${currentStepIndex}`;
+  await deleteVideoBlob(k);
+  if(activeStepVideoBlobUrl){
+    URL.revokeObjectURL(activeStepVideoBlobUrl);
+    activeStepVideoBlobUrl = null;
+  }
+  const step = currentStepData();
+  if(step && step.visual){
+    delete step.visual.videoUrl;
+    delete step.visual.videoKey;
+    saveData();
+  }
+  await renderDualSceneStage(step ? (step.visual || {}) : {}, currentStepIndex);
+};
+
+async function renderStageObjects(visualData, contextText = ""){
+  const vType = visualData?.type || "";
+  const scene = $("sceneContainer");
+  const videoBar = $("videoManagerBar");
+
+  if(vType === "english" || visualData.sentence || visualData.videoUrl || visualData.videoKey){
+    await renderDualSceneStage(visualData, currentStepIndex);
+    return;
+  }
+
+  scene.classList.add("hidden");
+  videoBar.classList.add("hidden");
+
+  if(vType === "fraction_circle"){
+    renderFractionCircleStage(visualData);
+    return;
+  }
+  if(vType === "subtraction"){
+    renderSubtractionStage(visualData);
+    return;
+  }
+  if(vType === "multiplication"){
+    renderMultiplicationStage(visualData);
+    return;
+  }
+  if(vType === "division"){
+    renderDivisionEqualGroups(visualData);
+    return;
+  }
+
+  renderAdditionStage(visualData);
+}
+
+/* ======================================================== */
+/* 🎙️ ROBUST TEACHER SCRIPT CHUNKING (Synchronized Beats)   */
+/* ======================================================== */
+function parseScriptIntoSynchronizedChunks(text, fallbackEmoji = "🌟"){
+  if(!text) return [];
+  let clean = text.replace(/my dear friend|superstar/gi, studentProfile.name || "Superstar");
+  
+  // Clean split that isolates count beats (e.g., "1...", "2...", "3!") while keeping sentences intact
+  const rawSegments = clean.split(/(?<=[.!?…])\s+|(?<=\d)\.{3}\s*/g);
+  const chunks = [];
+
+  rawSegments.forEach(raw => {
+    const cleanRaw = raw.trim();
+    if(!cleanRaw) return;
+    let spoken = cleanRaw;
+    let isCountBeat = false, countNum = null, groupTrigger = null, countAllTrigger = false;
+    let isSubTakeTrigger = false;
+    let divisionAction = null;
+    const lower = cleanRaw.toLowerCase();
+
+    if(/all.*together|altogether|count all/i.test(lower)) countAllTrigger = true;
+    else if(lower.includes("first group") || lower.includes("group 1")) groupTrigger = 0;
+    else if(lower.includes("second group") || lower.includes("group 2")) groupTrigger = 1;
+    else if(lower.includes("third group") || lower.includes("group 3")) groupTrigger = 2;
+    else if(lower.includes("fourth group") || lower.includes("group 4")) groupTrigger = 3;
+
+    if(/take\s*away|remove/i.test(lower)) isSubTakeTrigger = true;
+
+    // Detect single count beat: "1", "2", "3", or "1... 2... 3"
+    const countMatch = cleanRaw.match(/\b(\d{1,2})\b/);
+    if(countMatch && (cleanRaw.length <= 16 || cleanRaw.includes("..."))){
+      isCountBeat = true;
+      countNum = parseInt(countMatch[1], 10);
+      const word = getEmojiWord(fallbackEmoji);
+      spoken = `${countNum} ${word}${countNum > 1 ? 's' : ''}`;
+    } else {
+      spoken = spoken.replace(/÷/g, " divided by ").replace(/[-−]/g, " minus ").replace(/×/g, " times ").replace(/=/g, " equals ");
+    }
+
+    chunks.push({ 
+      displayText: cleanRaw, 
+      spokenText: spoken, 
+      isCountBeat, 
+      countNum, 
+      groupTrigger, 
+      countAllTrigger, 
+      isSubTakeTrigger,
+      divisionAction 
+    });
+  });
+  return chunks;
+}
+
+function setupTranscriptUI(stepTitle, chunks){
+  const feed = $("transcriptFeed");
+  feed.innerHTML = `<div style="color:#ffeb3b; font-weight:900; margin-bottom:2px;">📍 ${escapeHTML(stepTitle)}</div>`;
+  const block = document.createElement("div");
+  chunks.forEach((c, i) => {
+    const span = document.createElement("span");
+    span.className = "chunk"; span.id = `chunk-${i}`;
+    span.textContent = c.displayText + " ";
+    block.appendChild(span);
+  });
+  feed.appendChild(block);
+  feed.scrollTop = feed.scrollHeight;
+}
+
+function highlightTranscriptChunk(idx){
+  document.querySelectorAll(".chunk.active").forEach(c => c.classList.remove("active"));
+  if(idx >= 0){
+    const target = $(`chunk-${idx}`);
+    if(target){
+      target.classList.add("active");
+      target.scrollIntoView({ block: "nearest", behavior: "smooth" });
+    }
+  }
+}
+
+function clearTranscriptHistory(){ $("transcriptFeed").innerHTML = ""; }
+
+/* ======================================================== */
+/* 🏃 SYNCHRONIZED PLAYBACK & AUDIO CONTROLLER              */
 /* ======================================================== */
 function currentStepData(){
   if(!currentTopic) return {};
@@ -2281,34 +2619,36 @@ async function renderCurrentStep(){
   await renderStageObjects(stepObj.visual || {}, stepObj.board || "");
   setupStepQuizzes(stepObj);
 
-  const spokenText = extractSpokenText(stepObj);
-  $("transcriptFeed").innerHTML = `
-    <div style="color:#ffeb3b; font-weight:900; margin-bottom:4px;">📍 ${escapeHTML(stepTitle)}</div>
-    <div style="color:#e0f2e9; font-size:1.05rem; line-height:1.4;">${escapeHTML(spokenText)}</div>
-  `;
+  const rawSpeech = stepObj.speech || stepObj.text || stepObj.narration || stepObj.board || "";
+  speechChunks = parseScriptIntoSynchronizedChunks(rawSpeech, stepObj.visual?.emoji || "🌟");
+  setupTranscriptUI(stepTitle, speechChunks);
 
   $("playPauseBtn").textContent = "▶️ Play";
   $("prevStepBtn").disabled = (currentStepIndex === 0);
   $("nextStepBtn").disabled = (currentStepIndex >= totalSteps - 1);
-  $("speechStatus").textContent = "Ready. Tap ▶️ Play to begin!";
+  $("speechStatus").textContent = "Ready. Tap ▶️ Play to watch counting!";
 }
 
-// 🌟 COMPLETE FLUID NIGERIAN VOICE PLAYBACK (Never cuts off)
 async function playLesson(){
-  if(!currentTopic) return;
+  if(!currentTopic || !speechChunks.length) return;
   getAudio();
 
   stopLesson();
   clearTimeout(autoAdvanceTimeout);
+  playbackSessionId++;
+  const session = playbackSessionId;
   isPlaying = true;
   isPaused = false;
+  currentChunkIndex = 0;
+  activeTargetGroup = 0;
+  isCountAllMode = false;
+
   $("playPauseBtn").textContent = "⏸️ Pause";
 
   const video = $("activeStageVideo");
   const stepObj = currentStepData();
   const isSceneActive = !$("sceneContainer").classList.contains("hidden");
 
-  // If a video is present, play video
   if(video && isSceneActive){
     $("speakerPulseDot").className = "pulse-dot";
     $("speakerStatusText").textContent = "🎬 Playing Video...";
@@ -2323,109 +2663,90 @@ async function playLesson(){
   if(action === "run") playDogBarkSound();
   animationManager.animate(stepObj);
 
-  // Subtraction animation
-  if(stepObj.visual?.type === "subtraction"){
-    const tot = stepObj.visual.total || 5;
-    const sub = stepObj.visual.subtract || 2;
-    setTimeout(() => {
-      const emoji = stepObj.visual.emoji || "🍎";
-      const word = getEmojiWord(emoji);
-      const rem = tot - sub;
-      const tray = $("subTrayItems");
-      const taken = $("subTakenItems");
-      if(tray) tray.innerHTML = emoji.repeat(rem);
-      if(taken) taken.innerHTML = emoji.repeat(sub);
-      if($("subTrayCounter")) $("subTrayCounter").textContent = `${rem} ${word}s left`;
-      playPopTone(2);
-    }, 2800);
+  playNextChunk(session);
+}
+
+// 🌟 SEQUENTIAL COUNTING & SYNCHRONIZED BEAT PROCESSOR
+async function playNextChunk(sessionId){
+  if(!isPlaying || isPaused || sessionId !== playbackSessionId) return;
+
+  if(currentChunkIndex >= speechChunks.length){
+    onStepNarrationFinished();
+    return;
   }
 
-  // Division animation
-  if(stepObj.visual?.type === "division"){
-    const tot = stepObj.visual.total || 6;
-    const g = stepObj.visual.groups || 2;
-    const perG = Math.floor(tot / g);
-    for(let i=0; i<g; i++){
-      setTimeout(() => executeDivisionShare(i, perG), (i + 1) * 1600);
+  const chunk = speechChunks[currentChunkIndex];
+  highlightTranscriptChunk(currentChunkIndex);
+
+  // Group Highlight Tracking
+  if(chunk.countAllTrigger){
+    isCountAllMode = true;
+    document.querySelectorAll(".object-group").forEach(g => g.classList.add("active-group"));
+  } else if(chunk.groupTrigger !== null){
+    activeTargetGroup = chunk.groupTrigger;
+    isCountAllMode = false;
+    document.querySelectorAll(".object-group").forEach((g, idx) => {
+      if(idx === activeTargetGroup) g.classList.add("active-group");
+      else g.classList.remove("active-group");
+    });
+  }
+
+  // Subtraction Item Removal Trigger
+  const vType = currentStepData().visual?.type;
+  if(vType === "subtraction" && (chunk.isSubTakeTrigger || (chunk.isCountBeat && currentSubModel.currentTaken < currentSubModel.subtract))){
+    takeAwayOneItem();
+  }
+
+  // 🌟 Synchronized Pop-up for Count Beats
+  if(chunk.isCountBeat && chunk.countNum !== null){
+    if(isCountAllMode){
+      const target = document.querySelector(`[data-global-idx="${chunk.countNum - 1}"]`);
+      if(target) triggerItemBounce(target, chunk.countNum);
+    } else {
+      const target = document.getElementById(`item-g${activeTargetGroup}-i${chunk.countNum - 1}`);
+      if(target) triggerItemBounce(target, chunk.countNum);
     }
   }
 
-  // Addition counting animation
-  if(stepObj.visual?.type === "addition" && Array.isArray(stepObj.visual.groupCounts)){
-    const counts = stepObj.visual.groupCounts;
-    let delay = 1200;
-    setTimeout(() => {
-      const g0 = $("group-0"); if(g0) g0.classList.add("active-group");
-      for(let i=0; i<counts[0]; i++){
-        setTimeout(() => {
-          const item = document.getElementById(`item-g0-i${i}`);
-          if(item) triggerItemBounce(item, i + 1);
-        }, i * 650);
-      }
-    }, delay);
+  const onChunkDone = () => {
+    if(sessionId !== playbackSessionId || !isPlaying || isPaused) return;
+    currentChunkIndex++;
+    const delay = chunk.isCountBeat ? 300 : 200;
+    setTimeout(() => playNextChunk(sessionId), delay);
+  };
 
-    delay += (counts[0] * 650) + 1000;
-    setTimeout(() => {
-      const g0 = $("group-0"); if(g0) g0.classList.remove("active-group");
-      const g1 = $("group-1"); if(g1) g1.classList.add("active-group");
-      for(let i=0; i<counts[1]; i++){
-        setTimeout(() => {
-          const item = document.getElementById(`item-g1-i${i}`);
-          if(item) triggerItemBounce(item, i + 1);
-        }, i * 650);
-      }
-    }, delay);
-
-    delay += (counts[1] * 650) + 1200;
-    setTimeout(() => {
-      document.querySelectorAll(".object-group").forEach(g => g.classList.add("active-group"));
-      const allItems = document.querySelectorAll(".interactive-item");
-      allItems.forEach((it, idx) => {
-        setTimeout(() => triggerItemBounce(it, idx + 1), idx * 600);
-      });
-    }, delay);
-  }
-
-  const spokenText = extractSpokenText(stepObj);
-
-  // Stream via Nigerian voice backend (/api/tts)
-  $('speechStatus').textContent = "⏳ Loading natural Nigerian teacher voice...";
+  // Play Nigerian AI Voice
   try{
-    const audioBlob = await getAITeacherAudio(spokenText, currentTeacherVoice, currentSpeechSpeed);
-    if(!isPlaying) return;
+    const audioBlob = await getAITeacherAudio(chunk.spokenText, currentTeacherVoice, currentSpeechSpeed);
+    if(sessionId !== playbackSessionId || !isPlaying || isPaused) return;
 
-    if(currentAudioBlobUrl){
-      URL.revokeObjectURL(currentAudioBlobUrl);
-      currentAudioBlobUrl = null;
+    if(audioBlob){
+      if(currentAudioBlobUrl){
+        URL.revokeObjectURL(currentAudioBlobUrl);
+        currentAudioBlobUrl = null;
+      }
+      currentAudioBlobUrl = URL.createObjectURL(audioBlob);
+
+      const audio = new Audio(currentAudioBlobUrl);
+      audio.playbackRate = parseFloat(currentSpeechSpeed) || 1.0;
+      currentAudioElement = audio;
+
+      audio.onplay = () => {
+        requestWakeLock();
+        $('speakerPulseDot').classList.add('speaking');
+        const isFemale = currentTeacherVoice.includes('Ezinne');
+        $('speakerStatusText').textContent = isFemale ? '👩‍🏫 Teacher (🇳🇬 Ezinne)' : '👨‍🏫 Teacher (🇳🇬 Abeo)';
+        $('speechStatus').textContent = "🔊 Teacher is speaking...";
+      };
+
+      audio.onended = onChunkDone;
+      audio.onerror = () => playWebSpeechFallback(chunk.spokenText, onChunkDone);
+      await audio.play();
+    } else {
+      playWebSpeechFallback(chunk.spokenText, onChunkDone);
     }
-    currentAudioBlobUrl = URL.createObjectURL(audioBlob);
-
-    const audio = new Audio(currentAudioBlobUrl);
-    audio.playbackRate = parseFloat(currentSpeechSpeed) || 1.0;
-    currentAudioElement = audio;
-
-    audio.onplay = () => {
-      requestWakeLock();
-      $('speakerPulseDot').classList.add('speaking');
-      const isFemale = currentTeacherVoice.includes('Ezinne');
-      $('speakerStatusText').textContent = isFemale ? '👩‍🏫 Teacher Speaking (🇳🇬 Ezinne)' : '👨‍🏫 Teacher Speaking (🇳🇬 Abeo)';
-      $('speechStatus').textContent = "🔊 Listening to Nigerian Teacher...";
-    };
-
-    audio.onended = () => {
-      onStepNarrationFinished();
-    };
-
-    audio.onerror = (e) => {
-      console.warn("Audio playback notice:", e);
-      onStepNarrationFinished();
-    };
-
-    await audio.play();
-  }catch(err){
-    console.error("AI Narration notice:", err);
-    $('speechStatus').textContent = "⚠️ Voice unavailable. Check internet.";
-    setTimeout(onStepNarrationFinished, 3000);
+  } catch(err) {
+    playWebSpeechFallback(chunk.spokenText, onChunkDone);
   }
 }
 
@@ -2434,14 +2755,12 @@ function onStepNarrationFinished(){
   $("playPauseBtn").textContent = "▶️ Play";
   $("speakerPulseDot").classList.remove("speaking");
   updateSpeakerIndicator();
+  $("speechStatus").textContent = "Lesson step completed!";
 
   progress.completedSteps[`${currentTopic.id}_${currentStepIndex}`] = true;
   saveProgress();
 
   const stepObj = currentStepData();
-  const totalSteps = 1 + (currentTopic.examples ? currentTopic.examples.length : 0);
-
-  // 1. Check if step has a speaking check
   if(stepObj.checkpoint){
     $("checkpointQuestionText").textContent = stepObj.checkpoint.q;
     $("checkpointInput").value = "";
@@ -2451,19 +2770,16 @@ function onStepNarrationFinished(){
     return;
   }
 
-  // 2. 🔁 CONTINUOUS AUTO-PLAY
-  if(isAutoPlayEnabled && currentStepIndex < totalSteps - 1){
-    $("speechStatus").textContent = `⏳ Auto-Advancing to Step ${currentStepIndex + 2} in 2 seconds...`;
-    clearTimeout(autoAdvanceTimeout);
-    autoAdvanceTimeout = setTimeout(() => {
-      if(isAutoPlayEnabled){
-        currentStepIndex++;
-        renderCurrentStep().then(() => playLesson());
-      }
-    }, 1800);
-  } else if(currentStepIndex >= totalSteps - 1){
-    $("speechStatus").textContent = `🎉 Topic Completed! Outstanding job, ${studentProfile.name}!`;
-    triggerConfetti();
+  if(isAutoPlayEnabled){
+    const totalSteps = 1 + (currentTopic.examples ? currentTopic.examples.length : 0);
+    if(currentStepIndex < totalSteps - 1){
+      autoAdvanceTimeout = setTimeout(() => {
+        if(isAutoPlayEnabled){
+          currentStepIndex++;
+          renderCurrentStep().then(playLesson);
+        }
+      }, 1500);
+    }
   }
 }
 
@@ -2471,6 +2787,7 @@ function pauseLesson(){
   if(isPlaying && !isPaused){
     isPaused = true;
     if(currentAudioElement) currentAudioElement.pause();
+    if('speechSynthesis' in window) window.speechSynthesis.pause();
     const video = $("activeStageVideo");
     if(video) video.pause();
     $("playPauseBtn").textContent = "▶️ Resume";
@@ -2482,6 +2799,7 @@ function resumeLesson(){
   if(isPlaying && isPaused){
     isPaused = false;
     if(currentAudioElement) currentAudioElement.play().catch(()=>{});
+    if('speechSynthesis' in window) window.speechSynthesis.resume();
     const video = $("activeStageVideo");
     if(video && !video.ended) video.play().catch(()=>{});
     $("playPauseBtn").textContent = "⏸️ Pause";
@@ -2490,6 +2808,7 @@ function resumeLesson(){
 }
 
 function stopLesson(){
+  playbackSessionId++;
   isPlaying = false;
   isPaused = false;
   clearTimeout(autoAdvanceTimeout);
@@ -2498,6 +2817,7 @@ function stopLesson(){
   if(video){ video.pause(); video.currentTime = 0; }
   animationManager.reset();
   releaseWakeLock();
+  highlightTranscriptChunk(-1);
   $("playPauseBtn").textContent = "▶️ Play";
   $("speakerPulseDot").classList.remove("speaking");
   $("checkpointOverlay")?.classList.add("hidden");
@@ -2533,14 +2853,12 @@ function nextStep(){
 
 function toggleAutoplayMode(){
   isAutoPlayEnabled = !isAutoPlayEnabled;
-  localStorage.setItem(AUTOPLAY_KEY, isAutoPlayEnabled ? "true" : "false");
   $("autoplayTogglePill").classList.toggle("active", isAutoPlayEnabled);
   $("autoplayStatusLabel").textContent = isAutoPlayEnabled ? "🔁 Auto-Play: ON" : "⏸️ Auto-Play: OFF";
-  if(!isAutoPlayEnabled) clearTimeout(autoAdvanceTimeout);
 }
 
 /* ======================================================== */
-/* ⛶ FULLSCREEN                                             */
+/* ⛶ FULLSCREEN (Mobile & Desktop)                          */
 /* ======================================================== */
 window.toggleBrowserFullscreen = function(){
   const shell = $("fullscreenPlayerShell");
@@ -2621,11 +2939,11 @@ function submitCheckpointAnswer(){
 
   if(isCorrect){
     triggerConfetti(); playGoodTone();
-    fb.style.color = "#00ff88"; fb.textContent = `🎉 Correct! Awesome job, ${studentProfile.name}!`;
+    fb.style.color = "#00ff88"; fb.textContent = `🎉 Correct! Outstanding, ${studentProfile.name}!`;
     setTimeout(() => { $("checkpointOverlay").classList.add("hidden"); nextStep(); }, 1200);
   } else {
     playTryTone();
-    fb.style.color = "#ff4757"; fb.textContent = "❌ Not quite! Let's listen again!";
+    fb.style.color = "#ff4757"; fb.textContent = "❌ Let's try again! Listen carefully!";
     setTimeout(() => { $("checkpointOverlay").classList.add("hidden"); replayCurrentStep(); }, 1400);
   }
 }
@@ -2663,11 +2981,11 @@ function renderCurrentQuiz(){
       if(isCorrect){
         btn.classList.add("correct"); playGoodTone(); triggerConfetti();
         $("quizFeedback").className = "feedback correct-text";
-        $("quizFeedback").textContent = "🎉 Correct! Outstanding job!";
+        $("quizFeedback").textContent = "🎉 Correct! Super job!";
       } else {
         btn.classList.add("wrong"); playTryTone();
         $("quizFeedback").className = "feedback wrong-text";
-        $("quizFeedback").textContent = "❌ Let's try again next time!";
+        $("quizFeedback").textContent = "❌ Nice try! Practice makes perfect!";
       }
       $("quizFeedback").classList.remove("hidden");
       progress.quizzes.push({ topic: currentTopic.id, correct: isCorrect });
@@ -2689,18 +3007,19 @@ function advanceQuizQuestion(){
 /* 👩‍🏫 ASK TEACHER Q&A ROOM (NIGERIAN AI VOICE)             */
 /* ======================================================== */
 const PRESET_ANSWERS = {
-  "what is addition": "Addition means putting numbers or objects together to find the total sum!",
-  "what is a fraction": "A fraction represents equal parts of a whole circle or object!",
-  "what is subtraction": "Subtraction means taking away items to find out how many are left!",
-  "what is division": "Division is fair sharing into equal groups!",
-  "what is a verb": "A verb is an action word! It tells what someone or something does, like meow or run."
+  "addition": "Addition means putting numbers or objects together to find the total sum!",
+  "fraction": "A fraction represents equal parts of a whole circle or object! The top is numerator, the bottom is denominator.",
+  "subtraction": "Subtraction means taking away items to find out how many are left!",
+  "multiplication": "Multiplication is repeated addition of equal groups, like 3 groups of 2 equals 6!",
+  "division": "Division is fair sharing into equal groups!",
+  "verb": "A verb is an action word! It tells what someone does, like run, meow, jump, or learn."
 };
 
 async function submitStudentQuestion(){
   const q = $("askQuestionInput").value.trim(); if(!q) return;
   $("askBoardQuestion").textContent = `🙋‍♂️ Question: "${q}"`;
   const lower = q.toLowerCase();
-  let ans = `That is a wonderful question, ${studentProfile.name}! In our classroom, practicing each step is the key to understanding!`;
+  let ans = `That is a wonderful question, ${studentProfile.name}! In our classroom, understanding each step is the key to mastering math and English!`;
   for(const [k, v] of Object.entries(PRESET_ANSWERS)){
     if(lower.includes(k)){ ans = v; break; }
   }
@@ -2709,9 +3028,15 @@ async function submitStudentQuestion(){
   const fullAnswer = `Hello ${studentProfile.name}! ${ans}`;
   try{
     const blob = await getAITeacherAudio(fullAnswer, currentTeacherVoice, currentSpeechSpeed);
-    const audio = new Audio(URL.createObjectURL(blob));
-    audio.play();
-  }catch(e){}
+    if(blob){
+      const audio = new Audio(URL.createObjectURL(blob));
+      audio.play();
+    } else {
+      playWebSpeechFallback(fullAnswer);
+    }
+  }catch(e){
+    playWebSpeechFallback(fullAnswer);
+  }
 }
 
 /* ======================================================== */
@@ -2726,7 +3051,7 @@ document.addEventListener('visibilitychange', () => {
   const time = new Date().toLocaleTimeString();
 
   if(document.hidden){
-    if(presence) presence.innerHTML = `🚨 <b style="color:#dc2626;">ALERT: ${child} has LEFT the app!</b> (${time})`;
+    if(presence) presence.innerHTML = `🚨 <b style="color:#dc2626;">ALERT: ${child} has left the app!</b> (${time})`;
     if(logBox) logBox.innerHTML = `<div style="color:#dc2626; padding:2px 0;">🚨 Left app at ${time}</div>` + logBox.innerHTML;
   } else {
     if(presence) presence.innerHTML = `🟢 <b>${child} is ACTIVE and learning now.</b>`;
@@ -2774,66 +3099,42 @@ function renderAttendanceTable(){
 }
 
 /* ======================================================== */
-/* 📥 TOPIC EDITING, DELETING & IMPORTING                   */
+/* 📥 UNIVERSAL JSON IMPORT & CURRICULUM MANAGEMENT         */
 /* ======================================================== */
-function renderTopicManageList(){
-  const container = $("topicManageList");
-  if(!container) return;
-  $("loadedCount").textContent = data.topics.length;
-  if(!data.topics.length){ container.innerHTML = `<div style="text-align:center; padding:10px; color:#777;">No topics loaded.</div>`; return; }
+function normalizeLessonJSON(parsed) {
+  const rawTopic = Array.isArray(parsed) ? parsed[0] : (parsed.topics ? parsed.topics[0] : parsed);
+  if (!rawTopic || typeof rawTopic !== 'object') throw new Error("Invalid JSON structure.");
 
-  container.innerHTML = `
-    <table class="topic-manage-table">
-      <thead>
-        <tr><th>Topic</th><th>Subject</th><th>Class</th><th>Steps</th><th>Actions</th></tr>
-      </thead>
-      <tbody>
-        ${data.topics.map(t => {
-          const tid = t.id || slugify(t.topic);
-          const count = 1 + (t.examples ? t.examples.length : 0);
-          return `
-            <tr>
-              <td><b>${escapeHTML(t.topic)}</b></td>
-              <td>${escapeHTML(t.subject || "General")}</td>
-              <td><span class="badge class-badge">${escapeHTML(t.classLevel || "Primary 1")}</span></td>
-              <td>${count}</td>
-              <td>
-                <button class="btn btn-sm" onclick="editTopic('${escapeHTML(tid)}')">✏️ Edit</button>
-                <button class="btn danger btn-sm" onclick="deleteTopic('${escapeHTML(tid)}')">🗑️</button>
-              </td>
-            </tr>
-          `;
-        }).join("")}
-      </tbody>
-    </table>
-  `;
-}
+  const topicTitle = rawTopic.topic || rawTopic.title || "Custom Lesson";
+  const subject = rawTopic.subject || "General";
+  const classLevel = rawTopic.classLevel || studentProfile.classLevel || "Primary 1";
 
-function editTopic(topicId){
-  const t = data.topics.find(x => (x.id === topicId || slugify(x.topic) === topicId));
-  if(!t) return;
-  currentEditingTopicId = topicId;
-  $("jsonText").value = JSON.stringify(t, null, 2);
-  $("editNoticeText").textContent = `📝 Currently Editing: ${t.topic}`;
-  $("editNotice").style.display = "flex";
-  showScreen('import');
-  $("jsonText").scrollIntoView({ behavior: 'smooth' });
-}
+  if (rawTopic.intro && Array.isArray(rawTopic.examples)) {
+    return rawTopic;
+  }
 
-function cancelEditing(){
-  currentEditingTopicId = null;
-  $("editNotice").style.display = "none";
-  $("jsonText").value = "";
-}
+  const rawList = rawTopic.lesson || rawTopic.lessons || rawTopic.steps || rawTopic.items || rawTopic.examples || [];
 
-async function deleteTopic(topicId){
-  if(!confirm("Are you sure you want to delete this topic?")) return;
-  data.topics = data.topics.filter(t => (t.id !== topicId && slugify(t.topic) !== topicId));
-  saveData();
-  await deleteTopicFromCloud(topicId);
-  renderTopics();
-  renderTopicManageList();
-  alert("🗑️ Topic deleted successfully!");
+  return {
+    id: rawTopic.id || slugify(topicTitle),
+    classLevel: classLevel,
+    subject: subject,
+    topic: topicTitle,
+    intro: {
+      title: topicTitle.toUpperCase(),
+      board: rawTopic.board || topicTitle,
+      speech: rawTopic.speech || rawTopic.text || "Welcome to this lesson!",
+      visual: rawTopic.visual || { type: "addition", emoji: "🌟", groupCounts: [2, 2] }
+    },
+    examples: rawList.map((item, idx) => ({
+      board: item.board || `STEP ${idx + 1}`,
+      speech: item.speech || item.text || item.narration || "",
+      visual: item.visual || { type: "addition", emoji: "🌟", groupCounts: [2, 2] },
+      quiz: item.quiz,
+      quizzes: item.quizzes,
+      checkpoint: item.checkpoint
+    }))
+  };
 }
 
 function importPastedJSON(){
@@ -2841,23 +3142,13 @@ function importPastedJSON(){
   if(!raw) return alert("Please paste JSON first.");
   try{
     const parsed = JSON.parse(raw);
-    let incoming = Array.isArray(parsed) ? parsed : (parsed.topics || [parsed]);
-    for(const t of incoming){
-      if(!t.topic) throw new Error("Missing 'topic' title.");
-      const tid = currentEditingTopicId || t.id || slugify(t.topic);
-      t.id = tid;
-      if(!t.intro) t.intro = {};
-      if(!t.examples) t.examples = [];
-      const idx = data.topics.findIndex(x => x.id === tid);
-      if(idx >= 0) data.topics[idx] = t; 
-      else data.topics.push(t);
-      syncTopicToCloud(t);
-    }
+    const normalized = normalizeLessonJSON(parsed);
+    data.topics.unshift(normalized);
     saveData();
-    cancelEditing();
+    syncTopicToCloud(normalized);
     renderTopics();
-    renderTopicManageList();
-    alert("💾 Topic saved and synchronized successfully!");
+    alert(`🎉 Successfully imported: "${normalized.topic}"!`);
+    startTopic(normalized.id);
   }catch(e){
     alert("Invalid JSON: " + e.message);
   }
@@ -2881,11 +3172,7 @@ function renderTopics(){
           <h3 style="margin:4px 0;">${escapeHTML(t.topic)}</h3>
           <p style="margin:0 0 8px; color:#64748b; font-size:0.85rem;">${escapeHTML(t.subject || "General")} • ${steps} Steps</p>
         </div>
-        <div class="topic-actions" onclick="event.stopPropagation();">
-          <button class="btn primary btn-sm" style="flex:2;" onclick="startTopic('${escapeHTML(tid)}')">▶️ Start</button>
-          <button class="btn btn-sm" onclick="editTopic('${escapeHTML(tid)}')">✏️ Edit</button>
-          <button class="btn danger btn-sm" onclick="deleteTopic('${escapeHTML(tid)}')">🗑️</button>
-        </div>
+        <button class="btn primary btn-sm" style="width:100%;">▶️ Start Lesson</button>
       </div>
     `;
   }).join("");
@@ -2902,16 +3189,16 @@ function startTopic(topicId){
 
 function exitToTopics(){ stopLesson(); showScreen('topics'); }
 function pushLocalTopicsToCloud(){ data.topics.forEach(syncTopicToCloud); alert("Pushed all topics to Firebase!"); }
-function pullTopicsFromCloud(){ listenToCloudTopics(); alert("Synced with Firebase Cloud!"); }
 
-function loadSampleEnglishActionLesson(){ data.topics.unshift(JSON.parse(JSON.stringify(sampleEnglishNamingActionData))); saveData(); syncTopicToCloud(data.topics[0]); renderTopics(); renderTopicManageList(); alert("Loaded English Lesson!"); }
-function loadSampleAdditionLesson(){ data.topics.unshift(JSON.parse(JSON.stringify(sampleAdditionData))); saveData(); syncTopicToCloud(data.topics[0]); renderTopics(); renderTopicManageList(); alert("Loaded Addition!"); }
-function loadSampleSubtractionLesson(){ data.topics.unshift(JSON.parse(JSON.stringify(sampleSubtractionData))); saveData(); syncTopicToCloud(data.topics[0]); renderTopics(); renderTopicManageList(); alert("Loaded Subtraction!"); }
-function loadSampleDivisionLesson(){ data.topics.unshift(JSON.parse(JSON.stringify(sampleDivisionData))); saveData(); syncTopicToCloud(data.topics[0]); renderTopics(); renderTopicManageList(); alert("Loaded Division!"); }
-function loadSampleFractionLesson(){ data.topics.unshift(JSON.parse(JSON.stringify(sampleFractionData))); saveData(); syncTopicToCloud(data.topics[0]); renderTopics(); renderTopicManageList(); alert("Loaded Fractions!"); }
+function loadSampleAdditionLesson(){ data.topics.unshift(JSON.parse(JSON.stringify(sampleAdditionData))); saveData(); renderTopics(); alert("Loaded Addition!"); }
+function loadSampleSubtractionLesson(){ data.topics.unshift(JSON.parse(JSON.stringify(sampleSubtractionData))); saveData(); renderTopics(); alert("Loaded Subtraction!"); }
+function loadSampleMultiplicationLesson(){ data.topics.unshift(JSON.parse(JSON.stringify(sampleMultiplicationData))); saveData(); renderTopics(); alert("Loaded Multiplication!"); }
+function loadSampleFractionLesson(){ data.topics.unshift(JSON.parse(JSON.stringify(sampleFractionData))); saveData(); renderTopics(); alert("Loaded Fractions!"); }
+function loadSampleDivisionLesson(){ data.topics.unshift(JSON.parse(JSON.stringify(sampleDivisionData))); saveData(); renderTopics(); alert("Loaded Division!"); }
+function loadSampleEnglishActionLesson(){ data.topics.unshift(JSON.parse(JSON.stringify(sampleEnglishNamingActionData))); saveData(); renderTopics(); alert("Loaded English Lesson!"); }
 
 /* ======================================================== */
-/* ☀️ SCREEN AWAKE                                          */
+/* ☀️ SCREEN AWAKE (WAKE LOCK API)                          */
 /* ======================================================== */
 let wakeLock = null;
 
@@ -2974,7 +3261,6 @@ function showScreen(id){
   if(id==='topics') renderTopics();
   if(id==='progress') renderProgress();
   if(id==='attendance') renderAttendanceTable();
-  if(id==='import') renderTopicManageList();
   window.scrollTo({top:0, behavior:'smooth'});
 }
 
@@ -2987,12 +3273,16 @@ function toggleTVMode(){ document.body.classList.toggle("tv-mode"); }
 function slugify(s){ return String(s||"").toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"") || "topic"; }
 function escapeHTML(s){ return String(s||"").replace(/[&<>"']/g, m => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m])); }
 
+function saveProgress(){
+  try{ localStorage.setItem(PROGRESS_KEY, JSON.stringify(progress)); }catch(e){}
+}
+
 function updateStudentUI(){
   const name = studentProfile.name || "Superstar";
   const cl = studentProfile.classLevel || "Primary 1";
   $("topStudentName").textContent = name;
   $("topStudentClass").textContent = cl;
-  $("homeClassDisplay").textContent = cl;
+  $("sidebarStudentClass").textContent = cl;
   document.querySelectorAll(".student-name-display").forEach(e => e.textContent = name);
 }
 
@@ -3022,15 +3312,12 @@ function updateHomeStats(){
   $("homeScore").textContent = avg + "%";
 }
 
-// Initial App Launch
+// Launch
 initSpeechRecognition();
 updateStudentUI();
 updateSpeakerIndicator();
 $('teacherVoiceSelect').value = currentTeacherVoice;
-$("autoplayTogglePill").classList.toggle("active", isAutoPlayEnabled);
-$("autoplayStatusLabel").textContent = isAutoPlayEnabled ? "🔁 Auto-Play: ON" : "⏸️ Auto-Play: OFF";
 renderTopics();
-renderTopicManageList();
 renderAttendanceTable();
 initEmbeddedFirebase();
 </script>
