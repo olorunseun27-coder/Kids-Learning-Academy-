@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Kids Learning Academy - Smart Classroom with Interactive Counting</title>
+<title>Kids Learning Academy - Smart Classroom &amp; Universal Hub</title>
 
 <style>
 *{box-sizing:border-box}
@@ -287,6 +287,15 @@ button,input,select,textarea{font:inherit}
 .topic-card:hover{
   transform:translateY(-3px);
   box-shadow:0 8px 18px rgba(0,0,0,0.08);
+}
+
+.topic-actions{
+  display:flex;
+  gap:6px;
+  margin-top:10px;
+  border-top:1px solid #eef2f6;
+  padding-top:8px;
+  flex-wrap:wrap;
 }
 
 .badge{
@@ -742,7 +751,6 @@ button,input,select,textarea{font:inherit}
 
 .interactive-item:hover{transform:scale(1.2)}
 
-/* 🌟 POP & BOUNCE ANIMATION */
 .interactive-item.bounce{
   animation:popAndBounce 0.65s cubic-bezier(0.28, 0.84, 0.42, 1) forwards;
   z-index:10;
@@ -770,12 +778,6 @@ button,input,select,textarea{font:inherit}
   align-items:center;
   justify-content:center;
   box-shadow:0 3px 6px rgba(0,0,0,0.4);
-  animation:popBadge 0.2s ease-out;
-}
-
-@keyframes popBadge{
-  from{transform:scale(0); opacity:0}
-  to{transform:scale(1); opacity:1}
 }
 
 /* TRANSCRIPT */
@@ -797,21 +799,6 @@ button,input,select,textarea{font:inherit}
   color:#e0f2e9;
   text-align:center;
   font-weight:700;
-}
-
-.chunk{
-  display:inline-block;
-  margin:1px 3px;
-  padding:1px 5px;
-  border-radius:6px;
-  transition:background-color 0.15s, color 0.15s;
-}
-
-.chunk.active{
-  background:#ffe600;
-  color:#8b0000;
-  font-weight:900;
-  border-radius:4px;
 }
 
 /* CHECKPOINT OVERLAY */
@@ -1094,7 +1081,7 @@ footer{
   <div class="panel hero">
     <div style="font-size:2.8rem">👩‍🏫🎓🎒🎬</div>
     <h2>Welcome to Class, <span class="student-name-display">Superstar</span>!</h2>
-    <p>Explore lessons with your <b>Natural Nigerian English AI Teacher</b>. Watch items pop up and count synchronously!</p>
+    <p>Explore lessons with your <b>Natural Nigerian English AI Teacher</b>. Watch counting items jump and count in real time!</p>
     <div style="display:flex; justify-content:center; gap:8px; flex-wrap:wrap;">
       <button class="btn primary" onclick="showScreen('topics')">🚀 Open Topics</button>
       <button class="btn purple" onclick="showScreen('ask')">❓ Ask Teacher</button>
@@ -1335,10 +1322,13 @@ footer{
 <!-- IMPORT & CLOUD -->
 <section id="import" class="screen">
   <div class="panel">
-    <h2>📥 Import &amp; Organize Lessons</h2>
-    <p style="font-size:0.85rem; color:#4b5563;">
-      Import any JSON file. The app automatically detects text fields and narrates them with your Nigerian AI Teacher while counting objects pop up!
-    </p>
+    <h2>📥 Import, Edit &amp; Organize Lessons</h2>
+    
+    <div id="editNotice" style="display:none; background:#fffbeb; border-left:4px solid #f59e0b; padding:10px; border-radius:8px; margin-bottom:12px; align-items:center; justify-content:space-between;">
+      <b id="editNoticeText" style="color:#b45309; font-size:0.9rem;">📝 Currently Editing: [Topic Name]</b>
+      <button class="btn btn-sm" onclick="cancelEditing()">Cancel Edit</button>
+    </div>
+
     <div style="display:flex; gap:6px; flex-wrap:wrap; margin:10px 0;">
       <button class="btn primary btn-sm" onclick="pushLocalTopicsToCloud()">⬆️ Push All to Firebase</button>
       <button class="btn btn-sm" onclick="pullTopicsFromCloud()">⬇️ Pull All from Firebase</button>
@@ -1348,11 +1338,15 @@ footer{
       <button class="btn btn-sm" onclick="loadSampleDivisionLesson()">➗ Load Division</button>
       <button class="btn purple btn-sm" onclick="loadSampleFractionLesson()">🥧 Load Fractions</button>
     </div>
-    <textarea id="jsonText" placeholder="Paste ANY lesson JSON here..."></textarea>
+
+    <p style="text-align:center; font-weight:bold; margin:8px 0 4px; font-size:0.85rem;">Edit or Paste Lesson JSON Below</p>
+    <textarea id="jsonText" placeholder="Paste or edit lesson JSON here..."></textarea>
     <div style="margin-top:8px;">
-      <button class="btn primary btn-sm" onclick="importPastedJSON()">💾 Save and Load Topic</button>
+      <button class="btn primary btn-sm" onclick="importPastedJSON()">💾 Save Topic</button>
     </div>
-    <div id="topicManageList" style="margin-top:14px; overflow-x:auto;"></div>
+
+    <h3 style="margin-top:20px; font-size:1.05rem;">📚 All Loaded Topics (<span id="loadedCount">0</span>)</h3>
+    <div id="topicManageList" style="overflow-x:auto;"></div>
   </div>
 </section>
 
@@ -1405,6 +1399,7 @@ const PROGRESS_KEY = "kids_prog_v30";
 const STUDENT_KEY = "kids_stud_v30";
 const ATTENDANCE_KEY = "kids_att_v30";
 const VOICE_PREF_KEY = "kids_voice_pref_v30";
+const AUTOPLAY_KEY = "kids_autoplay_pref_v30";
 
 const formalFirebaseConfig = {
   apiKey: "AIzaSyCRL0nXwiqQk4isamyt1UkGWyQ50t3DjYo",
@@ -1418,7 +1413,7 @@ const formalFirebaseConfig = {
 };
 
 /* ======================================================== */
-/* 💾 LOCAL INDEXEDDB CACHE (VIDEOS & AZURE AI AUDIO)      */
+/* 💾 LOCAL INDEXEDDB CACHE (VIDEOS & AI AUDIO)            */
 /* ======================================================== */
 const DB_NAME = "KidsAcademyMediaDB";
 function openMediaDB() {
@@ -1434,7 +1429,7 @@ function openMediaDB() {
   });
 }
 
-// Video Blobs
+// Videos
 async function saveVideoBlob(k, b) {
   try {
     const db = await openMediaDB();
@@ -1459,7 +1454,7 @@ async function deleteVideoBlob(k) {
   } catch (e) {}
 }
 
-// AI Audio Blobs (Voice + Text Hash)
+// Audio Cache
 async function getCachedAudioBlob(cacheKey) {
   try {
     const db = await openMediaDB();
@@ -1507,7 +1502,51 @@ function updateSpeakerIndicator() {
   $('speakerStatusText').textContent = label;
 }
 
-// Fetch or retrieve cached AI voice audio
+// Extract natural teacher speech from any JSON field
+function extractSpokenText(stepObj) {
+  if (!stepObj) return "";
+  let raw = stepObj.speech ||
+            stepObj.text ||
+            stepObj.narration ||
+            stepObj.explanation ||
+            stepObj.instruction ||
+            stepObj.sentence ||
+            stepObj.content ||
+            stepObj.script ||
+            stepObj.question ||
+            (stepObj.board ? stepObj.board.replace(/EXAMPLE \d+(\/\d+)?|TOPIC FOUNDATION:|CONCEPT \d+(\/\d+)?/gi, '') : "");
+
+  if (typeof raw !== 'string') return "";
+
+  let text = raw.replace(/superstar|my dear friend|student/gi, studentProfile.name || "Superstar");
+
+  // Replace educational emojis with words so the Nigerian voice speaks them naturally
+  text = text
+    .replace(/🍎/g, " apple ")
+    .replace(/🍌/g, " banana ")
+    .replace(/🍊/g, " orange ")
+    .replace(/⭐|🌟|✨/g, " star ")
+    .replace(/🐱|🐈/g, " cat ")
+    .replace(/🐶|🐕/g, " dog ")
+    .replace(/🍪/g, " cookie ")
+    .replace(/🍬/g, " candy ")
+    .replace(/🚗/g, " car ")
+    .replace(/⚡/g, " energy ");
+
+  // Expand math symbols
+  text = text
+    .replace(/÷/g, " divided by ")
+    .replace(/[-−]/g, " minus ")
+    .replace(/\+/g, " plus ")
+    .replace(/=/g, " equals ")
+    .replace(/\b1\/2\b/g, " one half ")
+    .replace(/\b1\/3\b/g, " one third ")
+    .replace(/\b1\/4\b/g, " one quarter ");
+
+  return text.replace(/\s+/g, ' ').trim();
+}
+
+// Fetch complete, fluid audio from /api/tts
 async function getAITeacherAudio(text, voice, speed) {
   if (!text || !text.trim()) return null;
 
@@ -1695,11 +1734,10 @@ const sampleEnglishNamingActionData = {
   id: "p1-english-naming-actions", classLevel: "Primary 1", subject: "English", topic: "Naming and Action Words",
   intro: { title: "NAMING AND ACTION WORDS", board: "THE CAT MEOWS 🐱\n\n• Cat = Naming Word\n• Meows = Action Word", speech: "Hello superstar! Welcome to English class! Today we learn naming words and action words. Cat is a naming word. Meows is an action word!", visual: { type: "english", word: "CAT MEOWS", sentence: "The cat meows.", emoji: "🐱" } },
   examples: [
-    { board: "EXAMPLE 1\n\nTHE DOG BARKS 🐶\n\nDog = Naming Word\nBarks = Action Word", speech: "Look at the dog! The dog barks! Dog is a naming word, and barks is an action word.", visual: { type: "english", word: "DOG BARKS", sentence: "The dog barks.", emoji: "🐶" }, quizzes: [{ q: "What is the naming word in 'The dog barks'?", options: ["Dog","Barks","Runs"], answer: 0 }], checkpoint: { q: "Say the naming word in: The dog barks.", expectedAnswer: "dog" } }
+    { board: "EXAMPLE 1\n\nTHE DOG BARKS 🐶\n\nDog = Naming Word\nBarks = Action Word", speech: "Look at the dog! The dog barks! Dog is a naming word, and barks is an action word.", visual: { type: "english", word: "DOG BARKS", sentence: "The dog barks.", emoji: "🐶" }, quizzes: [{ q: "What is the naming word in 'The dog barks'?", options: ["Dog","Barks","Runs"], answer: 0 }] }
   ]
 };
 
-// 🌟 ADDITION WITH MULTI-STEP SYNCHRONIZED COUNTING
 const sampleAdditionData = {
   id: "addition-basics", classLevel: "Primary 1", subject: "Mathematics", topic: "Addition Basics",
   intro: { 
@@ -1711,23 +1749,20 @@ const sampleAdditionData = {
   examples: [
     { 
       board: "EXAMPLE 1\n\n3 + 2 = 5", 
-      speech: "Let's count the first group: 1🌟... 2🌟🌟... 3🌟🌟🌟. Great! Now let's count the second group: 1🌟... 2🌟🌟. Wonderful! Now let's count all the stars together: 1🌟... 2🌟🌟... 3🌟🌟🌟... 4🌟🌟🌟🌟... 5🌟🌟🌟🌟🌟! We have 5 stars altogether. Therefore, 3 plus 2 equals 5.", 
+      speech: "Let's count the first group: 1 star, 2 stars, 3 stars. Now let's count the second group: 1 star, 2 stars. Now let's count all the stars together: 1, 2, 3, 4, 5! We have 5 stars altogether. Therefore, 3 plus 2 equals 5.", 
       visual: { type: "addition", groupCounts: [3, 2], emoji: "🌟", title: "3 🌟 + 2 🌟 = 5 🌟" }, 
-      checkpoint: { q: "What is 3 + 2?", expectedAnswer: "5" }, 
       quiz: { q: "What is 3 + 2?", options: ["5","4","6"], answer: 0 } 
     },
     { 
       board: "EXAMPLE 2\n\n2 + 2 = 4", 
-      speech: "Let's count the first group: 1🌟... 2🌟🌟. Great! Now let's count the second group: 1🌟... 2🌟🌟. Wonderful! Now let's count all the stars together: 1🌟... 2🌟🌟... 3🌟🌟🌟... 4🌟🌟🌟🌟! We have 4 stars altogether. Therefore, 2 plus 2 equals 4.", 
+      speech: "Let's count: 2 stars in the first group, and 2 stars in the second group. Counting all together gives 4 stars! Therefore, 2 plus 2 equals 4.", 
       visual: { type: "addition", groupCounts: [2, 2], emoji: "🌟", title: "2 🌟 + 2 🌟 = 4 🌟" }, 
-      checkpoint: { q: "What is 2 + 2?", expectedAnswer: "4" }, 
       quiz: { q: "What is 2 + 2?", options: ["4","3","5"], answer: 0 } 
     },
     { 
       board: "EXAMPLE 3\n\n4 + 1 = 5", 
-      speech: "Let's count the first group: 1🍎... 2🍎🍎... 3🍎🍎🍎... 4🍎🍎🍎🍎. Now the second group: 1🍎. Now count all together: 1🍎... 2🍎🍎... 3🍎🍎🍎... 4🍎🍎🍎🍎... 5🍎🍎🍎🍎🍎! Total is 5 apples.", 
+      speech: "We have 4 apples in the first group, and 1 apple in the second group. Putting them together gives 5 apples!", 
       visual: { type: "addition", groupCounts: [4, 1], emoji: "🍎", title: "4 🍎 + 1 🍎 = 5 🍎" }, 
-      checkpoint: { q: "What is 4 + 1?", expectedAnswer: "5" }, 
       quiz: { q: "What is 4 + 1?", options: ["5","6","4"], answer: 0 } 
     }
   ]
@@ -1735,9 +1770,9 @@ const sampleAdditionData = {
 
 const sampleSubtractionData = {
   id: "subtraction", classLevel: "Primary 1", subject: "Mathematics", topic: "Subtraction (Taking Away)",
-  intro: { title: "SUBTRACTION FOUNDATION", board: "5 - 2 = 3\n\nSubtraction means taking away items from a tray.", speech: "Subtraction means taking away items! Let's watch how taking away works.", visual: { type: "subtraction", total: 5, subtract: 2, emoji: "🍎", title: "5 - 2 = ?" } },
+  intro: { title: "SUBTRACTION FOUNDATION", board: "5 - 2 = 3\n\nSubtraction means taking away items from a tray.", speech: "Subtraction means taking away items! We remove items from the tray and see what is left.", visual: { type: "subtraction", total: 5, subtract: 2, emoji: "🍎", title: "5 - 2 = ?" } },
   examples: [
-    { board: "EXAMPLE 1\n\n5 - 2 = 3", speech: "We have 5 apples in the active tray. We take away 2 apples. Exactly 3 apples remain! Therefore, 5 minus 2 equals 3.", visual: { type: "subtraction", total: 5, subtract: 2, emoji: "🍎", title: "5 - 2 = ?" }, checkpoint: { q: "What is 5 - 2?", expectedAnswer: "3" }, quiz: { q: "What is 5 - 2?", options: ["3","2","4"], answer: 0 } }
+    { board: "EXAMPLE 1\n\n5 - 2 = 3", speech: "We have 5 apples in the active tray. We take away 2 apples. Exactly 3 apples remain in the tray! Therefore, 5 minus 2 equals 3.", visual: { type: "subtraction", total: 5, subtract: 2, emoji: "🍎", title: "5 - 2 = ?" }, quiz: { q: "What is 5 - 2?", options: ["3","2","4"], answer: 0 } }
   ]
 };
 
@@ -1745,7 +1780,7 @@ const sampleDivisionData = {
   id: "division", classLevel: "Primary 1", subject: "Mathematics", topic: "Division (Equal Sharing)",
   intro: { title: "DIVISION: EQUAL SHARING", board: "6 ÷ 2 = 3\n\nDivision means fair sharing into groups!", speech: "Welcome to Division! Division means fair sharing into equal groups. We start with items in the tray, and share them equally!", visual: { type: "division", total: 6, groups: 2, emoji: "🍎", title: "6 ÷ 2 = ?" } },
   examples: [
-    { board: "EXAMPLE 1\n\n6 ÷ 2 = 3", speech: "We start with 6 apples in our tray. Let's share them equally between 2 groups! Group 1 gets 3 apples, and Group 2 gets 3 apples. Both groups get the exact same amount!", visual: { type: "division", total: 6, groups: 2, emoji: "🍎", title: "6 ÷ 2 = ?" }, checkpoint: { q: "What is 6 ÷ 2?", expectedAnswer: "3" }, quiz: { q: "How many apples does each group get?", options: ["3 apples","2 apples","4 apples"], answer: 0 } }
+    { board: "EXAMPLE 1\n\n6 ÷ 2 = 3", speech: "We start with 6 apples in our tray. Let's share them equally between 2 groups! Group 1 gets 3 apples, and Group 2 gets 3 apples. Both groups get the exact same amount! 0 apples left in the tray. Therefore, 6 divided by 2 equals 3.", visual: { type: "division", total: 6, groups: 2, emoji: "🍎", title: "6 ÷ 2 = ?" }, quiz: { q: "How many apples does each group get?", options: ["3 apples","2 apples","4 apples"], answer: 0 } }
   ]
 };
 
@@ -1753,7 +1788,7 @@ const sampleFractionData = {
   id: "fractions", classLevel: "Primary 1", subject: "Mathematics", topic: "Fractions: Parts of a Whole",
   intro: { title: "FRACTIONS: PARTS OF A WHOLE", board: "1/2 = One Half\n\nA fraction represents equal parts of a whole circle.", speech: "Welcome to class! A fraction is an equal part of a whole object. Tap any fraction pie to detach the slice!", visual: { type: "fraction_circle", denominators: [1, 2, 4], title: "Exploring Fractions: 1 Whole, 1/2, 1/4" } },
   examples: [
-    { board: "EXAMPLE 1\n\n1/2 = One Half", speech: "Look at the circle divided into 2 equal parts. Each part is one half! Two halves fit together to make one whole circle.", visual: { type: "fraction_circle", denominators: [2], title: "1/2 = One Half" }, checkpoint: { q: "How many halves make one whole?", expectedAnswer: "2" }, quiz: { q: "How many halves make one whole?", options: ["2 halves","1 half","3 halves"], answer: 0 } }
+    { board: "EXAMPLE 1\n\n1/2 = One Half", speech: "Look at the circle divided into 2 equal parts. Each part is one half! Two halves fit together to make one whole circle.", visual: { type: "fraction_circle", denominators: [2], title: "1/2 = One Half" }, quiz: { q: "How many halves make one whole?", options: ["2 halves","1 half","3 halves"], answer: 0 } }
   ]
 };
 
@@ -1779,11 +1814,12 @@ function loadData(){
 function saveData(){ try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(data)); }catch(e){} }
 let data = loadData(), progress = JSON.parse(localStorage.getItem(PROGRESS_KEY) || '{"completedSteps":{},"quizzes":[]}'), studentProfile = JSON.parse(localStorage.getItem(STUDENT_KEY) || '{"name":"Superstar","classLevel":"Primary 1"}'), attendanceLogs = JSON.parse(localStorage.getItem(ATTENDANCE_KEY) || "[]");
 
-let currentTopic = null, currentStepIndex = 0, isPlaying = false, isPaused = false, autoAdvanceTimeout = null, activeStepVideoBlobUrl = null, isAutoPlayEnabled = true;
-let activeTargetGroup = 0, isCountAllMode = false, speechChunks = [], currentChunkIndex = 0, playbackSessionId = 0;
+let currentTopic = null, currentStepIndex = 0, isPlaying = false, isPaused = false, autoAdvanceTimeout = null, activeStepVideoBlobUrl = null;
+let isAutoPlayEnabled = (localStorage.getItem(AUTOPLAY_KEY) !== "false"); // Default to TRUE
+let currentEditingTopicId = null;
 
 /* ======================================================== */
-/* 🔥 FIREBASE CLOUD REAL-TIME TOPIC & VIDEO SYNC           */
+/* 🔥 FIREBASE CLOUD REAL-TIME SYNC                         */
 /* ======================================================== */
 let firebaseApp = null, firestoreDb = null, fbModule = null;
 
@@ -1812,6 +1848,15 @@ async function syncTopicToCloud(t){
   }
 }
 
+async function deleteTopicFromCloud(topicId){
+  if(!firestoreDb || !fbModule) return;
+  try{
+    await fbModule.deleteDoc(fbModule.doc(firestoreDb, "topics", topicId));
+  }catch(e){
+    console.error("Cloud delete error:", e);
+  }
+}
+
 function listenToCloudTopics(){
   if(!firestoreDb || !fbModule) return;
   fbModule.onSnapshot(fbModule.collection(firestoreDb, "topics"), snap => {
@@ -1833,59 +1878,6 @@ function listenToCloudTopics(){
   }, () => {});
 }
 
-function fileToBase64(file){
-  return new Promise((res, rej) => {
-    const r = new FileReader();
-    r.onload = () => {
-      const result = r.result || "";
-      res(result.split("base64,")[1] || result);
-    };
-    r.onerror = rej;
-    r.readAsDataURL(file);
-  });
-}
-
-function b64ToBlob(b64, mime="video/mp4"){
-  const b = atob(b64), arr = new Uint8Array(b.length);
-  for(let i=0; i<b.length; i++) arr[i] = b.charCodeAt(i);
-  return new Blob([arr], {type: mime});
-}
-
-async function saveVideoToFirestore(file, videoKey){
-  if(!firestoreDb || !fbModule) throw new Error("Firebase Firestore is not connected");
-  const b64 = await fileToBase64(file);
-  const CHUNK = 500 * 1024;
-  const total = Math.ceil(b64.length / CHUNK);
-  for(let i=0; i<total; i++){
-    $("speechStatus").textContent = `⏳ Uploading video to Firebase: chunk ${i+1} of ${total}...`;
-    await fbModule.setDoc(fbModule.doc(firestoreDb, "lesson_videos", `${videoKey}_${i}`), {
-      k: videoKey, i: i, total: total, d: b64.slice(i*CHUNK, (i+1)*CHUNK), t: file.type || "video/mp4"
-    });
-  }
-}
-
-async function loadVideoFromFirestore(videoKey){
-  if(!firestoreDb || !fbModule) return null;
-  try{
-    const q = fbModule.query(fbModule.collection(firestoreDb, "lesson_videos"), fbModule.where("k", "==", videoKey));
-    const snap = await fbModule.getDocs(q);
-    if(snap.empty) return null;
-    const chunks = [];
-    let type = "video/mp4";
-    snap.forEach(d => { const x = d.data(); chunks[x.i] = x.d; if(x.t) type = x.t; });
-    return b64ToBlob(chunks.join(""), type);
-  }catch(e){ return null; }
-}
-
-async function deleteVideoFromFirestore(videoKey){
-  if(!firestoreDb || !fbModule) return;
-  try{
-    const q = fbModule.query(fbModule.collection(firestoreDb, "lesson_videos"), fbModule.where("k", "==", videoKey));
-    const snap = await fbModule.getDocs(q);
-    snap.forEach(d => fbModule.deleteDoc(d.ref));
-  }catch(e){}
-}
-
 /* ======================================================== */
 /* 🎬 DUAL SCENE & VIDEO MANAGEMENT                         */
 /* ======================================================== */
@@ -1894,14 +1886,6 @@ async function getVideoForStep(topicId, idx, v){
   let b = await getVideoBlob(k);
   if(b) return { src: URL.createObjectURL(b), isBlob: true, label: "Local Device Cache" };
   if(v?.videoUrl) return { src: v.videoUrl, isBlob: false, label: "Cloud Video URL ☁️" };
-  if(v?.videoKey){
-    $("speechStatus").textContent = "⏳ Downloading video from Firebase Cloud...";
-    const cloudBlob = await loadVideoFromFirestore(v.videoKey);
-    if(cloudBlob){
-      await saveVideoBlob(k, cloudBlob);
-      return { src: URL.createObjectURL(cloudBlob), isBlob: true, label: "Firebase Synced ☁️" };
-    }
-  }
   return null;
 }
 
@@ -1939,22 +1923,11 @@ window.handleStepVideoUpload = async function(event){
   const step = currentStepData();
   if(!step.visual) step.visual = {};
 
-  $("videoSourceStatus").innerHTML = "⏳ <b>Syncing to Firebase...</b>";
-  $("speechStatus").textContent = "⏳ Uploading and syncing video with Firebase...";
-
-  try{
-    await saveVideoToFirestore(file, k);
-    step.visual.videoKey = k;
-    delete step.visual.videoUrl;
-    saveData();
-    await syncTopicToCloud(currentTopic);
-    $("speechStatus").textContent = "✅ Video synced to Firebase Cloud! Other screens will now display it.";
-    alert("🎉 Video uploaded and synchronized with Firebase Cloud!");
-  }catch(e){
-    console.warn("Upload fallback:", e);
-    $("speechStatus").textContent = "⚠️ Video saved locally on this screen.";
-  }
+  $("videoSourceStatus").innerHTML = "🎥 <b>Video Active</b>";
+  saveData();
+  await syncTopicToCloud(currentTopic);
   await renderDualSceneStage(step.visual, currentStepIndex);
+  alert("🎉 Video saved! If you want it on other devices, use '🔗 Link URL' to paste a web link.");
 };
 
 window.linkStepVideoUrl = async function(){
@@ -1970,7 +1943,6 @@ window.linkStepVideoUrl = async function(){
   }
 
   step.visual.videoUrl = trimmed;
-  delete step.visual.videoKey;
   saveData();
   await syncTopicToCloud(currentTopic);
   await renderDualSceneStage(step.visual, currentStepIndex);
@@ -1989,11 +1961,7 @@ window.removeStepVideo = async function(){
 
   const step = currentStepData();
   if(step && step.visual){
-    if(step.visual.videoKey){
-      await deleteVideoFromFirestore(step.visual.videoKey);
-    }
     delete step.visual.videoUrl;
-    delete step.visual.videoKey;
     saveData();
     await syncTopicToCloud(currentTopic);
   }
@@ -2011,7 +1979,6 @@ let currentDivisionModel = { total: 6, groups: 2, emoji: "🍎", word: "apple", 
 
 function renderDivisionEqualGroups(visualData){
   const contentEl = $("stageContent");
-  $("stageTitle").textContent = "";
   contentEl.innerHTML = "";
 
   const emoji = visualData?.emoji || "🍎";
@@ -2187,12 +2154,12 @@ function renderSubtractionStage(visualData){
     <div class="sub-stage-row">
       <div class="sub-tray-card">
         <b style="color:#4ade80">IN TRAY</b>
-        <div style="font-size:2.4rem; padding:8px;">${emoji.repeat(remaining)}</div>
-        <div style="font-weight:900">${remaining} ${word}s left</div>
+        <div style="font-size:2.4rem; padding:8px;" id="subTrayItems">${emoji.repeat(remaining)}</div>
+        <div style="font-weight:900" id="subTrayCounter">${remaining} ${word}s left</div>
       </div>
       <div class="sub-taken-card">
         <b style="color:#f87171">TAKEN AWAY (-${subtract})</b>
-        <div style="font-size:2.4rem; padding:8px; opacity:0.65;">${emoji.repeat(subtract)}</div>
+        <div style="font-size:2.4rem; padding:8px; opacity:0.65;" id="subTakenItems">${emoji.repeat(subtract)}</div>
         <div style="font-weight:900">${subtract} taken away</div>
       </div>
     </div>
@@ -2204,7 +2171,7 @@ async function renderStageObjects(visualData, contextText = ""){
   const scene = $("sceneContainer");
   const videoBar = $("videoManagerBar");
 
-  if(vType === "english" || visualData.sentence || visualData.videoUrl || visualData.videoKey){
+  if(vType === "english" || visualData.sentence || visualData.videoUrl){
     await renderDualSceneStage(visualData, currentStepIndex);
     return;
   }
@@ -2256,11 +2223,10 @@ async function renderStageObjects(visualData, contextText = ""){
   }
 }
 
-// 🌟 POP-UP & BOUNCE FUNCTION (Shows count badge + sound)
 function triggerItemBounce(itemEl, num = 1){
   if(!itemEl) return;
   itemEl.classList.remove("bounce");
-  void itemEl.offsetWidth; // trigger reflow
+  void itemEl.offsetWidth;
   itemEl.classList.add("bounce");
 
   let badge = itemEl.querySelector(".count-indicator");
@@ -2277,78 +2243,7 @@ function triggerItemBounce(itemEl, num = 1){
 }
 
 /* ======================================================== */
-/* 🎙️ TEACHER SCRIPT CHUNKING (Synchronized Pop-ups)       */
-/* ======================================================== */
-function parseScriptIntoSynchronizedChunks(text, fallbackEmoji = "🌟"){
-  if(!text) return [];
-  let clean = text.replace(/my dear friend|superstar/gi, studentProfile.name || "Superstar");
-  const rawSegments = clean.match(/(\d+[\u{1F300}-\u{1F9FF}\u{2600}-\u{27BF}]+[\.…]*|[^\.!\?…,\n;:]+[\.!\?…,\n;:]*)/gu) || [clean];
-  const chunks = [];
-
-  rawSegments.forEach(raw => {
-    const cleanRaw = raw.trim();
-    if(!cleanRaw) return;
-    let spoken = cleanRaw;
-    let isCountBeat = false, countNum = null, groupTrigger = null, countAllTrigger = false;
-    let divisionAction = null;
-    const lower = cleanRaw.toLowerCase();
-
-    if(/all.*together|altogether|all the/i.test(lower)) countAllTrigger = true;
-    else if(lower.includes("first group") || lower.includes("group 1")) groupTrigger = 0;
-    else if(lower.includes("second group") || lower.includes("group 2")) groupTrigger = 1;
-
-    // Detect division distribution beat
-    const divMatch = cleanRaw.match(/group\s*(\d+)\s*gets?\s*(\d+)/i);
-    if(divMatch){
-      divisionAction = { targetGroup: parseInt(divMatch[1], 10) - 1, amount: parseInt(divMatch[2], 10) };
-    }
-
-    // Detect individual counting beat e.g. "1🌟...", "2🌟🌟..."
-    const countBeatMatch = cleanRaw.match(/^(\d{1,2})\s*([\u{1F300}-\u{1F9FF}\u{2600}-\u{27BF}]+)[\.…]*$/u);
-    if(countBeatMatch){
-      isCountBeat = true;
-      countNum = parseInt(countBeatMatch[1], 10);
-      const beatEmoji = (countBeatMatch[2].match(/[\u{1F300}-\u{1F9FF}\u{2600}-\u{27BF}]/u) || [])[0] || fallbackEmoji;
-      const word = getEmojiWord(beatEmoji);
-      spoken = `${countNum} ${word}${countNum > 1 ? 's' : ''}`;
-    } else {
-      spoken = spoken.replace(/÷/g, " divided by ").replace(/[-−]/g, " minus ").replace(/=/g, " equals ");
-    }
-
-    chunks.push({ displayText: cleanRaw, spokenText: spoken, isCountBeat, countNum, groupTrigger, countAllTrigger, divisionAction });
-  });
-  return chunks;
-}
-
-function setupTranscriptUI(stepTitle, chunks){
-  const feed = $("transcriptFeed");
-  feed.innerHTML = `<div style="color:#ffeb3b; font-weight:900; margin-bottom:2px;">📍 ${escapeHTML(stepTitle)}</div>`;
-  const block = document.createElement("div");
-  chunks.forEach((c, i) => {
-    const span = document.createElement("span");
-    span.className = "chunk"; span.id = `chunk-${i}`;
-    span.textContent = c.displayText + " ";
-    block.appendChild(span);
-  });
-  feed.appendChild(block);
-  feed.scrollTop = feed.scrollHeight;
-}
-
-function highlightTranscriptChunk(idx){
-  document.querySelectorAll(".chunk.active").forEach(c => c.classList.remove("active"));
-  if(idx >= 0){
-    const target = $(`chunk-${idx}`);
-    if(target){
-      target.classList.add("active");
-      target.scrollIntoView({ block: "nearest", behavior: "smooth" });
-    }
-  }
-}
-
-function clearTranscriptHistory(){ $("transcriptFeed").innerHTML = ""; }
-
-/* ======================================================== */
-/* 🏃 SYNCHRONIZED COUNTING & AUDIO PLAYBACK ENGINE         */
+/* 🏃 PLAYBACK ENGINE & STEP NAVIGATION                     */
 /* ======================================================== */
 function currentStepData(){
   if(!currentTopic) return {};
@@ -2386,30 +2281,27 @@ async function renderCurrentStep(){
   await renderStageObjects(stepObj.visual || {}, stepObj.board || "");
   setupStepQuizzes(stepObj);
 
-  const rawSpeech = stepObj.speech || stepObj.text || stepObj.narration || stepObj.board || "";
-  speechChunks = parseScriptIntoSynchronizedChunks(rawSpeech, stepObj.visual?.emoji || "🌟");
-  setupTranscriptUI(stepTitle, speechChunks);
+  const spokenText = extractSpokenText(stepObj);
+  $("transcriptFeed").innerHTML = `
+    <div style="color:#ffeb3b; font-weight:900; margin-bottom:4px;">📍 ${escapeHTML(stepTitle)}</div>
+    <div style="color:#e0f2e9; font-size:1.05rem; line-height:1.4;">${escapeHTML(spokenText)}</div>
+  `;
 
   $("playPauseBtn").textContent = "▶️ Play";
   $("prevStepBtn").disabled = (currentStepIndex === 0);
   $("nextStepBtn").disabled = (currentStepIndex >= totalSteps - 1);
-  $("speechStatus").textContent = "Ready. Tap ▶️ Play to watch counting!";
+  $("speechStatus").textContent = "Ready. Tap ▶️ Play to begin!";
 }
 
+// 🌟 COMPLETE FLUID NIGERIAN VOICE PLAYBACK (Never cuts off)
 async function playLesson(){
-  if(!currentTopic || !speechChunks.length) return;
+  if(!currentTopic) return;
   getAudio();
 
   stopLesson();
   clearTimeout(autoAdvanceTimeout);
-  playbackSessionId++;
-  const session = playbackSessionId;
   isPlaying = true;
   isPaused = false;
-  currentChunkIndex = 0;
-  activeTargetGroup = 0;
-  isCountAllMode = false;
-
   $("playPauseBtn").textContent = "⏸️ Pause";
 
   const video = $("activeStageVideo");
@@ -2431,57 +2323,80 @@ async function playLesson(){
   if(action === "run") playDogBarkSound();
   animationManager.animate(stepObj);
 
-  // Pre-load all chunk audios in parallel so there is 0 lag between counting beats!
-  Promise.all(speechChunks.map(c => getAITeacherAudio(c.spokenText, currentTeacherVoice, currentSpeechSpeed))).catch(()=>{});
-
-  playNextChunk(session);
-}
-
-// 🌟 SEQUENTIAL COUNTING & OBJECT POPPING ENGINE
-async function playNextChunk(sessionId){
-  if(!isPlaying || isPaused || sessionId !== playbackSessionId) return;
-
-  if(currentChunkIndex >= speechChunks.length){
-    onStepNarrationFinished();
-    return;
+  // Animate items during narration:
+  // Subtraction animation (move items to side tray)
+  if(stepObj.visual?.type === "subtraction"){
+    const tot = stepObj.visual.total || 5;
+    const sub = stepObj.visual.subtract || 2;
+    setTimeout(() => {
+      const emoji = stepObj.visual.emoji || "🍎";
+      const word = getEmojiWord(emoji);
+      const rem = tot - sub;
+      const tray = $("subTrayItems");
+      const taken = $("subTakenItems");
+      if(tray) tray.innerHTML = emoji.repeat(rem);
+      if(taken) taken.innerHTML = emoji.repeat(sub);
+      if($("subTrayCounter")) $("subTrayCounter").textContent = `${rem} ${word}s left`;
+      playPopTone(2);
+    }, 2800);
   }
 
-  const chunk = speechChunks[currentChunkIndex];
-  highlightTranscriptChunk(currentChunkIndex);
-
-  // 1. Highlight Group (Group 1 vs Group 2 vs All)
-  if(chunk.countAllTrigger){
-    isCountAllMode = true;
-    document.querySelectorAll(".object-group").forEach(g => g.classList.add("active-group"));
-  } else if(chunk.groupTrigger !== null){
-    activeTargetGroup = chunk.groupTrigger;
-    isCountAllMode = false;
-    document.querySelectorAll(".object-group").forEach((g, idx) => {
-      if(idx === activeTargetGroup) g.classList.add("active-group");
-      else g.classList.remove("active-group");
-    });
-  }
-
-  // 2. Division sharing
-  if(chunk.divisionAction){
-    executeDivisionShare(chunk.divisionAction.targetGroup, chunk.divisionAction.amount);
-  }
-
-  // 3. 🌟 OBJECT POP-UP & BOUNCE AS TEACHER COUNTS
-  if(chunk.isCountBeat && chunk.countNum !== null){
-    if(isCountAllMode){
-      const target = document.querySelector(`[data-global-idx="${chunk.countNum - 1}"]`);
-      if(target) triggerItemBounce(target, chunk.countNum);
-    } else {
-      const target = document.getElementById(`item-g${activeTargetGroup}-i${chunk.countNum - 1}`);
-      if(target) triggerItemBounce(target, chunk.countNum);
+  // Division animation (distribute items to boxes)
+  if(stepObj.visual?.type === "division"){
+    const tot = stepObj.visual.total || 6;
+    const g = stepObj.visual.groups || 2;
+    const perG = Math.floor(tot / g);
+    for(let i=0; i<g; i++){
+      setTimeout(() => executeDivisionShare(i, perG), (i + 1) * 1600);
     }
   }
 
-  // 4. Play Nigerian AI Voice for this counting beat
+  // Addition counting pop-ups (pop group 1, then group 2, then all)
+  if(stepObj.visual?.type === "addition" && Array.isArray(stepObj.visual.groupCounts)){
+    const counts = stepObj.visual.groupCounts;
+    let delay = 1200;
+    // Highlight Group 1
+    setTimeout(() => {
+      const g0 = $("group-0"); if(g0) g0.classList.add("active-group");
+      for(let i=0; i<counts[0]; i++){
+        setTimeout(() => {
+          const item = document.getElementById(`item-g0-i${i}`);
+          if(item) triggerItemBounce(item, i + 1);
+        }, i * 650);
+      }
+    }, delay);
+
+    delay += (counts[0] * 650) + 1000;
+    // Highlight Group 2
+    setTimeout(() => {
+      const g0 = $("group-0"); if(g0) g0.classList.remove("active-group");
+      const g1 = $("group-1"); if(g1) g1.classList.add("active-group");
+      for(let i=0; i<counts[1]; i++){
+        setTimeout(() => {
+          const item = document.getElementById(`item-g1-i${i}`);
+          if(item) triggerItemBounce(item, i + 1);
+        }, i * 650);
+      }
+    }, delay);
+
+    delay += (counts[1] * 650) + 1200;
+    // Count all together
+    setTimeout(() => {
+      document.querySelectorAll(".object-group").forEach(g => g.classList.add("active-group"));
+      const allItems = document.querySelectorAll(".interactive-item");
+      allItems.forEach((it, idx) => {
+        setTimeout(() => triggerItemBounce(it, idx + 1), idx * 600);
+      });
+    }, delay);
+  }
+
+  const spokenText = extractSpokenText(stepObj);
+
+  // Play unified natural voice (never cuts off)
+  $('speechStatus').textContent = "⏳ Generating natural Nigerian teacher voice...";
   try{
-    const audioBlob = await getAITeacherAudio(chunk.spokenText, currentTeacherVoice, currentSpeechSpeed);
-    if(sessionId !== playbackSessionId || !isPlaying || isPaused) return;
+    const audioBlob = await getAITeacherAudio(spokenText, currentTeacherVoice, currentSpeechSpeed);
+    if(!isPlaying) return;
 
     if(currentAudioBlobUrl){
       URL.revokeObjectURL(currentAudioBlobUrl);
@@ -2497,28 +2412,24 @@ async function playNextChunk(sessionId){
       requestWakeLock();
       $('speakerPulseDot').classList.add('speaking');
       const isFemale = currentTeacherVoice.includes('Ezinne');
-      $('speakerStatusText').textContent = isFemale ? '👩‍🏫 Teacher Counting (🇳🇬 Ezinne)' : '👨‍🏫 Teacher Counting (🇳🇬 Abeo)';
-      $('speechStatus').textContent = "🔊 Listening to teacher count...";
+      $('speakerStatusText').textContent = isFemale ? '👩‍🏫 Teacher Speaking (🇳🇬 Ezinne)' : '👨‍🏫 Teacher Speaking (🇳🇬 Abeo)';
+      $('speechStatus').textContent = "🔊 Listening to Nigerian Teacher...";
     };
 
     audio.onended = () => {
-      if(sessionId !== playbackSessionId || !isPlaying || isPaused) return;
-      currentChunkIndex++;
-      // Natural teaching pause: slight pause after count beats (320ms), or sentences (200ms)
-      const pauseDelay = chunk.isCountBeat ? 320 : 200;
-      setTimeout(() => playNextChunk(sessionId), pauseDelay);
+      onStepNarrationFinished();
     };
 
-    audio.onerror = () => {
-      currentChunkIndex++;
-      setTimeout(() => playNextChunk(sessionId), 300);
+    audio.onerror = (e) => {
+      console.warn("Audio playback notice:", e);
+      onStepNarrationFinished();
     };
 
     await audio.play();
   }catch(err){
-    console.warn("Speech chunk error:", err);
-    currentChunkIndex++;
-    setTimeout(() => playNextChunk(sessionId), 500);
+    console.error("AI Narration notice:", err);
+    $('speechStatus').textContent = "⚠️ Voice unavailable. Check internet.";
+    setTimeout(onStepNarrationFinished, 3000);
   }
 }
 
@@ -2527,12 +2438,14 @@ function onStepNarrationFinished(){
   $("playPauseBtn").textContent = "▶️ Play";
   $("speakerPulseDot").classList.remove("speaking");
   updateSpeakerIndicator();
-  $("speechStatus").textContent = "Counting completed!";
 
   progress.completedSteps[`${currentTopic.id}_${currentStepIndex}`] = true;
   saveProgress();
 
   const stepObj = currentStepData();
+  const totalSteps = 1 + (currentTopic.examples ? currentTopic.examples.length : 0);
+
+  // 1. Check if step has a speaking check
   if(stepObj.checkpoint){
     $("checkpointQuestionText").textContent = stepObj.checkpoint.q;
     $("checkpointInput").value = "";
@@ -2542,16 +2455,19 @@ function onStepNarrationFinished(){
     return;
   }
 
-  if(isAutoPlayEnabled){
-    const totalSteps = 1 + (currentTopic.examples ? currentTopic.examples.length : 0);
-    if(currentStepIndex < totalSteps - 1){
-      autoAdvanceTimeout = setTimeout(() => {
-        if(isAutoPlayEnabled){
-          currentStepIndex++;
-          renderCurrentStep().then(playLesson);
-        }
-      }, 1500);
-    }
+  // 2. 🔁 CONTINUOUS AUTO-PLAY (Advances to next step smoothly)
+  if(isAutoPlayEnabled && currentStepIndex < totalSteps - 1){
+    $("speechStatus").textContent = `⏳ Auto-Advancing to Step ${currentStepIndex + 2} in 2 seconds...`;
+    clearTimeout(autoAdvanceTimeout);
+    autoAdvanceTimeout = setTimeout(() => {
+      if(isAutoPlayEnabled){
+        currentStepIndex++;
+        renderCurrentStep().then(() => playLesson());
+      }
+    }, 1800);
+  } else if(currentStepIndex >= totalSteps - 1){
+    $("speechStatus").textContent = `🎉 Topic Completed! Outstanding job, ${studentProfile.name}!`;
+    triggerConfetti();
   }
 }
 
@@ -2578,7 +2494,6 @@ function resumeLesson(){
 }
 
 function stopLesson(){
-  playbackSessionId++;
   isPlaying = false;
   isPaused = false;
   clearTimeout(autoAdvanceTimeout);
@@ -2587,7 +2502,6 @@ function stopLesson(){
   if(video){ video.pause(); video.currentTime = 0; }
   animationManager.reset();
   releaseWakeLock();
-  highlightTranscriptChunk(-1);
   $("playPauseBtn").textContent = "▶️ Play";
   $("speakerPulseDot").classList.remove("speaking");
   $("checkpointOverlay")?.classList.add("hidden");
@@ -2623,8 +2537,10 @@ function nextStep(){
 
 function toggleAutoplayMode(){
   isAutoPlayEnabled = !isAutoPlayEnabled;
+  localStorage.setItem(AUTOPLAY_KEY, isAutoPlayEnabled ? "true" : "false");
   $("autoplayTogglePill").classList.toggle("active", isAutoPlayEnabled);
   $("autoplayStatusLabel").textContent = isAutoPlayEnabled ? "🔁 Auto-Play: ON" : "⏸️ Auto-Play: OFF";
+  if(!isAutoPlayEnabled) clearTimeout(autoAdvanceTimeout);
 }
 
 /* ======================================================== */
@@ -2862,58 +2778,66 @@ function renderAttendanceTable(){
 }
 
 /* ======================================================== */
-/* 📥 UNIVERSAL JSON IMPORT & NORMALIZATION                 */
+/* 📥 TOPIC EDITING, DELETING & IMPORTING                   */
 /* ======================================================== */
-function normalizeLessonJSON(parsed) {
-  const rawTopic = Array.isArray(parsed) ? parsed[0] : (parsed.topics ? parsed.topics[0] : parsed);
-  if (!rawTopic || typeof rawTopic !== 'object') throw new Error("Invalid JSON structure.");
+function renderTopicManageList(){
+  const container = $("topicManageList");
+  if(!container) return;
+  $("loadedCount").textContent = data.topics.length;
+  if(!data.topics.length){ container.innerHTML = `<div style="text-align:center; padding:10px; color:#777;">No topics loaded.</div>`; return; }
 
-  const topicTitle = rawTopic.topic || rawTopic.title || "Custom Lesson";
-  const subject = rawTopic.subject || "General";
-  const classLevel = rawTopic.classLevel || studentProfile.classLevel || "Primary 1";
+  container.innerHTML = `
+    <table class="topic-manage-table">
+      <thead>
+        <tr><th>Topic</th><th>Subject</th><th>Class</th><th>Steps</th><th>Actions</th></tr>
+      </thead>
+      <tbody>
+        ${data.topics.map(t => {
+          const tid = t.id || slugify(t.topic);
+          const count = 1 + (t.examples ? t.examples.length : 0);
+          return `
+            <tr>
+              <td><b>${escapeHTML(t.topic)}</b></td>
+              <td>${escapeHTML(t.subject || "General")}</td>
+              <td><span class="badge class-badge">${escapeHTML(t.classLevel || "Primary 1")}</span></td>
+              <td>${count}</td>
+              <td>
+                <button class="btn btn-sm" onclick="editTopic('${escapeHTML(tid)}')">✏️ Edit</button>
+                <button class="btn danger btn-sm" onclick="deleteTopic('${escapeHTML(tid)}')">🗑️</button>
+              </td>
+            </tr>
+          `;
+        }).join("")}
+      </tbody>
+    </table>
+  `;
+}
 
-  const rawList = rawTopic.lesson || rawTopic.lessons || rawTopic.steps || rawTopic.items || rawTopic.examples || [];
+function editTopic(topicId){
+  const t = data.topics.find(x => (x.id === topicId || slugify(x.topic) === topicId));
+  if(!t) return;
+  currentEditingTopicId = topicId;
+  $("jsonText").value = JSON.stringify(t, null, 2);
+  $("editNoticeText").textContent = `📝 Currently Editing: ${t.topic}`;
+  $("editNotice").style.display = "flex";
+  showScreen('import');
+  $("jsonText").scrollIntoView({ behavior: 'smooth' });
+}
 
-  let intro = rawTopic.intro;
-  let examples = [];
+function cancelEditing(){
+  currentEditingTopicId = null;
+  $("editNotice").style.display = "none";
+  $("jsonText").value = "";
+}
 
-  if (rawTopic.intro && Array.isArray(rawTopic.examples)) {
-    return rawTopic;
-  }
-
-  if (Array.isArray(rawList) && rawList.length > 0) {
-    intro = {
-      title: topicTitle.toUpperCase(),
-      board: `${topicTitle}\n\n${rawList[0].text || rawList[0].narration || rawList[0].speech || "Welcome to class!"}`,
-      speech: rawList[0].speech || rawList[0].text || rawList[0].narration || rawList[0].explanation || "",
-      visual: rawList[0].visual || { type: "addition", emoji: "🌟", groupCounts: [2, 2] }
-    };
-
-    examples = rawList.slice(1).map((item, idx) => ({
-      board: `STEP ${idx + 1}\n\n${item.text || item.narration || item.speech || item.board || ""}`,
-      speech: item.speech || item.text || item.narration || item.explanation || "",
-      visual: item.visual || { type: "addition", emoji: "🌟", groupCounts: [2, 2] },
-      quiz: item.quiz,
-      quizzes: item.quizzes,
-      checkpoint: item.checkpoint
-    }));
-  } else {
-    intro = {
-      title: topicTitle,
-      board: rawTopic.board || topicTitle,
-      speech: rawTopic.speech || rawTopic.text || "Welcome to this lesson!",
-      visual: { type: "addition", emoji: "🌟", groupCounts: [2, 2] }
-    };
-  }
-
-  return {
-    id: rawTopic.id || slugify(topicTitle),
-    classLevel: classLevel,
-    subject: subject,
-    topic: topicTitle,
-    intro: intro,
-    examples: examples
-  };
+async function deleteTopic(topicId){
+  if(!confirm("Are you sure you want to delete this topic?")) return;
+  data.topics = data.topics.filter(t => (t.id !== topicId && slugify(t.topic) !== topicId));
+  saveData();
+  await deleteTopicFromCloud(topicId);
+  renderTopics();
+  renderTopicManageList();
+  alert("🗑️ Topic deleted successfully!");
 }
 
 function importPastedJSON(){
@@ -2921,13 +2845,23 @@ function importPastedJSON(){
   if(!raw) return alert("Please paste JSON first.");
   try{
     const parsed = JSON.parse(raw);
-    const normalized = normalizeLessonJSON(parsed);
-    data.topics.unshift(normalized);
+    let incoming = Array.isArray(parsed) ? parsed : (parsed.topics || [parsed]);
+    for(const t of incoming){
+      if(!t.topic) throw new Error("Missing 'topic' title.");
+      const tid = currentEditingTopicId || t.id || slugify(t.topic);
+      t.id = tid;
+      if(!t.intro) t.intro = {};
+      if(!t.examples) t.examples = [];
+      const idx = data.topics.findIndex(x => x.id === tid);
+      if(idx >= 0) data.topics[idx] = t; 
+      else data.topics.push(t);
+      syncTopicToCloud(t);
+    }
     saveData();
-    syncTopicToCloud(normalized);
+    cancelEditing();
     renderTopics();
-    alert(`🎉 Successfully imported: "${normalized.topic}"!\nIt is ready with synchronized counting and Nigerian AI Voice narration.`);
-    startTopic(normalized.id);
+    renderTopicManageList();
+    alert("💾 Topic saved and synchronized successfully!");
   }catch(e){
     alert("Invalid JSON: " + e.message);
   }
@@ -2951,7 +2885,11 @@ function renderTopics(){
           <h3 style="margin:4px 0;">${escapeHTML(t.topic)}</h3>
           <p style="margin:0 0 8px; color:#64748b; font-size:0.85rem;">${escapeHTML(t.subject || "General")} • ${steps} Steps</p>
         </div>
-        <button class="btn primary btn-sm" style="width:100%;">▶️ Start Lesson</button>
+        <div class="topic-actions" onclick="event.stopPropagation();">
+          <button class="btn primary btn-sm" style="flex:2;" onclick="startTopic('${escapeHTML(tid)}')">▶️ Start</button>
+          <button class="btn btn-sm" onclick="editTopic('${escapeHTML(tid)}')">✏️ Edit</button>
+          <button class="btn danger btn-sm" onclick="deleteTopic('${escapeHTML(tid)}')">🗑️</button>
+        </div>
       </div>
     `;
   }).join("");
@@ -2970,14 +2908,14 @@ function exitToTopics(){ stopLesson(); showScreen('topics'); }
 function pushLocalTopicsToCloud(){ data.topics.forEach(syncTopicToCloud); alert("Pushed all topics to Firebase!"); }
 function pullTopicsFromCloud(){ listenToCloudTopics(); alert("Synced with Firebase Cloud!"); }
 
-function loadSampleEnglishActionLesson(){ data.topics.unshift(JSON.parse(JSON.stringify(sampleEnglishNamingActionData))); saveData(); syncTopicToCloud(data.topics[0]); renderTopics(); alert("Loaded English Lesson!"); }
-function loadSampleAdditionLesson(){ data.topics.unshift(JSON.parse(JSON.stringify(sampleAdditionData))); saveData(); syncTopicToCloud(data.topics[0]); renderTopics(); alert("Loaded Addition!"); }
-function loadSampleSubtractionLesson(){ data.topics.unshift(JSON.parse(JSON.stringify(sampleSubtractionData))); saveData(); syncTopicToCloud(data.topics[0]); renderTopics(); alert("Loaded Subtraction!"); }
-function loadSampleDivisionLesson(){ data.topics.unshift(JSON.parse(JSON.stringify(sampleDivisionData))); saveData(); syncTopicToCloud(data.topics[0]); renderTopics(); alert("Loaded Division!"); }
-function loadSampleFractionLesson(){ data.topics.unshift(JSON.parse(JSON.stringify(sampleFractionData))); saveData(); syncTopicToCloud(data.topics[0]); renderTopics(); alert("Loaded Fractions!"); }
+function loadSampleEnglishActionLesson(){ data.topics.unshift(JSON.parse(JSON.stringify(sampleEnglishNamingActionData))); saveData(); syncTopicToCloud(data.topics[0]); renderTopics(); renderTopicManageList(); alert("Loaded English Lesson!"); }
+function loadSampleAdditionLesson(){ data.topics.unshift(JSON.parse(JSON.stringify(sampleAdditionData))); saveData(); syncTopicToCloud(data.topics[0]); renderTopics(); renderTopicManageList(); alert("Loaded Addition!"); }
+function loadSampleSubtractionLesson(){ data.topics.unshift(JSON.parse(JSON.stringify(sampleSubtractionData))); saveData(); syncTopicToCloud(data.topics[0]); renderTopics(); renderTopicManageList(); alert("Loaded Subtraction!"); }
+function loadSampleDivisionLesson(){ data.topics.unshift(JSON.parse(JSON.stringify(sampleDivisionData))); saveData(); syncTopicToCloud(data.topics[0]); renderTopics(); renderTopicManageList(); alert("Loaded Division!"); }
+function loadSampleFractionLesson(){ data.topics.unshift(JSON.parse(JSON.stringify(sampleFractionData))); saveData(); syncTopicToCloud(data.topics[0]); renderTopics(); renderTopicManageList(); alert("Loaded Fractions!"); }
 
 /* ======================================================== */
-/* ☀️ SCREEN AWAKE (WAKE LOCK API)                          */
+/* ☀️ SCREEN AWAKE & FULLSCREEN                             */
 /* ======================================================== */
 let wakeLock = null;
 
@@ -3040,6 +2978,7 @@ function showScreen(id){
   if(id==='topics') renderTopics();
   if(id==='progress') renderProgress();
   if(id==='attendance') renderAttendanceTable();
+  if(id==='import') renderTopicManageList();
   window.scrollTo({top:0, behavior:'smooth'});
 }
 
@@ -3067,10 +3006,7 @@ function saveStudentRegistration(){
   studentProfile.name = $("regStudentName").value || "Superstar";
   studentProfile.classLevel = $("regStudentClass").value || "Primary 1";
   localStorage.setItem(STUDENT_KEY, JSON.stringify(studentProfile));
-  document.querySelectorAll(".student-name-display").forEach(e => e.textContent = studentProfile.name);
-  $("topStudentName").textContent = studentProfile.name;
-  $("topStudentClass").textContent = studentProfile.classLevel;
-  $("homeClassDisplay").textContent = studentProfile.classLevel;
+  updateStudentUI();
   closeRegistrationModal();
   renderTopics();
 }
@@ -3095,7 +3031,10 @@ initSpeechRecognition();
 updateStudentUI();
 updateSpeakerIndicator();
 $('teacherVoiceSelect').value = currentTeacherVoice;
+$("autoplayTogglePill").classList.toggle("active", isAutoPlayEnabled);
+$("autoplayStatusLabel").textContent = isAutoPlayEnabled ? "🔁 Auto-Play: ON" : "⏸️ Auto-Play: OFF";
 renderTopics();
+renderTopicManageList();
 renderAttendanceTable();
 initEmbeddedFirebase();
 </script>
