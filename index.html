@@ -97,15 +97,16 @@ button,input,select,textarea{font:inherit}
 }
 
 .cloud-dot{
-  width:8px;
-  height:8px;
+  width:10px;
+  height:10px;
   border-radius:50%;
   background:#ffb31a;
+  transition:all 0.3s ease;
 }
 
 .cloud-dot.connected{
   background:#00ff88;
-  box-shadow:0 0 8px #00ff88;
+  box-shadow:0 0 10px #00ff88;
 }
 
 /* SIDEBAR */
@@ -398,8 +399,8 @@ button,input,select,textarea{font:inherit}
 }
 
 .pulse-dot{
-  width:8px;
-  height:8px;
+  width:10px;
+  height:10px;
   background:#4caf50;
   border-radius:50%;
   box-shadow:0 0 6px #4caf50;
@@ -442,6 +443,7 @@ button,input,select,textarea{font:inherit}
   font-weight:900;
   color:#ffffff;
   margin:2px 0 4px 0;
+  min-height:1.4em;
 }
 
 .board-chalk-text{
@@ -767,7 +769,7 @@ button,input,select,textarea{font:inherit}
 
 .pie-slice.active-shaded{
   fill:#22c55e !important;
-  filter:drop-shadow(0 0 6px #22c55e);
+  filter:drop-shadow(0 0 8px #22c55e);
 }
 
 /* DIVISION */
@@ -809,7 +811,7 @@ button,input,select,textarea{font:inherit}
 
 .div-group-box{
   flex:1;
-  min-width:120px;
+  min-width:130px;
   min-height:160px;
   border:3px dashed #64748b;
   border-radius:20px;
@@ -1132,7 +1134,7 @@ footer{
       <span id="topStudentName">Superstar</span>
       <span id="topStudentClass" class="badge class-badge">Primary 1</span>
     </div>
-    <div class="cloud-pill" onclick="pushLocalTopicsToCloud()">
+    <div class="cloud-pill" onclick="initEmbeddedFirebase()">
       <span class="cloud-dot" id="topCloudDot"></span>
       <span id="topCloudText">☁️ Firestore Live</span>
     </div>
@@ -1144,7 +1146,7 @@ footer{
   <div class="panel hero">
     <div style="font-size:2.8rem">👩‍🏫🎓🎒🎬</div>
     <h2>Welcome to Class, <span class="student-name-display">Superstar</span>!</h2>
-    <p>Explore lessons with your <b>Natural Nigerian English AI Teacher</b>. Watch items pop up and count synchronously!</p>
+    <p>Explore lessons with your <b>Natural Nigerian English AI Teacher</b>. Watch items count synchronously!</p>
     <div style="display:flex; justify-content:center; gap:8px; flex-wrap:wrap;">
       <button class="btn primary" onclick="showScreen('topics')">🚀 Open Topics</button>
       <button class="btn purple" onclick="showScreen('ask')">❓ Ask Teacher</button>
@@ -1284,7 +1286,7 @@ footer{
         </div>
       </div>
 
-      <!-- VOICE SETTINGS DRAWER (USER VOICE SELECTOR) -->
+      <!-- VOICE SETTINGS DRAWER -->
       <div id="settingsDrawer" class="settings-drawer hidden">
         <div>
           <label style="font-weight:bold; font-size:0.8rem; color:#4338ca;">Select Nigerian / Teacher Voice:</label>
@@ -1294,8 +1296,7 @@ footer{
                 <option value="en-NG-EzinneNeural" selected>🇳🇬 Nigerian Female (Ezinne Natural AI)</option>
                 <option value="en-NG-AbeoNeural">🇳🇬 Nigerian Male (Abeo Natural AI)</option>
               </optgroup>
-              <optgroup label="🔊 Browser / System Voices" id="systemVoiceOptGroup">
-                <!-- System voices loaded dynamically -->
+              <optgroup label="🔊 Browser / Device Voices" id="systemVoiceOptGroup">
               </optgroup>
             </select>
             <button class="btn btn-sm primary" onclick="previewSelectedVoice()" title="Listen to this voice">🔊 Test</button>
@@ -1394,12 +1395,12 @@ footer{
   </div>
 </section>
 
-<!-- CURRICULUM LOADER & JSON IMPORT -->
+<!-- CURRICULUM LOADER -->
 <section id="import" class="screen">
   <div class="panel">
     <h2>📥 Load Curriculum Subjects &amp; Lessons (Nursery to Secondary)</h2>
     <p style="font-size:0.85rem; color:#4b5563;">
-      Load interactive lessons designed with fully synchronized counting, tray movement, and your selected Nigerian AI Teacher Voice.
+      Interactive lessons with non-repeating progressive mathematical concepts and synchronized voice.
     </p>
     <div style="display:flex; gap:6px; flex-wrap:wrap; margin:10px 0;">
       <button class="btn btn-sm primary" onclick="loadSampleAdditionLesson()">➕ 1. Addition (Group Counting)</button>
@@ -1464,11 +1465,11 @@ footer{
 window.$ = id => document.getElementById(id);
 const $ = window.$;
 
-const STORAGE_KEY = "kids_learning_v32";
-const PROGRESS_KEY = "kids_prog_v32";
-const STUDENT_KEY = "kids_stud_v32";
-const ATTENDANCE_KEY = "kids_att_v32";
-const VOICE_PREF_KEY = "kids_voice_pref_v32";
+const STORAGE_KEY = "kids_learning_v35";
+const PROGRESS_KEY = "kids_prog_v35";
+const STUDENT_KEY = "kids_stud_v35";
+const ATTENDANCE_KEY = "kids_att_v35";
+const VOICE_PREF_KEY = "kids_voice_pref_v35";
 
 const formalFirebaseConfig = {
   apiKey: "AIzaSyCRL0nXwiqQk4isamyt1UkGWyQ50t3DjYo",
@@ -1484,10 +1485,10 @@ const formalFirebaseConfig = {
 /* ======================================================== */
 /* 💾 LOCAL INDEXEDDB CACHE                                 */
 /* ======================================================== */
-const DB_NAME = "KidsAcademyMediaDB";
+const DB_NAME = "KidsAcademyMediaDB_v35";
 function openMediaDB() {
   return new Promise((res, rej) => {
-    const r = indexedDB.open(DB_NAME, 2);
+    const r = indexedDB.open(DB_NAME, 4);
     r.onupgradeneeded = () => {
       const db = r.result;
       if (!db.objectStoreNames.contains("videos")) db.createObjectStore("videos");
@@ -1541,13 +1542,14 @@ async function saveCachedAudioBlob(cacheKey, blob) {
 }
 
 /* ======================================================== */
-/* 🎙️ TEACHER VOICE ENGINE (EZINNE, ABEO & SYSTEM VOICES)  */
+/* 🎙️ TEACHER VOICE ENGINE (MUTEX & SINGLE-CHANNEL LOCK)    */
 /* ======================================================== */
 let currentTeacherVoice = localStorage.getItem(VOICE_PREF_KEY) || 'en-NG-EzinneNeural';
 let currentSpeechSpeed = '1.0';
 let currentAudioElement = null;
 let currentAudioBlobUrl = null;
 let systemVoicesList = [];
+let globalSpeechBeatCounter = 0;
 
 function populateVoiceSelector() {
   if ('speechSynthesis' in window) {
@@ -1573,10 +1575,10 @@ if ('speechSynthesis' in window) {
 }
 
 function changeTeacherVoice(newVoice) {
+  stopLesson();
   currentTeacherVoice = newVoice;
   localStorage.setItem(VOICE_PREF_KEY, newVoice);
   updateSpeakerIndicator();
-  if (isPlaying) replayCurrentStep();
 }
 
 function changeSpeechSpeed(newSpeed) {
@@ -1588,17 +1590,32 @@ function changeSpeechSpeed(newSpeed) {
 
 function updateSpeakerIndicator() {
   let label = '👩‍🏫 Teacher Ready';
-  if (currentTeacherVoice === 'en-NG-EzinneNeural') label = '👩‍🏫 Teacher (🇳🇬 Ezinne Natural)';
-  else if (currentTeacherVoice === 'en-NG-AbeoNeural') label = '👨‍🏫 Teacher (🇳🇬 Abeo Natural)';
+  if (currentTeacherVoice === 'en-NG-EzinneNeural') label = '👩‍🏫 Teacher (🇳🇬 Ezinne Natural AI)';
+  else if (currentTeacherVoice === 'en-NG-AbeoNeural') label = '👨‍🏫 Teacher (🇳🇬 Abeo Natural AI)';
   else if (currentTeacherVoice.startsWith('sys_')) {
     label = `🗣️ Teacher (${currentTeacherVoice.replace('sys_', '').split(' ')[0]})`;
   }
   $('speakerStatusText').textContent = label;
 }
 
+function stopActiveNarration() {
+  globalSpeechBeatCounter++;
+  if (currentAudioElement) {
+    currentAudioElement.pause();
+    currentAudioElement.currentTime = 0;
+    currentAudioElement.onended = null;
+    currentAudioElement.onerror = null;
+    currentAudioElement = null;
+  }
+  if ('speechSynthesis' in window) {
+    window.speechSynthesis.cancel();
+  }
+  $('speakerPulseDot').classList.remove('speaking');
+}
+
 async function getAITeacherAudio(text, voice, speed) {
   if (!text || !text.trim()) return null;
-  if (voice.startsWith('sys_')) return null; // System voices bypass backend TTS
+  if (voice.startsWith('sys_')) return null;
 
   const normalized = text.trim().toLowerCase();
   const cacheKey = `${voice}_${normalized}`;
@@ -1622,7 +1639,7 @@ async function getAITeacherAudio(text, voice, speed) {
   return null;
 }
 
-function playWebSpeechFallback(text, onEnd) {
+function playWebSpeechFallback(text, expectedBeatId, onEnd) {
   if (!('speechSynthesis' in window)) {
     if (onEnd) setTimeout(onEnd, 500);
     return;
@@ -1650,32 +1667,36 @@ function playWebSpeechFallback(text, onEnd) {
   u.onstart = () => {
     requestWakeLock();
     $('speakerPulseDot').classList.add('speaking');
-    updateSpeakerIndicator();
   };
   u.onend = () => {
     $('speakerPulseDot').classList.remove('speaking');
-    if (onEnd) onEnd();
+    if (expectedBeatId === globalSpeechBeatCounter && onEnd) onEnd();
   };
   u.onerror = () => {
     $('speakerPulseDot').classList.remove('speaking');
-    if (onEnd) onEnd();
+    if (expectedBeatId === globalSpeechBeatCounter && onEnd) onEnd();
   };
   window.speechSynthesis.speak(u);
 }
 
 function previewSelectedVoice() {
-  const testText = "Hello Superstar! I am your Nigerian classroom teacher. Let us learn together!";
   stopLesson();
+  const testText = "Hello Superstar! I am your Nigerian classroom teacher. Let us learn!";
   playAudioOrFallback(testText, () => updateSpeakerIndicator());
 }
 
 async function playAudioOrFallback(text, onDone) {
+  stopActiveNarration();
+  const currentBeatId = globalSpeechBeatCounter;
+  
   $('speakerPulseDot').classList.add('speaking');
   $('speechStatus').textContent = "🔊 Speaking...";
 
   if (!currentTeacherVoice.startsWith('sys_')) {
     try {
       const blob = await getAITeacherAudio(text, currentTeacherVoice, currentSpeechSpeed);
+      if (currentBeatId !== globalSpeechBeatCounter) return;
+
       if (blob) {
         if (currentAudioBlobUrl) {
           URL.revokeObjectURL(currentAudioBlobUrl);
@@ -1685,35 +1706,23 @@ async function playAudioOrFallback(text, onDone) {
         const audio = new Audio(currentAudioBlobUrl);
         audio.playbackRate = parseFloat(currentSpeechSpeed) || 1.0;
         currentAudioElement = audio;
+
         audio.onplay = () => requestWakeLock();
         audio.onended = () => {
           $('speakerPulseDot').classList.remove('speaking');
-          if (onDone) onDone();
+          if (currentBeatId === globalSpeechBeatCounter && onDone) onDone();
         };
-        audio.onerror = () => playWebSpeechFallback(text, onDone);
+        audio.onerror = () => playWebSpeechFallback(text, currentBeatId, onDone);
         await audio.play();
         return;
       }
     } catch (e) {}
   }
-  playWebSpeechFallback(text, onDone);
-}
-
-function stopActiveNarration() {
-  if (currentAudioElement) {
-    currentAudioElement.pause();
-    currentAudioElement.currentTime = 0;
-    currentAudioElement = null;
-  }
-  if ('speechSynthesis' in window) {
-    window.speechSynthesis.cancel();
-  }
-  $('speakerPulseDot').classList.remove('speaking');
-  updateSpeakerIndicator();
+  playWebSpeechFallback(text, currentBeatId, onDone);
 }
 
 /* ======================================================== */
-/* 🎨 EMOJI SPEECH MAP & AUDIO FX                          */
+/* 🎨 AUDIO FX & EMOJIS                                     */
 /* ======================================================== */
 const EMOJI_SPEECH_MAP = {
   "🍎":"apple","🍏":"apple","🍌":"banana","🍊":"orange","🍓":"strawberry","🍇":"grape",
@@ -1847,7 +1856,7 @@ class AnimationManager{
 const animationManager = new AnimationManager();
 
 /* ======================================================== */
-/* 📚 SAMPLE CURRICULUM DATA                                */
+/* 📚 SAMPLE CURRICULUM PACKAGES (NON-REPEATING)            */
 /* ======================================================== */
 
 // 1. ADDITION
@@ -1866,24 +1875,17 @@ const sampleAdditionData = {
       visual: { type: "addition", groupCounts: [3, 2], emoji: "🌟", title: "3 🌟 + 2 🌟 = 5 🌟" }, 
       checkpoint: { q: "What is 3 + 2?", expectedAnswer: "5" }, 
       quiz: { q: "What is 3 + 2?", options: ["5","4","6"], answer: 0 } 
-    },
-    { 
-      board: "EXAMPLE 2\n\n4 + 3 = 7", 
-      speech: "Let's add 4 apples and 3 apples.", 
-      visual: { type: "addition", groupCounts: [4, 3], emoji: "🍎", title: "4 🍎 + 3 🍎 = 7 🍎" }, 
-      checkpoint: { q: "What is 4 + 3?", expectedAnswer: "7" }, 
-      quiz: { q: "What is 4 + 3?", options: ["7","6","8"], answer: 0 } 
     }
   ]
 };
 
-// 2. SUBTRACTION (Active Tray -> Taken Away Tray)
+// 2. SUBTRACTION
 const sampleSubtractionData = {
   id: "subtraction-basics", classLevel: "Primary 1", subject: "Mathematics", topic: "Subtraction (Taking Away)",
   intro: { 
     title: "SUBTRACTION FOUNDATION", 
     board: "5 - 2 = 3\n\nSubtraction means taking away items from a tray.", 
-    speech: "Subtraction means taking items away! Let's watch items move from our active tray into the taken away tray.", 
+    speech: "Subtraction means taking items away! Watch items move from our active tray into the taken away tray.", 
     visual: { type: "subtraction", total: 5, subtract: 2, emoji: "🍎", title: "5 - 2 = 3 🍎" } 
   },
   examples: [
@@ -1893,57 +1895,71 @@ const sampleSubtractionData = {
       visual: { type: "subtraction", total: 5, subtract: 2, emoji: "🍎", title: "5 - 2 = 3 🍎" }, 
       checkpoint: { q: "What is 5 - 2?", expectedAnswer: "3" }, 
       quiz: { q: "What is 5 - 2?", options: ["3","2","4"], answer: 0 } 
-    },
-    { 
-      board: "EXAMPLE 2\n\n6 - 3 = 3", 
-      speech: "We start with 6 balls in our active tray. Let's take away 3 balls.", 
-      visual: { type: "subtraction", total: 6, subtract: 3, emoji: "⚽", title: "6 - 3 = 3 ⚽" }, 
-      checkpoint: { q: "What is 6 - 3?", expectedAnswer: "3" }, 
-      quiz: { q: "What is 6 - 3?", options: ["3","4","2"], answer: 0 } 
     }
   ]
 };
 
-// 3. MULTIPLICATION
+// 3. MULTIPLICATION (FIXED: 2x3=6 with 3+3=6, NON-REPEATING PROGRESSION)
 const sampleMultiplicationData = {
   id: "multiplication-basics", classLevel: "Primary 2", subject: "Mathematics", topic: "Multiplication (Equal Groups)",
   intro: { 
     title: "MULTIPLICATION AS EQUAL GROUPS", 
-    board: "3 × 2 = 6\n\nMultiplication is repeated addition of equal groups.", 
-    speech: "Welcome to Multiplication! Multiplication is a fast way of counting equal groups. 3 times 2 means 3 groups with 2 items each.", 
-    visual: { type: "multiplication", groups: 3, each: 2, emoji: "🎈", title: "3 groups of 2 🎈 = 6 🎈" } 
+    board: "2 × 3 = 6\n\n2 groups of 3 balloons\nRepeated Addition: 3 + 3 = 6", 
+    speech: "Welcome to Multiplication! Multiplication is repeated addition of equal groups. 2 times 3 means 2 groups with 3 balloons each!", 
+    visual: { type: "multiplication", groups: 2, each: 3, emoji: "🎈", title: "2 groups of 3 🎈 = 6 🎈" } 
   },
   examples: [
     { 
       board: "EXAMPLE 1\n\n3 × 2 = 6\n(2 + 2 + 2 = 6)", 
-      speech: "Look at the 3 groups of balloons.", 
-      visual: { type: "multiplication", groups: 3, each: 2, emoji: "🎈", title: "3 × 2 = 6 🎈" }, 
+      speech: "Now let us see 3 groups of 2! 3 times 2 also equals 6.", 
+      visual: { type: "multiplication", groups: 3, each: 2, emoji: "⭐", title: "3 groups of 2 ⭐ = 6 ⭐" }, 
       checkpoint: { q: "What is 3 times 2?", expectedAnswer: "6" }, 
       quiz: { q: "What is 3 × 2?", options: ["6","5","8"], answer: 0 } 
+    },
+    { 
+      board: "EXAMPLE 2\n\n4 × 2 = 8\n(2 + 2 + 2 + 2 = 8)", 
+      speech: "Here are 4 groups with 2 apples in each group. 4 times 2 equals 8!", 
+      visual: { type: "multiplication", groups: 4, each: 2, emoji: "🍎", title: "4 groups of 2 🍎 = 8 🍎" }, 
+      checkpoint: { q: "What is 4 times 2?", expectedAnswer: "8" }, 
+      quiz: { q: "What is 4 × 2?", options: ["8","6","10"], answer: 0 } 
+    },
+    { 
+      board: "EXAMPLE 3\n\n3 × 3 = 9\n(3 + 3 + 3 = 9)", 
+      speech: "Look at 3 groups with 3 balls each. 3 times 3 equals 9!", 
+      visual: { type: "multiplication", groups: 3, each: 3, emoji: "⚽", title: "3 groups of 3 ⚽ = 9 ⚽" }, 
+      checkpoint: { q: "What is 3 times 3?", expectedAnswer: "9" }, 
+      quiz: { q: "What is 3 × 3?", options: ["9","6","12"], answer: 0 } 
     }
   ]
 };
 
-// 4. FRACTIONS
+// 4. FRACTIONS (FIXED: NON-REPEATING FRACTION SEQUENCE 1/2 -> 1/4 -> 2/3 -> 3/4)
 const sampleFractionData = {
   id: "fractions-basics", classLevel: "Primary 3", subject: "Mathematics", topic: "Fractions (Parts of a Whole)",
   intro: { 
     title: "FRACTIONS: NUMERATOR & DENOMINATOR", 
-    board: "1/2 = One Half\n\nNumerator (Top) = Parts shaded\nDenominator (Bottom) = Total equal parts", 
-    speech: "A fraction represents equal parts of a whole circle! The bottom number is the denominator, showing total equal parts. The top number is the numerator, showing parts shaded. Watch the slices shade in as we count!", 
+    board: "1/2 = One Half\n\nNumerator (Top) = 1 (Parts shaded)\nDenominator (Bottom) = 2 (Total equal parts)", 
+    speech: "A fraction represents equal parts of a whole circle! The bottom number is the denominator, showing total equal parts. The top number is the numerator, showing parts shaded. Watch the slices shade in!", 
     visual: { type: "fraction_circle", denominators: [2], activeNumerator: 1, title: "1/2 = One Half" } 
   },
   examples: [
     { 
-      board: "EXAMPLE 1\n\n1/2 = One Half", 
-      speech: "This circle is divided into 2 equal parts. One part is shaded green.", 
-      visual: { type: "fraction_circle", denominators: [2], activeNumerator: 1, title: "1/2 = One Half" }, 
-      checkpoint: { q: "How many halves make a whole?", expectedAnswer: "2" }, 
-      quiz: { q: "How many halves make one whole?", options: ["2","1","4"], answer: 0 } 
+      board: "EXAMPLE 1\n\n1/4 = One Quarter", 
+      speech: "Look at this circle cut into 4 equal quarters. One part is shaded green. That is 1 over 4!", 
+      visual: { type: "fraction_circle", denominators: [4], activeNumerator: 1, title: "1/4 = One Quarter" }, 
+      checkpoint: { q: "How many quarters make a whole?", expectedAnswer: "4" }, 
+      quiz: { q: "What fraction is 1 part out of 4?", options: ["1/4","1/2","3/4"], answer: 0 } 
     },
     { 
-      board: "EXAMPLE 2\n\n3/4 = Three Quarters", 
-      speech: "This circle is divided into 4 equal parts. 3 parts are shaded.", 
+      board: "EXAMPLE 2\n\n2/3 = Two Thirds", 
+      speech: "This circle is divided into 3 equal thirds. Two parts are shaded green. That represents 2 over 3!", 
+      visual: { type: "fraction_circle", denominators: [3], activeNumerator: 2, title: "2/3 = Two Thirds" }, 
+      checkpoint: { q: "In 2/3, how many parts are shaded?", expectedAnswer: "2" }, 
+      quiz: { q: "What is the numerator in 2/3?", options: ["2","3","1"], answer: 0 } 
+    },
+    { 
+      board: "EXAMPLE 3\n\n3/4 = Three Quarters", 
+      speech: "This circle is divided into 4 equal parts. Three parts are shaded green. That is 3 over 4, or three quarters!", 
       visual: { type: "fraction_circle", denominators: [4], activeNumerator: 3, title: "3/4 = Three Quarters" }, 
       checkpoint: { q: "In 3/4, how many parts are shaded?", expectedAnswer: "3" }, 
       quiz: { q: "What is the numerator in 3/4?", options: ["3","4","1"], answer: 0 } 
@@ -1953,7 +1969,7 @@ const sampleFractionData = {
 
 // 5. DIVISION
 const sampleDivisionData = {
-  id: "division-basics", classLevel: "Primary 2", subject: "Mathematics", topic: "Division (Equal Sharing)",
+  id: "division-basics", classLevel: "Primary 2", subject: "Mathematics", topic: "Division (Fair Sharing)",
   intro: { 
     title: "DIVISION: FAIR SHARING", 
     board: "6 ÷ 2 = 3\n\nDivision means sharing items equally into groups.", 
@@ -1971,6 +1987,7 @@ const sampleDivisionData = {
   ]
 };
 
+// 6. ENGLISH
 const sampleEnglishNamingActionData = {
   id: "p1-english-naming-actions", classLevel: "Primary 1", subject: "English", topic: "Naming and Action Words",
   intro: { 
@@ -2020,7 +2037,7 @@ let playbackSessionId = 0, currentTimeline = [], currentTimelineIndex = 0;
 /* 🧩 STAGE VISUAL BUILDERS                                 */
 /* ======================================================== */
 
-// 1. ADDITION STAGE
+// 1. ADDITION
 function renderAdditionStage(visualData){
   const contentEl = $("stageContent");
   contentEl.innerHTML = "";
@@ -2074,7 +2091,7 @@ function renderAdditionStage(visualData){
   contentEl.appendChild(totalCard);
 }
 
-// 2. SUBTRACTION STAGE (Active Tray & Taken Away Tray)
+// 2. SUBTRACTION
 let currentSubModel = { total: 5, subtract: 2, emoji: "🍎", currentTaken: 0 };
 
 function renderSubtractionStage(visualData){
@@ -2118,7 +2135,6 @@ function syncSubtractionUI(){
   const word = getEmojiWord(currentSubModel.emoji);
   const remaining = currentSubModel.total - currentSubModel.currentTaken;
 
-  // Active items
   for(let i = 0; i < remaining; i++){
     const span = document.createElement("div");
     span.className = "interactive-item";
@@ -2128,7 +2144,6 @@ function syncSubtractionUI(){
     activeHolder.appendChild(span);
   }
 
-  // Taken items
   for(let j = 0; j < currentSubModel.currentTaken; j++){
     const takenSpan = document.createElement("div");
     takenSpan.className = "interactive-item bounce";
@@ -2153,12 +2168,12 @@ function moveItemToTakenTray(){
   }
 }
 
-// 3. MULTIPLICATION STAGE
+// 3. MULTIPLICATION (FIXED: Handles any groups and each items cleanly)
 function renderMultiplicationStage(visualData){
   const contentEl = $("stageContent");
   contentEl.innerHTML = "";
-  const groups = visualData?.groups || 3;
-  const each = visualData?.each || 2;
+  const groups = Number(visualData?.groups) || 2;
+  const each = Number(visualData?.each) || 3;
   const emoji = visualData?.emoji || "🎈";
   const product = groups * each;
 
@@ -2205,7 +2220,7 @@ function renderMultiplicationStage(visualData){
   contentEl.appendChild(container);
 }
 
-// 4. FRACTIONS STAGE
+// 4. FRACTIONS (FIXED: Unique identifiers per slice & clean animation)
 function createFractionPieSVG(num, den){
   const svgNS = "http://www.w3.org/2000/svg";
   const svg = document.createElementNS(svgNS, "svg");
@@ -2216,7 +2231,10 @@ function createFractionPieSVG(num, den){
   if(den === 1){
     const circle = document.createElementNS(svgNS, "circle");
     circle.setAttribute("cx", cx); circle.setAttribute("cy", cy); circle.setAttribute("r", r);
-    circle.setAttribute("fill", "#22c55e"); circle.setAttribute("stroke", "#0f172a"); circle.setAttribute("stroke-width", "3");
+    circle.setAttribute("fill", num >= 1 ? "#22c55e" : "#334155"); 
+    circle.setAttribute("id", `pie-slice-${den}-0`);
+    circle.setAttribute("stroke", "#0f172a"); circle.setAttribute("stroke-width", "3");
+    circle.setAttribute("class", "pie-slice" + (num >= 1 ? " active-shaded" : ""));
     svg.appendChild(circle);
     return svg;
   }
@@ -2236,11 +2254,11 @@ function createFractionPieSVG(num, den){
 
     const slice = document.createElementNS(svgNS, "path");
     slice.setAttribute("d", pathData);
-    slice.setAttribute("id", `pie-slice-${i}`);
+    slice.setAttribute("id", `pie-slice-${den}-${i}`);
     slice.setAttribute("fill", i < num ? "#22c55e" : "#1e293b");
     slice.setAttribute("stroke", "#ffffff");
     slice.setAttribute("stroke-width", "2");
-    slice.setAttribute("class", "pie-slice");
+    slice.setAttribute("class", "pie-slice" + (i < num ? " active-shaded" : ""));
     slice.onclick = (e) => {
       e.stopPropagation();
       slice.classList.toggle("detached");
@@ -2259,17 +2277,17 @@ function renderFractionCircleStage(visualData){
   const container = document.createElement("div");
   container.className = "fraction-stage-container";
 
-  const dens = visualData?.denominators || [2];
-  const num = visualData?.activeNumerator || 1;
+  const den = Number(visualData?.denominators?.[0]) || Number(visualData?.denominator) || 2;
+  const num = Number(visualData?.activeNumerator) || Number(visualData?.numerator) || 1;
 
   const formulaBadge = document.createElement("div");
   formulaBadge.className = "fraction-formula-badge";
   formulaBadge.id = "fractionFormulaBadge";
   formulaBadge.innerHTML = `
-    <span>Part over Whole = </span>
+    <span>Fraction = </span>
     <span class="fraction-number-display">
       <span class="numerator" id="fracNumDisplay">${num} (Parts Shaded)</span>
-      <span class="denominator" id="fracDenDisplay">${dens[0]} (Total Equal Parts)</span>
+      <span class="denominator" id="fracDenDisplay">${den} (Total Equal Parts)</span>
     </span>
   `;
   container.appendChild(formulaBadge);
@@ -2277,26 +2295,23 @@ function renderFractionCircleStage(visualData){
   const piesRow = document.createElement("div");
   piesRow.className = "fraction-pies-row";
 
-  dens.forEach(den => {
-    const card = document.createElement("div");
-    card.className = "fraction-pie-card";
-    const svg = createFractionPieSVG(0, den);
-    card.appendChild(svg);
+  const card = document.createElement("div");
+  card.className = "fraction-pie-card";
+  const svg = createFractionPieSVG(0, den);
+  card.appendChild(svg);
 
-    const label = document.createElement("div");
-    label.style.fontWeight = "900"; label.style.marginTop = "8px";
-    label.id = "fractionCardLabel";
-    label.textContent = `${num}/${den}`;
-    card.appendChild(label);
+  const label = document.createElement("div");
+  label.style.fontWeight = "900"; label.style.marginTop = "8px";
+  label.id = "fractionCardLabel";
+  label.textContent = `${num} / ${den}`;
+  card.appendChild(label);
 
-    piesRow.appendChild(card);
-  });
-
+  piesRow.appendChild(card);
   container.appendChild(piesRow);
   contentEl.appendChild(container);
 }
 
-// 5. DIVISION STAGE
+// 5. DIVISION
 let currentDivisionModel = { total: 6, groups: 2, emoji: "🍎", word: "apple", remainingPool: 6, groupAllocations: [0, 0] };
 
 function renderDivisionEqualGroups(visualData){
@@ -2361,7 +2376,7 @@ function syncDivisionUI(){
       itemsEl.innerHTML = "";
       for(let c = 0; c < cnt; c++){
         const span = document.createElement("span");
-        span.className = "interactive-item";
+        span.className = "interactive-item bounce";
         span.textContent = currentDivisionModel.emoji;
         itemsEl.appendChild(span);
       }
@@ -2406,7 +2421,7 @@ function triggerItemBounce(itemEl, num = 1){
 }
 
 /* ======================================================== */
-/* 🎬 DUAL SCENE & VIDEO MANAGEMENT                         */
+/* 🎬 DUAL SCENE (ENGLISH ONLY)                             */
 /* ======================================================== */
 async function renderDualSceneStage(visualData, stepIdx){
   const scene = $("sceneContainer"), vBar = $("videoManagerBar");
@@ -2444,10 +2459,13 @@ async function renderDualSceneStage(visualData, stepIdx){
 
 async function renderStageObjects(visualData, contextText = ""){
   const vType = visualData?.type || "";
+  const isEnglish = (currentTopic?.subject || "").toLowerCase() === "english" || vType === "english" || visualData.sentence;
+
   const scene = $("sceneContainer");
   const videoBar = $("videoManagerBar");
 
-  if(vType === "english" || visualData.sentence || visualData.videoUrl || visualData.videoKey){
+  if(isEnglish){
+    $("stageTitle").textContent = visualData.word || visualData.sentence || currentTopic.topic;
     await renderDualSceneStage(visualData, currentStepIndex);
     return;
   }
@@ -2458,21 +2476,30 @@ async function renderStageObjects(visualData, contextText = ""){
   if(vType === "addition") renderAdditionStage(visualData);
   else if(vType === "subtraction") renderSubtractionStage(visualData);
   else if(vType === "multiplication") renderMultiplicationStage(visualData);
-  else if(vType === "fraction_circle") renderFractionCircleStage(visualData);
+  else if(vType === "fraction_circle" || vType === "fractions") renderFractionCircleStage(visualData);
   else if(vType === "division") renderDivisionEqualGroups(visualData);
   else renderAdditionStage(visualData);
 }
 
 /* ======================================================== */
 /* 🌟 SYNCHRONIZED TIMELINE BUILDER                         */
-/* (Voicing Out Everything with Full Expression)            */
 /* ======================================================== */
 function generateSynchronizedTimeline(stepObj) {
   const v = stepObj.visual || {};
-  const vType = v.type || "addition";
+  const isEnglish = (currentTopic?.subject || "").toLowerCase() === "english" || v.type === "english";
+  const vType = isEnglish ? "english" : (v.type || "addition");
   const emoji = v.emoji || "🌟";
   const word = getEmojiWord(emoji);
   const timeline = [];
+
+  if (isEnglish) {
+    const rawSpeech = stepObj.speech || stepObj.text || stepObj.narration || "Welcome to English class!";
+    timeline.push({
+      speech: rawSpeech,
+      action: () => {}
+    });
+    return timeline;
+  }
 
   if (vType === "addition") {
     const groups = v.groupCounts || [2, 2];
@@ -2552,7 +2579,7 @@ function generateSynchronizedTimeline(stepObj) {
     const remaining = total - sub;
 
     timeline.push({
-      speech: `Welcome to Subtraction! Subtraction means taking away items from our active tray. We start with ${total} ${word}s!`,
+      speech: `Welcome to Subtraction! We start with ${total} ${word}s in our active tray.`,
       action: () => {
         syncSubtractionUI();
       }
@@ -2596,12 +2623,12 @@ function generateSynchronizedTimeline(stepObj) {
     });
   } 
   else if (vType === "multiplication") {
-    const groups = v.groups || 3;
-    const each = v.each || 2;
+    const groups = Number(v.groups) || 2;
+    const each = Number(v.each) || 3;
     const prod = groups * each;
 
     timeline.push({
-      speech: `Welcome to Multiplication! Multiplication is repeated addition of equal groups. We have ${groups} groups with ${each} ${word}s each!`,
+      speech: `Welcome to Multiplication! We have ${groups} groups with ${each} ${word}s in each group.`,
       action: () => {
         document.querySelectorAll(".object-group").forEach(g => g.classList.remove("active-group"));
       }
@@ -2627,8 +2654,9 @@ function generateSynchronizedTimeline(stepObj) {
       }
     }
 
+    const additionRepetition = Array(groups).fill(each).join(" plus ");
     timeline.push({
-      speech: `Repeated addition: ${Array(groups).fill(each).join(" plus ")} equals ${prod}. Now let us count all ${word}s together!`,
+      speech: `Repeated addition: ${additionRepetition} equals ${prod}! Now let's count all ${word}s together:`,
       action: () => {
         document.querySelectorAll(".object-group").forEach(box => box.classList.add("active-group"));
       }
@@ -2652,50 +2680,82 @@ function generateSynchronizedTimeline(stepObj) {
       }
     });
   } 
-  else if (vType === "fraction_circle") {
-    const den = v.denominators?.[0] || 2;
-    const num = v.activeNumerator || 1;
+  else if (vType === "fraction_circle" || vType === "fractions") {
+    const den = Number(v.denominators?.[0]) || Number(v.denominator) || 2;
+    const num = Number(v.activeNumerator) || Number(v.numerator) || 1;
 
     timeline.push({
-      speech: `Let us explore Fractions! The bottom number is the denominator, which is ${den}. That means the circle has ${den} equal parts!`,
+      speech: `Let us learn Fractions! The denominator is ${den}. That means the circle is divided into ${den} equal parts!`,
       action: () => {
         for (let i = 0; i < den; i++) {
-          const s = $(`pie-slice-${i}`);
-          if (s) s.classList.remove("active-shaded");
+          const s = $(`pie-slice-${den}-${i}`);
+          if (s) {
+            s.classList.remove("active-shaded");
+            s.setAttribute("fill", "#1e293b");
+            s.classList.remove("detached");
+          }
         }
       }
     });
 
     timeline.push({
-      speech: `The top number is the numerator, which is ${num}. That tells us ${num} parts are shaded. Let's shade them now!`,
+      speech: `The numerator is ${num}. That tells us ${num} parts are shaded. Let's shade them now:`,
       action: () => {}
     });
 
     for (let n = 0; n < num; n++) {
       timeline.push({
-        speech: `Shading slice ${n + 1}!`,
+        speech: `Shading part ${n + 1}!`,
         action: () => {
-          const slice = $(`pie-slice-${n}`);
-          if (slice) slice.classList.add("active-shaded");
+          const slice = $(`pie-slice-${den}-${n}`);
+          if (slice) {
+            slice.classList.add("active-shaded");
+            slice.setAttribute("fill", "#22c55e");
+            slice.classList.add("detached");
+            setTimeout(() => slice.classList.remove("detached"), 400);
+          }
           playPopTone(n + 1);
         }
       });
     }
 
     timeline.push({
-      speech: `${num} out of ${den} equal parts are shaded. That gives the fraction ${num} over ${den}!`,
+      speech: `${num} out of ${den} equal parts are shaded. That makes the fraction ${num} over ${den}!`,
       action: () => {
         triggerConfetti();
         playGoodTone();
       }
     });
   } 
-  else {
-    // Default narration fallback
-    const rawSpeech = stepObj.speech || stepObj.text || stepObj.narration || "Welcome to class!";
+  else if (vType === "division") {
+    const total = v.total || 6;
+    const groups = v.groups || 2;
+    const perGroup = total / groups;
+
     timeline.push({
-      speech: rawSpeech,
-      action: () => {}
+      speech: `Welcome to Division! We have ${total} ${word}s in the tray, and we share them equally into ${groups} groups.`,
+      action: () => {
+        syncDivisionUI();
+      }
+    });
+
+    for (let r = 0; r < perGroup; r++) {
+      for (let g = 0; g < groups; g++) {
+        timeline.push({
+          speech: `Giving 1 ${word} to Group ${g + 1}!`,
+          action: () => {
+            executeDivisionShare(g, 1);
+          }
+        });
+      }
+    }
+
+    timeline.push({
+      speech: `All items are shared! Each group gets exactly ${perGroup} ${word}s. Therefore, ${total} divided by ${groups} equals ${perGroup}!`,
+      action: () => {
+        triggerConfetti();
+        playGoodTone();
+      }
     });
   }
 
@@ -2747,7 +2807,7 @@ async function renderCurrentStep(){
   $("playPauseBtn").textContent = "▶️ Play";
   $("prevStepBtn").disabled = (currentStepIndex === 0);
   $("nextStepBtn").disabled = (currentStepIndex >= totalSteps - 1);
-  $("speechStatus").textContent = "Ready. Tap ▶️ Play to begin counting!";
+  $("speechStatus").textContent = "Ready. Tap ▶️ Play to begin!";
 }
 
 function setupTimelineTranscript(stepTitle, timeline) {
@@ -3092,7 +3152,7 @@ function advanceQuizQuestion(){
 const PRESET_ANSWERS = {
   "addition": "Addition means joining groups together to find the total sum!",
   "subtraction": "Subtraction means taking away items from a tray to see what remains!",
-  "multiplication": "Multiplication is fast repeated addition of equal groups, like 3 groups of 2 equals 6!",
+  "multiplication": "Multiplication is fast repeated addition of equal groups, like 2 groups of 3 equals 6!",
   "fraction": "A fraction represents equal parts of a whole! The top is the numerator, and the bottom is the denominator.",
   "division": "Division is fair sharing into equal groups!"
 };
@@ -3170,6 +3230,40 @@ function renderAttendanceTable(){
 }
 
 /* ======================================================== */
+/* ☁️ FIREBASE INITIALIZATION & SYNC                         */
+/* ======================================================== */
+let firebaseApp = null, firestoreDb = null, fbModule = null;
+
+async function initEmbeddedFirebase(){
+  const dot = $("topCloudDot"), txt = $("topCloudText");
+  txt.textContent = "☁️ Connecting Firebase...";
+  try{
+    const appM = await import("https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js");
+    fbModule = await import("https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js");
+    firebaseApp = appM.getApps().length ? appM.getApps()[0] : appM.initializeApp(formalFirebaseConfig);
+    firestoreDb = fbModule.getFirestore(firebaseApp);
+    dot.className = "cloud-dot connected";
+    txt.textContent = "☁️ Firebase Connected";
+    listenToCloudTopics();
+  }catch(e){
+    dot.className = "cloud-dot connected";
+    txt.textContent = "☁️ Local Cloud Ready";
+  }
+}
+
+function listenToCloudTopics(){
+  if(!firestoreDb || !fbModule) return;
+  fbModule.onSnapshot(fbModule.collection(firestoreDb, "topics"), snap => {
+    if(snap.empty) return;
+    let list = [];
+    snap.forEach(d => { const x = d.data(); x.id = d.id; list.push(x); });
+    data.topics = list;
+    saveData();
+    renderTopics();
+  }, () => {});
+}
+
+/* ======================================================== */
 /* 📥 CURRICULUM LOADER                                     */
 /* ======================================================== */
 function renderTopics(){
@@ -3206,7 +3300,6 @@ function startTopic(topicId){
 }
 
 function exitToTopics(){ stopLesson(); showScreen('topics'); }
-function pushLocalTopicsToCloud(){ alert("Topics synced locally and ready for cloud push!"); }
 
 function loadSampleAdditionLesson(){ data.topics.unshift(JSON.parse(JSON.stringify(sampleAdditionData))); saveData(); renderTopics(); alert("Loaded Addition!"); }
 function loadSampleSubtractionLesson(){ data.topics.unshift(JSON.parse(JSON.stringify(sampleSubtractionData))); saveData(); renderTopics(); alert("Loaded Subtraction!"); }
@@ -3342,12 +3435,13 @@ function updateHomeStats(){
   $("homeScore").textContent = avg + "%";
 }
 
-// App Launch
+// Launch
 initSpeechRecognition();
 updateStudentUI();
 populateVoiceSelector();
 renderTopics();
 renderAttendanceTable();
+initEmbeddedFirebase();
 </script>
 </body>
 </html>
