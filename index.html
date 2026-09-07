@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Kids Learning Academy - Smart Classroom with Nigerian AI Teacher</title>
+<title>Kids Learning Academy - Smart Classroom &amp; Universal Hub</title>
 
 <style>
 *{box-sizing:border-box}
@@ -108,7 +108,7 @@ button,input,select,textarea{font:inherit}
   box-shadow:0 0 8px #00ff88;
 }
 
-/* SIDEBAR DRAWER */
+/* SIDEBAR */
 .sidebar-backdrop{
   position:fixed;
   inset:0;
@@ -213,7 +213,7 @@ button,input,select,textarea{font:inherit}
   background:#fafbfc;
 }
 
-/* GENERAL BUTTONS */
+/* BUTTONS */
 .btn{
   border:0;
   border-radius:12px;
@@ -786,14 +786,6 @@ button,input,select,textarea{font:inherit}
   font-weight:700;
 }
 
-.chunk.active{
-  background:#ffe600;
-  color:#8b0000;
-  font-weight:900;
-  border-radius:4px;
-  padding:1px 4px;
-}
-
 /* CHECKPOINT OVERLAY */
 .checkpoint-overlay{
   position:absolute;
@@ -1053,7 +1045,7 @@ footer{
     <button class="menu-toggle-btn" onclick="toggleSidebar()">☰</button>
     <div class="brand-info">
       <h1>📚 Kids Learning Academy</h1>
-      <small>Universal Smart Classroom • 🇳🇬 Nigerian AI Teacher</small>
+      <small>Smart Classroom • 🇳🇬 Nigerian AI Teacher Voice</small>
     </div>
   </div>
   <div class="topbar-right">
@@ -1367,7 +1359,7 @@ footer{
     <h2>Parent Security Gate</h2>
     <p>Please solve to access:</p>
     <div id="parentGateMathProblem" style="font-size:1.3rem; font-weight:bold; color:#d97706; margin-bottom:10px;"></div>
-    <input type="number" id="parentGateAnswer" placeholder="Answer..." style="font-size:1.1rem; text-align:center; font-weight:bold; margin-bottom:12px;">
+    <input type="number" id="parentGateAnswer" placeholder="Answer..." style="margin-bottom:10px; text-align:center;">
     <div style="display:flex; gap:8px;">
       <button class="btn primary" style="flex:1;" onclick="verifyParentGateAnswer()">Unlock</button>
       <button class="btn" onclick="closeParentGateModal()">Cancel</button>
@@ -1406,7 +1398,7 @@ const DB_NAME = "KidsAcademyMediaDB";
 function openMediaDB() {
   return new Promise((res, rej) => {
     const r = indexedDB.open(DB_NAME, 2);
-    r.onupgradeneeded = (e) => {
+    r.onupgradeneeded = () => {
       const db = r.result;
       if (!db.objectStoreNames.contains("videos")) db.createObjectStore("videos");
       if (!db.objectStoreNames.contains("audio_cache")) db.createObjectStore("audio_cache");
@@ -1416,7 +1408,7 @@ function openMediaDB() {
   });
 }
 
-// Video Blobs Cache
+// Video Blobs
 async function saveVideoBlob(k, b) {
   try {
     const db = await openMediaDB();
@@ -1441,7 +1433,7 @@ async function deleteVideoBlob(k) {
   } catch (e) {}
 }
 
-// Audio Blobs Cache (Voice + Text Hash)
+// AI Audio Blobs (Voice + Text Hash)
 async function getCachedAudioBlob(cacheKey) {
   try {
     const db = await openMediaDB();
@@ -1461,7 +1453,7 @@ async function saveCachedAudioBlob(cacheKey, blob) {
 }
 
 /* ======================================================== */
-/* 🎙️ NIGERIAN AI TEACHER SPEECH ENGINE (AZURE NEURAL TTS)  */
+/* 🎙️ NIGERIAN AI TEACHER SPEECH ENGINE (/api/tts)         */
 /* ======================================================== */
 let currentTeacherVoice = localStorage.getItem(VOICE_PREF_KEY) || 'en-NG-EzinneNeural';
 let currentSpeechSpeed = '1.0';
@@ -1489,7 +1481,7 @@ function updateSpeakerIndicator() {
   $('speakerStatusText').textContent = label;
 }
 
-// Clean and extract human teacher speech from any JSON field
+// Extract natural teacher speech from any JSON field
 function extractSpokenText(stepObj) {
   if (!stepObj) return "";
   let raw = stepObj.speech ||
@@ -1505,10 +1497,9 @@ function extractSpokenText(stepObj) {
 
   if (typeof raw !== 'string') return "";
 
-  // Replace child name placeholder
   let text = raw.replace(/superstar|my dear friend|student/gi, studentProfile.name || "Superstar");
 
-  // Replace common educational emojis with clear words so Azure pronounces them naturally
+  // Replace educational emojis with clear words so the Nigerian voice speaks them naturally
   text = text
     .replace(/🍎/g, " apple ")
     .replace(/🍌/g, " banana ")
@@ -1541,13 +1532,11 @@ async function getAITeacherAudio(text, voice, speed) {
   const normalized = text.trim().toLowerCase();
   const cacheKey = `${voice}_${normalized}`;
 
-  // 1. Check browser IndexedDB cache
+  // Check local IndexedDB cache
   const cached = await getCachedAudioBlob(cacheKey);
-  if (cached) {
-    return cached;
-  }
+  if (cached) return cached;
 
-  // 2. Query secure backend proxy endpoint (/api/tts)
+  // Request from Vercel backend (/api/tts)
   if (currentNarrationAbortCtrl) {
     currentNarrationAbortCtrl.abort();
   }
@@ -1570,7 +1559,7 @@ async function getAITeacherAudio(text, voice, speed) {
   return audioBlob;
 }
 
-// Universal Playback Function for Lessons & Ask The Teacher
+// Universal Playback Function
 async function playNarrationWithNigerianAI(textToSpeak, onStartCb, onEndedCb) {
   stopActiveNarration();
 
@@ -1623,10 +1612,7 @@ async function playNarrationWithNigerianAI(textToSpeak, onStartCb, onEndedCb) {
     console.error("AI Narration Error:", err);
     stopActiveNarration();
     $('speechStatus').textContent = "⚠️ Voice unavailable. Please check internet connection.";
-    // Let lesson continue even if voice is temporarily offline
-    if (onEndedCb) {
-      setTimeout(onEndedCb, 3000);
-    }
+    if (onEndedCb) setTimeout(onEndedCb, 3000);
   }
 }
 
@@ -2413,7 +2399,7 @@ async function playLesson(){
   const stepObj = currentStepData();
   const isSceneActive = !$("sceneContainer").classList.contains("hidden");
 
-  // If a video is loaded on this step, play the video first
+  // If a video is loaded on this step, play the video
   if(video && isSceneActive){
     $("speakerPulseDot").className = "pulse-dot";
     $("speakerStatusText").textContent = "🎬 Playing Video...";
@@ -2430,7 +2416,7 @@ async function playLesson(){
   if(action === "run") playDogBarkSound();
   animationManager.animate(stepObj);
 
-  // If division step, simulate fair sharing into boxes
+  // If division step, distribute into boxes step by step
   if(stepObj.visual?.type === "division"){
     const tot = stepObj.visual.total || 6;
     const g = stepObj.visual.groups || 2;
@@ -2442,16 +2428,14 @@ async function playLesson(){
 
   const spokenText = extractSpokenText(stepObj);
 
-  // Read with natural Azure Nigerian AI teacher voice
+  // Play with natural Nigerian AI teacher voice (/api/tts)
   await playNarrationWithNigerianAI(
     spokenText,
     () => {
-      // Audio started
       const block = $('transcriptActiveBlock');
       if(block) block.style.color = '#ffe600';
     },
     () => {
-      // Audio finished
       const block = $('transcriptActiveBlock');
       if(block) block.style.color = '#e0f2e9';
       onStepNarrationFinished();
@@ -2708,14 +2692,14 @@ function advanceQuizQuestion(){
 }
 
 /* ======================================================== */
-/* 👩‍🏫 ASK TEACHER Q&A (NIGERIAN AI VOICE)                  */
+/* 👩‍🏫 ASK TEACHER Q&A ROOM (NIGERIAN AI VOICE)             */
 /* ======================================================== */
 const PRESET_ANSWERS = {
   "what is addition": "Addition means putting numbers or objects together to find the total sum!",
   "what is a fraction": "A fraction represents equal parts of a whole circle or object!",
   "what is subtraction": "Subtraction means taking away items to find out how many are left!",
   "what is division": "Division is fair sharing into equal groups!",
-  "what is a verb": "A verb is an action word! It tells what someone or something does, like run or jump."
+  "what is a verb": "A verb is an action word! It tells what someone or something does, like meow or run."
 };
 
 async function submitStudentQuestion(){
@@ -2760,8 +2744,6 @@ function openParentGateModal(){
   $("parentGateModal").classList.remove("hidden");
 }
 
-function closeParentGateModal(){ $("parentGateModal").classList.add("hidden"); }
-
 function verifyParentGateAnswer(){
   if(parseInt($("parentGateAnswer").value, 10) === gateExpectedAns){
     $("parentGateModal").classList.add("hidden");
@@ -2797,7 +2779,6 @@ function renderAttendanceTable(){
 /* 📥 UNIVERSAL JSON IMPORT & NORMALIZATION                 */
 /* ======================================================== */
 function normalizeLessonJSON(parsed) {
-  // Support single topic object or array of topics
   const rawTopic = Array.isArray(parsed) ? parsed[0] : (parsed.topics ? parsed.topics[0] : parsed);
   if (!rawTopic || typeof rawTopic !== 'object') throw new Error("Invalid JSON structure.");
 
@@ -2805,18 +2786,15 @@ function normalizeLessonJSON(parsed) {
   const subject = rawTopic.subject || "General";
   const classLevel = rawTopic.classLevel || studentProfile.classLevel || "Primary 1";
 
-  // Support: "lesson": [ ... ], "lessons": [ ... ], "steps": [ ... ], or existing "examples"
   const rawList = rawTopic.lesson || rawTopic.lessons || rawTopic.steps || rawTopic.items || rawTopic.examples || [];
 
   let intro = rawTopic.intro;
   let examples = [];
 
   if (rawTopic.intro && Array.isArray(rawTopic.examples)) {
-    // Already in existing format
     return rawTopic;
   }
 
-  // Convert generic list of items into smartboard classroom steps
   if (Array.isArray(rawList) && rawList.length > 0) {
     intro = {
       title: topicTitle.toUpperCase(),
@@ -2862,7 +2840,7 @@ function importPastedJSON(){
     saveData();
     syncTopicToCloud(normalized);
     renderTopics();
-    alert(`🎉 Successfully imported: "${normalized.topic}"!\nIt is now ready with Nigerian AI Voice narration.`);
+    alert(`🎉 Successfully imported: "${normalized.topic}"!\nIt is ready with Nigerian AI Voice narration.`);
     startTopic(normalized.id);
   }catch(e){
     alert("Invalid JSON: " + e.message);
@@ -2902,41 +2880,15 @@ function startTopic(topicId){
   renderCurrentStep().then(() => { if(isAutoPlayEnabled) setTimeout(playLesson, 400); });
 }
 
-function exitToTopics(){
-  stopLesson();
-  showScreen('topics');
-}
+function exitToTopics(){ stopLesson(); showScreen('topics'); }
+function pushLocalTopicsToCloud(){ data.topics.forEach(syncTopicToCloud); alert("Pushed all topics to Firebase!"); }
+function pullTopicsFromCloud(){ listenToCloudTopics(); alert("Synced with Firebase Cloud!"); }
 
-function pushLocalTopicsToCloud(){
-  data.topics.forEach(syncTopicToCloud);
-  alert(`Pushed ${data.topics.length} topic(s) to Firebase Cloud Firestore!`);
-}
-
-function pullTopicsFromCloud(){
-  listenToCloudTopics();
-  alert("Synced with Firebase Cloud!");
-}
-
-function loadSampleEnglishActionLesson(){
-  data.topics.unshift(JSON.parse(JSON.stringify(sampleEnglishNamingActionData)));
-  saveData(); syncTopicToCloud(data.topics[0]); renderTopics(); alert("Loaded English Lesson!");
-}
-function loadSampleAdditionLesson(){
-  data.topics.unshift(JSON.parse(JSON.stringify(sampleAdditionData)));
-  saveData(); syncTopicToCloud(data.topics[0]); renderTopics(); alert("Loaded Addition!");
-}
-function loadSampleSubtractionLesson(){
-  data.topics.unshift(JSON.parse(JSON.stringify(sampleSubtractionData)));
-  saveData(); syncTopicToCloud(data.topics[0]); renderTopics(); alert("Loaded Subtraction!");
-}
-function loadSampleDivisionLesson(){
-  data.topics.unshift(JSON.parse(JSON.stringify(sampleDivisionData)));
-  saveData(); syncTopicToCloud(data.topics[0]); renderTopics(); alert("Loaded Division!");
-}
-function loadSampleFractionLesson(){
-  data.topics.unshift(JSON.parse(JSON.stringify(sampleFractionData)));
-  saveData(); syncTopicToCloud(data.topics[0]); renderTopics(); alert("Loaded Fractions!");
-}
+function loadSampleEnglishActionLesson(){ data.topics.unshift(JSON.parse(JSON.stringify(sampleEnglishNamingActionData))); saveData(); syncTopicToCloud(data.topics[0]); renderTopics(); alert("Loaded English Lesson!"); }
+function loadSampleAdditionLesson(){ data.topics.unshift(JSON.parse(JSON.stringify(sampleAdditionData))); saveData(); syncTopicToCloud(data.topics[0]); renderTopics(); alert("Loaded Addition!"); }
+function loadSampleSubtractionLesson(){ data.topics.unshift(JSON.parse(JSON.stringify(sampleSubtractionData))); saveData(); syncTopicToCloud(data.topics[0]); renderTopics(); alert("Loaded Subtraction!"); }
+function loadSampleDivisionLesson(){ data.topics.unshift(JSON.parse(JSON.stringify(sampleDivisionData))); saveData(); syncTopicToCloud(data.topics[0]); renderTopics(); alert("Loaded Division!"); }
+function loadSampleFractionLesson(){ data.topics.unshift(JSON.parse(JSON.stringify(sampleFractionData))); saveData(); syncTopicToCloud(data.topics[0]); renderTopics(); alert("Loaded Fractions!"); }
 
 /* ======================================================== */
 /* ☀️ SCREEN AWAKE (WAKE LOCK API)                          */
@@ -3011,14 +2963,8 @@ function toggleSidebar(){
 }
 
 function toggleTVMode(){ document.body.classList.toggle("tv-mode"); }
-
-function slugify(s){
-  return String(s||"").toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"") || "topic";
-}
-
-function escapeHTML(s){
-  return String(s||"").replace(/[&<>"']/g, m => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]));
-}
+function slugify(s){ return String(s||"").toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"") || "topic"; }
+function escapeHTML(s){ return String(s||"").replace(/[&<>"']/g, m => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m])); }
 
 function updateStudentUI(){
   const name = studentProfile.name || "Superstar";
@@ -3034,7 +2980,11 @@ function closeRegistrationModal(){ $("registrationModal").classList.add("hidden"
 function saveStudentRegistration(){
   studentProfile.name = $("regStudentName").value || "Superstar";
   studentProfile.classLevel = $("regStudentClass").value || "Primary 1";
-  saveStudentProfile();
+  localStorage.setItem(STUDENT_KEY, JSON.stringify(studentProfile));
+  document.querySelectorAll(".student-name-display").forEach(e => e.textContent = studentProfile.name);
+  $("topStudentName").textContent = studentProfile.name;
+  $("topStudentClass").textContent = studentProfile.classLevel;
+  $("homeClassDisplay").textContent = studentProfile.classLevel;
   closeRegistrationModal();
   renderTopics();
 }
@@ -3054,7 +3004,7 @@ function updateHomeStats(){
   $("homeScore").textContent = avg + "%";
 }
 
-// Initial Launch
+// Initial App Launch
 initSpeechRecognition();
 updateStudentUI();
 updateSpeakerIndicator();
@@ -3064,4 +3014,5 @@ renderAttendanceTable();
 initEmbeddedFirebase();
 </script>
 </body>
-  </html>
+</html>
+
