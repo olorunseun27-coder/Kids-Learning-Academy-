@@ -108,7 +108,7 @@ button,input,select,textarea{font:inherit}
   box-shadow:0 0 8px #00ff88;
 }
 
-/* SIDEBAR */
+/* SIDEBAR DRAWER */
 .sidebar-backdrop{
   position:fixed;
   inset:0;
@@ -1060,7 +1060,7 @@ footer{
     <button class="menu-toggle-btn" onclick="toggleSidebar()">☰</button>
     <div class="brand-info">
       <h1>📚 Kids Learning Academy</h1>
-      <small>Smart Classroom • 🇳🇬 Nigerian AI Teacher Voice</small>
+      <small>Smart Classroom • 🇳🇬 Nigerian Natural Voice Engine</small>
     </div>
   </div>
   <div class="topbar-right">
@@ -1815,7 +1815,7 @@ function saveData(){ try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(data)
 let data = loadData(), progress = JSON.parse(localStorage.getItem(PROGRESS_KEY) || '{"completedSteps":{},"quizzes":[]}'), studentProfile = JSON.parse(localStorage.getItem(STUDENT_KEY) || '{"name":"Superstar","classLevel":"Primary 1"}'), attendanceLogs = JSON.parse(localStorage.getItem(ATTENDANCE_KEY) || "[]");
 
 let currentTopic = null, currentStepIndex = 0, isPlaying = false, isPaused = false, autoAdvanceTimeout = null, activeStepVideoBlobUrl = null;
-let isAutoPlayEnabled = (localStorage.getItem(AUTOPLAY_KEY) !== "false"); // Default to TRUE
+let isAutoPlayEnabled = (localStorage.getItem(AUTOPLAY_KEY) !== "false");
 let currentEditingTopicId = null;
 
 /* ======================================================== */
@@ -2323,8 +2323,7 @@ async function playLesson(){
   if(action === "run") playDogBarkSound();
   animationManager.animate(stepObj);
 
-  // Animate items during narration:
-  // Subtraction animation (move items to side tray)
+  // Subtraction animation
   if(stepObj.visual?.type === "subtraction"){
     const tot = stepObj.visual.total || 5;
     const sub = stepObj.visual.subtract || 2;
@@ -2341,7 +2340,7 @@ async function playLesson(){
     }, 2800);
   }
 
-  // Division animation (distribute items to boxes)
+  // Division animation
   if(stepObj.visual?.type === "division"){
     const tot = stepObj.visual.total || 6;
     const g = stepObj.visual.groups || 2;
@@ -2351,11 +2350,10 @@ async function playLesson(){
     }
   }
 
-  // Addition counting pop-ups (pop group 1, then group 2, then all)
+  // Addition counting animation
   if(stepObj.visual?.type === "addition" && Array.isArray(stepObj.visual.groupCounts)){
     const counts = stepObj.visual.groupCounts;
     let delay = 1200;
-    // Highlight Group 1
     setTimeout(() => {
       const g0 = $("group-0"); if(g0) g0.classList.add("active-group");
       for(let i=0; i<counts[0]; i++){
@@ -2367,7 +2365,6 @@ async function playLesson(){
     }, delay);
 
     delay += (counts[0] * 650) + 1000;
-    // Highlight Group 2
     setTimeout(() => {
       const g0 = $("group-0"); if(g0) g0.classList.remove("active-group");
       const g1 = $("group-1"); if(g1) g1.classList.add("active-group");
@@ -2380,7 +2377,6 @@ async function playLesson(){
     }, delay);
 
     delay += (counts[1] * 650) + 1200;
-    // Count all together
     setTimeout(() => {
       document.querySelectorAll(".object-group").forEach(g => g.classList.add("active-group"));
       const allItems = document.querySelectorAll(".interactive-item");
@@ -2392,8 +2388,8 @@ async function playLesson(){
 
   const spokenText = extractSpokenText(stepObj);
 
-  // Play unified natural voice (never cuts off)
-  $('speechStatus').textContent = "⏳ Generating natural Nigerian teacher voice...";
+  // Stream via Nigerian voice backend (/api/tts)
+  $('speechStatus').textContent = "⏳ Loading natural Nigerian teacher voice...";
   try{
     const audioBlob = await getAITeacherAudio(spokenText, currentTeacherVoice, currentSpeechSpeed);
     if(!isPlaying) return;
@@ -2455,7 +2451,7 @@ function onStepNarrationFinished(){
     return;
   }
 
-  // 2. 🔁 CONTINUOUS AUTO-PLAY (Advances to next step smoothly)
+  // 2. 🔁 CONTINUOUS AUTO-PLAY
   if(isAutoPlayEnabled && currentStepIndex < totalSteps - 1){
     $("speechStatus").textContent = `⏳ Auto-Advancing to Step ${currentStepIndex + 2} in 2 seconds...`;
     clearTimeout(autoAdvanceTimeout);
@@ -2544,7 +2540,7 @@ function toggleAutoplayMode(){
 }
 
 /* ======================================================== */
-/* ⛶ FULLSCREEN (Mobile & Desktop Compatible)              */
+/* ⛶ FULLSCREEN                                             */
 /* ======================================================== */
 window.toggleBrowserFullscreen = function(){
   const shell = $("fullscreenPlayerShell");
@@ -2915,7 +2911,7 @@ function loadSampleDivisionLesson(){ data.topics.unshift(JSON.parse(JSON.stringi
 function loadSampleFractionLesson(){ data.topics.unshift(JSON.parse(JSON.stringify(sampleFractionData))); saveData(); syncTopicToCloud(data.topics[0]); renderTopics(); renderTopicManageList(); alert("Loaded Fractions!"); }
 
 /* ======================================================== */
-/* ☀️ SCREEN AWAKE & FULLSCREEN                             */
+/* ☀️ SCREEN AWAKE                                          */
 /* ======================================================== */
 let wakeLock = null;
 
@@ -3040,4 +3036,3 @@ initEmbeddedFirebase();
 </script>
 </body>
 </html>
-
