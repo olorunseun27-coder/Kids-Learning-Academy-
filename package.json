@@ -1,0 +1,8 @@
+{
+  "name": "kids-learning-academy",
+  "version": "1.0.0",
+  "type": "module",
+  "dependencies": {
+    "msedge-tts": "^1.4.3"
+  }
+}
