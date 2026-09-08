@@ -1,3447 +1,1879 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Kids Learning Academy - Smart Classroom with Interactive Counting</title>
-
-<style>
-*{box-sizing:border-box}
-
-body{
-  margin:0;
-  font-family:"Comic Sans MS","Trebuchet MS",Arial,sans-serif;
-  background:linear-gradient(135deg,#e5f6ff,#fff0f8);
-  color:#202040;
-  user-select:none;
-  -webkit-tap-highlight-color:transparent;
-  transition:font-size 0.2s ease;
-}
-
-button,input,select,textarea{font:inherit}
-
-.app{
-  max-width:1150px;
-  margin:auto;
-  padding:10px;
-  transition:all 0.2s ease;
-}
-
-/* TOPBAR */
-.topbar{
-  background:linear-gradient(135deg,#4338ca,#673de6);
-  color:white;
-  border-radius:20px;
-  padding:10px 16px;
-  box-shadow:0 8px 22px rgba(0,0,0,0.15);
-  position:sticky;
-  top:6px;
-  z-index:90;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  flex-wrap:wrap;
-  gap:8px;
-}
-
-.topbar-left,.topbar-right{
-  display:flex;
-  align-items:center;
-  gap:8px;
-  flex-wrap:wrap;
-}
-
-.menu-toggle-btn{
-  background:rgba(255,255,255,0.22);
-  border:2px solid rgba(255,255,255,0.4);
-  color:white;
-  border-radius:14px;
-  width:44px;
-  height:44px;
-  font-size:1.5rem;
-  font-weight:900;
-  cursor:pointer;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  transition:all 0.15s ease;
-}
-
-.menu-toggle-btn:hover{background:rgba(255,255,255,0.35);transform:scale(1.05)}
-.menu-toggle-btn:active{transform:scale(0.92)}
-
-.brand-info h1{
-  margin:0;
-  font-size:clamp(1.1rem,3.4vw,1.55rem);
-  font-weight:900;
-}
-
-.brand-info small{
-  opacity:.92;
-  font-weight:700;
-  font-size:clamp(0.72rem, 2vw, 0.82rem);
-  display:block;
-}
-
-.student-tag,.cloud-pill{
-  display:inline-flex;
-  align-items:center;
-  gap:6px;
-  background:rgba(255, 255, 255, 0.22);
-  padding:5px 12px;
-  border-radius:14px;
-  font-size:0.84rem;
-  font-weight:800;
-  border:1px solid rgba(255,255,255,0.4);
-  cursor:pointer;
-}
-
-.cloud-dot{
-  width:10px;
-  height:10px;
-  border-radius:50%;
-  background:#ffb31a;
-  transition:all 0.3s ease;
-}
-
-.cloud-dot.connected{
-  background:#00ff88;
-  box-shadow:0 0 10px #00ff88;
-}
-
-/* SIDEBAR */
-.sidebar-backdrop{
-  position:fixed;
-  inset:0;
-  background:rgba(10, 15, 28, 0.65);
-  backdrop-filter:blur(4px);
-  z-index:10000;
-  opacity:0;
-  visibility:hidden;
-  transition:0.28s;
-}
-
-.sidebar-backdrop.open{opacity:1;visibility:visible}
-
-.sidebar-drawer{
-  position:fixed;
-  top:0;
-  left:0;
-  bottom:0;
-  width:320px;
-  max-width:85vw;
-  background:#ffffff;
-  z-index:10001;
-  transform:translateX(-100%);
-  transition:transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-  display:flex;
-  flex-direction:column;
-  box-shadow:8px 0 32px rgba(0,0,0,0.3);
-  overflow-y:auto;
-}
-
-.sidebar-drawer.open{transform:translateX(0)}
-
-.sidebar-header{
-  background:linear-gradient(135deg, #4338ca, #673de6);
-  color:white;
-  padding:16px;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-}
-
-.sidebar-close-btn{
-  background:rgba(255,255,255,0.25);
-  border:0;
-  color:white;
-  font-size:1.3rem;
-  font-weight:900;
-  border-radius:50%;
-  width:36px;
-  height:36px;
-  cursor:pointer;
-}
-
-.sidebar-student-card{
-  padding:12px 16px;
-  background:#f7f3ff;
-  border-bottom:2px solid #ede5ff;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  cursor:pointer;
-}
-
-.sidebar-nav{
-  padding:12px;
-  display:flex;
-  flex-direction:column;
-  gap:8px;
-  flex:1;
-}
-
-.sidebar-link{
-  display:flex;
-  align-items:center;
-  gap:12px;
-  padding:12px 14px;
-  border-radius:14px;
-  border:2px solid #eef2f6;
-  background:#fcfdfe;
-  color:#2b1f4d;
-  font-weight:800;
-  font-size:0.98rem;
-  cursor:pointer;
-  transition:all 0.15s;
-}
-
-.sidebar-link:hover,.sidebar-link.active{
-  background:#4338ca;
-  color:white;
-  border-color:#4338ca;
-}
-
-.sidebar-link.warn{
-  background:#fffbeb;
-  border-color:#fde68a;
-  color:#92400e;
-}
-
-.sidebar-footer{
-  padding:14px;
-  border-top:1px solid #e2e8f0;
-  background:#fafbfc;
-}
-
-/* BUTTONS */
-.btn{
-  border:0;
-  border-radius:12px;
-  padding:8px 14px;
-  background:white;
-  color:#4338ca;
-  font-weight:800;
-  cursor:pointer;
-  display:inline-flex;
-  align-items:center;
-  justify-content:center;
-  gap:5px;
-  transition:all 0.15s;
-  box-shadow:0 2px 5px rgba(0,0,0,0.1);
-}
-
-.btn:active{transform:scale(0.96)}
-.btn.primary{background:#16a34a;color:white}
-.btn.warn{background:#f59e0b;color:#2c1900}
-.btn.danger{background:#ef4444;color:white}
-.btn.purple{background:#6366f1;color:white}
-.btn.tv-btn{background:#ff5722;color:white;border:2px solid #fff}
-.btn.tv-btn.active{background:#ffeb3b;color:#d84315;border-color:#ff9800;box-shadow:0 0 10px #ffeb3b}
-.btn-sm{padding:5px 10px;font-size:0.82rem;border-radius:10px}
-.btn:disabled{opacity:0.45;cursor:not-allowed}
-
-.screen{display:none;margin-top:12px}
-.screen.active{display:block}
-
-.panel{
-  background:white;
-  border-radius:20px;
-  padding:16px;
-  box-shadow:0 6px 18px rgba(0,0,0,0.06);
-  margin-bottom:14px;
-}
-
-.lesson-header{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  flex-wrap:wrap;
-  gap:8px;
-  margin-bottom:8px;
-}
-
-.hero{
-  text-align:center;
-  background:linear-gradient(135deg,#fff9c9,#fff);
-  border:3px dashed #f0c62d;
-}
-
-.grid{
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
-  gap:12px;
-}
-
-.topic-card{
-  border:2px solid #e2e8f0;
-  border-radius:16px;
-  padding:14px;
-  background:#fbfcff;
-  cursor:pointer;
-  transition:.15s;
-  display:flex;
-  flex-direction:column;
-  justify-content:space-between;
-}
-
-.topic-card:hover{
-  transform:translateY(-3px);
-  box-shadow:0 8px 18px rgba(0,0,0,0.08);
-}
-
-.badge{
-  display:inline-block;
-  padding:4px 9px;
-  border-radius:16px;
-  background:#eee8ff;
-  color:#4338ca;
-  font-weight:800;
-  font-size:0.8rem;
-}
-
-.class-badge{
-  background:#fef3c7;
-  color:#92400e;
-  border:1px solid #fde68a;
-}
-
-.progress{
-  height:7px;
-  background:#e9edf3;
-  border-radius:20px;
-  overflow:hidden;
-  margin:4px 0 8px;
-}
-
-.progress>div{
-  height:100%;
-  background:#16a34a;
-  width:0;
-  transition:.3s;
-}
-
-/* SMARTBOARD THEATER */
-.fullscreen-player{
-  position:relative;
-  display:flex;
-  flex-direction:column;
-  width:100%;
-}
-
-.fullscreen-player.is-fullscreen{
-  position:fixed!important;
-  inset:0!important;
-  z-index:999999!important;
-  background:#0d140f!important;
-  padding:8px!important;
-  max-width:100vw!important;
-  height:100vh!important;
-  margin:0!important;
-  border-radius:0!important;
-  display:flex!important;
-  flex-direction:column!important;
-  justify-content:space-between!important;
-}
-
-.classroom-smartboard{
-  background:radial-gradient(circle at center, #1b222d 0%, #10141c 100%);
-  border:7px solid #4a3424;
-  border-radius:20px;
-  box-shadow:0 10px 25px rgba(0,0,0,0.4);
-  color:#ffffff;
-  display:flex;
-  flex-direction:column;
-  position:relative;
-  flex:1 1 auto;
-  min-height:520px;
-  overflow:hidden;
-}
-
-.smartboard-header{
-  background:rgba(13, 17, 24, 0.95);
-  border-bottom:2px solid rgba(255, 255, 255, 0.12);
-  padding:6px 12px;
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-}
-
-.board-tag{
-  background:#252e3e;
-  color:#ffeb3b;
-  padding:2px 8px;
-  border-radius:8px;
-  font-size:0.8rem;
-  font-weight:900;
-}
-
-.teacher-indicator{
-  display:flex;
-  align-items:center;
-  gap:6px;
-  font-size:0.8rem;
-  color:#c8e6c9;
-  font-weight:800;
-}
-
-.wake-lock-badge{
-  display:inline-flex;
-  align-items:center;
-  gap:4px;
-  background:rgba(255, 235, 59, 0.18);
-  border:1px solid #ffeb3b;
-  color:#fff9c4;
-  padding:2px 6px;
-  border-radius:8px;
-  font-size:0.72rem;
-  font-weight:bold;
-}
-
-.pulse-dot{
-  width:10px;
-  height:10px;
-  background:#4caf50;
-  border-radius:50%;
-  box-shadow:0 0 6px #4caf50;
-}
-
-.pulse-dot.speaking{
-  background:#ff5252;
-  box-shadow:0 0 10px #ff5252;
-  animation:pulseAnim 0.7s infinite alternate;
-}
-
-@keyframes pulseAnim{
-  0%{transform:scale(0.9); opacity:0.7}
-  100%{transform:scale(1.3); opacity:1}
-}
-
-.board-content-split{
-  display:flex;
-  flex-direction:column;
-  flex:1 1 auto;
-  min-height:0;
-  position:relative;
-  overflow:hidden;
-}
-
-.board-main-stage{
-  flex:1 1 auto;
-  min-height:0;
-  overflow-y:auto;
-  padding:12px 10px;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  justify-content:flex-start;
-  text-align:center;
-}
-
-.stage-title{
-  font-size:clamp(1.25rem, 4vw, 2.1rem);
-  font-weight:900;
-  color:#ffffff;
-  margin:2px 0 4px 0;
-  min-height:1.4em;
-}
-
-.board-chalk-text{
-  font-size:clamp(1.15rem, 3.2vw, 1.8rem);
-  font-weight:900;
-  color:#fef08a;
-  margin:2px 0 8px;
-  white-space:pre-wrap;
-  line-height:1.35;
-}
-
-/* 16:9 DUAL SCENE */
-.scene-container{
-  width:100%;
-  max-width:580px;
-  aspect-ratio:16 / 9;
-  border-radius:18px;
-  background:#000000;
-  border:3px solid #334e68;
-  position:relative;
-  overflow:hidden;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  margin:4px auto;
-}
-
-.scene-ground{
-  position:absolute;
-  left:0;
-  right:0;
-  bottom:0;
-  height:40%;
-  background:#bbf7d0;
-  border-top:4px solid #86efac;
-}
-
-.emoji-object{
-  position:absolute;
-  top:50%;
-  font-size:clamp(60px,11vw,95px);
-  transform:translate(-50%,-50%);
-  z-index:2;
-  filter:drop-shadow(0 6px 8px rgba(0,0,0,0.22));
-}
-
-.action-caption{
-  position:absolute;
-  bottom:10px;
-  left:50%;
-  transform:translateX(-50%);
-  background:#ffffff;
-  padding:5px 14px;
-  border-radius:999px;
-  font-weight:900;
-  font-size:0.9rem;
-  z-index:4;
-  color:#1e293b;
-}
-
-.speech-bubble{
-  position:absolute;
-  top:16px;
-  left:50%;
-  transform:translateX(-50%);
-  background:#fff;
-  border:3px solid #18243a;
-  color:#18243a;
-  padding:6px 16px;
-  border-radius:20px;
-  font-weight:900;
-  font-size:1.15rem;
-  z-index:4;
-}
-
-.stage-video{
-  width:100%;
-  height:100%;
-  object-fit:cover;
-  border-radius:14px;
-  z-index:3;
-}
-
-.video-manager-bar{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:8px;
-  width:100%;
-  max-width:580px;
-  margin:6px auto 0;
-  background:rgba(255,255,255,0.08);
-  padding:6px 12px;
-  border-radius:12px;
-  border:1px solid rgba(255,255,255,0.15);
-  flex-wrap:wrap;
-}
-
-/* ======================================================== */
-/* 🌟 INTERACTIVE MATHEMATICS STAGES                        */
-/* ======================================================== */
-.groups-container{
-  display:flex;
-  flex-wrap:wrap;
-  justify-content:center;
-  align-items:center;
-  gap:12px;
-  width:100%;
-  margin:auto 0;
-}
-
-.math-operator-sign{
-  font-size:clamp(2rem, 5vw, 2.8rem);
-  font-weight:900;
-  color:#ffeb3b;
-  padding:0 4px;
-  text-shadow:0 2px 8px rgba(0,0,0,0.5);
-}
-
-.object-group{
-  background:rgba(255, 255, 255, 0.08);
-  border:2.5px dashed rgba(255, 255, 255, 0.45);
-  border-radius:18px;
-  padding:10px 14px;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  min-width:90px;
-  transition:border-color 0.25s, background-color 0.25s, transform 0.25s;
-}
-
-.object-group.active-group{
-  border:3px solid #ffcc00;
-  background:rgba(255, 204, 0, 0.25);
-  transform:scale(1.06);
-}
-
-.interactive-item{
-  font-size:clamp(2.3rem, 5.8vw, 3.2rem);
-  display:inline-flex;
-  align-items:center;
-  justify-content:center;
-  cursor:pointer;
-  position:relative;
-  transition:transform 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.3s;
-  user-select:none;
-}
-
-.interactive-item:hover{transform:scale(1.2)}
-
-.interactive-item.bounce{
-  animation:popAndBounce 0.65s cubic-bezier(0.28, 0.84, 0.42, 1) forwards;
-  z-index:10;
-}
-
-@keyframes popAndBounce{
-  0%{transform:scale(1) translateY(0)}
-  25%{transform:scale(1.35, 0.75) translateY(3px)}
-  50%{transform:scale(0.95, 1.3) translateY(-24px); filter:drop-shadow(0 12px 10px rgba(255, 204, 0, 0.8))}
-  75%{transform:scale(1.15, 0.9) translateY(-6px)}
-  100%{transform:scale(1) translateY(0)}
-}
-
-.count-indicator{
-  position:absolute;
-  top:-14px;
-  background:#ff4757;
-  color:white;
-  font-size:0.95rem;
-  font-weight:900;
-  border-radius:50%;
-  width:28px;
-  height:28px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  box-shadow:0 3px 6px rgba(0,0,0,0.5);
-  animation:popBadge 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-}
-
-@keyframes popBadge{
-  from{transform:scale(0); opacity:0}
-  to{transform:scale(1.15); opacity:1}
-}
-
-/* SUBTRACTION ACTIVE TRAY & REMOVAL TRAY */
-.sub-stage-row{
-  display:flex;
-  gap:16px;
-  justify-content:center;
-  width:96%;
-  max-width:620px;
-  margin-top:6px;
-  flex-wrap:wrap;
-}
-
-.sub-tray-card,.sub-taken-card{
-  flex:1;
-  min-width:240px;
-  background:#182333;
-  border:3.5px solid #22c55e;
-  border-radius:20px;
-  padding:14px;
-  display:flex;
-  flex-direction:column;
-  justify-content:space-between;
-  align-items:center;
-  min-height:210px;
-  transition:all 0.25s ease;
-}
-
-.sub-taken-card{
-  border-color:#ef4444;
-  border-style:dashed;
-  background:#25161c;
-}
-
-.tray-items-holder{
-  display:flex;
-  flex-wrap:wrap;
-  justify-content:center;
-  align-items:center;
-  gap:10px;
-  min-height:75px;
-  margin:10px 0;
-  width:100%;
-}
-
-/* MULTIPLICATION */
-.multiplication-stage{
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  width:100%;
-}
-
-.mult-repeated-formula{
-  background:rgba(255,255,255,0.12);
-  border:2px solid #fde047;
-  padding:8px 16px;
-  border-radius:14px;
-  color:#fef08a;
-  font-size:1.18rem;
-  font-weight:900;
-  margin-bottom:12px;
-  text-align:center;
-}
-
-/* FRACTIONS */
-.fraction-stage-container{
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  width:100%;
-  max-width:700px;
-  margin:0 auto;
-}
-
-.fraction-formula-badge{
-  background:rgba(255, 235, 59, 0.18);
-  border:2px solid #ffeb3b;
-  border-radius:14px;
-  padding:6px 16px;
-  color:#fff;
-  font-size:1.15rem;
-  font-weight:900;
-  margin-bottom:12px;
-  display:inline-flex;
-  align-items:center;
-  gap:10px;
-}
-
-.fraction-number-display{
-  display:inline-flex;
-  flex-direction:column;
-  vertical-align:middle;
-  text-align:center;
-  line-height:1;
-  font-size:1.3rem;
-}
-
-.fraction-number-display .numerator{border-bottom:2.5px solid currentColor; padding-bottom:2px;}
-.fraction-number-display .denominator{padding-top:2px;}
-
-.fraction-pies-row{
-  display:flex;
-  flex-wrap:wrap;
-  gap:16px;
-  justify-content:center;
-  align-items:center;
-  margin-top:6px;
-}
-
-.fraction-pie-card{
-  background:#1e293b;
-  border:3px solid #475569;
-  border-radius:20px;
-  padding:14px 18px;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  cursor:pointer;
-  transition:transform 0.2s, border-color 0.2s;
-}
-
-.fraction-pie-card:hover{transform:scale(1.05); border-color:#22c55e;}
-
-.fraction-svg-pie{
-  width:150px;
-  height:150px;
-  overflow:visible;
-}
-
-.pie-slice{
-  cursor:pointer;
-  transition:transform 0.3s cubic-bezier(0.18, 0.89, 0.32, 1.28), fill 0.25s;
-  transform-origin:75px 75px;
-}
-
-.pie-slice.detached{
-  transform:scale(1.1) translate(6px, -6px);
-}
-
-.pie-slice.active-shaded{
-  fill:#22c55e !important;
-  filter:drop-shadow(0 0 8px #22c55e);
-}
-
-/* DIVISION */
-.division-container{
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  width:100%;
-  max-width:600px;
-  margin:0 auto;
-}
-
-.div-equation-title{
-  font-size:clamp(1.8rem, 5.5vw, 2.6rem);
-  font-weight:900;
-  color:#ffffff;
-  margin:4px 0 6px 0;
-}
-
-.div-pool-card{
-  background:#1c2331;
-  border:2px solid rgba(255, 255, 255, 0.15);
-  border-radius:20px;
-  padding:10px 14px;
-  width:94%;
-  max-width:460px;
-  text-align:center;
-  margin-bottom:12px;
-}
-
-.div-groups-row{
-  display:flex;
-  gap:12px;
-  justify-content:center;
-  width:96%;
-  max-width:560px;
-  flex-wrap:wrap;
-}
-
-.div-group-box{
-  flex:1;
-  min-width:130px;
-  min-height:160px;
-  border:3px dashed #64748b;
-  border-radius:20px;
-  background:rgba(255, 255, 255, 0.04);
-  padding:10px 8px;
-  display:flex;
-  flex-direction:column;
-  justify-content:space-between;
-  align-items:center;
-  transition:all 0.25s ease;
-}
-
-.div-group-box.receiving{
-  border-color:#ffeb3b;
-  background:rgba(255, 235, 59, 0.18);
-  transform:scale(1.06);
-}
-
-/* TRANSCRIPT */
-.board-transcript-container{
-  background:#0b1017;
-  border-top:2px solid rgba(255, 255, 255, 0.14);
-  padding:6px 10px;
-  max-height:105px;
-}
-
-.transcript-feed{
-  max-height:70px;
-  overflow-y:auto;
-  padding:5px 8px;
-  background:rgba(0, 0, 0, 0.45);
-  border-radius:8px;
-  font-size:clamp(0.9rem, 2.5vw, 1.15rem);
-  line-height:1.45;
-  color:#e0f2e9;
-  text-align:center;
-  font-weight:700;
-}
-
-.chunk{
-  display:inline-block;
-  margin:1px 3px;
-  padding:1px 5px;
-  border-radius:6px;
-  transition:background-color 0.15s, color 0.15s;
-}
-
-.chunk.active{
-  background:#ffe600;
-  color:#8b0000;
-  font-weight:900;
-  border-radius:4px;
-}
-
-/* CHECKPOINT OVERLAY */
-.checkpoint-overlay{
-  position:absolute;
-  inset:0;
-  background:rgba(10, 20, 14, 0.96);
-  z-index:50;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  justify-content:center;
-  padding:16px;
-  text-align:center;
-}
-
-.checkpoint-mic-btn{
-  background:#ff4757;
-  color:white;
-  border:2px solid white;
-  border-radius:50px;
-  padding:9px 20px;
-  font-size:1.05rem;
-  font-weight:900;
-  cursor:pointer;
-}
-
-.checkpoint-mic-btn.listening{
-  background:#00e676;
-  color:#0b3d1b;
-  box-shadow:0 0 18px #00e676;
-}
-
-/* PLAYER TOOLBAR */
-.player-toolbar{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  flex-wrap:wrap;
-  gap:6px;
-  background:#ffffff;
-  border:2px solid #e2e8f0;
-  border-radius:16px;
-  padding:6px 10px;
-  margin-top:6px;
-}
-
-.player-left-group, .player-center-group, .player-right-group{
-  display:flex;
-  align-items:center;
-  gap:5px;
-  flex-wrap:wrap;
-}
-
-.autoplay-pill{
-  display:inline-flex;
-  align-items:center;
-  gap:5px;
-  background:#f8fafc;
-  padding:5px 10px;
-  border-radius:10px;
-  font-size:0.8rem;
-  font-weight:900;
-  cursor:pointer;
-  border:2px solid #cbd5e1;
-}
-
-.autoplay-pill.active{
-  background:#4338ca;
-  color:white;
-  border-color:#4338ca;
-}
-
-.settings-drawer{
-  display:grid;
-  grid-template-columns:repeat(auto-fit, minmax(180px, 1fr));
-  gap:8px;
-  background:#f8fbff;
-  border:1px solid #e0e9f5;
-  border-radius:14px;
-  padding:8px 12px;
-  margin-top:6px;
-}
-
-/* QUIZ */
-.quiz-section{
-  background:#fdfdff;
-  border:2px solid #e2e8f0;
-  border-radius:16px;
-  padding:14px;
-  margin-top:12px;
-}
-
-.options-grid{
-  display:grid;
-  grid-template-columns:repeat(auto-fit, minmax(220px, 1fr));
-  gap:8px;
-}
-
-.option{
-  width:100%;
-  text-align:left;
-  border:2px solid #ddd;
-  background:white;
-  border-radius:12px;
-  padding:9px 12px;
-  cursor:pointer;
-  font-weight:800;
-}
-
-.option.correct{border-color:#16a34a;background:#ecfdf5;color:#166534}
-.option.wrong{border-color:#dc2626;background:#fef2f2;color:#991b1b}
-
-/* TV MODE */
-body.tv-mode{
-  font-size:1.22rem;
-  background:#060911;
-  color:#f8fafc;
-}
-body.tv-mode .panel{background:#131b27;color:#fff;border:3px solid #334155}
-body.tv-mode .classroom-smartboard{min-height:580px}
-body.tv-mode .interactive-item{font-size:clamp(3.2rem, 8vw, 4.6rem)}
-
-.info-grid{
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(130px,1fr));
-  gap:8px;
-  margin-top:10px;
-}
-
-.info-card{
-  padding:10px;
-  border-radius:14px;
-  background:#f7f2ff;
-  text-align:center;
-}
-.info-card b{display:block;font-size:1.3rem}
-
-textarea{
-  width:100%;
-  min-height:120px;
-  border:2px solid #ddd;
-  border-radius:10px;
-  padding:8px;
-  font-family:monospace;
-}
-
-input[type=text], input[type=number]{
-  width:100%;
-  padding:7px 10px;
-  background:#f5f5f5;
-  border-radius:8px;
-  border:1px solid #ccc;
-}
-
-select{
-  padding:6px 8px;
-  border-radius:10px;
-  border:2px solid #ccc;
-}
-
-.hidden{display:none!important}
-
-.modal-overlay{
-  position:fixed;
-  inset:0;
-  background:rgba(0, 0, 0, 0.65);
-  z-index:999999;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  padding:14px;
-}
-
-.modal-card{
-  background:white;
-  border-radius:24px;
-  padding:22px;
-  max-width:460px;
-  width:100%;
-  text-align:center;
-}
-
-.topic-manage-table{
-  width:100%;
-  border-collapse:collapse;
-  margin-top:8px;
-}
-
-.topic-manage-table th, .topic-manage-table td{
-  padding:6px 8px;
-  border-bottom:1px solid #e2e8f0;
-  text-align:left;
-  font-size:0.8rem;
-}
-
-#confettiCanvas{
-  position:fixed;
-  inset:0;
-  pointer-events:none;
-  z-index:9999999;
-}
-
-footer{
-  text-align:center;
-  color:#777;
-  padding:10px;
-  font-size:0.8rem;
-  font-weight:700;
-}
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Interactive Mathematics Classroom - Nigerian AI Voices</title>
+  <style>
+    :root {
+      --bg-classroom: #f1f5f9;
+      --board-bg: #153324;
+      --board-frame: #6b3310;
+      --board-chalk: #f8fafc;
+      --board-chalk-yellow: #fde047;
+      --board-chalk-green: #86efac;
+      --primary: #1e40af;
+      --primary-hover: #1d4ed8;
+      --accent: #d97706;
+      --success: #15803d;
+      --danger: #b91c1c;
+      --card-bg: #ffffff;
+      --text-main: #0f172a;
+      --text-muted: #64748b;
+      --border: #cbd5e1;
+      --shadow: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body, html {
+      background: var(--bg-classroom);
+      color: var(--text-main);
+      min-height: 100vh;
+    }
+
+    #app-container {
+      display: flex;
+      flex-direction: column;
+      max-width: 1150px;
+      margin: 0 auto;
+      min-height: 100vh;
+      background: #ffffff;
+    }
+
+    /* TOP NAVIGATION */
+    #top-nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 14px;
+      background: #ffffff;
+      border-bottom: 2px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .nav-left, .nav-right {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .brand-badge {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      font-weight: 800;
+      font-size: 1.15rem;
+      color: var(--primary);
+    }
+
+    .lesson-picker select, .voice-picker select {
+      padding: 7px 10px;
+      border-radius: 8px;
+      border: 1.5px solid var(--border);
+      background: #f8fafc;
+      font-size: 0.85rem;
+      font-weight: 700;
+      outline: none;
+    }
+
+    .control-btn-group {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      background: #f1f5f9;
+      padding: 3px 6px;
+      border-radius: 24px;
+      border: 1px solid var(--border);
+    }
+
+    .btn-icon {
+      background: #ffffff;
+      border: 1px solid var(--border);
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      font-size: 1.05rem;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.15s ease;
+    }
+
+    .btn-icon:active { transform: scale(0.93); background: #e2e8f0; }
+    .btn-icon.play-btn { background: var(--success); color: white; border-color: var(--success); }
+    .btn-icon.active { background: #dbeafe; border-color: var(--primary); color: var(--primary); }
+
+    .btn-pill {
+      padding: 7px 12px;
+      border-radius: 20px;
+      border: 1.5px solid var(--border);
+      background: #ffffff;
+      font-size: 0.82rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .btn-pill:active { transform: scale(0.96); }
+    .btn-pill.primary { background: var(--primary); color: white; border: none; }
+    .btn-pill.accent { background: #fef3c7; color: #92400e; border-color: #fde68a; }
+    .btn-pill.toggle-active { background: #ecfdf5; color: #065f46; border-color: #10b981; }
+
+    /* STATUS BAR */
+    #lesson-status-bar {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 14px;
+      background: #f8fafc;
+      border-bottom: 1px solid var(--border);
+      font-size: 0.85rem;
+      font-weight: 600;
+    }
+
+    .badge {
+      padding: 3px 8px;
+      border-radius: 6px;
+      font-size: 0.72rem;
+      font-weight: 800;
+      background: #dbeafe;
+      color: #1e40af;
+      letter-spacing: 0.5px;
+    }
+
+    .badge.warning { background: #fef3c7; color: #92400e; }
+    .badge.success { background: #dcfce7; color: #166534; }
+    .badge.voice { background: #fae8ff; color: #86198f; }
+
+    .progress-track {
+      flex: 1;
+      height: 8px;
+      background: #e2e8f0;
+      border-radius: 4px;
+      overflow: hidden;
+    }
+
+    #progress-bar-fill {
+      height: 100%;
+      width: 10%;
+      background: var(--primary);
+      transition: width 0.3s ease;
+    }
+
+    /* MAIN STAGE */
+    #classroom-stage {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      padding: 12px;
+      gap: 12px;
+    }
+
+    /* THE TEACHING BOARD */
+    .board-surface {
+      background: var(--board-bg);
+      border: 8px solid var(--board-frame);
+      border-radius: 14px;
+      color: var(--board-chalk);
+      min-height: 250px;
+      box-shadow: inset 0 0 35px rgba(0,0,0,0.65), var(--shadow);
+      display: flex;
+      flex-direction: column;
+      padding: 16px;
+    }
+
+    #board-header {
+      text-align: center;
+      border-bottom: 1px dashed rgba(255,255,255,0.25);
+      padding-bottom: 6px;
+      margin-bottom: 10px;
+    }
+
+    #board-title {
+      font-size: 1.3rem;
+      color: var(--board-chalk-yellow);
+      letter-spacing: 0.5px;
+    }
+
+    #board-subtitle {
+      font-size: 0.85rem;
+      opacity: 0.85;
+    }
+
+    #board-viewport {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 150px;
+    }
+
+    .workspace {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      width: 100%;
+      flex-wrap: wrap;
+    }
+
+    .symbol-card-board {
+      background: rgba(255, 255, 255, 0.1);
+      border: 1.5px solid rgba(255, 255, 255, 0.25);
+      border-radius: 10px;
+      padding: 12px 20px;
+      text-align: center;
+      min-width: 120px;
+      animation: popIn 0.3s ease;
+    }
+
+    .symbol-big {
+      font-size: 3rem;
+      font-weight: 900;
+      color: var(--board-chalk-yellow);
+      line-height: 1;
+    }
+
+    .symbol-name {
+      font-weight: 700;
+      margin-top: 4px;
+      font-size: 0.9rem;
+    }
+
+    .symbol-meaning {
+      font-size: 0.78rem;
+      color: var(--board-chalk-green);
+    }
+
+    .object-group {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      padding: 10px 16px;
+      background: rgba(255, 255, 255, 0.08);
+      border-radius: 12px;
+      animation: popIn 0.35s ease;
+    }
+
+    .items-row {
+      font-size: 2.3rem;
+      display: flex;
+      gap: 8px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .group-count-tag {
+      font-size: 1.2rem;
+      font-weight: 800;
+      color: var(--board-chalk-yellow);
+    }
+
+    .math-operator-sign {
+      font-size: 2.6rem;
+      font-weight: 900;
+      color: var(--board-chalk-yellow);
+    }
+
+    .equation-banner {
+      margin-top: 10px;
+      text-align: center;
+      font-size: 1.9rem;
+      font-weight: 800;
+      color: #ffffff;
+      background: rgba(0, 0, 0, 0.35);
+      padding: 8px;
+      border-radius: 8px;
+      min-height: 44px;
+    }
+
+    /* TEACHER STRIP */
+    #teacher-section {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .teacher-box {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+    }
+
+    .teacher-avatar-wrapper {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      flex-shrink: 0;
+    }
+
+    .teacher-avatar {
+      font-size: 2.5rem;
+      background: #ffffff;
+      border: 3px solid #cbd5e1;
+      border-radius: 50%;
+      width: 56px;
+      height: 56px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: var(--shadow);
+      transition: all 0.2s ease;
+    }
+
+    .teacher-avatar.speaking {
+      border-color: #10b981;
+      box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.25);
+      transform: scale(1.05);
+    }
+
+    .teacher-name-tag {
+      font-size: 0.72rem;
+      font-weight: 800;
+      margin-top: 3px;
+      color: var(--text-muted);
+    }
+
+    .speech-bubble {
+      flex: 1;
+      background: #ffffff;
+      padding: 12px 16px;
+      border-radius: 14px;
+      border-top-left-radius: 2px;
+      box-shadow: var(--shadow);
+      border: 1.5px solid var(--border);
+      font-size: 1rem;
+      line-height: 1.5;
+      color: #1e293b;
+      min-height: 56px;
+      position: relative;
+    }
+
+    .audio-indicator {
+      display: inline-block;
+      margin-left: 6px;
+      font-size: 0.85rem;
+      color: #10b981;
+      animation: pulse 1.2s infinite;
+    }
+
+    /* BIG TOUCHABLE ACTION BUTTON */
+    .action-toolbar {
+      display: flex;
+      gap: 8px;
+    }
+
+    .btn-main-action {
+      flex: 1;
+      background: var(--primary);
+      color: white;
+      border: none;
+      border-radius: 12px;
+      padding: 13px 18px;
+      font-size: 1rem;
+      font-weight: 800;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      box-shadow: 0 4px 6px -1px rgba(30, 64, 175, 0.25);
+    }
+
+    .btn-main-action:active { background: var(--primary-hover); transform: scale(0.98); }
+
+    /* CHECKPOINT & QUIZ PANEL */
+    .interaction-card {
+      background: #ffffff;
+      border-radius: 14px;
+      border: 2px solid #cbd5e1;
+      padding: 14px;
+      box-shadow: var(--shadow);
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      animation: slideUp 0.25s ease-out;
+    }
+
+    .interaction-card.hidden { display: none !important; }
+
+    .panel-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 6px;
+    }
+
+    .question-body {
+      font-size: 1.18rem;
+      font-weight: 800;
+      text-align: center;
+      padding: 4px 0;
+      color: var(--text-main);
+    }
+
+    .hint-container {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      font-size: 1.8rem;
+    }
+
+    .keypad-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 8px;
+      max-width: 330px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    .key-btn {
+      background: #f1f5f9;
+      border: 1.5px solid #cbd5e1;
+      border-radius: 8px;
+      padding: 12px 0;
+      font-size: 1.3rem;
+      font-weight: 800;
+      cursor: pointer;
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .key-btn:active {
+      background: var(--primary);
+      color: #ffffff;
+      border-color: var(--primary);
+      transform: scale(0.94);
+    }
+
+    .options-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+
+    .option-btn {
+      background: #f8fafc;
+      border: 2px solid #cbd5e1;
+      border-radius: 10px;
+      padding: 12px 8px;
+      font-size: 0.95rem;
+      font-weight: 800;
+      cursor: pointer;
+      text-align: center;
+    }
+
+    .option-btn:active {
+      border-color: var(--primary);
+      background: #eff6ff;
+      transform: scale(0.96);
+    }
+
+    .feedback-alert {
+      padding: 10px 14px;
+      border-radius: 8px;
+      font-size: 0.92rem;
+      font-weight: 700;
+      line-height: 1.4;
+    }
+
+    .feedback-alert.correct { background: #dcfce7; border: 1px solid #86efac; color: #166534; }
+    .feedback-alert.incorrect { background: #fee2e2; border: 1px solid #fca5a5; color: #991b1b; }
+    .feedback-alert.hidden { display: none; }
+
+    /* TOAST NOTIFICATION */
+    #app-toast {
+      position: fixed;
+      bottom: 16px;
+      right: 16px;
+      background: #1e293b;
+      color: #f8fafc;
+      padding: 10px 16px;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      box-shadow: var(--shadow);
+      z-index: 200;
+      display: none;
+      align-items: center;
+      gap: 6px;
+    }
+
+    /* MODALS */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.6);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 100;
+      padding: 12px;
+    }
+
+    .modal-overlay.hidden { display: none !important; }
+
+    .modal-card {
+      background: white;
+      border-radius: 14px;
+      width: 100%;
+      max-width: 480px;
+      max-height: 85vh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      box-shadow: 0 20px 25px -5px rgba(0,0,0,0.3);
+    }
+
+    .modal-card.wide { max-width: 780px; height: 85vh; }
+
+    .modal-header {
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .btn-close {
+      background: none;
+      border: none;
+      font-size: 1.6rem;
+      cursor: pointer;
+      color: var(--text-muted);
+      padding: 0 4px;
+    }
+
+    .modal-body {
+      padding: 14px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .roster-input-row { display: flex; gap: 6px; }
+    .roster-input-row input {
+      flex: 1;
+      padding: 8px 12px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      font-size: 0.95rem;
+    }
+
+    .item-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .item-list li {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px 12px;
+      background: #f1f5f9;
+      border-radius: 8px;
+      font-weight: 700;
+    }
+
+    .item-list li button {
+      background: none;
+      border: none;
+      color: var(--danger);
+      font-size: 1.2rem;
+      cursor: pointer;
+    }
+
+    #json-editor-textarea {
+      flex: 1;
+      width: 100%;
+      min-height: 320px;
+      font-family: monospace;
+      font-size: 0.8rem;
+      padding: 10px;
+      border-radius: 8px;
+      background: #1e293b;
+      color: #e2e8f0;
+      border: 1px solid #334155;
+      outline: none;
+      resize: none;
+    }
+
+    @keyframes popIn {
+      from { transform: scale(0.7); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+    @keyframes slideUp {
+      from { transform: translateY(12px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+    @keyframes pulse {
+      0% { opacity: 0.4; }
+      50% { opacity: 1; }
+      100% { opacity: 0.4; }
+    }
+  </style>
 </head>
-
 <body>
-<canvas id="confettiCanvas"></canvas>
-<div id="sidebarBackdrop" class="sidebar-backdrop" onclick="toggleSidebar()"></div>
-
-<aside id="sidebarDrawer" class="sidebar-drawer">
-  <div class="sidebar-header">
-    <div style="display:flex; align-items:center; gap:8px;">
-      <span style="font-size:1.6rem;">📚</span>
-      <div>
-        <h3 style="margin:0;">Academy Menu</h3>
-        <small>Universal Smart Classroom</small>
-      </div>
-    </div>
-    <button class="sidebar-close-btn" onclick="toggleSidebar()">✕</button>
-  </div>
-
-  <div class="sidebar-student-card" onclick="openRegistrationModal(); toggleSidebar();">
-    <div>
-      <div style="font-size:0.75rem; color:#6b7280; font-weight:bold;">ACTIVE LEARNER</div>
-      <b class="student-name-display" style="font-size:1.05rem; color:#4338ca;">Superstar</b>
-      <span id="sidebarStudentClass" class="badge class-badge">Primary 1</span>
-    </div>
-    <span>✏️</span>
-  </div>
-
-  <nav class="sidebar-nav">
-    <button class="sidebar-link active" id="nav-home" onclick="showScreen('home'); toggleSidebar();"><span>🏠</span> Home Classroom</button>
-    <button class="sidebar-link" id="nav-topics" onclick="showScreen('topics'); toggleSidebar();"><span>📚</span> Topics &amp; Subjects</button>
-    <button class="sidebar-link" id="nav-ask" onclick="showScreen('ask'); toggleSidebar();"><span>❓</span> Ask The Teacher</button>
-    <button class="sidebar-link" id="nav-attendance" onclick="showScreen('attendance'); toggleSidebar();"><span>📅</span> Attendance Clock</button>
-    <button class="sidebar-link warn" id="nav-parent" onclick="openParentGateModal(); toggleSidebar();"><span>👨‍👩‍👧</span> Parent Monitor Hub</button>
-    <button class="sidebar-link" id="nav-import" onclick="showScreen('import'); toggleSidebar();"><span>📥</span> Curriculum &amp; Lessons</button>
-    <button class="sidebar-link" id="nav-progress" onclick="showScreen('progress'); toggleSidebar();"><span>🏆</span> Learning Progress</button>
-  </nav>
-
-  <div class="sidebar-footer">
-    <button class="btn tv-btn" onclick="toggleTVMode()" style="width:100%; padding:10px;">
-      <span id="sidebarTvLabel">📺 Toggle TV / Jumbo View</span>
-    </button>
-  </div>
-</aside>
-
-<div class="app">
-<header class="topbar">
-  <div class="topbar-left">
-    <button class="menu-toggle-btn" onclick="toggleSidebar()">☰</button>
-    <div class="brand-info">
-      <h1>📚 Kids Learning Academy</h1>
-      <small>Smart Classroom • 🇳🇬 Choose Your Nigerian Teacher Voice</small>
-    </div>
-  </div>
-  <div class="topbar-right">
-    <div class="student-tag" onclick="openRegistrationModal()">
-      <span>👤</span>
-      <span id="topStudentName">Superstar</span>
-      <span id="topStudentClass" class="badge class-badge">Primary 1</span>
-    </div>
-    <div class="cloud-pill" onclick="initEmbeddedFirebase()">
-      <span class="cloud-dot" id="topCloudDot"></span>
-      <span id="topCloudText">☁️ Firestore Live</span>
-    </div>
-  </div>
-</header>
-
-<!-- HOME -->
-<section id="home" class="screen active">
-  <div class="panel hero">
-    <div style="font-size:2.8rem">👩‍🏫🎓🎒🎬</div>
-    <h2>Welcome to Class, <span class="student-name-display">Superstar</span>!</h2>
-    <p>Explore lessons with your <b>Natural Nigerian English AI Teacher</b>. Watch items count synchronously!</p>
-    <div style="display:flex; justify-content:center; gap:8px; flex-wrap:wrap;">
-      <button class="btn primary" onclick="showScreen('topics')">🚀 Open Topics</button>
-      <button class="btn purple" onclick="showScreen('ask')">❓ Ask Teacher</button>
-      <button class="btn warn" onclick="openRegistrationModal()">👤 Change Student</button>
-      <button class="btn tv-btn" onclick="toggleTVMode()">📺 Toggle TV Mode</button>
-    </div>
-  </div>
-  <div class="panel">
-    <h2>📌 Quick Learning Stats</h2>
-    <div class="info-grid">
-      <div class="info-card"><b id="homeTopics">0</b>Topics</div>
-      <div class="info-card"><b id="homeLessons">0</b>Examples</div>
-      <div class="info-card"><b id="homeScore">0%</b>Quiz Average</div>
-    </div>
-  </div>
-</section>
-
-<!-- TOPICS -->
-<section id="topics" class="screen">
-  <div class="panel">
-    <div class="lesson-header">
-      <div><h2>📚 Classroom Topics &amp; Subjects</h2></div>
-      <div style="display:flex; gap:6px;">
-        <select id="topicsClassFilter" onchange="renderTopics()" style="font-weight:bold;">
-          <option value="ALL">🌐 All Classes (Nursery to Secondary)</option>
-          <option value="Nursery">Nursery</option>
-          <option value="Primary 1" selected>Primary 1</option>
-          <option value="Primary 2">Primary 2</option>
-          <option value="Primary 3">Primary 3</option>
-          <option value="Primary 4">Primary 4</option>
-          <option value="Primary 5">Primary 5</option>
-          <option value="JSS 1">JSS 1 (Secondary)</option>
-          <option value="JSS 2">JSS 2 (Secondary)</option>
-        </select>
-        <button class="btn warn btn-sm" onclick="showScreen('import')">📥 Add Lesson</button>
-      </div>
-    </div>
-    <div id="topicGrid" class="grid"></div>
-  </div>
-</section>
-
-<!-- LESSON PLAYER -->
-<section id="lessons" class="screen">
-  <div class="panel" style="padding:8px;">
-    <div class="lesson-header">
-      <button class="btn btn-sm" onclick="exitToTopics()">← Back to Topics</button>
-      <div style="text-align:right">
-        <span id="topicClassBadge" class="badge class-badge">Primary 1</span>
-        <span id="topicBadge" class="badge"></span>
-        <h2 id="lessonTitle" style="margin:2px 0; font-size:1.15rem;"></h2>
-      </div>
-    </div>
-
-    <div class="progress"><div id="lessonProgress"></div></div>
-
-    <div id="fullscreenPlayerShell" class="fullscreen-player">
-      <div class="classroom-smartboard">
-        <div class="smartboard-header">
-          <span id="boardHeaderTag" class="board-tag">PRIMARY 1 • LESSON</span>
-          <div class="teacher-indicator">
-            <div id="speakerPulseDot" class="pulse-dot"></div>
-            <span id="speakerStatusText">👩‍🏫 Teacher Ready (🇳🇬 Ezinne)</span>
-            <span id="wakeLockBadge" class="wake-lock-badge hidden">☀️ Screen Awake</span>
-          </div>
-          <span id="lessonCounter" style="font-size:0.75rem; color:#a3c9a8; font-weight:bold;">Step 1</span>
+  <div id="app-container">
+    <!-- Top Navigation & Control Deck -->
+    <header id="top-nav">
+      <div class="nav-left">
+        <div class="brand-badge">
+          <span>📐</span>
+          <span>MathMaster</span>
         </div>
 
-        <div class="board-content-split">
-          <div class="board-main-stage">
-            <div id="stageTitle" class="stage-title"></div>
-            <div id="boardChalkText" class="board-chalk-text hidden"></div>
-
-            <!-- DUAL 16:9 SCENE -->
-            <div class="scene-container hidden" id="sceneContainer">
-              <div class="scene-ground" id="sceneGround"></div>
-              <div class="action-caption" id="actionCaption">Watch carefully! 👀</div>
-            </div>
-
-            <!-- VIDEO MANAGER BAR -->
-            <div class="video-manager-bar hidden" id="videoManagerBar">
-              <span id="videoSourceStatus" style="font-size:0.78rem; color:#cbd5e1; font-weight:bold;">🎨 Showing Animated Characters</span>
-              <div style="display:flex; gap:6px; flex-wrap:wrap;">
-                <label class="btn btn-sm primary" style="cursor:pointer;">
-                  🎥 Upload 16:9 Video
-                  <input type="file" id="stepVideoInput" accept="video/*" hidden onchange="handleStepVideoUpload(event)">
-                </label>
-                <button class="btn btn-sm purple" onclick="linkStepVideoUrl()">🔗 Link URL</button>
-                <button class="btn btn-sm danger hidden" id="removeVideoBtn" onclick="removeStepVideo()">🗑️ Delete Video</button>
-              </div>
-            </div>
-
-            <div id="stageContent" class="groups-container"></div>
-          </div>
-
-          <div class="board-transcript-container">
-            <div style="display:flex; justify-content:space-between; font-size:0.75rem; color:#a3c9a8; font-weight:800; margin-bottom:3px;">
-              <span>🎙️ Live Teacher Subtitles</span>
-              <button class="btn btn-sm" onclick="clearTranscriptHistory()" style="padding:1px 5px; font-size:0.68rem; background:rgba(255,255,255,0.15); color:white;">Clear</button>
-            </div>
-            <div id="transcriptFeed" class="transcript-feed"></div>
-          </div>
-
-          <!-- CHECKPOINT OVERLAY -->
-          <div id="checkpointOverlay" class="checkpoint-overlay hidden">
-            <div style="font-size:2.6rem; margin-bottom:4px;">🙋‍♀️✨</div>
-            <h3 style="color:#ffeb3b; margin:0 0 6px 0;">Speaking Check!</h3>
-            <p id="checkpointQuestionText" style="font-size:1.18rem; color:#fff; margin-bottom:10px; font-weight:bold;">What is 5 - 2?</p>
-            <div style="display:flex; flex-direction:column; align-items:center; gap:8px; max-width:360px; width:100%;">
-              <button id="checkpointVoiceBtn" class="checkpoint-mic-btn" onclick="toggleVoiceAnswering()">🎙️ Speak Answer</button>
-              <div style="display:flex; gap:6px; width:100%;">
-                <input type="text" id="checkpointInput" placeholder="Say answer or type..." style="font-size:1.15rem; text-align:center; font-weight:bold;">
-                <button class="btn primary" onclick="submitCheckpointAnswer()">Submit</button>
-              </div>
-            </div>
-            <div id="checkpointFeedback" style="margin-top:8px; font-weight:bold; font-size:1.05rem;"></div>
-          </div>
+        <div class="lesson-picker">
+          <select id="class-select" aria-label="Select Class"></select>
+          <select id="topic-select" aria-label="Select Topic"></select>
         </div>
-      </div>
 
-      <div class="player-toolbar">
-        <div class="player-left-group">
-          <button class="btn btn-sm" id="prevStepBtn" onclick="previousStep()">⏮️ Back</button>
-          <button class="btn btn-sm primary" id="playPauseBtn" onclick="togglePlayPause()">▶️ Play</button>
-          <button class="btn btn-sm" onclick="replayCurrentStep()">🔄 Replay</button>
-          <button class="btn btn-sm primary" id="nextStepBtn" onclick="nextStep()">Next ⏭️</button>
-        </div>
-        <div class="player-center-group">
-          <div id="autoplayTogglePill" class="autoplay-pill active" onclick="toggleAutoplayMode()">
-            <span id="autoplayStatusLabel">🔁 Auto-Play: ON</span>
-          </div>
-          <button class="btn tv-btn btn-sm" onclick="toggleTVMode()">📺 TV View</button>
-        </div>
-        <div class="player-right-group">
-          <button class="btn danger btn-sm" onclick="stopLesson()">⏹️ Stop</button>
-          <button class="btn btn-sm purple" onclick="toggleSettingsDrawer()">🗣️ Choose Voice</button>
-          <button class="btn btn-sm" id="fullscreenToggleBtn" onclick="toggleBrowserFullscreen()">⛶ Fullscreen</button>
-        </div>
-      </div>
-
-      <!-- VOICE SETTINGS DRAWER -->
-      <div id="settingsDrawer" class="settings-drawer hidden">
-        <div>
-          <label style="font-weight:bold; font-size:0.8rem; color:#4338ca;">Select Nigerian / Teacher Voice:</label>
-          <div style="display:flex; gap:6px; margin-top:4px;">
-            <select id="teacherVoiceSelect" onchange="changeTeacherVoice(this.value)" style="width:100%; font-weight:bold;">
-              <optgroup label="🌟 Natural Nigerian AI Voices">
-                <option value="en-NG-EzinneNeural" selected>🇳🇬 Nigerian Female (Ezinne Natural AI)</option>
-                <option value="en-NG-AbeoNeural">🇳🇬 Nigerian Male (Abeo Natural AI)</option>
-              </optgroup>
-              <optgroup label="🔊 Browser / Device Voices" id="systemVoiceOptGroup">
-              </optgroup>
-            </select>
-            <button class="btn btn-sm primary" onclick="previewSelectedVoice()" title="Listen to this voice">🔊 Test</button>
-          </div>
-        </div>
-        <div>
-          <label style="font-weight:bold; font-size:0.8rem;">Teacher Voice Speed</label>
-          <select id="speed" onchange="changeSpeechSpeed(this.value)" style="width:100%; margin-top:4px;">
-            <option value="0.85">Slow (0.85x)</option>
-            <option value="1.0" selected>Normal (1.0x)</option>
-            <option value="1.15">Fast (1.15x)</option>
+        <!-- Nigerian Teacher Voice Selector -->
+        <div class="voice-picker">
+          <select id="voice-select" aria-label="Select Teacher Voice">
+            <option value="en-NG-EzinneNeural">👩🏾‍🏫 Ezinne (Female)</option>
+            <option value="en-NG-AbeoNeural">👨🏾‍🏫 Abeo (Male)</option>
           </select>
         </div>
       </div>
-      <div id="speechStatus" style="font-weight:bold; text-align:center; font-size:0.85rem; margin-top:4px;">Ready to learn!</div>
-    </div>
 
-    <!-- QUIZ -->
-    <div id="stepQuizArea" class="quiz-section hidden">
-      <div style="display:flex; justify-content:space-between; margin-bottom:8px; font-size:0.82rem; font-weight:800; color:#64748b;">
-        <span>✍️ Practice Quiz</span>
-        <span id="quizCounterText">Question 1 of 1</span>
-        <span id="quizScoreText" class="badge">Score: 0</span>
-      </div>
-      <div class="quiz-question" id="quizQuestionText" style="font-weight:900; font-size:1.05rem;"></div>
-      <div class="options-grid" id="optionsContainer"></div>
-      <div id="quizFeedback" style="margin-top:10px; padding:8px 12px; border-radius:10px; font-weight:bold;" class="hidden"></div>
-      <div style="text-align:right; margin-top:8px;">
-        <button class="btn btn-sm primary hidden" id="quizNextBtn" onclick="advanceQuizQuestion()">Next Question ➡️</button>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ASK TEACHER -->
-<section id="ask" class="screen">
-  <div class="panel">
-    <div class="lesson-header">
-      <h2>❓ Ask the Teacher Room</h2>
-      <button class="btn" onclick="showScreen('home')">← Home</button>
-    </div>
-    <div class="classroom-smartboard" style="min-height:220px; max-height:260px; margin-top:10px;">
-      <div class="board-main-stage" style="justify-content:center;">
-        <div id="askBoardQuestion" style="font-size:1.1rem; color:#ffeb3b; margin-bottom:8px; font-weight:bold;">Ask any school question!</div>
-        <div id="askBoardAnswer" style="font-size:1.2rem; color:#fff; line-height:1.5;">"Hello Superstar! Type your question below."</div>
-      </div>
-    </div>
-    <div style="display:flex; gap:6px; margin-top:10px;">
-      <input type="text" id="askQuestionInput" placeholder="e.g., What is addition? What is a fraction?" style="font-size:1rem; font-weight:bold;">
-      <button class="btn primary" onclick="submitStudentQuestion()">🗣️ Ask Now</button>
-    </div>
-  </div>
-</section>
-
-<!-- ATTENDANCE -->
-<section id="attendance" class="screen">
-  <div class="panel">
-    <div class="lesson-header">
-      <h2>📅 Student Attendance Register</h2>
-      <button class="btn primary btn-sm" onclick="markManualAttendance()">✍️ Clock In Today</button>
-    </div>
-    <table class="topic-manage-table">
-      <thead><tr><th>Date</th><th>Student</th><th>Class</th><th>Time</th><th>Status</th></tr></thead>
-      <tbody id="attendanceTableBody"></tbody>
-    </table>
-  </div>
-</section>
-
-<!-- PARENT HUB -->
-<section id="parent" class="screen">
-  <div class="panel">
-    <div class="lesson-header">
-      <h2>👨‍👩‍👧 Parent Live Supervision Hub</h2>
-      <button class="btn btn-sm" onclick="showScreen('home')">← Exit Hub</button>
-    </div>
-    <div id="parentPresenceStatus" style="padding:12px; border-radius:12px; background:#f0fdf4; border:2px solid #22c55e; font-weight:bold; margin:10px 0; color:#166534;">
-      🟢 Superstar is actively learning in class.
-    </div>
-    <div class="panel" style="background:#f8fafc; border:2px solid #e2e8f0; margin-bottom:14px;">
-      <h4 style="margin-top:0;">📜 Real-Time Attention &amp; Tab-Switching Log</h4>
-      <div id="parentEventLogs" style="max-height:140px; overflow-y:auto; font-size:0.85rem; font-weight:bold;"></div>
-    </div>
-  </div>
-</section>
-
-<!-- PROGRESS -->
-<section id="progress" class="screen">
-  <div class="panel">
-    <h2>🏆 Learning Progress</h2>
-    <div class="info-grid">
-      <div class="info-card"><b id="statTopics">0</b>Topics</div>
-      <div class="info-card"><b id="statLessons">0</b>Lessons</div>
-      <div class="info-card"><b id="statQuizzes">0</b>Quizzes</div>
-      <div class="info-card"><b id="statAverage">0%</b>Accuracy</div>
-    </div>
-  </div>
-</section>
-
-<!-- CURRICULUM LOADER -->
-<section id="import" class="screen">
-  <div class="panel">
-    <h2>📥 Load Curriculum Subjects &amp; Lessons (Nursery to Secondary)</h2>
-    <p style="font-size:0.85rem; color:#4b5563;">
-      Interactive lessons with non-repeating progressive mathematical concepts and synchronized voice.
-    </p>
-    <div style="display:flex; gap:6px; flex-wrap:wrap; margin:10px 0;">
-      <button class="btn btn-sm primary" onclick="loadSampleAdditionLesson()">➕ 1. Addition (Group Counting)</button>
-      <button class="btn btn-sm warn" onclick="loadSampleSubtractionLesson()">➖ 2. Subtraction (Moving Trays)</button>
-      <button class="btn btn-sm purple" onclick="loadSampleMultiplicationLesson()">✖️ 3. Multiplication (Equal Groups)</button>
-      <button class="btn btn-sm warn" onclick="loadSampleFractionLesson()">🥧 4. Fractions (Shading Slices)</button>
-      <button class="btn btn-sm primary" onclick="loadSampleDivisionLesson()">➗ 5. Division (Fair Sharing)</button>
-      <button class="btn btn-sm purple" onclick="loadSampleEnglishActionLesson()">🐱 6. English Naming &amp; Action</button>
-    </div>
-    <textarea id="jsonText" placeholder="Paste custom lesson JSON here..."></textarea>
-    <div style="margin-top:8px;">
-      <button class="btn primary btn-sm" onclick="importPastedJSON()">💾 Save and Load Topic</button>
-    </div>
-  </div>
-</section>
-
-<!-- REGISTRATION MODAL -->
-<div id="registrationModal" class="modal-overlay hidden">
-  <div class="modal-card">
-    <div style="font-size:3rem;">🎓🎒</div>
-    <h2>Student Registration</h2>
-    <div style="text-align:left; margin-bottom:12px;">
-      <label for="regStudentName">Child / Student Name:</label>
-      <input type="text" id="regStudentName" placeholder="e.g. Flourish, Daniel, Chidera" style="font-size:1rem; font-weight:bold;">
-    </div>
-    <div style="text-align:left; margin-bottom:16px;">
-      <label for="regStudentClass">Class Level:</label>
-      <select id="regStudentClass" style="font-size:0.95rem; font-weight:bold; width:100%;">
-        <option value="Nursery">Nursery</option>
-        <option value="Primary 1" selected>Primary 1</option>
-        <option value="Primary 2">Primary 2</option>
-        <option value="Primary 3">Primary 3</option>
-        <option value="Primary 4">Primary 4</option>
-        <option value="Primary 5">Primary 5</option>
-        <option value="JSS 1">JSS 1 (Secondary)</option>
-        <option value="JSS 2">JSS 2 (Secondary)</option>
-      </select>
-    </div>
-    <div style="display:flex; gap:8px;">
-      <button class="btn primary" style="flex:1;" onclick="saveStudentRegistration()">Save</button>
-      <button class="btn" onclick="closeRegistrationModal()">Cancel</button>
-    </div>
-  </div>
-</div>
-
-<div id="parentGateModal" class="modal-overlay hidden">
-  <div class="modal-card">
-    <h3>Parent Security Gate</h3>
-    <div id="parentGateMathProblem" style="font-size:1.3rem; font-weight:bold; margin:10px 0;"></div>
-    <input type="number" id="parentGateAnswer" placeholder="Answer..." style="margin-bottom:10px; text-align:center;">
-    <div style="display:flex; gap:8px;">
-      <button class="btn primary" style="flex:1;" onclick="verifyParentGateAnswer()">Unlock</button>
-      <button class="btn" onclick="closeParentGateModal()">Cancel</button>
-    </div>
-  </div>
-</div>
-
-<footer>Kids Learning Academy • Universal Interactive Classroom • Natural Nigerian AI Voice</footer>
-</div>
-
-<script>
-window.$ = id => document.getElementById(id);
-const $ = window.$;
-
-const STORAGE_KEY = "kids_learning_v35";
-const PROGRESS_KEY = "kids_prog_v35";
-const STUDENT_KEY = "kids_stud_v35";
-const ATTENDANCE_KEY = "kids_att_v35";
-const VOICE_PREF_KEY = "kids_voice_pref_v35";
-
-const formalFirebaseConfig = {
-  apiKey: "AIzaSyCRL0nXwiqQk4isamyt1UkGWyQ50t3DjYo",
-  authDomain: "kids-school-accademy.firebaseapp.com",
-  databaseURL: "https://kids-school-accademy-default-rtdb.firebaseio.com",
-  projectId: "kids-school-accademy",
-  storageBucket: "kids-school-accademy.firebasestorage.app",
-  messagingSenderId: "227052035126",
-  appId: "1:227052035126:web:432601b90f3d54a00e8c97",
-  measurementId: "G-B8DSN41S9K"
-};
-
-/* ======================================================== */
-/* 💾 LOCAL INDEXEDDB CACHE                                 */
-/* ======================================================== */
-const DB_NAME = "KidsAcademyMediaDB_v35";
-function openMediaDB() {
-  return new Promise((res, rej) => {
-    const r = indexedDB.open(DB_NAME, 4);
-    r.onupgradeneeded = () => {
-      const db = r.result;
-      if (!db.objectStoreNames.contains("videos")) db.createObjectStore("videos");
-      if (!db.objectStoreNames.contains("audio_cache")) db.createObjectStore("audio_cache");
-    };
-    r.onsuccess = () => res(r.result);
-    r.onerror = () => rej(r.error);
-  });
-}
-
-async function saveVideoBlob(k, b) {
-  try {
-    const db = await openMediaDB();
-    const tx = db.transaction("videos", "readwrite");
-    tx.objectStore("videos").put(b, k);
-  } catch (e) {}
-}
-async function getVideoBlob(k) {
-  try {
-    const db = await openMediaDB();
-    return new Promise(res => {
-      const q = db.transaction("videos", "readonly").objectStore("videos").get(k);
-      q.onsuccess = () => res(q.result);
-      q.onerror = () => res(null);
-    });
-  } catch (e) { return null; }
-}
-async function deleteVideoBlob(k) {
-  try {
-    const db = await openMediaDB();
-    db.transaction("videos", "readwrite").objectStore("videos").delete(k);
-  } catch (e) {}
-}
-
-async function getCachedAudioBlob(cacheKey) {
-  try {
-    const db = await openMediaDB();
-    return new Promise(res => {
-      const q = db.transaction("audio_cache", "readonly").objectStore("audio_cache").get(cacheKey);
-      q.onsuccess = () => res(q.result || null);
-      q.onerror = () => res(null);
-    });
-  } catch (e) { return null; }
-}
-async function saveCachedAudioBlob(cacheKey, blob) {
-  try {
-    const db = await openMediaDB();
-    const tx = db.transaction("audio_cache", "readwrite");
-    tx.objectStore("audio_cache").put(blob, cacheKey);
-  } catch (e) {}
-}
-
-/* ======================================================== */
-/* 🎙️ TEACHER VOICE ENGINE (MUTEX & SINGLE-CHANNEL LOCK)    */
-/* ======================================================== */
-let currentTeacherVoice = localStorage.getItem(VOICE_PREF_KEY) || 'en-NG-EzinneNeural';
-let currentSpeechSpeed = '1.0';
-let currentAudioElement = null;
-let currentAudioBlobUrl = null;
-let systemVoicesList = [];
-let globalSpeechBeatCounter = 0;
-
-function populateVoiceSelector() {
-  if ('speechSynthesis' in window) {
-    systemVoicesList = window.speechSynthesis.getVoices();
-    const grp = $('systemVoiceOptGroup');
-    if (grp) {
-      grp.innerHTML = '';
-      systemVoicesList.forEach((v) => {
-        const isNG = v.lang.includes('NG') || v.name.toLowerCase().includes('nigeria');
-        const opt = document.createElement('option');
-        opt.value = `sys_${v.name}`;
-        opt.textContent = `${isNG ? '🇳🇬' : '🌐'} ${v.name} (${v.lang})`;
-        grp.appendChild(opt);
-      });
-    }
-  }
-  $('teacherVoiceSelect').value = currentTeacherVoice;
-  updateSpeakerIndicator();
-}
-
-if ('speechSynthesis' in window) {
-  window.speechSynthesis.onvoiceschanged = populateVoiceSelector;
-}
-
-function changeTeacherVoice(newVoice) {
-  stopLesson();
-  currentTeacherVoice = newVoice;
-  localStorage.setItem(VOICE_PREF_KEY, newVoice);
-  updateSpeakerIndicator();
-}
-
-function changeSpeechSpeed(newSpeed) {
-  currentSpeechSpeed = newSpeed;
-  if (currentAudioElement) {
-    currentAudioElement.playbackRate = parseFloat(newSpeed) || 1.0;
-  }
-}
-
-function updateSpeakerIndicator() {
-  let label = '👩‍🏫 Teacher Ready';
-  if (currentTeacherVoice === 'en-NG-EzinneNeural') label = '👩‍🏫 Teacher (🇳🇬 Ezinne Natural AI)';
-  else if (currentTeacherVoice === 'en-NG-AbeoNeural') label = '👨‍🏫 Teacher (🇳🇬 Abeo Natural AI)';
-  else if (currentTeacherVoice.startsWith('sys_')) {
-    label = `🗣️ Teacher (${currentTeacherVoice.replace('sys_', '').split(' ')[0]})`;
-  }
-  $('speakerStatusText').textContent = label;
-}
-
-function stopActiveNarration() {
-  globalSpeechBeatCounter++;
-  if (currentAudioElement) {
-    currentAudioElement.pause();
-    currentAudioElement.currentTime = 0;
-    currentAudioElement.onended = null;
-    currentAudioElement.onerror = null;
-    currentAudioElement = null;
-  }
-  if ('speechSynthesis' in window) {
-    window.speechSynthesis.cancel();
-  }
-  $('speakerPulseDot').classList.remove('speaking');
-}
-
-async function getAITeacherAudio(text, voice, speed) {
-  if (!text || !text.trim()) return null;
-  if (voice.startsWith('sys_')) return null;
-
-  const normalized = text.trim().toLowerCase();
-  const cacheKey = `${voice}_${normalized}`;
-
-  const cached = await getCachedAudioBlob(cacheKey);
-  if (cached) return cached;
-
-  try {
-    const response = await fetch('/api/tts', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ text, voice, speed })
-    });
-
-    if (response.ok) {
-      const audioBlob = await response.blob();
-      await saveCachedAudioBlob(cacheKey, audioBlob);
-      return audioBlob;
-    }
-  } catch (e) {}
-  return null;
-}
-
-function playWebSpeechFallback(text, expectedBeatId, onEnd) {
-  if (!('speechSynthesis' in window)) {
-    if (onEnd) setTimeout(onEnd, 500);
-    return;
-  }
-  window.speechSynthesis.cancel();
-  const u = new SpeechSynthesisUtterance(text);
-  u.rate = parseFloat(currentSpeechSpeed) || 1.0;
-
-  let chosenVoice = null;
-  if (currentTeacherVoice.startsWith('sys_')) {
-    const vName = currentTeacherVoice.replace('sys_', '');
-    chosenVoice = systemVoicesList.find(v => v.name === vName);
-  } else {
-    chosenVoice = systemVoicesList.find(v => v.lang === 'en-NG' || v.name.toLowerCase().includes('nigeria'))
-               || systemVoicesList.find(v => v.lang.startsWith('en')) || null;
-  }
-
-  if (chosenVoice) {
-    u.voice = chosenVoice;
-    u.lang = chosenVoice.lang;
-  } else {
-    u.lang = 'en-NG';
-  }
-
-  u.onstart = () => {
-    requestWakeLock();
-    $('speakerPulseDot').classList.add('speaking');
-  };
-  u.onend = () => {
-    $('speakerPulseDot').classList.remove('speaking');
-    if (expectedBeatId === globalSpeechBeatCounter && onEnd) onEnd();
-  };
-  u.onerror = () => {
-    $('speakerPulseDot').classList.remove('speaking');
-    if (expectedBeatId === globalSpeechBeatCounter && onEnd) onEnd();
-  };
-  window.speechSynthesis.speak(u);
-}
-
-function previewSelectedVoice() {
-  stopLesson();
-  const testText = "Hello Superstar! I am your Nigerian classroom teacher. Let us learn!";
-  playAudioOrFallback(testText, () => updateSpeakerIndicator());
-}
-
-async function playAudioOrFallback(text, onDone) {
-  stopActiveNarration();
-  const currentBeatId = globalSpeechBeatCounter;
-  
-  $('speakerPulseDot').classList.add('speaking');
-  $('speechStatus').textContent = "🔊 Speaking...";
-
-  if (!currentTeacherVoice.startsWith('sys_')) {
-    try {
-      const blob = await getAITeacherAudio(text, currentTeacherVoice, currentSpeechSpeed);
-      if (currentBeatId !== globalSpeechBeatCounter) return;
-
-      if (blob) {
-        if (currentAudioBlobUrl) {
-          URL.revokeObjectURL(currentAudioBlobUrl);
-          currentAudioBlobUrl = null;
-        }
-        currentAudioBlobUrl = URL.createObjectURL(blob);
-        const audio = new Audio(currentAudioBlobUrl);
-        audio.playbackRate = parseFloat(currentSpeechSpeed) || 1.0;
-        currentAudioElement = audio;
-
-        audio.onplay = () => requestWakeLock();
-        audio.onended = () => {
-          $('speakerPulseDot').classList.remove('speaking');
-          if (currentBeatId === globalSpeechBeatCounter && onDone) onDone();
-        };
-        audio.onerror = () => playWebSpeechFallback(text, currentBeatId, onDone);
-        await audio.play();
-        return;
-      }
-    } catch (e) {}
-  }
-  playWebSpeechFallback(text, currentBeatId, onDone);
-}
-
-/* ======================================================== */
-/* 🎨 AUDIO FX & EMOJIS                                     */
-/* ======================================================== */
-const EMOJI_SPEECH_MAP = {
-  "🍎":"apple","🍏":"apple","🍌":"banana","🍊":"orange","🍓":"strawberry","🍇":"grape",
-  "🍉":"watermelon","🍒":"cherry","🍍":"pineapple","🥭":"mango","🍑":"peach","🍋":"lemon",
-  "⚽":"ball","🏀":"basketball","🏈":"football","⚾":"baseball",
-  "✏️":"pencil","✏":"pencil","🖍️":"crayon","🖍":"crayon",
-  "⭐":"star","🌟":"star","✨":"star","💫":"star",
-  "🎈":"balloon","🎁":"gift","🐱":"cat","🐈":"cat","🐶":"dog","🐕":"dog"
-};
-
-function getEmojiWord(emoji){
-  if(!emoji) return "item";
-  const clean = emoji.replace(/[\uFE00-\uFE0F]/g, '');
-  return EMOJI_SPEECH_MAP[clean] || EMOJI_SPEECH_MAP[emoji] || "item";
-}
-
-function displayEmoji(emoji){
-  return String(emoji || "").replace(/🐱/g,"🐈").replace(/🐶/g,"🐕");
-}
-
-let audioCtx = null;
-function getAudio(){
-  if(!audioCtx) audioCtx = new(window.AudioContext || window.webkitAudioContext)();
-  if(audioCtx.state === 'suspended') audioCtx.resume();
-  return audioCtx;
-}
-function playTone(freq, type="triangle", dur=0.25){
-  try{
-    const ctx = getAudio(), o = ctx.createOscillator(), g = ctx.createGain();
-    o.type = type;
-    o.frequency.setValueAtTime(freq, ctx.currentTime);
-    g.gain.setValueAtTime(0.2, ctx.currentTime);
-    g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + dur);
-    o.connect(g);
-    g.connect(ctx.destination);
-    o.start();
-    o.stop(ctx.currentTime + dur);
-  }catch(e){}
-}
-function playGoodTone(){ [523,659,784].forEach((f,i)=>setTimeout(()=>playTone(f,"triangle",0.25),i*90)); }
-function playTryTone(){ playTone(220,"sawtooth",0.35); }
-function playPopTone(p=1){ playTone(340 + (p % 10) * 45, "sine", 0.12); }
-
-function playCatMeowSound(){
-  try{
-    const ctx = getAudio(), now = ctx.currentTime;
-    const osc1 = ctx.createOscillator(), gain = ctx.createGain();
-    osc1.type = "sawtooth";
-    osc1.frequency.setValueAtTime(420, now);
-    osc1.frequency.linearRampToValueAtTime(820, now + 0.38);
-    osc1.frequency.exponentialRampToValueAtTime(360, now + 1.2);
-    gain.gain.setValueAtTime(0.001, now);
-    gain.gain.linearRampToValueAtTime(0.35, now + 0.15);
-    gain.gain.exponentialRampToValueAtTime(0.001, now + 1.25);
-    osc1.connect(gain); gain.connect(ctx.destination);
-    osc1.start(now); osc1.stop(now + 1.25);
-  }catch(e){}
-}
-
-function playDogBarkSound(){
-  try{
-    const ctx = getAudio(), now = ctx.currentTime;
-    [0, 0.24].forEach(d => {
-      const t = now + d;
-      const osc = ctx.createOscillator(), gain = ctx.createGain();
-      osc.type = "sawtooth";
-      osc.frequency.setValueAtTime(280, t);
-      osc.frequency.exponentialRampToValueAtTime(120, t + 0.16);
-      gain.gain.setValueAtTime(0.001, t);
-      gain.gain.linearRampToValueAtTime(0.35, t + 0.03);
-      gain.gain.exponentialRampToValueAtTime(0.001, t + 0.18);
-      osc.connect(gain); gain.connect(ctx.destination);
-      osc.start(t); osc.stop(t + 0.18);
-    });
-  }catch(e){}
-}
-
-/* ======================================================== */
-/* 🏃 ANIMATION MANAGER                                     */
-/* ======================================================== */
-class AnimationManager{
-  constructor(){ this.animations = []; }
-  reset(){
-    this.animations.forEach(a => {try{a.cancel()}catch(e){}});
-    this.animations = [];
-    document.querySelectorAll(".emoji-object").forEach(el => { el.style.transform = "translate(-50%,-50%)"; });
-    const sc = $("sceneContainer");
-    if(sc) sc.querySelectorAll(".speech-bubble").forEach(x => x.remove());
-  }
-  bubble(text){
-    const sc = $("sceneContainer");
-    if(!sc) return;
-    const b = document.createElement("div");
-    b.className = "speech-bubble";
-    b.textContent = text;
-    sc.appendChild(b);
-  }
-  detect(ex){
-    const text = [ex.visual?.word, ex.visual?.sentence, ex.board, ex.speech, ex.text, ex.narration].join(" ").toLowerCase();
-    if(/\bmeow(s|ing)?\b/.test(text)) return "meow";
-    if(/\brun(s|ning)?|bark(s|ing)?\b/.test(text)) return "run";
-    return null;
-  }
-  animate(ex){
-    this.reset();
-    const action = this.detect(ex);
-    const subject = document.querySelector(".emoji-object");
-    if(!action || !subject) return Promise.resolve();
-
-    if(action === "meow"){
-      this.bubble("MEOW! 🗣️");
-      const a = subject.animate([
-        {transform:"translate(-50%,-50%) scale(1) rotate(0deg)"},
-        {transform:"translate(-50%,-50%) scale(1.15) rotate(-6deg)",offset:.25},
-        {transform:"translate(-50%,-50%) scale(1.15) rotate(6deg)",offset:.5},
-        {transform:"translate(-50%,-50%) scale(1) rotate(0deg)"}
-      ], {duration: 2000, iterations: 2});
-      this.animations.push(a);
-      return a.finished;
-    } else if(action === "run"){
-      this.bubble("WOOF! 🐕");
-      const a = subject.animate([
-        {transform:"translate(-50%,-50%) translateX(-120px)"},
-        {transform:"translate(-50%,-50%) translateX(120px)"}
-      ], {duration: 2400, iterations: 2, direction: "alternate"});
-      this.animations.push(a);
-      return a.finished;
-    }
-  }
-}
-const animationManager = new AnimationManager();
-
-/* ======================================================== */
-/* 📚 SAMPLE CURRICULUM PACKAGES (NON-REPEATING)            */
-/* ======================================================== */
-
-// 1. ADDITION
-const sampleAdditionData = {
-  id: "addition-basics", classLevel: "Primary 1", subject: "Mathematics", topic: "Addition (Group Counting)",
-  intro: { 
-    title: "ADDITION FOUNDATION", 
-    board: "2 + 2 = 4\n\nAddition means putting groups together.", 
-    speech: "Welcome to Math class! Addition means putting groups together to find the total sum. Watch how we count Group 1, then Group 2, and then count all of them together!", 
-    visual: { type: "addition", groupCounts: [2, 2], emoji: "🌟", title: "2 🌟 + 2 🌟 = 4 🌟" } 
-  },
-  examples: [
-    { 
-      board: "EXAMPLE 1\n\n3 + 2 = 5", 
-      speech: "Let's count Group 1, Group 2, and then all together.", 
-      visual: { type: "addition", groupCounts: [3, 2], emoji: "🌟", title: "3 🌟 + 2 🌟 = 5 🌟" }, 
-      checkpoint: { q: "What is 3 + 2?", expectedAnswer: "5" }, 
-      quiz: { q: "What is 3 + 2?", options: ["5","4","6"], answer: 0 } 
-    }
-  ]
-};
-
-// 2. SUBTRACTION
-const sampleSubtractionData = {
-  id: "subtraction-basics", classLevel: "Primary 1", subject: "Mathematics", topic: "Subtraction (Taking Away)",
-  intro: { 
-    title: "SUBTRACTION FOUNDATION", 
-    board: "5 - 2 = 3\n\nSubtraction means taking away items from a tray.", 
-    speech: "Subtraction means taking items away! Watch items move from our active tray into the taken away tray.", 
-    visual: { type: "subtraction", total: 5, subtract: 2, emoji: "🍎", title: "5 - 2 = 3 🍎" } 
-  },
-  examples: [
-    { 
-      board: "EXAMPLE 1\n\n5 - 2 = 3", 
-      speech: "We have 5 apples in the tray. Let us take away 2 apples.", 
-      visual: { type: "subtraction", total: 5, subtract: 2, emoji: "🍎", title: "5 - 2 = 3 🍎" }, 
-      checkpoint: { q: "What is 5 - 2?", expectedAnswer: "3" }, 
-      quiz: { q: "What is 5 - 2?", options: ["3","2","4"], answer: 0 } 
-    }
-  ]
-};
-
-// 3. MULTIPLICATION (FIXED: 2x3=6 with 3+3=6, NON-REPEATING PROGRESSION)
-const sampleMultiplicationData = {
-  id: "multiplication-basics", classLevel: "Primary 2", subject: "Mathematics", topic: "Multiplication (Equal Groups)",
-  intro: { 
-    title: "MULTIPLICATION AS EQUAL GROUPS", 
-    board: "2 × 3 = 6\n\n2 groups of 3 balloons\nRepeated Addition: 3 + 3 = 6", 
-    speech: "Welcome to Multiplication! Multiplication is repeated addition of equal groups. 2 times 3 means 2 groups with 3 balloons each!", 
-    visual: { type: "multiplication", groups: 2, each: 3, emoji: "🎈", title: "2 groups of 3 🎈 = 6 🎈" } 
-  },
-  examples: [
-    { 
-      board: "EXAMPLE 1\n\n3 × 2 = 6\n(2 + 2 + 2 = 6)", 
-      speech: "Now let us see 3 groups of 2! 3 times 2 also equals 6.", 
-      visual: { type: "multiplication", groups: 3, each: 2, emoji: "⭐", title: "3 groups of 2 ⭐ = 6 ⭐" }, 
-      checkpoint: { q: "What is 3 times 2?", expectedAnswer: "6" }, 
-      quiz: { q: "What is 3 × 2?", options: ["6","5","8"], answer: 0 } 
-    },
-    { 
-      board: "EXAMPLE 2\n\n4 × 2 = 8\n(2 + 2 + 2 + 2 = 8)", 
-      speech: "Here are 4 groups with 2 apples in each group. 4 times 2 equals 8!", 
-      visual: { type: "multiplication", groups: 4, each: 2, emoji: "🍎", title: "4 groups of 2 🍎 = 8 🍎" }, 
-      checkpoint: { q: "What is 4 times 2?", expectedAnswer: "8" }, 
-      quiz: { q: "What is 4 × 2?", options: ["8","6","10"], answer: 0 } 
-    },
-    { 
-      board: "EXAMPLE 3\n\n3 × 3 = 9\n(3 + 3 + 3 = 9)", 
-      speech: "Look at 3 groups with 3 balls each. 3 times 3 equals 9!", 
-      visual: { type: "multiplication", groups: 3, each: 3, emoji: "⚽", title: "3 groups of 3 ⚽ = 9 ⚽" }, 
-      checkpoint: { q: "What is 3 times 3?", expectedAnswer: "9" }, 
-      quiz: { q: "What is 3 × 3?", options: ["9","6","12"], answer: 0 } 
-    }
-  ]
-};
-
-// 4. FRACTIONS (FIXED: NON-REPEATING FRACTION SEQUENCE 1/2 -> 1/4 -> 2/3 -> 3/4)
-const sampleFractionData = {
-  id: "fractions-basics", classLevel: "Primary 3", subject: "Mathematics", topic: "Fractions (Parts of a Whole)",
-  intro: { 
-    title: "FRACTIONS: NUMERATOR & DENOMINATOR", 
-    board: "1/2 = One Half\n\nNumerator (Top) = 1 (Parts shaded)\nDenominator (Bottom) = 2 (Total equal parts)", 
-    speech: "A fraction represents equal parts of a whole circle! The bottom number is the denominator, showing total equal parts. The top number is the numerator, showing parts shaded. Watch the slices shade in!", 
-    visual: { type: "fraction_circle", denominators: [2], activeNumerator: 1, title: "1/2 = One Half" } 
-  },
-  examples: [
-    { 
-      board: "EXAMPLE 1\n\n1/4 = One Quarter", 
-      speech: "Look at this circle cut into 4 equal quarters. One part is shaded green. That is 1 over 4!", 
-      visual: { type: "fraction_circle", denominators: [4], activeNumerator: 1, title: "1/4 = One Quarter" }, 
-      checkpoint: { q: "How many quarters make a whole?", expectedAnswer: "4" }, 
-      quiz: { q: "What fraction is 1 part out of 4?", options: ["1/4","1/2","3/4"], answer: 0 } 
-    },
-    { 
-      board: "EXAMPLE 2\n\n2/3 = Two Thirds", 
-      speech: "This circle is divided into 3 equal thirds. Two parts are shaded green. That represents 2 over 3!", 
-      visual: { type: "fraction_circle", denominators: [3], activeNumerator: 2, title: "2/3 = Two Thirds" }, 
-      checkpoint: { q: "In 2/3, how many parts are shaded?", expectedAnswer: "2" }, 
-      quiz: { q: "What is the numerator in 2/3?", options: ["2","3","1"], answer: 0 } 
-    },
-    { 
-      board: "EXAMPLE 3\n\n3/4 = Three Quarters", 
-      speech: "This circle is divided into 4 equal parts. Three parts are shaded green. That is 3 over 4, or three quarters!", 
-      visual: { type: "fraction_circle", denominators: [4], activeNumerator: 3, title: "3/4 = Three Quarters" }, 
-      checkpoint: { q: "In 3/4, how many parts are shaded?", expectedAnswer: "3" }, 
-      quiz: { q: "What is the numerator in 3/4?", options: ["3","4","1"], answer: 0 } 
-    }
-  ]
-};
-
-// 5. DIVISION
-const sampleDivisionData = {
-  id: "division-basics", classLevel: "Primary 2", subject: "Mathematics", topic: "Division (Fair Sharing)",
-  intro: { 
-    title: "DIVISION: FAIR SHARING", 
-    board: "6 ÷ 2 = 3\n\nDivision means sharing items equally into groups.", 
-    speech: "Welcome to Division! Division means sharing fairly into equal groups. We start with items in the tray and share them equally.", 
-    visual: { type: "division", total: 6, groups: 2, emoji: "🍎", title: "6 ÷ 2 = 3 🍎" } 
-  },
-  examples: [
-    { 
-      board: "EXAMPLE 1\n\n6 ÷ 2 = 3", 
-      speech: "We have 6 apples to share equally between 2 groups.", 
-      visual: { type: "division", total: 6, groups: 2, emoji: "🍎", title: "6 ÷ 2 = 3 🍎" }, 
-      checkpoint: { q: "What is 6 ÷ 2?", expectedAnswer: "3" }, 
-      quiz: { q: "How many apples does each group get?", options: ["3","2","4"], answer: 0 } 
-    }
-  ]
-};
-
-// 6. ENGLISH
-const sampleEnglishNamingActionData = {
-  id: "p1-english-naming-actions", classLevel: "Primary 1", subject: "English", topic: "Naming and Action Words",
-  intro: { 
-    title: "NAMING AND ACTION WORDS", 
-    board: "THE CAT MEOWS 🐱\n\n• Cat = Naming Word\n• Meows = Action Word", 
-    speech: "Hello superstar! Welcome to English class! Cat is a naming word. Meows is an action word!", 
-    visual: { type: "english", word: "CAT MEOWS", sentence: "The cat meows.", emoji: "🐱" } 
-  },
-  examples: [
-    { 
-      board: "EXAMPLE 1\n\nTHE DOG BARKS 🐶\n\nDog = Naming Word\nBarks = Action Word", 
-      speech: "Look at the dog! The dog barks! Dog is a naming word, and barks is an action word.", 
-      visual: { type: "english", word: "DOG BARKS", sentence: "The dog barks.", emoji: "🐶" }, 
-      quizzes: [{ q: "What is the naming word in 'The dog barks'?", options: ["Dog","Barks","Runs"], answer: 0 }], 
-      checkpoint: { q: "Say the naming word in: The dog barks.", expectedAnswer: "dog" } 
-    }
-  ]
-};
-
-function loadData(){
-  try{
-    const s = localStorage.getItem(STORAGE_KEY);
-    if(s){
-      const p = JSON.parse(s);
-      if(p.topics?.length) return p;
-    }
-  }catch(e){}
-  return {
-    topics: [
-      JSON.parse(JSON.stringify(sampleAdditionData)),
-      JSON.parse(JSON.stringify(sampleSubtractionData)),
-      JSON.parse(JSON.stringify(sampleMultiplicationData)),
-      JSON.parse(JSON.stringify(sampleFractionData)),
-      JSON.parse(JSON.stringify(sampleDivisionData)),
-      JSON.parse(JSON.stringify(sampleEnglishNamingActionData))
-    ]
-  };
-}
-
-function saveData(){ try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(data)); }catch(e){} }
-let data = loadData(), progress = JSON.parse(localStorage.getItem(PROGRESS_KEY) || '{"completedSteps":{},"quizzes":[]}'), studentProfile = JSON.parse(localStorage.getItem(STUDENT_KEY) || '{"name":"Superstar","classLevel":"Primary 1"}'), attendanceLogs = JSON.parse(localStorage.getItem(ATTENDANCE_KEY) || "[]");
-
-let currentTopic = null, currentStepIndex = 0, isPlaying = false, isPaused = false, autoAdvanceTimeout = null, activeStepVideoBlobUrl = null, isAutoPlayEnabled = true;
-let playbackSessionId = 0, currentTimeline = [], currentTimelineIndex = 0;
-
-/* ======================================================== */
-/* 🧩 STAGE VISUAL BUILDERS                                 */
-/* ======================================================== */
-
-// 1. ADDITION
-function renderAdditionStage(visualData){
-  const contentEl = $("stageContent");
-  contentEl.innerHTML = "";
-  const groupCounts = visualData?.groupCounts || [2, 2];
-  const emoji = visualData?.emoji || "🌟";
-  const sum = groupCounts.reduce((a, b) => a + b, 0);
-
-  $("stageTitle").textContent = visualData?.title || `${groupCounts.join(" + ")} = ${sum} ${emoji}`;
-
-  let globalIdx = 0;
-  for(let g = 0; g < groupCounts.length; g++){
-    if(g > 0){
-      const plus = document.createElement("div");
-      plus.className = "math-operator-sign";
-      plus.textContent = "+";
-      contentEl.appendChild(plus);
-    }
-
-    const grpDiv = document.createElement("div");
-    grpDiv.className = "object-group";
-    grpDiv.id = `group-${g}`;
-    grpDiv.innerHTML = `<div style="font-size:0.8rem; font-weight:900; background:rgba(0,0,0,0.5); padding:2px 8px; border-radius:8px; color:#ffeb3b; margin-bottom:6px;">Group ${g + 1} (${groupCounts[g]})</div>`;
-    
-    const row = document.createElement("div");
-    row.style.display = "flex"; row.style.flexWrap = "wrap"; row.style.gap = "8px"; row.style.justifyContent = "center";
-    
-    for(let i = 0; i < groupCounts[g]; i++){
-      const span = document.createElement("div");
-      span.className = "interactive-item";
-      span.id = `item-g${g}-i${i}`;
-      span.setAttribute("data-group", g);
-      span.setAttribute("data-local-idx", i);
-      span.setAttribute("data-global-idx", globalIdx++);
-      span.textContent = emoji;
-      span.onclick = () => triggerItemBounce(span, i + 1);
-      row.appendChild(span);
-    }
-    grpDiv.appendChild(row);
-    contentEl.appendChild(grpDiv);
-  }
-
-  const eq = document.createElement("div");
-  eq.className = "math-operator-sign";
-  eq.textContent = "=";
-  contentEl.appendChild(eq);
-
-  const totalCard = document.createElement("div");
-  totalCard.className = "object-group";
-  totalCard.id = "group-total";
-  totalCard.innerHTML = `<div style="font-size:0.85rem; font-weight:900; color:#4ade80;">Total Sum</div><div style="font-size:1.8rem; font-weight:900; color:#fff;" id="additionTotalVal">?</div>`;
-  contentEl.appendChild(totalCard);
-}
-
-// 2. SUBTRACTION
-let currentSubModel = { total: 5, subtract: 2, emoji: "🍎", currentTaken: 0 };
-
-function renderSubtractionStage(visualData){
-  const contentEl = $("stageContent");
-  contentEl.innerHTML = "";
-  const total = visualData?.total || 5;
-  const subtract = visualData?.subtract || 2;
-  const emoji = visualData?.emoji || "🍎";
-  const word = getEmojiWord(emoji);
-
-  currentSubModel = { total, subtract, emoji, currentTaken: 0 };
-  $("stageTitle").textContent = visualData?.title || `${total} - ${subtract} = ${total - subtract} ${emoji}`;
-
-  const row = document.createElement("div");
-  row.className = "sub-stage-row";
-
-  row.innerHTML = `
-    <div class="sub-tray-card" id="subActiveTray">
-      <b style="color:#4ade80">ACTIVE TRAY (${total} START)</b>
-      <div class="tray-items-holder" id="subActiveItems"></div>
-      <div style="font-weight:900; font-size:1.05rem;" id="subActiveCount">${total} ${word}s in tray</div>
-    </div>
-    <div class="sub-taken-card" id="subTakenTray">
-      <b style="color:#f87171">TAKEN AWAY TRAY (-${subtract})</b>
-      <div class="tray-items-holder" id="subTakenItems"></div>
-      <div style="font-weight:900; font-size:1.05rem; color:#fca5a5;" id="subTakenCount">0 taken away</div>
-    </div>
-  `;
-
-  contentEl.appendChild(row);
-  syncSubtractionUI();
-}
-
-function syncSubtractionUI(){
-  const activeHolder = $("subActiveItems");
-  const takenHolder = $("subTakenItems");
-  if(!activeHolder || !takenHolder) return;
-
-  activeHolder.innerHTML = "";
-  takenHolder.innerHTML = "";
-  const word = getEmojiWord(currentSubModel.emoji);
-  const remaining = currentSubModel.total - currentSubModel.currentTaken;
-
-  for(let i = 0; i < remaining; i++){
-    const span = document.createElement("div");
-    span.className = "interactive-item";
-    span.id = `sub-active-${i}`;
-    span.textContent = currentSubModel.emoji;
-    span.onclick = () => triggerItemBounce(span, i + 1);
-    activeHolder.appendChild(span);
-  }
-
-  for(let j = 0; j < currentSubModel.currentTaken; j++){
-    const takenSpan = document.createElement("div");
-    takenSpan.className = "interactive-item bounce";
-    takenSpan.textContent = currentSubModel.emoji;
-    takenHolder.appendChild(takenSpan);
-  }
-
-  $("subActiveCount").textContent = `${remaining} ${word}${remaining !== 1 ? 's' : ''} remaining`;
-  $("subTakenCount").textContent = `${currentSubModel.currentTaken} of ${currentSubModel.subtract} taken away`;
-}
-
-function moveItemToTakenTray(){
-  if(currentSubModel.currentTaken < currentSubModel.subtract){
-    currentSubModel.currentTaken++;
-    playPopTone(currentSubModel.currentTaken);
-    syncSubtractionUI();
-    const takenCard = $("subTakenTray");
-    if(takenCard){
-      takenCard.style.borderColor = "#ffeb3b";
-      setTimeout(() => takenCard.style.borderColor = "#ef4444", 300);
-    }
-  }
-}
-
-// 3. MULTIPLICATION (FIXED: Handles any groups and each items cleanly)
-function renderMultiplicationStage(visualData){
-  const contentEl = $("stageContent");
-  contentEl.innerHTML = "";
-  const groups = Number(visualData?.groups) || 2;
-  const each = Number(visualData?.each) || 3;
-  const emoji = visualData?.emoji || "🎈";
-  const product = groups * each;
-
-  $("stageTitle").textContent = visualData?.title || `${groups} × ${each} = ${product} ${emoji}`;
-
-  const container = document.createElement("div");
-  container.className = "multiplication-stage";
-
-  const repFormula = Array(groups).fill(each).join(" + ") + ` = ${product}`;
-  const formulaDiv = document.createElement("div");
-  formulaDiv.className = "mult-repeated-formula";
-  formulaDiv.id = "multFormulaDisplay";
-  formulaDiv.textContent = `Repeated Addition: ${repFormula}`;
-  container.appendChild(formulaDiv);
-
-  const groupsWrapper = document.createElement("div");
-  groupsWrapper.className = "groups-container";
-
-  let globalIdx = 0;
-  for(let g = 0; g < groups; g++){
-    const box = document.createElement("div");
-    box.className = "object-group";
-    box.id = `group-${g}`;
-    box.innerHTML = `<div style="font-size:0.8rem; font-weight:900; background:rgba(0,0,0,0.5); padding:2px 8px; border-radius:8px; color:#ffeb3b; margin-bottom:6px;">Group ${g + 1} (${each})</div>`;
-
-    const row = document.createElement("div");
-    row.style.display = "flex"; row.style.gap = "8px"; row.style.justifyContent = "center";
-    for(let i = 0; i < each; i++){
-      const span = document.createElement("div");
-      span.className = "interactive-item";
-      span.id = `item-g${g}-i${i}`;
-      span.setAttribute("data-group", g);
-      span.setAttribute("data-local-idx", i);
-      span.setAttribute("data-global-idx", globalIdx++);
-      span.textContent = emoji;
-      span.onclick = () => triggerItemBounce(span, i + 1);
-      row.appendChild(span);
-    }
-    box.appendChild(row);
-    groupsWrapper.appendChild(box);
-  }
-
-  container.appendChild(groupsWrapper);
-  contentEl.appendChild(container);
-}
-
-// 4. FRACTIONS (FIXED: Unique identifiers per slice & clean animation)
-function createFractionPieSVG(num, den){
-  const svgNS = "http://www.w3.org/2000/svg";
-  const svg = document.createElementNS(svgNS, "svg");
-  svg.setAttribute("class", "fraction-svg-pie");
-  svg.setAttribute("viewBox", "0 0 150 150");
-  const cx = 75, cy = 75, r = 65;
-
-  if(den === 1){
-    const circle = document.createElementNS(svgNS, "circle");
-    circle.setAttribute("cx", cx); circle.setAttribute("cy", cy); circle.setAttribute("r", r);
-    circle.setAttribute("fill", num >= 1 ? "#22c55e" : "#334155"); 
-    circle.setAttribute("id", `pie-slice-${den}-0`);
-    circle.setAttribute("stroke", "#0f172a"); circle.setAttribute("stroke-width", "3");
-    circle.setAttribute("class", "pie-slice" + (num >= 1 ? " active-shaded" : ""));
-    svg.appendChild(circle);
-    return svg;
-  }
-
-  const bg = document.createElementNS(svgNS, "circle");
-  bg.setAttribute("cx", cx); bg.setAttribute("cy", cy); bg.setAttribute("r", r);
-  bg.setAttribute("fill", "#334155"); bg.setAttribute("stroke", "#0f172a"); bg.setAttribute("stroke-width", "3");
-  svg.appendChild(bg);
-
-  const angleStep = (2 * Math.PI) / den;
-  for(let i = 0; i < den; i++){
-    const startAngle = -Math.PI / 2 + i * angleStep;
-    const endAngle = startAngle + angleStep;
-    const x1 = cx + r * Math.cos(startAngle), y1 = cy + r * Math.sin(startAngle);
-    const x2 = cx + r * Math.cos(endAngle), y2 = cy + r * Math.sin(endAngle);
-    const pathData = `M ${cx} ${cy} L ${x1} ${y1} A ${r} ${r} 0 0 1 ${x2} ${y2} Z`;
-
-    const slice = document.createElementNS(svgNS, "path");
-    slice.setAttribute("d", pathData);
-    slice.setAttribute("id", `pie-slice-${den}-${i}`);
-    slice.setAttribute("fill", i < num ? "#22c55e" : "#1e293b");
-    slice.setAttribute("stroke", "#ffffff");
-    slice.setAttribute("stroke-width", "2");
-    slice.setAttribute("class", "pie-slice" + (i < num ? " active-shaded" : ""));
-    slice.onclick = (e) => {
-      e.stopPropagation();
-      slice.classList.toggle("detached");
-      playPopTone(i + 1);
-    };
-    svg.appendChild(slice);
-  }
-  return svg;
-}
-
-function renderFractionCircleStage(visualData){
-  const contentEl = $("stageContent");
-  contentEl.innerHTML = "";
-  $("stageTitle").textContent = visualData?.title || "Understanding Fractions";
-
-  const container = document.createElement("div");
-  container.className = "fraction-stage-container";
-
-  const den = Number(visualData?.denominators?.[0]) || Number(visualData?.denominator) || 2;
-  const num = Number(visualData?.activeNumerator) || Number(visualData?.numerator) || 1;
-
-  const formulaBadge = document.createElement("div");
-  formulaBadge.className = "fraction-formula-badge";
-  formulaBadge.id = "fractionFormulaBadge";
-  formulaBadge.innerHTML = `
-    <span>Fraction = </span>
-    <span class="fraction-number-display">
-      <span class="numerator" id="fracNumDisplay">${num} (Parts Shaded)</span>
-      <span class="denominator" id="fracDenDisplay">${den} (Total Equal Parts)</span>
-    </span>
-  `;
-  container.appendChild(formulaBadge);
-
-  const piesRow = document.createElement("div");
-  piesRow.className = "fraction-pies-row";
-
-  const card = document.createElement("div");
-  card.className = "fraction-pie-card";
-  const svg = createFractionPieSVG(0, den);
-  card.appendChild(svg);
-
-  const label = document.createElement("div");
-  label.style.fontWeight = "900"; label.style.marginTop = "8px";
-  label.id = "fractionCardLabel";
-  label.textContent = `${num} / ${den}`;
-  card.appendChild(label);
-
-  piesRow.appendChild(card);
-  container.appendChild(piesRow);
-  contentEl.appendChild(container);
-}
-
-// 5. DIVISION
-let currentDivisionModel = { total: 6, groups: 2, emoji: "🍎", word: "apple", remainingPool: 6, groupAllocations: [0, 0] };
-
-function renderDivisionEqualGroups(visualData){
-  const contentEl = $("stageContent");
-  contentEl.innerHTML = "";
-
-  const emoji = visualData?.emoji || "🍎";
-  const totalItems = visualData?.total || 6;
-  const numGroups = visualData?.groups || 2;
-  const word = getEmojiWord(emoji);
-
-  currentDivisionModel = {
-    total: totalItems, groups: numGroups, emoji, word,
-    remainingPool: totalItems, groupAllocations: Array(numGroups).fill(0)
-  };
-
-  const container = document.createElement("div");
-  container.className = "division-container";
-
-  container.innerHTML = `
-    <div class="div-equation-title">${totalItems} ÷ ${numGroups} = ?</div>
-    <div class="div-pool-card">
-      <div style="font-weight:900; font-size:0.85rem; color:#cbd5e1; margin-bottom:6px;">${word.toUpperCase()}S IN TRAY</div>
-      <div style="display:flex; flex-wrap:wrap; justify-content:center; gap:8px; min-height:48px;" id="divPoolItems"></div>
-    </div>
-    <div class="div-groups-row" id="divGroupsRow"></div>
-  `;
-
-  contentEl.appendChild(container);
-
-  const row = $("divGroupsRow");
-  for(let g = 0; g < numGroups; g++){
-    const box = document.createElement("div");
-    box.className = "div-group-box";
-    box.id = `divGroupBox-${g}`;
-    box.innerHTML = `
-      <b style="font-size:0.85rem; color:#ffffff;">GROUP ${g + 1}</b>
-      <div style="font-size:2rem; min-height:50px; display:flex; flex-wrap:wrap; justify-content:center; gap:6px;" id="divGroupItems-${g}"></div>
-      <div style="font-size:0.95rem; font-weight:900;" id="divGroupCounter-${g}">0 ${word}s</div>
-    `;
-    row.appendChild(box);
-  }
-
-  syncDivisionUI();
-}
-
-function syncDivisionUI(){
-  const pool = $("divPoolItems");
-  if(!pool) return;
-  pool.innerHTML = "";
-  for(let i = 0; i < currentDivisionModel.remainingPool; i++){
-    const span = document.createElement("span");
-    span.className = "interactive-item";
-    span.textContent = currentDivisionModel.emoji;
-    pool.appendChild(span);
-  }
-
-  currentDivisionModel.groupAllocations.forEach((cnt, g) => {
-    const itemsEl = $(`divGroupItems-${g}`);
-    const cntEl = $(`divGroupCounter-${g}`);
-    if(itemsEl){
-      itemsEl.innerHTML = "";
-      for(let c = 0; c < cnt; c++){
-        const span = document.createElement("span");
-        span.className = "interactive-item bounce";
-        span.textContent = currentDivisionModel.emoji;
-        itemsEl.appendChild(span);
-      }
-    }
-    if(cntEl) cntEl.textContent = `${cnt} ${currentDivisionModel.word}${cnt !== 1 ? 's' : ''}`;
-  });
-}
-
-function executeDivisionShare(targetGroup, shareAmount = 1){
-  if(currentDivisionModel.remainingPool <= 0) return;
-  const safeTarget = Math.max(0, Math.min(targetGroup, currentDivisionModel.groups - 1));
-  const actualShare = Math.min(shareAmount, currentDivisionModel.remainingPool);
-  currentDivisionModel.remainingPool -= actualShare;
-  currentDivisionModel.groupAllocations[safeTarget] += actualShare;
-
-  const box = $(`divGroupBox-${safeTarget}`);
-  if(box){
-    box.classList.add("receiving");
-    setTimeout(() => box.classList.remove("receiving"), 350);
-  }
-  playPopTone(currentDivisionModel.groupAllocations[safeTarget]);
-  syncDivisionUI();
-}
-
-function triggerItemBounce(itemEl, num = 1){
-  if(!itemEl) return;
-  itemEl.classList.remove("bounce");
-  void itemEl.offsetWidth;
-  itemEl.classList.add("bounce");
-
-  let badge = itemEl.querySelector(".count-indicator");
-  if(!badge){
-    badge = document.createElement("div");
-    badge.className = "count-indicator";
-    itemEl.appendChild(badge);
-  }
-  badge.textContent = num;
-  playPopTone(num);
-  setTimeout(() => { 
-    if(badge && badge.parentNode === itemEl) itemEl.removeChild(badge); 
-  }, 950);
-}
-
-/* ======================================================== */
-/* 🎬 DUAL SCENE (ENGLISH ONLY)                             */
-/* ======================================================== */
-async function renderDualSceneStage(visualData, stepIdx){
-  const scene = $("sceneContainer"), vBar = $("videoManagerBar");
-  scene.classList.remove("hidden"); vBar.classList.remove("hidden");
-  $("stageContent").innerHTML = "";
-
-  if(activeStepVideoBlobUrl){ URL.revokeObjectURL(activeStepVideoBlobUrl); activeStepVideoBlobUrl = null; }
-
-  const k = `${currentTopic?.id || "topic"}_step_${stepIdx}`;
-  let b = await getVideoBlob(k);
-  if(b){
-    const url = URL.createObjectURL(b);
-    activeStepVideoBlobUrl = url;
-    scene.innerHTML = `<video class="stage-video" id="activeStageVideo" src="${url}" playsinline controls></video>`;
-    $("videoSourceStatus").innerHTML = `🎥 <b>Video (Local Cache)</b>`;
-    $("removeVideoBtn").classList.remove("hidden");
-    return;
-  }
-
-  if(visualData?.videoUrl){
-    scene.innerHTML = `<video class="stage-video" id="activeStageVideo" src="${visualData.videoUrl}" playsinline controls></video>`;
-    $("videoSourceStatus").innerHTML = `🎥 <b>Cloud Video ☁️</b>`;
-    $("removeVideoBtn").classList.remove("hidden");
-    return;
-  }
-
-  $("videoSourceStatus").textContent = "🎨 Showing Animated Characters";
-  $("removeVideoBtn").classList.add("hidden");
-  scene.innerHTML = `<div class="scene-ground"></div><div class="action-caption" id="actionCaption">${escapeHTML(visualData.sentence || visualData.word || "Watch carefully!")}</div>`;
-  const span = document.createElement("span");
-  span.className = "emoji-object single";
-  span.textContent = displayEmoji(visualData.emoji || "🐱");
-  scene.appendChild(span);
-}
-
-async function renderStageObjects(visualData, contextText = ""){
-  const vType = visualData?.type || "";
-  const isEnglish = (currentTopic?.subject || "").toLowerCase() === "english" || vType === "english" || visualData.sentence;
-
-  const scene = $("sceneContainer");
-  const videoBar = $("videoManagerBar");
-
-  if(isEnglish){
-    $("stageTitle").textContent = visualData.word || visualData.sentence || currentTopic.topic;
-    await renderDualSceneStage(visualData, currentStepIndex);
-    return;
-  }
-
-  scene.classList.add("hidden");
-  videoBar.classList.add("hidden");
-
-  if(vType === "addition") renderAdditionStage(visualData);
-  else if(vType === "subtraction") renderSubtractionStage(visualData);
-  else if(vType === "multiplication") renderMultiplicationStage(visualData);
-  else if(vType === "fraction_circle" || vType === "fractions") renderFractionCircleStage(visualData);
-  else if(vType === "division") renderDivisionEqualGroups(visualData);
-  else renderAdditionStage(visualData);
-}
-
-/* ======================================================== */
-/* 🌟 SYNCHRONIZED TIMELINE BUILDER                         */
-/* ======================================================== */
-function generateSynchronizedTimeline(stepObj) {
-  const v = stepObj.visual || {};
-  const isEnglish = (currentTopic?.subject || "").toLowerCase() === "english" || v.type === "english";
-  const vType = isEnglish ? "english" : (v.type || "addition");
-  const emoji = v.emoji || "🌟";
-  const word = getEmojiWord(emoji);
-  const timeline = [];
-
-  if (isEnglish) {
-    const rawSpeech = stepObj.speech || stepObj.text || stepObj.narration || "Welcome to English class!";
-    timeline.push({
-      speech: rawSpeech,
-      action: () => {}
-    });
-    return timeline;
-  }
-
-  if (vType === "addition") {
-    const groups = v.groupCounts || [2, 2];
-    const total = groups.reduce((a, b) => a + b, 0);
-
-    timeline.push({
-      speech: `Welcome to Addition! Let us add ${groups[0]} and ${groups[1]}. First, let's count Group 1!`,
-      action: () => {
-        document.querySelectorAll(".object-group").forEach(g => g.classList.remove("active-group"));
-        $("group-0")?.classList.add("active-group");
-      }
-    });
-
-    for (let i = 0; i < groups[0]; i++) {
-      timeline.push({
-        speech: `${i + 1} ${word}!`,
-        action: () => {
-          const item = $(`item-g0-i${i}`);
-          if (item) triggerItemBounce(item, i + 1);
-        }
-      });
-    }
-
-    timeline.push({
-      speech: `Great! Group 1 has ${groups[0]} ${word}s. Now, let's count Group 2!`,
-      action: () => {
-        document.querySelectorAll(".object-group").forEach(g => g.classList.remove("active-group"));
-        $("group-1")?.classList.add("active-group");
-      }
-    });
-
-    for (let j = 0; j < groups[1]; j++) {
-      timeline.push({
-        speech: `${j + 1} ${word}!`,
-        action: () => {
-          const item = $(`item-g1-i${j}`);
-          if (item) triggerItemBounce(item, j + 1);
-        }
-      });
-    }
-
-    timeline.push({
-      speech: `Wonderful! Group 2 has ${groups[1]} ${word}s. Now let us count all the groups together!`,
-      action: () => {
-        document.querySelectorAll(".object-group").forEach(g => g.classList.add("active-group"));
-      }
-    });
-
-    let gIdx = 0;
-    for (let g = 0; g < groups.length; g++) {
-      for (let k = 0; k < groups[g]; k++) {
-        const currentCount = gIdx + 1;
-        timeline.push({
-          speech: `${currentCount}!`,
-          action: () => {
-            const item = document.querySelector(`[data-global-idx="${currentCount - 1}"]`);
-            if (item) triggerItemBounce(item, currentCount);
-          }
-        });
-        gIdx++;
-      }
-    }
-
-    timeline.push({
-      speech: `We have ${total} ${word}s altogether! Therefore, ${groups[0]} plus ${groups[1]} equals ${total}!`,
-      action: () => {
-        const totVal = $("additionTotalVal");
-        if (totVal) totVal.textContent = `${total} ${emoji}`;
-        triggerConfetti();
-        playGoodTone();
-      }
-    });
-  } 
-  else if (vType === "subtraction") {
-    const total = v.total || 5;
-    const sub = v.subtract || 2;
-    const remaining = total - sub;
-
-    timeline.push({
-      speech: `Welcome to Subtraction! We start with ${total} ${word}s in our active tray.`,
-      action: () => {
-        syncSubtractionUI();
-      }
-    });
-
-    timeline.push({
-      speech: `Now, let us take away ${sub} ${word}s into our taken away tray! Watch them move!`,
-      action: () => {}
-    });
-
-    for (let s = 0; s < sub; s++) {
-      timeline.push({
-        speech: `Taking away ${s + 1}!`,
-        action: () => {
-          moveItemToTakenTray();
-        }
-      });
-    }
-
-    timeline.push({
-      speech: `Look at the active tray now! Let's count how many ${word}s remain:`,
-      action: () => {}
-    });
-
-    for (let r = 0; r < remaining; r++) {
-      timeline.push({
-        speech: `${r + 1} ${word}!`,
-        action: () => {
-          const item = $(`sub-active-${r}`);
-          if (item) triggerItemBounce(item, r + 1);
-        }
-      });
-    }
-
-    timeline.push({
-      speech: `Exactly ${remaining} ${word}s are left! Therefore, ${total} minus ${sub} equals ${remaining}!`,
-      action: () => {
-        triggerConfetti();
-        playGoodTone();
-      }
-    });
-  } 
-  else if (vType === "multiplication") {
-    const groups = Number(v.groups) || 2;
-    const each = Number(v.each) || 3;
-    const prod = groups * each;
-
-    timeline.push({
-      speech: `Welcome to Multiplication! We have ${groups} groups with ${each} ${word}s in each group.`,
-      action: () => {
-        document.querySelectorAll(".object-group").forEach(g => g.classList.remove("active-group"));
-      }
-    });
-
-    for (let g = 0; g < groups; g++) {
-      timeline.push({
-        speech: `Let's count Group ${g + 1}:`,
-        action: () => {
-          document.querySelectorAll(".object-group").forEach(box => box.classList.remove("active-group"));
-          $(`group-${g}`)?.classList.add("active-group");
-        }
-      });
-
-      for (let e = 0; e < each; e++) {
-        timeline.push({
-          speech: `${e + 1} ${word}!`,
-          action: () => {
-            const item = $(`item-g${g}-i${e}`);
-            if (item) triggerItemBounce(item, e + 1);
-          }
-        });
-      }
-    }
-
-    const additionRepetition = Array(groups).fill(each).join(" plus ");
-    timeline.push({
-      speech: `Repeated addition: ${additionRepetition} equals ${prod}! Now let's count all ${word}s together:`,
-      action: () => {
-        document.querySelectorAll(".object-group").forEach(box => box.classList.add("active-group"));
-      }
-    });
-
-    for (let all = 0; all < prod; all++) {
-      timeline.push({
-        speech: `${all + 1}!`,
-        action: () => {
-          const item = document.querySelector(`[data-global-idx="${all}"]`);
-          if (item) triggerItemBounce(item, all + 1);
-        }
-      });
-    }
-
-    timeline.push({
-      speech: `There are ${prod} ${word}s in total! Therefore, ${groups} times ${each} equals ${prod}!`,
-      action: () => {
-        triggerConfetti();
-        playGoodTone();
-      }
-    });
-  } 
-  else if (vType === "fraction_circle" || vType === "fractions") {
-    const den = Number(v.denominators?.[0]) || Number(v.denominator) || 2;
-    const num = Number(v.activeNumerator) || Number(v.numerator) || 1;
-
-    timeline.push({
-      speech: `Let us learn Fractions! The denominator is ${den}. That means the circle is divided into ${den} equal parts!`,
-      action: () => {
-        for (let i = 0; i < den; i++) {
-          const s = $(`pie-slice-${den}-${i}`);
-          if (s) {
-            s.classList.remove("active-shaded");
-            s.setAttribute("fill", "#1e293b");
-            s.classList.remove("detached");
-          }
-        }
-      }
-    });
-
-    timeline.push({
-      speech: `The numerator is ${num}. That tells us ${num} parts are shaded. Let's shade them now:`,
-      action: () => {}
-    });
-
-    for (let n = 0; n < num; n++) {
-      timeline.push({
-        speech: `Shading part ${n + 1}!`,
-        action: () => {
-          const slice = $(`pie-slice-${den}-${n}`);
-          if (slice) {
-            slice.classList.add("active-shaded");
-            slice.setAttribute("fill", "#22c55e");
-            slice.classList.add("detached");
-            setTimeout(() => slice.classList.remove("detached"), 400);
-          }
-          playPopTone(n + 1);
-        }
-      });
-    }
-
-    timeline.push({
-      speech: `${num} out of ${den} equal parts are shaded. That makes the fraction ${num} over ${den}!`,
-      action: () => {
-        triggerConfetti();
-        playGoodTone();
-      }
-    });
-  } 
-  else if (vType === "division") {
-    const total = v.total || 6;
-    const groups = v.groups || 2;
-    const perGroup = total / groups;
-
-    timeline.push({
-      speech: `Welcome to Division! We have ${total} ${word}s in the tray, and we share them equally into ${groups} groups.`,
-      action: () => {
-        syncDivisionUI();
-      }
-    });
-
-    for (let r = 0; r < perGroup; r++) {
-      for (let g = 0; g < groups; g++) {
-        timeline.push({
-          speech: `Giving 1 ${word} to Group ${g + 1}!`,
-          action: () => {
-            executeDivisionShare(g, 1);
-          }
-        });
-      }
-    }
-
-    timeline.push({
-      speech: `All items are shared! Each group gets exactly ${perGroup} ${word}s. Therefore, ${total} divided by ${groups} equals ${perGroup}!`,
-      action: () => {
-        triggerConfetti();
-        playGoodTone();
-      }
-    });
-  }
-
-  return timeline;
-}
-
-/* ======================================================== */
-/* 🏃 PLAYBACK ENGINE                                       */
-/* ======================================================== */
-function currentStepData(){
-  if(!currentTopic) return {};
-  if(currentStepIndex === 0) return currentTopic.intro || (currentTopic.examples ? currentTopic.examples[0] : {});
-  return currentTopic.examples?.[currentStepIndex - 1] || {};
-}
-
-async function renderCurrentStep(){
-  if(!currentTopic) return;
-  stopLesson();
-  clearTimeout(autoAdvanceTimeout);
-  $("checkpointOverlay").classList.add("hidden");
-
-  const totalSteps = 1 + (currentTopic.examples ? currentTopic.examples.length : 0);
-  const stepObj = currentStepData();
-  const topicClass = currentTopic.classLevel || "Primary 1";
-
-  $("topicBadge").textContent = `${currentTopic.subject || "General"} • ${currentTopic.topic}`;
-  $("topicClassBadge").textContent = topicClass;
-  $("boardHeaderTag").textContent = `${topicClass.toUpperCase()} • LESSON`;
-  $("lessonProgress").style.width = `${((currentStepIndex + 1) / totalSteps) * 100}%`;
-
-  const stepTitle = currentStepIndex === 0 ? (currentTopic.intro?.title || "Intro") : (stepObj.board?.split('\n')[0] || `Step ${currentStepIndex + 1}`);
-  $("lessonTitle").textContent = stepTitle;
-  $("lessonCounter").textContent = `Step ${currentStepIndex + 1} of ${totalSteps}`;
-
-  const chalk = $("boardChalkText");
-  if(stepObj.board){
-    chalk.classList.remove("hidden");
-    chalk.textContent = displayEmoji(stepObj.board);
-  } else {
-    chalk.classList.add("hidden");
-  }
-
-  await renderStageObjects(stepObj.visual || {}, stepObj.board || "");
-  setupStepQuizzes(stepObj);
-
-  currentTimeline = generateSynchronizedTimeline(stepObj);
-  setupTimelineTranscript(stepTitle, currentTimeline);
-
-  $("playPauseBtn").textContent = "▶️ Play";
-  $("prevStepBtn").disabled = (currentStepIndex === 0);
-  $("nextStepBtn").disabled = (currentStepIndex >= totalSteps - 1);
-  $("speechStatus").textContent = "Ready. Tap ▶️ Play to begin!";
-}
-
-function setupTimelineTranscript(stepTitle, timeline) {
-  const feed = $("transcriptFeed");
-  feed.innerHTML = `<div style="color:#ffeb3b; font-weight:900; margin-bottom:2px;">📍 ${escapeHTML(stepTitle)}</div>`;
-  const block = document.createElement("div");
-  timeline.forEach((item, i) => {
-    const span = document.createElement("span");
-    span.className = "chunk";
-    span.id = `chunk-${i}`;
-    span.textContent = item.speech + " ";
-    block.appendChild(span);
-  });
-  feed.appendChild(block);
-  feed.scrollTop = feed.scrollHeight;
-}
-
-function highlightTimelineBeat(idx) {
-  document.querySelectorAll(".chunk.active").forEach(c => c.classList.remove("active"));
-  if(idx >= 0){
-    const target = $(`chunk-${idx}`);
-    if(target){
-      target.classList.add("active");
-      target.scrollIntoView({ block: "nearest", behavior: "smooth" });
-    }
-  }
-}
-
-async function playLesson(){
-  if(!currentTopic || !currentTimeline.length) return;
-  getAudio();
-
-  stopLesson();
-  clearTimeout(autoAdvanceTimeout);
-  playbackSessionId++;
-  const session = playbackSessionId;
-  isPlaying = true;
-  isPaused = false;
-  currentTimelineIndex = 0;
-
-  $("playPauseBtn").textContent = "⏸️ Pause";
-
-  const video = $("activeStageVideo");
-  const stepObj = currentStepData();
-  const isSceneActive = !$("sceneContainer").classList.contains("hidden");
-
-  if(video && isSceneActive){
-    $("speakerPulseDot").className = "pulse-dot";
-    $("speakerStatusText").textContent = "🎬 Playing Video...";
-    video.currentTime = 0;
-    video.play().catch(()=>{});
-    video.onended = () => onStepNarrationFinished();
-    return;
-  }
-
-  const action = isSceneActive ? animationManager.detect(stepObj) : null;
-  if(action === "meow") playCatMeowSound();
-  if(action === "run") playDogBarkSound();
-  animationManager.animate(stepObj);
-
-  playNextTimelineBeat(session);
-}
-
-function playNextTimelineBeat(sessionId) {
-  if(!isPlaying || isPaused || sessionId !== playbackSessionId) return;
-
-  if(currentTimelineIndex >= currentTimeline.length){
-    onStepNarrationFinished();
-    return;
-  }
-
-  const beat = currentTimeline[currentTimelineIndex];
-  highlightTimelineBeat(currentTimelineIndex);
-
-  if(beat.action) beat.action();
-
-  playAudioOrFallback(beat.speech, () => {
-    if(sessionId !== playbackSessionId || !isPlaying || isPaused) return;
-    currentTimelineIndex++;
-    setTimeout(() => playNextTimelineBeat(sessionId), 220);
-  });
-}
-
-function onStepNarrationFinished(){
-  isPlaying = false;
-  $("playPauseBtn").textContent = "▶️ Play";
-  $("speakerPulseDot").classList.remove("speaking");
-  updateSpeakerIndicator();
-  $("speechStatus").textContent = "Step completed!";
-
-  progress.completedSteps[`${currentTopic.id}_${currentStepIndex}`] = true;
-  saveProgress();
-
-  const stepObj = currentStepData();
-  if(stepObj.checkpoint){
-    $("checkpointQuestionText").textContent = stepObj.checkpoint.q;
-    $("checkpointInput").value = "";
-    $("checkpointFeedback").textContent = "";
-    $("checkpointOverlay").classList.remove("hidden");
-    playGoodTone();
-    return;
-  }
-
-  if(isAutoPlayEnabled){
-    const totalSteps = 1 + (currentTopic.examples ? currentTopic.examples.length : 0);
-    if(currentStepIndex < totalSteps - 1){
-      autoAdvanceTimeout = setTimeout(() => {
-        if(isAutoPlayEnabled){
-          currentStepIndex++;
-          renderCurrentStep().then(playLesson);
-        }
-      }, 1500);
-    }
-  }
-}
-
-function pauseLesson(){
-  if(isPlaying && !isPaused){
-    isPaused = true;
-    if(currentAudioElement) currentAudioElement.pause();
-    if('speechSynthesis' in window) window.speechSynthesis.pause();
-    const video = $("activeStageVideo");
-    if(video) video.pause();
-    $("playPauseBtn").textContent = "▶️ Resume";
-    $("speakerPulseDot").classList.remove("speaking");
-  }
-}
-
-function resumeLesson(){
-  if(isPlaying && isPaused){
-    isPaused = false;
-    if(currentAudioElement) currentAudioElement.play().catch(()=>{});
-    if('speechSynthesis' in window) window.speechSynthesis.resume();
-    const video = $("activeStageVideo");
-    if(video && !video.ended) video.play().catch(()=>{});
-    $("playPauseBtn").textContent = "⏸️ Pause";
-    $("speakerPulseDot").classList.add("speaking");
-  }
-}
-
-function stopLesson(){
-  playbackSessionId++;
-  isPlaying = false;
-  isPaused = false;
-  clearTimeout(autoAdvanceTimeout);
-  stopActiveNarration();
-  const video = $("activeStageVideo");
-  if(video){ video.pause(); video.currentTime = 0; }
-  animationManager.reset();
-  releaseWakeLock();
-  highlightTimelineBeat(-1);
-  $("playPauseBtn").textContent = "▶️ Play";
-  $("speakerPulseDot").classList.remove("speaking");
-  $("checkpointOverlay")?.classList.add("hidden");
-  updateSpeakerIndicator();
-}
-
-function togglePlayPause(){
-  getAudio();
-  if(isPlaying && !isPaused) pauseLesson();
-  else if(isPlaying && isPaused) resumeLesson();
-  else playLesson();
-}
-
-function replayCurrentStep(){
-  stopLesson();
-  renderCurrentStep().then(() => setTimeout(playLesson, 150));
-}
-
-function previousStep(){
-  if(currentStepIndex > 0){
-    currentStepIndex--;
-    renderCurrentStep().then(() => { if(isAutoPlayEnabled) playLesson(); });
-  }
-}
-
-function nextStep(){
-  const tot = 1 + (currentTopic.examples ? currentTopic.examples.length : 0);
-  if(currentStepIndex < tot - 1){
-    currentStepIndex++;
-    renderCurrentStep().then(() => { if(isAutoPlayEnabled) playLesson(); });
-  }
-}
-
-function toggleAutoplayMode(){
-  isAutoPlayEnabled = !isAutoPlayEnabled;
-  $("autoplayTogglePill").classList.toggle("active", isAutoPlayEnabled);
-  $("autoplayStatusLabel").textContent = isAutoPlayEnabled ? "🔁 Auto-Play: ON" : "⏸️ Auto-Play: OFF";
-}
-
-function clearTranscriptHistory(){ $("transcriptFeed").innerHTML = ""; }
-
-/* ======================================================== */
-/* ⛶ FULLSCREEN                                             */
-/* ======================================================== */
-window.toggleBrowserFullscreen = function(){
-  const shell = $("fullscreenPlayerShell");
-  const btn = $("fullscreenToggleBtn");
-  const isCustomFs = shell.classList.contains("is-fullscreen");
-
-  if (document.fullscreenElement || document.webkitFullscreenElement) {
-    if (document.exitFullscreen) document.exitFullscreen().catch(()=>{});
-    else if (document.webkitExitFullscreen) document.webkitExitFullscreen();
-    shell.classList.remove("is-fullscreen");
-    if(btn) btn.textContent = "⛶ Fullscreen";
-  } else if (isCustomFs) {
-    shell.classList.remove("is-fullscreen");
-    if(btn) btn.textContent = "⛶ Fullscreen";
-  } else {
-    const req = shell.requestFullscreen || shell.webkitRequestFullscreen;
-    if (req) {
-      req.call(shell).then(() => {
-        shell.classList.add("is-fullscreen");
-        if(btn) btn.textContent = "✖ Exit Fullscreen";
-      }).catch(() => {
-        shell.classList.add("is-fullscreen");
-        if(btn) btn.textContent = "✖ Exit Fullscreen";
-      });
-    } else {
-      shell.classList.add("is-fullscreen");
-      if(btn) btn.textContent = "✖ Exit Fullscreen";
-    }
-  }
-};
-
-document.addEventListener("fullscreenchange", () => {
-  const shell = $("fullscreenPlayerShell");
-  const btn = $("fullscreenToggleBtn");
-  if (!document.fullscreenElement) {
-    shell.classList.remove("is-fullscreen");
-    if(btn) btn.textContent = "⛶ Fullscreen";
-  }
-});
-
-function toggleSettingsDrawer(){ $("settingsDrawer").classList.toggle("hidden"); }
-
-/* ======================================================== */
-/* 🎯 SPEAKING CHECKPOINTS                                  */
-/* ======================================================== */
-let recognition = null, isListeningForAnswer = false;
-
-function initSpeechRecognition(){
-  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
-  if(!SR) return;
-  try{
-    recognition = new SR();
-    recognition.lang = "en-NG";
-    recognition.onstart = () => { isListeningForAnswer = true; $("checkpointVoiceBtn").classList.add("listening"); };
-    recognition.onresult = e => {
-      isListeningForAnswer = false;
-      const transcript = e.results[0][0].transcript.toLowerCase();
-      $("checkpointInput").value = transcript;
-      setTimeout(submitCheckpointAnswer, 400);
-    };
-    recognition.onend = () => { isListeningForAnswer = false; $("checkpointVoiceBtn").classList.remove("listening"); };
-  }catch(e){}
-}
-
-function toggleVoiceAnswering(){
-  if(!recognition) return alert("Speech recognition not supported in this browser. Please type your answer.");
-  if(isListeningForAnswer) recognition.stop();
-  else recognition.start();
-}
-
-function submitCheckpointAnswer(){
-  const step = currentStepData();
-  if(!step.checkpoint) return;
-  const raw = $("checkpointInput").value.trim().toLowerCase();
-  const exp = (step.checkpoint.expectedAnswer || "").toLowerCase().trim();
-  const isCorrect = raw.includes(exp) || raw === exp;
-  const fb = $("checkpointFeedback");
-
-  if(isCorrect){
-    triggerConfetti(); playGoodTone();
-    fb.style.color = "#00ff88"; fb.textContent = `🎉 Correct! Awesome job, ${studentProfile.name}!`;
-    setTimeout(() => { $("checkpointOverlay").classList.add("hidden"); nextStep(); }, 1200);
-  } else {
-    playTryTone();
-    fb.style.color = "#ff4757"; fb.textContent = "❌ Let's listen and try again!";
-    setTimeout(() => { $("checkpointOverlay").classList.add("hidden"); replayCurrentStep(); }, 1400);
-  }
-}
-
-/* ======================================================== */
-/* 📝 QUIZZES                                               */
-/* ======================================================== */
-let currentQuizList = [], currentQuizIndex = 0;
-
-function setupStepQuizzes(stepObj){
-  currentQuizList = stepObj.quizzes || (stepObj.quiz ? [stepObj.quiz] : []);
-  currentQuizIndex = 0;
-  renderCurrentQuiz();
-}
-
-function renderCurrentQuiz(){
-  const sec = $("stepQuizArea");
-  if(!currentQuizList.length){ sec.classList.add("hidden"); return; }
-  sec.classList.remove("hidden");
-
-  const q = currentQuizList[currentQuizIndex];
-  $("quizCounterText").textContent = `Question ${currentQuizIndex + 1} of ${currentQuizList.length}`;
-  $("quizQuestionText").textContent = q.q;
-  const c = $("optionsContainer");
-  c.innerHTML = "";
-  $("quizFeedback").classList.add("hidden");
-  $("quizNextBtn").classList.add("hidden");
-
-  q.options.forEach((opt, i) => {
-    const btn = document.createElement("button");
-    btn.className = "option"; btn.textContent = opt;
-    btn.onclick = () => {
-      document.querySelectorAll(".option").forEach(b => b.disabled = true);
-      const isCorrect = (i === q.answer);
-      if(isCorrect){
-        btn.classList.add("correct"); playGoodTone(); triggerConfetti();
-        $("quizFeedback").className = "feedback correct-text";
-        $("quizFeedback").textContent = "🎉 Correct! Outstanding job!";
-      } else {
-        btn.classList.add("wrong"); playTryTone();
-        $("quizFeedback").className = "feedback wrong-text";
-        $("quizFeedback").textContent = "❌ Great try! You can do it!";
-      }
-      $("quizFeedback").classList.remove("hidden");
-      progress.quizzes.push({ topic: currentTopic.id, correct: isCorrect });
-      saveProgress();
-      if(currentQuizIndex < currentQuizList.length - 1) $("quizNextBtn").classList.remove("hidden");
-    };
-    c.appendChild(btn);
-  });
-}
-
-function advanceQuizQuestion(){
-  if(currentQuizIndex < currentQuizList.length - 1){
-    currentQuizIndex++;
-    renderCurrentQuiz();
-  }
-}
-
-/* ======================================================== */
-/* 👩‍🏫 ASK TEACHER Q&A ROOM                                  */
-/* ======================================================== */
-const PRESET_ANSWERS = {
-  "addition": "Addition means joining groups together to find the total sum!",
-  "subtraction": "Subtraction means taking away items from a tray to see what remains!",
-  "multiplication": "Multiplication is fast repeated addition of equal groups, like 2 groups of 3 equals 6!",
-  "fraction": "A fraction represents equal parts of a whole! The top is the numerator, and the bottom is the denominator.",
-  "division": "Division is fair sharing into equal groups!"
-};
-
-async function submitStudentQuestion(){
-  const q = $("askQuestionInput").value.trim(); if(!q) return;
-  $("askBoardQuestion").textContent = `🙋‍♂️ Question: "${q}"`;
-  const lower = q.toLowerCase();
-  let ans = `That is a wonderful question, ${studentProfile.name}! In our classroom, understanding each step is the key!`;
-  for(const [k, v] of Object.entries(PRESET_ANSWERS)){
-    if(lower.includes(k)){ ans = v; break; }
-  }
-  $("askBoardAnswer").textContent = ans;
-  const fullAnswer = `Hello ${studentProfile.name}! ${ans}`;
-  playAudioOrFallback(fullAnswer);
-}
-
-/* ======================================================== */
-/* 👨‍👩‍👧 PARENT HUB & ATTENDANCE                             */
-/* ======================================================== */
-let gateExpectedAns = 0;
-
-document.addEventListener('visibilitychange', () => {
-  const child = studentProfile.name || "Student";
-  const presence = $("parentPresenceStatus");
-  const logBox = $("parentEventLogs");
-  const time = new Date().toLocaleTimeString();
-
-  if(document.hidden){
-    if(presence) presence.innerHTML = `🚨 <b style="color:#dc2626;">ALERT: ${child} left the app!</b> (${time})`;
-    if(logBox) logBox.innerHTML = `<div style="color:#dc2626; padding:2px 0;">🚨 Left app at ${time}</div>` + logBox.innerHTML;
-  } else {
-    if(presence) presence.innerHTML = `🟢 <b>${child} is ACTIVE and learning now.</b>`;
-    if(logBox) logBox.innerHTML = `<div style="color:#059669; padding:2px 0;">✅ Returned at ${time}</div>` + logBox.innerHTML;
-  }
-});
-
-function openParentGateModal(){
-  const a = Math.floor(Math.random() * 8) + 3, b = Math.floor(Math.random() * 8) + 3;
-  gateExpectedAns = a + b;
-  $("parentGateMathProblem").textContent = `${a} + ${b} = ?`;
-  $("parentGateAnswer").value = "";
-  $("parentGateModal").classList.remove("hidden");
-}
-
-function verifyParentGateAnswer(){
-  if(parseInt($("parentGateAnswer").value, 10) === gateExpectedAns){
-    $("parentGateModal").classList.add("hidden");
-    showScreen('parent');
-  } else alert("Incorrect answer! Gate locked.");
-}
-
-function markManualAttendance(){
-  attendanceLogs.unshift({
-    date: new Date().toLocaleDateString(), name: studentProfile.name, classLevel: studentProfile.classLevel,
-    time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }), status: "Present 🟢"
-  });
-  localStorage.setItem(ATTENDANCE_KEY, JSON.stringify(attendanceLogs));
-  renderAttendanceTable();
-  alert(`Attendance clocked in for ${studentProfile.name}!`);
-}
-
-function renderAttendanceTable(){
-  const tbody = $("attendanceTableBody");
-  if(!tbody) return;
-  tbody.innerHTML = attendanceLogs.map(a => `
-    <tr>
-      <td><b>${escapeHTML(a.date)}</b></td>
-      <td>${escapeHTML(a.name)}</td>
-      <td><span class="badge class-badge">${escapeHTML(a.classLevel)}</span></td>
-      <td>${escapeHTML(a.time)}</td>
-      <td style="color:#059669; font-weight:bold;">${escapeHTML(a.status)}</td>
-    </tr>
-  `).join("") || "<tr><td colspan='5' style='text-align:center;'>No attendance records yet.</td></tr>";
-}
-
-/* ======================================================== */
-/* ☁️ FIREBASE INITIALIZATION & SYNC                         */
-/* ======================================================== */
-let firebaseApp = null, firestoreDb = null, fbModule = null;
-
-async function initEmbeddedFirebase(){
-  const dot = $("topCloudDot"), txt = $("topCloudText");
-  txt.textContent = "☁️ Connecting Firebase...";
-  try{
-    const appM = await import("https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js");
-    fbModule = await import("https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js");
-    firebaseApp = appM.getApps().length ? appM.getApps()[0] : appM.initializeApp(formalFirebaseConfig);
-    firestoreDb = fbModule.getFirestore(firebaseApp);
-    dot.className = "cloud-dot connected";
-    txt.textContent = "☁️ Firebase Connected";
-    listenToCloudTopics();
-  }catch(e){
-    dot.className = "cloud-dot connected";
-    txt.textContent = "☁️ Local Cloud Ready";
-  }
-}
-
-function listenToCloudTopics(){
-  if(!firestoreDb || !fbModule) return;
-  fbModule.onSnapshot(fbModule.collection(firestoreDb, "topics"), snap => {
-    if(snap.empty) return;
-    let list = [];
-    snap.forEach(d => { const x = d.data(); x.id = d.id; list.push(x); });
-    data.topics = list;
-    saveData();
-    renderTopics();
-  }, () => {});
-}
-
-/* ======================================================== */
-/* 📥 CURRICULUM LOADER                                     */
-/* ======================================================== */
-function renderTopics(){
-  const grid = $("topicGrid"); if(!grid) return;
-  const filter = $("topicsClassFilter")?.value || "ALL";
-  const list = filter === "ALL" ? data.topics : data.topics.filter(t => (t.classLevel || "Primary 1") === filter);
-
-  grid.innerHTML = list.map(t => {
-    const tid = t.id || slugify(t.topic);
-    const steps = 1 + (t.examples ? t.examples.length : 0);
-    return `
-      <div class="topic-card" onclick="startTopic('${escapeHTML(tid)}')">
-        <div>
-          <div style="display:flex; justify-content:space-between;">
-            <span style="font-size:2.2rem;">${t.intro?.visual?.emoji || "📚"}</span>
-            <span class="badge class-badge">${escapeHTML(t.classLevel || "Primary 1")}</span>
-          </div>
-          <h3 style="margin:4px 0;">${escapeHTML(t.topic)}</h3>
-          <p style="margin:0 0 8px; color:#64748b; font-size:0.85rem;">${escapeHTML(t.subject || "General")} • ${steps} Steps</p>
+      <div class="nav-right">
+        <!-- Control Buttons: Play, Pause, Replay, Next -->
+        <div class="control-btn-group">
+          <button id="btn-play" title="Play Explanation" class="btn-icon play-btn">▶</button>
+          <button id="btn-pause" title="Pause Explanation" class="btn-icon">⏸</button>
+          <button id="btn-replay" title="Replay Explanation" class="btn-icon">🔁</button>
+          <button id="btn-next" title="Next Step" class="btn-icon">⏭</button>
         </div>
-        <button class="btn primary btn-sm" style="width:100%;">▶️ Start Lesson</button>
+
+        <!-- Continuous Play Mode Button -->
+        <button id="btn-continuous" class="btn-pill" title="Toggle Continuous Lesson Flow">
+          🔄 <span>Auto Flow: Off</span>
+        </button>
+
+        <button id="btn-roster" class="btn-pill">👥 <span id="active-student-display">Class</span></button>
+        <button id="btn-editor" class="btn-pill accent">✏️ JSON</button>
       </div>
-    `;
-  }).join("");
+    </header>
 
-  updateHomeStats();
-}
+    <!-- Stage Area -->
+    <main id="classroom-stage">
+      <div id="lesson-status-bar">
+        <span id="stage-badge" class="badge">INTRO</span>
+        <span id="voice-badge" class="badge voice">Voice: Ezinne (en-NG)</span>
+        <span id="lesson-topic-display">Primary 1 • Addition Basics</span>
+        <div class="progress-track">
+          <div id="progress-bar-fill"></div>
+        </div>
+      </div>
 
-function startTopic(topicId){
-  currentTopic = data.topics.find(t => t.id === topicId || slugify(t.topic) === topicId) || data.topics[0];
-  currentStepIndex = 0;
-  showScreen('lessons');
-  renderCurrentStep().then(() => { if(isAutoPlayEnabled) setTimeout(playLesson, 400); });
-}
+      <!-- Teaching Chalkboard -->
+      <section id="teaching-board" class="board-surface">
+        <div id="board-header">
+          <h2 id="board-title">Welcome to Mathematics</h2>
+          <p id="board-subtitle">Understanding Quantities</p>
+        </div>
 
-function exitToTopics(){ stopLesson(); showScreen('topics'); }
+        <div id="board-viewport">
+          <div id="visual-workspace" class="workspace"></div>
+        </div>
 
-function loadSampleAdditionLesson(){ data.topics.unshift(JSON.parse(JSON.stringify(sampleAdditionData))); saveData(); renderTopics(); alert("Loaded Addition!"); }
-function loadSampleSubtractionLesson(){ data.topics.unshift(JSON.parse(JSON.stringify(sampleSubtractionData))); saveData(); renderTopics(); alert("Loaded Subtraction!"); }
-function loadSampleMultiplicationLesson(){ data.topics.unshift(JSON.parse(JSON.stringify(sampleMultiplicationData))); saveData(); renderTopics(); alert("Loaded Multiplication!"); }
-function loadSampleFractionLesson(){ data.topics.unshift(JSON.parse(JSON.stringify(sampleFractionData))); saveData(); renderTopics(); alert("Loaded Fractions!"); }
-function loadSampleDivisionLesson(){ data.topics.unshift(JSON.parse(JSON.stringify(sampleDivisionData))); saveData(); renderTopics(); alert("Loaded Division!"); }
-function loadSampleEnglishActionLesson(){ data.topics.unshift(JSON.parse(JSON.stringify(sampleEnglishNamingActionData))); saveData(); renderTopics(); alert("Loaded English Lesson!"); }
+        <div id="board-equation-display" class="equation-banner"></div>
+      </section>
 
-function importPastedJSON(){
-  const raw = $("jsonText").value.trim();
-  if(!raw) return alert("Please paste JSON first.");
-  try{
-    const parsed = JSON.parse(raw);
-    data.topics.unshift(parsed);
-    saveData();
-    renderTopics();
-    alert(`🎉 Successfully imported topic!`);
-    startTopic(parsed.id || slugify(parsed.topic));
-  }catch(e){
-    alert("Invalid JSON: " + e.message);
-  }
-}
+      <!-- Teacher Voice Strip -->
+      <section id="teacher-section">
+        <div class="teacher-box">
+          <div class="teacher-avatar-wrapper">
+            <div id="teacher-avatar" class="teacher-avatar">👩🏾‍🏫</div>
+            <span id="teacher-label" class="teacher-name-tag">Teacher Ezinne</span>
+          </div>
+          <div id="teacher-speech" class="speech-bubble">
+            Loading your lesson...
+          </div>
+        </div>
 
-/* ======================================================== */
-/* ☀️ SCREEN AWAKE & CONFETTI                               */
-/* ======================================================== */
-let wakeLock = null;
+        <div class="action-toolbar">
+          <button id="btn-main-continue" class="btn-main-action">
+            Continue to Next Step ➔
+          </button>
+        </div>
+      </section>
 
-async function requestWakeLock(){
-  if('wakeLock' in navigator){
-    try {
-      if(!wakeLock) {
-        wakeLock = await navigator.wakeLock.request('screen');
-        $('wakeLockBadge').classList.remove('hidden');
-        wakeLock.addEventListener('release', () => {
-          wakeLock = null;
-          $('wakeLockBadge').classList.add('hidden');
-        });
+      <!-- Dual Question Checkpoint & Quiz Panel -->
+      <section id="interaction-panel" class="interaction-card hidden">
+        <div class="panel-header">
+          <span id="panel-type-tag" class="badge warning">CHECKPOINT • QUESTION 1 OF 2</span>
+          <span id="panel-instruction">Check your understanding</span>
+        </div>
+
+        <div id="panel-question-text" class="question-body">Question goes here</div>
+        <div id="panel-visual-hint" class="hint-container"></div>
+        <div id="panel-interaction-zone"></div>
+        <div id="panel-feedback" class="feedback-alert hidden"></div>
+      </section>
+    </main>
+
+    <!-- Small Toast Notification -->
+    <div id="app-toast"></div>
+
+    <!-- Student Roster Modal -->
+    <div id="roster-modal" class="modal-overlay hidden">
+      <div class="modal-card">
+        <div class="modal-header">
+          <h3>Classroom Student Roster</h3>
+          <button class="btn-close" id="btn-close-roster">&times;</button>
+        </div>
+        <div class="modal-body">
+          <p style="font-size: 0.85rem; color: var(--text-muted);">
+            Teacher will naturally call on registered students during practice.
+          </p>
+          <div class="roster-input-row">
+            <input type="text" id="new-student-name" placeholder="Enter student name (e.g. Chidi, Amina)" />
+            <button id="btn-add-student" class="btn-pill primary">Add</button>
+          </div>
+          <ul id="students-list" class="item-list"></ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- JSON Studio Modal -->
+    <div id="editor-modal" class="modal-overlay hidden">
+      <div class="modal-card wide">
+        <div class="modal-header">
+          <h3>Lesson JSON Studio</h3>
+          <div style="display: flex; gap: 6px;">
+            <button id="btn-save-json" class="btn-pill primary">Save & Load</button>
+            <button class="btn-close" id="btn-close-editor">&times;</button>
+          </div>
+        </div>
+        <div class="modal-body">
+          <div style="display:flex; justify-content:space-between; align-items:center;">
+            <span id="json-status" style="font-size: 0.8rem; font-weight: 700;">Ready</span>
+            <span style="font-size:0.75rem; color:var(--text-muted);">Azure Neural TTS Supported</span>
+          </div>
+          <textarea id="json-editor-textarea" spellcheck="false"></textarea>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      "use strict";
+
+      // ======================================================================
+      // 1. CONFIGURATION & CONSTANTS
+      // ======================================================================
+      const TTS_ENDPOINT = "/api/tts"; // Secure backend proxy
+      const DEFAULT_VOICE = "en-NG-EzinneNeural";
+
+      const CURRICULUM = [
+        {
+          id: "p1-math-addition",
+          classLevel: "Primary 1",
+          topic: "Addition Basics",
+          stages: [
+            {
+              stageType: "welcome",
+              title: "Welcome to Addition",
+              subtitle: "Putting Quantities Together",
+              speech: "Hello! Welcome to our Mathematics classroom. Today we are learning about Addition. Addition means putting quantities together to find how many we have altogether.",
+              boardAction: { type: "SHOW_WELCOME", text: "ADDITION: Putting Things Together" }
+            },
+            {
+              stageType: "foundation",
+              title: "Important Math Signs",
+              subtitle: "The Plus and Equals Signs",
+              speech: "Before calculating, let us meet two important signs. Look at the board. The cross sign is the PLUS sign. It means add or put together. The two flat lines make the EQUALS sign, showing the total answer.",
+              boardAction: {
+                type: "SHOW_SYMBOLS",
+                symbols: [
+                  { symbol: "+", name: "PLUS SIGN", meaning: "PUT TOGETHER / ADD" },
+                  { symbol: "=", name: "EQUALS SIGN", meaning: "TOTAL AMOUNT" }
+                ]
+              }
+            },
+            {
+              stageType: "example",
+              title: "Example 1: Adding Apples",
+              speech: "Look at the board. First, we have two sweet red apples. Then, we add one more apple. Let us count all of them together: one, two, three! So, two plus one equals three.",
+              boardAction: {
+                type: "SYNCED_ADDITION",
+                item: "apple",
+                icon: "🍎",
+                leftCount: 2,
+                rightCount: 1,
+                equation: "2 + 1 = 3"
+              },
+              checkpoint: {
+                questions: [
+                  {
+                    type: "procedural",
+                    prompt: "Now your turn! What is 2 + 2?",
+                    icon: "🍎",
+                    left: 2,
+                    right: 2,
+                    correctAnswer: 4,
+                    remediation: "Let us count together calmly: one, two, three, four! So two plus two equals four."
+                  },
+                  {
+                    type: "conceptual",
+                    prompt: "Chidi has 3 oranges. His mother gives him 1 more orange. How many oranges does Chidi have altogether?",
+                    icon: "🍊",
+                    left: 3,
+                    right: 1,
+                    correctAnswer: 4,
+                    remediation: "Chidi started with three oranges. Add one more: one, two, three, four oranges altogether!"
+                  }
+                ]
+              }
+            },
+            {
+              stageType: "example",
+              title: "Example 2: Adding Pencils",
+              speech: "{{student_name}}, look at the board. Here are three yellow pencils. We add two more pencils. Counting them all together gives: one, two, three, four, five. So, three plus two equals five.",
+              boardAction: {
+                type: "SYNCED_ADDITION",
+                item: "pencil",
+                icon: "✏️",
+                leftCount: 3,
+                rightCount: 2,
+                equation: "3 + 2 = 5"
+              },
+              checkpoint: {
+                questions: [
+                  {
+                    type: "procedural",
+                    prompt: "What is 3 + 1?",
+                    icon: "✏️",
+                    left: 3,
+                    right: 1,
+                    correctAnswer: 4,
+                    remediation: "Start with three pencils and add one more: one, two, three, four. The answer is four."
+                  },
+                  {
+                    type: "conceptual",
+                    prompt: "Amina has 4 notebooks. She buys 2 more notebooks. How many notebooks does Amina have in all?",
+                    icon: "📓",
+                    left: 4,
+                    right: 2,
+                    correctAnswer: 6,
+                    remediation: "Count forward two times from four: five, six! Amina has six notebooks."
+                  }
+                ]
+              }
+            },
+            {
+              stageType: "summary",
+              title: "Lesson Summary",
+              subtitle: "What We Learned Today",
+              speech: "You did wonderful work today! Remember: Addition means combining quantities. The plus sign means add, and the equals sign gives our final total. Now let's try our quiz!",
+              boardAction: {
+                type: "SHOW_SUMMARY",
+                points: [
+                  "Addition means putting amounts together",
+                  "+ (Plus) tells us to add",
+                  "= (Equals) shows our total answer"
+                ]
+              }
+            },
+            {
+              stageType: "quiz",
+              title: "Addition Mastery Quiz",
+              questions: [
+                {
+                  prompt: "What does the plus sign (+) mean?",
+                  options: ["Take away", "Put together / Add", "Share equally", "Measure"],
+                  correctIndex: 1,
+                  feedback: "The plus sign tells us to add or put items together."
+                },
+                {
+                  prompt: "What is 3 + 3?",
+                  options: ["5", "6", "7", "4"],
+                  correctIndex: 1,
+                  feedback: "Three plus three equals six."
+                },
+                {
+                  prompt: "Emeka has 4 mangos. He gets 1 more. How many mangos does Emeka have?",
+                  options: ["3", "5", "6", "4"],
+                  correctIndex: 1,
+                  feedback: "Four mangos plus one mango equals five mangos altogether."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          id: "n1-math-counting",
+          classLevel: "Nursery 1",
+          topic: "Counting Numbers 1 to 5",
+          stages: [
+            {
+              stageType: "welcome",
+              title: "Let's Count Numbers!",
+              subtitle: "Numbers 1 to 5",
+              speech: "Hello little champions! Today we are learning to count from one to five with sweet fruits!",
+              boardAction: { type: "SHOW_WELCOME", text: "COUNTING 1 TO 5 🍎 🍌 🍊" }
+            },
+            {
+              stageType: "example",
+              title: "Counting 3 Mangoes",
+              speech: "{{student_name}}, look at these sweet mangoes on our board. Let us count together: one... two... three mangoes!",
+              boardAction: {
+                type: "SYNCED_ADDITION",
+                item: "mango",
+                icon: "🥭",
+                leftCount: 3,
+                rightCount: 0,
+                equation: "3 Sweet Mangoes"
+              },
+              checkpoint: {
+                questions: [
+                  {
+                    type: "procedural",
+                    prompt: "How many stars do you see? ⭐ ⭐",
+                    icon: "⭐",
+                    left: 2,
+                    right: 0,
+                    correctAnswer: 2,
+                    remediation: "Let us count: One... Two! There are two stars."
+                  },
+                  {
+                    type: "conceptual",
+                    prompt: "If you see 1 big balloon 🎈, what number is that?",
+                    icon: "🎈",
+                    left: 1,
+                    right: 0,
+                    correctAnswer: 1,
+                    remediation: "Only one balloon! The answer is one."
+                  }
+                ]
+              }
+            },
+            {
+              stageType: "summary",
+              title: "Counting Summary",
+              subtitle: "1, 2, 3, 4, 5",
+              speech: "Wonderful counting! Keep practicing your numbers every day.",
+              boardAction: {
+                type: "SHOW_SUMMARY",
+                points: ["1 = One", "2 = Two", "3 = Three", "4 = Four", "5 = Five"]
+              }
+            },
+            {
+              stageType: "quiz",
+              title: "Nursery Counting Quiz",
+              questions: [
+                {
+                  prompt: "How many apples are here: 🍎 🍎 🍎 ?",
+                  options: ["2", "3", "4", "5"],
+                  correctIndex: 1,
+                  feedback: "That's right! One, two, three apples!"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          id: "jss1-math-integers",
+          classLevel: "Junior Secondary 1",
+          topic: "Directed Numbers (Integers)",
+          stages: [
+            {
+              stageType: "welcome",
+              title: "Directed Numbers",
+              subtitle: "Positive and Negative Integers",
+              speech: "Welcome class. Today we explore Directed Numbers. In real life, quantities have direction: earning money versus owing debt, or climbing up versus going down.",
+              boardAction: { type: "SHOW_WELCOME", text: "INTEGERS: (+ Positive) & (− Negative)" }
+            },
+            {
+              stageType: "foundation",
+              title: "Understanding The Signs",
+              subtitle: "Gains vs Losses",
+              speech: "Positive numbers represent quantities above zero or gains. Negative numbers have a minus sign and represent quantities below zero or debts.",
+              boardAction: {
+                type: "SHOW_SYMBOLS",
+                symbols: [
+                  { symbol: "+5", name: "POSITIVE FIVE", meaning: "5 units above zero / Gain" },
+                  { symbol: "−5", name: "NEGATIVE FIVE", meaning: "5 units below zero / Debt" }
+                ]
+              }
+            },
+            {
+              stageType: "example",
+              title: "Example: Combining Opposite Signs",
+              speech: "Imagine you have five Naira, written as positive five. You spend three Naira, written as negative three. Combining them leaves you with positive two Naira.",
+              boardAction: {
+                type: "SYNCED_ADDITION",
+                item: "coin",
+                icon: "🪙",
+                leftCount: 5,
+                rightCount: 3,
+                equation: "(+5) + (−3) = +2"
+              },
+              checkpoint: {
+                questions: [
+                  {
+                    type: "procedural",
+                    prompt: "Calculate: (+4) + (−2) = ?",
+                    icon: "🪙",
+                    left: 4,
+                    right: 2,
+                    correctAnswer: 2,
+                    remediation: "Starting at positive four and taking away two leaves you with positive two."
+                  },
+                  {
+                    type: "conceptual",
+                    prompt: "A temperature starts at 3 degrees and drops by 5 degrees. What is the new temperature?",
+                    icon: "🌡️",
+                    left: 3,
+                    right: 5,
+                    correctAnswer: -2,
+                    remediation: "Three minus five crosses below zero to minus two degrees."
+                  }
+                ]
+              }
+            },
+            {
+              stageType: "summary",
+              title: "Integers Summary",
+              subtitle: "Core Rules",
+              speech: "Remember: Numbers with different signs compete, and the sign of the larger absolute value wins.",
+              boardAction: {
+                type: "SHOW_SUMMARY",
+                points: ["+ = Positive (above zero)", "− = Negative (below zero)", "Zero is neutral"]
+              }
+            },
+            {
+              stageType: "quiz",
+              title: "Integers Quiz",
+              questions: [
+                {
+                  prompt: "Which integer represents owing 500 Naira?",
+                  options: ["+500", "−500", "0", "+50"],
+                  correctIndex: 1,
+                  feedback: "Owing debt is represented with a minus sign: minus 500."
+                }
+              ]
+            }
+          ]
+        }
+      ];
+
+      // ======================================================================
+      // 2. TEXT CLEANING & MATHEMATICS SPEECH CONVERTER
+      // ======================================================================
+      function cleanTextForSpeech(text) {
+        if (!text) return "";
+        let cleaned = text;
+
+        // 1. Strip HTML tags and code blocks
+        cleaned = cleaned.replace(/<[^>]*>/g, " ");
+        cleaned = cleaned.replace(/`[^`]*`/g, " ");
+
+        // 2. Remove JSON syntax remains if any
+        cleaned = cleaned.replace(/[{}\[\]"]/g, " ");
+
+        // 3. Remove Emojis & decorative Unicode symbols
+        cleaned = cleaned.replace(/([\u2700-\u27BF]|[\uE000-\uF8FF]|\uD83C[\uDC00-\uDFFF]|\uD83D[\uDC00-\uDFFF]|[\u2011-\u26FF]|\uD83E[\uDD10-\uDDFF])/g, "");
+
+        // 4. Convert Mathematics expressions naturally to spoken English
+        cleaned = cleaned.replace(/₦\s*(\d+)/g, "$1 Naira");
+        cleaned = cleaned.replace(/(\d+)\s*\/\s*2/g, "one half");
+        cleaned = cleaned.replace(/(\d+)\s*\/\s*4/g, "one quarter");
+        cleaned = cleaned.replace(/(\d+)\s*\+\s*(\d+)/g, "$1 plus $2");
+        cleaned = cleaned.replace(/(\d+)\s*[\-−]\s*(\d+)/g, "$1 minus $2");
+        cleaned = cleaned.replace(/(\d+)\s*[×*]\s*(\d+)/g, "$1 times $2");
+        cleaned = cleaned.replace(/(\d+)\s*[÷\/]\s*(\d+)/g, "$1 divided by $2");
+        cleaned = cleaned.replace(/\s*=\s*/g, " equals ");
+        cleaned = cleaned.replace(/\(\+(\d+)\)/g, "positive $1");
+        cleaned = cleaned.replace(/\([−\-](\d+)\)/g, "negative $1");
+
+        // 5. Clean punctuation and excess spacing
+        cleaned = cleaned.replace(/[\r\n\t]+/g, " ");
+        cleaned = cleaned.replace(/\s{2,}/g, " ").trim();
+
+        return cleaned;
       }
-    } catch(e){}
-  }
-}
 
-function releaseWakeLock(){
-  if(wakeLock){
-    try{ wakeLock.release(); }catch(e){}
-    wakeLock = null;
-    $('wakeLockBadge').classList.add('hidden');
-  }
-}
+      // ======================================================================
+      // 3. INDEXED-DB AUDIO CACHE (lessonID + voice + text)
+      // ======================================================================
+      class AudioCache {
+        constructor() {
+          this.db = null;
+          this.ready = this.init();
+        }
 
-function triggerConfetti(){
-  const cv = $("confettiCanvas"), ctx = cv.getContext("2d");
-  cv.width = window.innerWidth; cv.height = window.innerHeight;
-  let p = Array.from({length:35}, () => ({
-    x: Math.random() * cv.width, y: 0,
-    r: Math.random() * 6 + 2, dy: Math.random() * 4 + 2,
-    c: ["#ff4757","#2ed573","#1e90ff","#ffa502","#9b59b6"][Math.floor(Math.random()*5)]
-  }));
-  let step = 0;
-  function draw(){
-    ctx.clearRect(0,0,cv.width,cv.height);
-    step++;
-    p.forEach(i => {
-      i.y += i.dy;
-      ctx.fillStyle = i.c;
-      ctx.beginPath(); ctx.arc(i.x, i.y, i.r, 0, Math.PI*2); ctx.fill();
-    });
-    if(step < 60) requestAnimationFrame(draw);
-    else ctx.clearRect(0,0,cv.width,cv.height);
-  }
-  draw();
-}
+        init() {
+          return new Promise((resolve) => {
+            if (!window.indexedDB) return resolve(null);
+            const request = indexedDB.open("MathVoiceCache", 1);
+            request.onupgradeneeded = (e) => {
+              const db = e.target.result;
+              if (!db.objectStoreNames.contains("audio_snippets")) {
+                db.createObjectStore("audio_snippets");
+              }
+            };
+            request.onsuccess = (e) => {
+              this.db = e.target.result;
+              resolve(this.db);
+            };
+            request.onerror = () => resolve(null);
+          });
+        }
 
-/* ======================================================== */
-/* 🛠️ INITIALIZATION & UTILITIES                            */
-/* ======================================================== */
-function showScreen(id){
-  stopLesson();
-  document.querySelectorAll(".screen").forEach(s => s.classList.remove("active"));
-  $(id)?.classList.add("active");
-  if(id==='topics') renderTopics();
-  if(id==='progress') renderProgress();
-  if(id==='attendance') renderAttendanceTable();
-  window.scrollTo({top:0, behavior:'smooth'});
-}
+        async get(key) {
+          await this.ready;
+          if (!this.db) return null;
+          return new Promise((resolve) => {
+            try {
+              const tx = this.db.transaction("audio_snippets", "readonly");
+              const store = tx.objectStore("audio_snippets");
+              const req = store.get(key);
+              req.onsuccess = () => resolve(req.result || null);
+              req.onerror = () => resolve(null);
+            } catch (err) {
+              resolve(null);
+            }
+          });
+        }
 
-function toggleSidebar(){
-  $("sidebarDrawer").classList.toggle("open");
-  $("sidebarBackdrop").classList.toggle("open");
-}
+        async set(key, blob) {
+          await this.ready;
+          if (!this.db) return;
+          try {
+            const tx = this.db.transaction("audio_snippets", "readwrite");
+            const store = tx.objectStore("audio_snippets");
+            store.put(blob, key);
+          } catch (err) {}
+        }
+      }
 
-function toggleTVMode(){ document.body.classList.toggle("tv-mode"); }
-function slugify(s){ return String(s||"").toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"") || "topic"; }
-function escapeHTML(s){ return String(s||"").replace(/[&<>"']/g, m => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m])); }
+      // ======================================================================
+      // 4. NIGERIAN AI VOICE ENGINE (Azure Neural with Offline Fallback)
+      // ======================================================================
+      class NigerianVoiceEngine {
+        constructor(onStateChange, onToast) {
+          this.onStateChange = onStateChange;
+          this.onToast = onToast;
+          this.cache = new AudioCache();
+          this.audioPlayer = new Audio();
+          this.currentVoice = localStorage.getItem("math_teacher_voice") || DEFAULT_VOICE;
+          this.isPlaying = false;
+          this.isPaused = false;
+          this.onEndedCallback = null;
 
-function saveProgress(){
-  try{ localStorage.setItem(PROGRESS_KEY, JSON.stringify(progress)); }catch(e){}
-}
+          this.audioPlayer.addEventListener("ended", () => {
+            this.isPlaying = false;
+            this.isPaused = false;
+            this.onStateChange(false);
+            if (this.onEndedCallback) this.onEndedCallback();
+          });
 
-function updateStudentUI(){
-  const name = studentProfile.name || "Superstar";
-  const cl = studentProfile.classLevel || "Primary 1";
-  $("topStudentName").textContent = name;
-  $("topStudentClass").textContent = cl;
-  $("sidebarStudentClass").textContent = cl;
-  document.querySelectorAll(".student-name-display").forEach(e => e.textContent = name);
-}
+          this.audioPlayer.addEventListener("error", () => {
+            this.isPlaying = false;
+            this.isPaused = false;
+            this.onStateChange(false);
+          });
+        }
 
-function openRegistrationModal(){ $("registrationModal").classList.remove("hidden"); }
-function closeRegistrationModal(){ $("registrationModal").classList.add("hidden"); }
-function saveStudentRegistration(){
-  studentProfile.name = $("regStudentName").value || "Superstar";
-  studentProfile.classLevel = $("regStudentClass").value || "Primary 1";
-  localStorage.setItem(STUDENT_KEY, JSON.stringify(studentProfile));
-  updateStudentUI();
-  closeRegistrationModal();
-  renderTopics();
-}
+        setVoice(voiceId) {
+          this.currentVoice = voiceId;
+          localStorage.setItem("math_teacher_voice", voiceId);
+        }
 
-function renderProgress(){
-  $("statTopics").textContent = data.topics.length;
-  $("statLessons").textContent = Object.keys(progress.completedSteps).length;
-  $("statQuizzes").textContent = progress.quizzes.length;
-  const avg = progress.quizzes.length ? Math.round((progress.quizzes.filter(q => q.correct).length / progress.quizzes.length) * 100) : 0;
-  $("statAverage").textContent = avg + "%";
-}
+        getVoice() {
+          return this.currentVoice;
+        }
 
-function updateHomeStats(){
-  $("homeTopics").textContent = data.topics.length;
-  $("homeLessons").textContent = data.topics.reduce((acc, t) => acc + (t.examples ? t.examples.length : 0), 0);
-  const avg = progress.quizzes.length ? Math.round((progress.quizzes.filter(q => q.correct).length / progress.quizzes.length) * 100) : 0;
-  $("homeScore").textContent = avg + "%";
-}
+        stop() {
+          if (this.audioPlayer) {
+            this.audioPlayer.pause();
+            this.audioPlayer.currentTime = 0;
+          }
+          if (window.speechSynthesis) {
+            window.speechSynthesis.cancel();
+          }
+          this.isPlaying = false;
+          this.isPaused = false;
+          this.onStateChange(false);
+        }
 
-// Launch
-initSpeechRecognition();
-updateStudentUI();
-populateVoiceSelector();
-renderTopics();
-renderAttendanceTable();
-initEmbeddedFirebase();
-</script>
+        pause() {
+          if (this.isPlaying && !this.isPaused) {
+            this.audioPlayer.pause();
+            this.isPaused = true;
+            this.onStateChange(false);
+          }
+        }
+
+        resume() {
+          if (this.isPaused) {
+            this.audioPlayer.play().then(() => {
+              this.isPlaying = true;
+              this.isPaused = false;
+              this.onStateChange(true);
+            }).catch(() => {
+              this.isPaused = false;
+              this.isPlaying = false;
+            });
+          }
+        }
+
+        async speak(cleanText, lessonId = "gen", onEnded = null) {
+          this.stop();
+          if (!cleanText) return;
+
+          this.onEndedCallback = onEnded;
+          const cacheKey = `${lessonId}_${this.currentVoice}_${cleanText}`;
+
+          // 1. Check IndexedDB Cache
+          const cachedBlob = await this.cache.get(cacheKey);
+          if (cachedBlob) {
+            this.playBlob(cachedBlob);
+            return;
+          }
+
+          // 2. Fetch from Secure Backend API
+          try {
+            const res = await fetch(TTS_ENDPOINT, {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                text: cleanText,
+                voice: this.currentVoice
+              })
+            });
+
+            if (!res.ok) throw new Error("Azure TTS service response: " + res.status);
+
+            const blob = await res.blob();
+            await this.cache.set(cacheKey, blob);
+            this.playBlob(blob);
+          } catch (err) {
+            // 3. Graceful Offline Fallback to Browser SpeechSynthesis
+            this.onToast("Backend voice offline. Using device speech.", 3000);
+            this.speakWithSpeechSynthesis(cleanText);
+          }
+        }
+
+        playBlob(blob) {
+          const url = URL.createObjectURL(blob);
+          this.audioPlayer.src = url;
+          this.audioPlayer.play().then(() => {
+            this.isPlaying = true;
+            this.isPaused = false;
+            this.onStateChange(true);
+          }).catch((err) => {
+            // Handle mobile gesture autoplay restrictions
+            this.isPlaying = false;
+            this.isPaused = false;
+            this.onStateChange(false);
+          });
+        }
+
+        speakWithSpeechSynthesis(text) {
+          if (!window.speechSynthesis) return;
+          try {
+            window.speechSynthesis.cancel();
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.rate = 0.88; // Deliberate teacher pace
+            utterance.pitch = this.currentVoice.includes("Ezinne") ? 1.05 : 0.95;
+
+            // Pick closest English voice
+            const voices = window.speechSynthesis.getVoices() || [];
+            const voice = voices.find(v => v && v.lang && (v.lang.includes("en-NG") || v.lang.startsWith("en")));
+            if (voice) utterance.voice = voice;
+
+            utterance.onstart = () => {
+              this.isPlaying = true;
+              this.onStateChange(true);
+            };
+
+            utterance.onend = () => {
+              this.isPlaying = false;
+              this.onStateChange(false);
+              if (this.onEndedCallback) this.onEndedCallback();
+            };
+
+            utterance.onerror = () => {
+              this.isPlaying = false;
+              this.onStateChange(false);
+            };
+
+            window.speechSynthesis.speak(utterance);
+          } catch (err) {
+            this.isPlaying = false;
+            this.onStateChange(false);
+          }
+        }
+      }
+
+      // ======================================================================
+      // 5. MAIN TEACHING ENGINE CLASS
+      // ======================================================================
+      class TeachingEngine {
+        constructor() {
+          this.lessons = this.safeStorageGet("math_lessons_data", CURRICULUM);
+          this.students = this.safeStorageGet("math_students_data", ["David", "Mary", "Emeka", "Amina", "Sarah"]);
+          this.currentLesson = this.lessons[0];
+          this.currentStageIndex = 0;
+          this.checkpointIndex = 0;
+          this.quizIndex = 0;
+          this.quizScore = 0;
+
+          // Continuous Play mode
+          this.continuousPlay = false;
+
+          // Voice System Init
+          this.voiceEngine = new NigerianVoiceEngine(
+            (isSpeaking) => this.updateSpeakingUI(isSpeaking),
+            (msg, duration) => this.showToast(msg, duration)
+          );
+
+          this.cacheDOMElements();
+          this.bindEvents();
+          this.populateSelectors();
+          this.renderRosterList();
+          this.loadLesson(this.currentLesson);
+        }
+
+        safeStorageGet(key, fallback) {
+          try {
+            const item = localStorage.getItem(key);
+            return item ? JSON.parse(item) : fallback;
+          } catch (e) {
+            return fallback;
+          }
+        }
+
+        safeStorageSet(key, value) {
+          try {
+            localStorage.setItem(key, JSON.stringify(value));
+          } catch (e) {}
+        }
+
+        cacheDOMElements() {
+          this.classSelect = document.getElementById("class-select");
+          this.topicSelect = document.getElementById("topic-select");
+          this.voiceSelect = document.getElementById("voice-select");
+          this.stageBadge = document.getElementById("stage-badge");
+          this.voiceBadge = document.getElementById("voice-badge");
+          this.lessonTopicDisplay = document.getElementById("lesson-topic-display");
+          this.progressBar = document.getElementById("progress-bar-fill");
+
+          this.boardTitle = document.getElementById("board-title");
+          this.boardSubtitle = document.getElementById("board-subtitle");
+          this.visualWorkspace = document.getElementById("visual-workspace");
+          this.boardEquation = document.getElementById("board-equation-display");
+
+          this.teacherAvatar = document.getElementById("teacher-avatar");
+          this.teacherLabel = document.getElementById("teacher-label");
+          this.teacherSpeech = document.getElementById("teacher-speech");
+          this.btnMainContinue = document.getElementById("btn-main-continue");
+
+          // Playback Control Buttons
+          this.btnPlay = document.getElementById("btn-play");
+          this.btnPause = document.getElementById("btn-pause");
+          this.btnReplay = document.getElementById("btn-replay");
+          this.btnNext = document.getElementById("btn-next");
+          this.btnContinuous = document.getElementById("btn-continuous");
+
+          this.interactionPanel = document.getElementById("interaction-panel");
+          this.panelTypeTag = document.getElementById("panel-type-tag");
+          this.panelInstruction = document.getElementById("panel-instruction");
+          this.panelQuestionText = document.getElementById("panel-question-text");
+          this.panelVisualHint = document.getElementById("panel-visual-hint");
+          this.panelInteractionZone = document.getElementById("panel-interaction-zone");
+          this.panelFeedback = document.getElementById("panel-feedback");
+
+          this.activeStudentDisplay = document.getElementById("active-student-display");
+          this.toast = document.getElementById("app-toast");
+
+          this.rosterModal = document.getElementById("roster-modal");
+          this.editorModal = document.getElementById("editor-modal");
+          this.jsonEditorTextarea = document.getElementById("json-editor-textarea");
+          this.jsonStatus = document.getElementById("json-status");
+        }
+
+        bindEvents() {
+          // Selectors
+          this.classSelect.addEventListener("change", () => this.onClassChange());
+          this.topicSelect.addEventListener("change", () => this.onTopicChange());
+
+          // Voice Selector change
+          this.voiceSelect.addEventListener("change", (e) => {
+            const selected = e.target.value;
+            this.voiceEngine.setVoice(selected);
+            this.updateVoiceLabel();
+            this.voiceEngine.stop();
+            this.playCurrentStageSpeech();
+          });
+
+          // Playback Buttons
+          this.btnPlay.addEventListener("click", () => {
+            if (this.voiceEngine.isPaused) {
+              this.voiceEngine.resume();
+            } else {
+              this.playCurrentStageSpeech();
+            }
+          });
+
+          this.btnPause.addEventListener("click", () => {
+            this.voiceEngine.pause();
+          });
+
+          this.btnReplay.addEventListener("click", () => {
+            this.playCurrentStageSpeech();
+          });
+
+          this.btnNext.addEventListener("click", () => {
+            this.voiceEngine.stop();
+            this.handleNextStage();
+          });
+
+          this.btnMainContinue.addEventListener("click", () => {
+            this.voiceEngine.stop();
+            this.handleNextStage();
+          });
+
+          // Continuous Play Mode Toggle
+          this.btnContinuous.addEventListener("click", () => {
+            this.continuousPlay = !this.continuousPlay;
+            this.btnContinuous.classList.toggle("toggle-active", this.continuousPlay);
+            this.btnContinuous.querySelector("span").textContent = this.continuousPlay ? "Auto Flow: On" : "Auto Flow: Off";
+            this.showToast(this.continuousPlay ? "Continuous Play enabled" : "Continuous Play disabled", 2000);
+          });
+
+          // Modals
+          document.getElementById("btn-roster").addEventListener("click", () => this.rosterModal.classList.remove("hidden"));
+          document.getElementById("btn-close-roster").addEventListener("click", () => this.rosterModal.classList.add("hidden"));
+
+          document.getElementById("btn-editor").addEventListener("click", () => {
+            this.jsonEditorTextarea.value = JSON.stringify(this.currentLesson, null, 2);
+            this.jsonStatus.textContent = "Editing active lesson JSON";
+            this.jsonStatus.style.color = "var(--text-muted)";
+            this.editorModal.classList.remove("hidden");
+          });
+          document.getElementById("btn-close-editor").addEventListener("click", () => this.editorModal.classList.add("hidden"));
+
+          // Roster Actions
+          document.getElementById("btn-add-student").addEventListener("click", () => {
+            const input = document.getElementById("new-student-name");
+            const val = input.value.trim();
+            if (val) {
+              this.students.push(val);
+              this.safeStorageSet("math_students_data", this.students);
+              this.renderRosterList();
+              input.value = "";
+            }
+          });
+
+          // Save JSON
+          document.getElementById("btn-save-json").addEventListener("click", () => {
+            try {
+              const parsed = JSON.parse(this.jsonEditorTextarea.value);
+              if (!parsed.id || !parsed.topic || !parsed.stages) {
+                throw new Error("Missing id, topic, or stages.");
+              }
+              const idx = this.lessons.findIndex(l => l.id === parsed.id);
+              if (idx >= 0) {
+                this.lessons[idx] = parsed;
+              } else {
+                this.lessons.push(parsed);
+              }
+              this.safeStorageSet("math_lessons_data", this.lessons);
+              this.populateSelectors();
+              this.loadLesson(parsed);
+              this.editorModal.classList.add("hidden");
+              this.showToast("Lesson saved & loaded successfully!", 2500);
+            } catch (err) {
+              this.jsonStatus.textContent = "❌ " + err.message;
+              this.jsonStatus.style.color = "var(--danger)";
+            }
+          });
+        }
+
+        populateSelectors() {
+          const classes = [...new Set(this.lessons.map(l => l.classLevel))];
+          this.classSelect.innerHTML = classes.map(c => `<option value="${c}">${c}</option>`).join("");
+          this.voiceSelect.value = this.voiceEngine.getVoice();
+          this.updateVoiceLabel();
+          this.onClassChange(false);
+        }
+
+        updateVoiceLabel() {
+          const isEzinne = this.voiceEngine.getVoice().includes("Ezinne");
+          this.teacherAvatar.textContent = isEzinne ? "👩🏾‍🏫" : "👨🏾‍🏫";
+          this.teacherLabel.textContent = isEzinne ? "Teacher Ezinne" : "Teacher Abeo";
+          this.voiceBadge.textContent = isEzinne ? "Voice: Ezinne (en-NG)" : "Voice: Abeo (en-NG)";
+        }
+
+        onClassChange(autoStart = true) {
+          const selClass = this.classSelect.value;
+          const filtered = this.lessons.filter(l => l.classLevel === selClass);
+          this.topicSelect.innerHTML = filtered.map(t => `<option value="${t.id}">${t.topic}</option>`).join("");
+          if (autoStart && filtered.length > 0) {
+            this.loadLesson(filtered[0]);
+          }
+        }
+
+        onTopicChange() {
+          const found = this.lessons.find(l => l.id === this.topicSelect.value);
+          if (found) this.loadLesson(found);
+        }
+
+        loadLesson(lesson) {
+          this.currentLesson = lesson;
+          this.currentStageIndex = 0;
+          this.classSelect.value = lesson.classLevel;
+          this.topicSelect.value = lesson.id;
+          this.lessonTopicDisplay.textContent = `${lesson.classLevel} • ${lesson.topic}`;
+          this.runCurrentStage();
+        }
+
+        runCurrentStage() {
+          const stage = this.currentLesson.stages[this.currentStageIndex];
+          if (!stage) return;
+
+          this.interactionPanel.classList.add("hidden");
+          this.panelFeedback.classList.add("hidden");
+
+          // Progress calculation
+          const pct = Math.round(((this.currentStageIndex + 1) / this.currentLesson.stages.length) * 100);
+          this.progressBar.style.width = pct + "%";
+          this.stageBadge.textContent = stage.stageType.toUpperCase();
+
+          // Update Board Header
+          this.boardTitle.textContent = stage.title || this.currentLesson.topic;
+          this.boardSubtitle.textContent = stage.subtitle || "";
+
+          // Render Visual Demonstration
+          this.renderBoardVisual(stage.boardAction);
+
+          // Format teacher script with natural student callout
+          let script = stage.speech || "";
+          if (script.includes("{{student_name}}")) {
+            const randomName = this.students.length > 0 ? this.students[Math.floor(Math.random() * this.students.length)] : "friend";
+            script = script.replace("{{student_name}}", randomName);
+            this.activeStudentDisplay.textContent = randomName;
+          } else {
+            this.activeStudentDisplay.textContent = "Class";
+          }
+
+          this.teacherSpeech.textContent = script;
+
+          // Route stage modes
+          if (stage.stageType === "example" && stage.checkpoint) {
+            this.btnMainContinue.textContent = "Answer Checkpoint Below 👇";
+            this.checkpointIndex = 0;
+            this.renderCheckpoint(stage.checkpoint);
+          } else if (stage.stageType === "quiz") {
+            this.btnMainContinue.textContent = "Answer Quiz Below 👇";
+            this.quizIndex = 0;
+            this.quizScore = 0;
+            this.renderQuizQuestion(stage);
+          } else {
+            this.btnMainContinue.textContent = "Continue to Next Step ➔";
+          }
+
+          // Trigger Nigerian AI Speech
+          this.playCurrentStageSpeech();
+        }
+
+        playCurrentStageSpeech() {
+          const stage = this.currentLesson.stages[this.currentStageIndex];
+          if (!stage) return;
+
+          const rawText = this.teacherSpeech.textContent || stage.speech;
+          const cleanText = cleanTextForSpeech(rawText);
+
+          this.voiceEngine.speak(cleanText, this.currentLesson.id, () => {
+            // Handle Continuous Play Mode
+            if (this.continuousPlay && stage.stageType !== "quiz" && stage.stageType !== "example") {
+              setTimeout(() => {
+                if (this.continuousPlay) this.handleNextStage();
+              }, 1600);
+            }
+          });
+        }
+
+        // ====================================================================
+        // VISUAL DEMONSTRATION & SYNCHRONIZATION
+        // ====================================================================
+        renderBoardVisual(action) {
+          this.visualWorkspace.innerHTML = "";
+          this.boardEquation.innerHTML = "";
+          if (!action) return;
+
+          if (action.type === "SHOW_WELCOME") {
+            this.visualWorkspace.innerHTML = `
+              <div style="text-align:center; padding: 12px;">
+                <div style="font-size: 3.5rem; margin-bottom: 6px;">🌟 📖 📐</div>
+                <div style="color: var(--board-chalk-green); font-size: 1.15rem; font-weight: 700;">
+                  ${action.text}
+                </div>
+              </div>
+            `;
+          } else if (action.type === "SHOW_SYMBOLS") {
+            this.visualWorkspace.innerHTML = action.symbols.map(s => `
+              <div class="symbol-card-board">
+                <div class="symbol-big">${s.symbol}</div>
+                <div class="symbol-name">${s.name}</div>
+                <div class="symbol-meaning">${s.meaning}</div>
+              </div>
+            `).join("");
+          } else if (action.type === "SYNCED_ADDITION") {
+            // Visual step synchronization
+            const leftIcons = Array(action.leftCount).fill(action.icon).join(" ");
+            const rightIcons = Array(action.rightCount).fill(action.icon).join(" ");
+
+            let html = `
+              <div class="object-group">
+                <div class="items-row">${leftIcons || "·"}</div>
+                <div class="group-count-tag">${action.leftCount}</div>
+              </div>
+            `;
+
+            if (action.rightCount > 0) {
+              html += `
+                <div class="math-operator-sign">+</div>
+                <div class="object-group">
+                  <div class="items-row">${rightIcons}</div>
+                  <div class="group-count-tag">${action.rightCount}</div>
+                </div>
+              `;
+            }
+
+            this.visualWorkspace.innerHTML = html;
+            this.boardEquation.textContent = action.equation || "";
+          } else if (action.type === "SHOW_SUMMARY") {
+            this.visualWorkspace.innerHTML = `
+              <div style="background: rgba(255,255,255,0.1); padding: 12px 18px; border-radius: 10px; width: 100%; max-width: 440px;">
+                <ul style="list-style: none; display: flex; flex-direction: column; gap: 8px;">
+                  ${action.points.map(pt => `<li style="font-size: 1rem; color: var(--board-chalk-green); font-weight: 700;">✓ ${pt}</li>`).join("")}
+                </ul>
+              </div>
+            `;
+          }
+        }
+
+        // ====================================================================
+        // CHECKPOINT (DUAL QUESTION RULE)
+        // ====================================================================
+        renderCheckpoint(checkpoint) {
+          this.interactionPanel.classList.remove("hidden");
+          const q = checkpoint.questions[this.checkpointIndex];
+
+          const isQ1 = this.checkpointIndex === 0;
+          this.panelTypeTag.textContent = isQ1 ? "CHECKPOINT • QUESTION 1 (PROCEDURAL)" : "CHECKPOINT • QUESTION 2 (CONCEPTUAL)";
+          this.panelTypeTag.className = isQ1 ? "badge warning" : "badge";
+          this.panelInstruction.textContent = "Check understanding before moving forward";
+          this.panelQuestionText.textContent = q.prompt;
+
+          this.panelVisualHint.textContent = q.icon ? `${q.icon.repeat(q.left || 0)}  ${q.right ? "+ " + q.icon.repeat(q.right) : ""}` : "";
+
+          // Render keypad 0-9
+          this.panelInteractionZone.innerHTML = `
+            <div class="keypad-grid">
+              ${[0, 1, 2, 3, 4, 5, 6, 7, 8, 9].map(num => `
+                <button class="key-btn" data-val="${num}">${num}</button>
+              `).join("")}
+            </div>
+          `;
+
+          this.panelInteractionZone.querySelectorAll(".key-btn").forEach(btn => {
+            btn.addEventListener("click", () => {
+              const val = parseInt(btn.getAttribute("data-val"), 10);
+              this.handleCheckpointAnswer(checkpoint, q, val);
+            });
+          });
+        }
+
+        handleCheckpointAnswer(checkpoint, question, userValue) {
+          if (userValue === question.correctAnswer) {
+            this.panelFeedback.className = "feedback-alert correct";
+            this.panelFeedback.innerHTML = "🌟 <strong>Correct!</strong> Excellent thinking!";
+            this.panelFeedback.classList.remove("hidden");
+
+            const successScript = "Excellent work! That is correct!";
+            this.teacherSpeech.textContent = successScript;
+            this.voiceEngine.speak(cleanTextForSpeech(successScript), this.currentLesson.id);
+
+            setTimeout(() => {
+              this.panelFeedback.classList.add("hidden");
+              if (this.checkpointIndex === 0) {
+                this.checkpointIndex = 1;
+                this.renderCheckpoint(checkpoint);
+              } else {
+                this.interactionPanel.classList.add("hidden");
+                this.handleNextStage();
+              }
+            }, 1800);
+          } else {
+            this.panelFeedback.className = "feedback-alert incorrect";
+            this.panelFeedback.innerHTML = `💡 <strong>Let's look at this together:</strong> ${question.remediation}`;
+            this.panelFeedback.classList.remove("hidden");
+
+            this.teacherSpeech.textContent = question.remediation;
+            this.voiceEngine.speak(cleanTextForSpeech(question.remediation), this.currentLesson.id);
+          }
+        }
+
+        // ====================================================================
+        // QUIZ SYSTEM
+        // ====================================================================
+        renderQuizQuestion(stage) {
+          this.interactionPanel.classList.remove("hidden");
+          const q = stage.questions[this.quizIndex];
+
+          this.panelTypeTag.textContent = `QUIZ • QUESTION ${this.quizIndex + 1} OF ${stage.questions.length}`;
+          this.panelTypeTag.className = "badge success";
+          this.panelInstruction.textContent = "Select the correct answer";
+          this.panelQuestionText.textContent = q.prompt;
+          this.panelVisualHint.textContent = "";
+
+          this.panelInteractionZone.innerHTML = `
+            <div class="options-grid">
+              ${q.options.map((opt, i) => `
+                <button class="option-btn" data-idx="${i}">${opt}</button>
+              `).join("")}
+            </div>
+          `;
+
+          this.panelInteractionZone.querySelectorAll(".option-btn").forEach(btn => {
+            btn.addEventListener("click", () => {
+              const idx = parseInt(btn.getAttribute("data-idx"), 10);
+              const isCorrect = idx === q.correctIndex;
+              if (isCorrect) this.quizScore++;
+
+              this.panelFeedback.className = isCorrect ? "feedback-alert correct" : "feedback-alert incorrect";
+              this.panelFeedback.innerHTML = isCorrect ? `✅ <strong>Correct!</strong> ${q.feedback}` : `❌ <strong>Review:</strong> ${q.feedback}`;
+              this.panelFeedback.classList.remove("hidden");
+
+              this.teacherSpeech.textContent = q.feedback;
+              this.voiceEngine.speak(cleanTextForSpeech(q.feedback), this.currentLesson.id);
+
+              setTimeout(() => {
+                this.panelFeedback.classList.add("hidden");
+                if (this.quizIndex < stage.questions.length - 1) {
+                  this.quizIndex++;
+                  this.renderQuizQuestion(stage);
+                } else {
+                  this.showQuizResults(stage);
+                }
+              }, 2200);
+            });
+          });
+        }
+
+        showQuizResults(stage) {
+          const total = stage.questions.length;
+          const pct = Math.round((this.quizScore / total) * 100);
+
+          this.panelTypeTag.textContent = "LESSON COMPLETED";
+          this.panelInstruction.textContent = "Performance Report";
+          this.panelQuestionText.textContent = `You scored ${this.quizScore} / ${total} (${pct}%)`;
+          this.panelVisualHint.textContent = pct >= 70 ? "🏆 🌟 🎓" : "📖 ✏️ 💡";
+
+          const summarySpeech = `Lesson completed! You scored ${this.quizScore} out of ${total}. Wonderful effort!`;
+          this.teacherSpeech.textContent = summarySpeech;
+          this.voiceEngine.speak(cleanTextForSpeech(summarySpeech), this.currentLesson.id);
+
+          this.panelInteractionZone.innerHTML = `
+            <div style="text-align: center; width: 100%;">
+              <button id="btn-restart-quiz" class="btn-pill primary" style="padding: 10px 18px; font-size: 1rem;">🔄 Restart Lesson</button>
+            </div>
+          `;
+
+          document.getElementById("btn-restart-quiz").addEventListener("click", () => {
+            this.loadLesson(this.currentLesson);
+          });
+        }
+
+        handleNextStage() {
+          if (this.currentStageIndex < this.currentLesson.stages.length - 1) {
+            this.currentStageIndex++;
+            this.runCurrentStage();
+          }
+        }
+
+        updateSpeakingUI(isSpeaking) {
+          this.teacherAvatar.classList.toggle("speaking", isSpeaking);
+          let indicator = document.getElementById("audio-pulse");
+          if (isSpeaking) {
+            if (!indicator) {
+              indicator = document.createElement("span");
+              indicator.id = "audio-pulse";
+              indicator.className = "audio-indicator";
+              indicator.textContent = "🔊 Speaking...";
+              this.teacherSpeech.appendChild(indicator);
+            }
+          } else {
+            if (indicator) indicator.remove();
+          }
+        }
+
+        renderRosterList() {
+          const ul = document.getElementById("students-list");
+          ul.innerHTML = this.students.map((st, i) => `
+            <li>
+              <span>👤 ${st}</span>
+              <button data-idx="${i}">&times;</button>
+            </li>
+          `).join("");
+
+          ul.querySelectorAll("button").forEach(b => {
+            b.addEventListener("click", (e) => {
+              const index = parseInt(e.target.getAttribute("data-idx"), 10);
+              this.students.splice(index, 1);
+              this.safeStorageSet("math_students_data", this.students);
+              this.renderRosterList();
+            });
+          });
+        }
+
+        showToast(msg, duration = 2500) {
+          this.toast.textContent = msg;
+          this.toast.style.display = "flex";
+          setTimeout(() => {
+            this.toast.style.display = "none";
+          }, duration);
+        }
+      }
+
+      // Initialize
+      if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", () => new TeachingEngine());
+      } else {
+        new TeachingEngine();
+      }
+    })();
+  </script>
 </body>
-</html>
+  </html>
