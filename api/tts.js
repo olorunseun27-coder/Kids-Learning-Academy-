@@ -1,63 +1,81 @@
-// api/tts.js - Unbroken Nigerian Neural Voice Stream
-import { MsEdgeTTS, OUTPUT_FORMAT } from "msedge-tts";
+/**
+ * SECURE AZURE SPEECH PROXY BACKEND FOR NIGERIAN VOICES (EZINNE & ABEO)
+ * Run with: node server.js
+ * Requirements: npm install express cors dotenv
+ */
 
-export default async function handler(req, res) {
-  res.setHeader("Access-Control-Allow-Origin", "*");
-  res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
-  res.setHeader("Access-Control-Allow-Headers", "Content-Type");
+const express = require("express");
+const cors = require("cors");
+require("dotenv").config();
 
-  if (req.method === "OPTIONS") return res.status(200).end();
-  if (req.method !== "POST") return res.status(405).json({ error: "Method Not Allowed" });
+const app = express();
+app.use(cors());
+app.use(express.json());
 
-  const { text, voice = "en-NG-EzinneNeural" } = req.body || {};
+// Serve static frontend files if hosted together
+app.use(express.static("."));
 
-  if (!text || typeof text !== "string" || !text.trim()) {
-    return res.status(400).json({ error: "Missing or empty text." });
-  }
+// Azure Speech API Credentials from Environment Variables
+const AZURE_KEY = process.env.AZURE_SPEECH_KEY;
+const AZURE_REGION = process.env.AZURE_SPEECH_REGION || "eastus";
 
+app.post("/api/tts", async (req, res) => {
   try {
-    const tts = new MsEdgeTTS();
-    await tts.setMetadata(voice, OUTPUT_FORMAT.AUDIO_24KHZ_48KBITRATE_MONO_MP3);
+    const { text, voice } = req.body;
 
-    const { audioStream } = tts.toStream(text);
+    if (!text) {
+      return res.status(400).json({ error: "Missing text parameter" });
+    }
 
-    const audioBuffer = await new Promise((resolve, reject) => {
-      const chunks = [];
-      let isFinished = false;
+    // Default to en-NG-EzinneNeural if invalid voice supplied
+    const selectedVoice = (voice === "en-NG-AbeoNeural") ? "en-NG-AbeoNeural" : "en-NG-EzinneNeural";
 
-      const done = () => {
-        if (isFinished) return;
-        isFinished = true;
-        resolve(Buffer.concat(chunks));
-      };
+    // Azure SSML with deliberate, warm teacher delivery
+    const ssml = `
+      <speak version="1.0" xmlns="http://www.w3.org/2001/10/synthesis" xml:lang="en-NG">
+        <voice name="${selectedVoice}">
+          <prosody rate="-4%" pitch="0%">
+            ${text}
+          </prosody>
+        </voice>
+      </speak>
+    `.trim();
 
-      audioStream.on("data", (chunk) => chunks.push(chunk));
-      audioStream.on("end", done);
-      audioStream.on("close", done);
-      audioStream.on("error", (err) => {
-        if (!isFinished) {
-          isFinished = true;
-          reject(err);
-        }
-      });
+    const azureUrl = `https://${AZURE_REGION}.tts.speech.microsoft.com/cognitiveservices/v1`;
 
-      // Safety timeout: 15 seconds
-      setTimeout(() => {
-        if (!isFinished) {
-          if (chunks.length > 0) done();
-          else {
-            isFinished = true;
-            reject(new Error("TTS stream timed out"));
-          }
-        }
-      }, 15000);
+    const azureResponse = await fetch(azureUrl, {
+      method: "POST",
+      headers: {
+        "Ocp-Apim-Subscription-Key": AZURE_KEY,
+        "Content-Type": "application/ssml+xml",
+        "X-Microsoft-OutputFormat": "audio-16khz-128kbitrate-mono-mp3",
+        "User-Agent": "NigerianMathTeacherApp"
+      },
+      body: ssml
     });
 
-    res.setHeader("Content-Type", "audio/mpeg");
-    res.setHeader("Cache-Control", "public, max-age=31536000, immutable");
-    return res.status(200).send(audioBuffer);
-  } catch (err) {
-    console.error("Edge TTS Error:", err);
-    return res.status(500).json({ error: "Speech generation failed: " + err.message });
+    if (!azureResponse.ok) {
+      const errBody = await azureResponse.text();
+      console.error("Azure Speech Error:", azureResponse.status, errBody);
+      return res.status(azureResponse.status).json({ error: "TTS generation failed" });
+    }
+
+    const audioBuffer = await azureResponse.arrayBuffer();
+
+    res.set({
+      "Content-Type": "audio/mpeg",
+      "Content-Length": audioBuffer.byteLength,
+      "Cache-Control": "public, max-age=86400" // Cache audio for 24h
+    });
+
+    return res.send(Buffer.from(audioBuffer));
+  } catch (error) {
+    console.error("Server Internal Error:", error);
+    return res.status(500).json({ error: "Internal voice server error" });
   }
-}
+});
+
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+  console.log(`Nigerian Math Teacher voice service running on port ${PORT}`);
+});
