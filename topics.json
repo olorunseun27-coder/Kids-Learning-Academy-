@@ -1,0 +1,457 @@
+[
+  {
+    "topicId": "top-numbers",
+    "topicTitle": "1. Numbers and Counting",
+    "lessons": [
+      {
+        "id": "p1-num-count-1-10",
+        "title": "Counting 1–10",
+        "subtopic": "Counting 1–10",
+        "stages": [
+          {
+            "stageType": "example",
+            "title": "Counting 1 to 5 with Apples",
+            "subtitle": "Watch each apple pop up with its number!",
+            "speech": "Let's count how many apples we have on our board!",
+            "sequence": [
+              { "say": "Let us count five sweet apples on our board together.", "write": null },
+              { "say": "Here comes our first apple: one.", "popItem": { "group": "left", "index": 0, "num": 1 } },
+              { "say": "Here is another apple: two.", "popItem": { "group": "left", "index": 1, "num": 2 } },
+              { "say": "Now we have three apples.", "popItem": { "group": "left", "index": 2, "num": 3 } },
+              { "say": "Here comes the fourth apple: four.", "popItem": { "group": "left", "index": 3, "num": 4 } },
+              { "say": "And the last apple: five!", "popItem": { "group": "left", "index": 4, "num": 5 } },
+              { "say": "We have counted all of them. There are five apples on the board!", "write": "5", "isResult": true }
+            ],
+            "boardAction": {
+              "type": "DYNAMIC_COUNT",
+              "icon": "🍎",
+              "count": 5
+            },
+            "checkpoint": {
+              "questions": [
+                {
+                  "type": "multiple-choice",
+                  "prompt": "How many apples are here: 🍎 🍎 🍎 🍎 ?",
+                  "spokenPrompt": "Look at the apples on your screen. Count them carefully. How many apples are there?",
+                  "options": ["2", "3", "4", "5"],
+                  "correctIndex": 2,
+                  "feedback": "There are 4 apples."
+                }
+              ]
+            }
+          },
+          {
+            "stageType": "example",
+            "title": "Counting 1 to 10 with Stars",
+            "subtitle": "Counting all the way to ten!",
+            "speech": "Now let us count ten bright stars all the way to ten!",
+            "sequence": [
+              { "say": "Let us count ten bright stars on our board together.", "write": null },
+              { "say": "One.", "popItem": { "group": "left", "index": 0, "num": 1 } },
+              { "say": "Two.", "popItem": { "group": "left", "index": 1, "num": 2 } },
+              { "say": "Three.", "popItem": { "group": "left", "index": 2, "num": 3 } },
+              { "say": "Four.", "popItem": { "group": "left", "index": 3, "num": 4 } },
+              { "say": "Five.", "popItem": { "group": "left", "index": 4, "num": 5 } },
+              { "say": "Six.", "popItem": { "group": "left", "index": 5, "num": 6 } },
+              { "say": "Seven.", "popItem": { "group": "left", "index": 6, "num": 7 } },
+              { "say": "Eight.", "popItem": { "group": "left", "index": 7, "num": 8 } },
+              { "say": "Nine.", "popItem": { "group": "left", "index": 8, "num": 9 } },
+              { "say": "Ten! Ten bright stars!", "popItem": { "group": "left", "index": 9, "num": 10 } },
+              { "say": "We have counted all of them. There are ten stars on the board!", "write": "10", "isResult": true }
+            ],
+            "boardAction": {
+              "type": "DYNAMIC_COUNT",
+              "icon": "⭐",
+              "count": 10
+            },
+            "checkpoint": {
+              "questions": [
+                {
+                  "type": "multiple-choice",
+                  "prompt": "What number comes right after 9 when counting?",
+                  "spokenPrompt": "What number comes right after nine when counting?",
+                  "options": ["8", "10", "11", "7"],
+                  "correctIndex": 1,
+                  "feedback": "10 comes right after 9."
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "topicId": "top-addition",
+    "topicTitle": "2. Addition",
+    "lessons": [
+      {
+        "id": "p1-add-apples",
+        "title": "Adding Apples (2 + 3 = 5)",
+        "subtopic": "Addition with objects",
+        "stages": [
+          {
+            "stageType": "example",
+            "title": "Adding Apples (2 + 3 = ?)",
+            "subtitle": "First we state and explain the question, then we solve!",
+            "speech": "Let us state our addition question first: 2 + 3 = ?",
+            "sequence": [
+              { "say": "Look at our board. We want to solve this addition problem.", "write": null },
+              { "say": "We start with number two.", "write": "2" },
+              { "say": "Plus! The plus sign means we put things together to add them.", "write": "+" },
+              { "say": "Three! We will add three more.", "write": "3" },
+              { "say": "Equals! The equals sign tells us our final answer.", "write": "=" },
+              { "say": "How many apples will we have altogether?", "write": "?" },
+              { "say": "To find the answer, let us look at our two groups of apples.", "write": null },
+              { "say": "Our first group has one apple...", "popItem": { "group": "left", "index": 0, "num": 1 } },
+              { "say": "...and two apples!", "popItem": { "group": "left", "index": 1, "num": 2 } },
+              { "say": "Now look at our second group. It has one apple...", "popItem": { "group": "right", "index": 0, "num": 1 } },
+              { "say": "...two apples...", "popItem": { "group": "right", "index": 1, "num": 2 } },
+              { "say": "...and three apples!", "popItem": { "group": "right", "index": 2, "num": 3 } },
+              { "say": "Because of the plus sign, let us combine both groups and count them all together!", "write": null },
+              { "say": "One.", "recountItem": { "target": "left", "index": 0, "totalNum": 1 } },
+              { "say": "Two.", "recountItem": { "target": "left", "index": 1, "totalNum": 2 } },
+              { "say": "Three.", "recountItem": { "target": "right", "index": 0, "totalNum": 3 } },
+              { "say": "Four.", "recountItem": { "target": "right", "index": 1, "totalNum": 4 } },
+              { "say": "Five apples in total!", "recountItem": { "target": "right", "index": 2, "totalNum": 5 } },
+              { "say": "Therefore, two plus three equals five!", "write": "5", "isResult": true }
+            ],
+            "boardAction": {
+              "type": "DUAL_GROUP",
+              "icon": "🍎",
+              "leftCount": 2,
+              "rightCount": 3
+            },
+            "checkpoint": {
+              "questions": [
+                {
+                  "type": "multiple-choice",
+                  "prompt": "🍎🍎🍎 + 🍎🍎 = ?",
+                  "spokenPrompt": "What is three apples plus two apples?",
+                  "options": ["4", "5", "6", "7"],
+                  "correctIndex": 1,
+                  "feedback": "3 plus 2 equals 5."
+                }
+              ]
+            }
+          },
+          {
+            "stageType": "example",
+            "title": "Adding to Ten (5 + 5 = ?)",
+            "subtitle": "Solving 5 + 5 = 10 on the board",
+            "speech": "Let us solve: 5 + 5 = ?",
+            "sequence": [
+              { "say": "Look at our board. Let us solve five plus five.", "write": null },
+              { "say": "Five!", "write": "5" },
+              { "say": "Plus!", "write": "+" },
+              { "say": "Five!", "write": "5" },
+              { "say": "Equals!", "write": "=" },
+              { "say": "What is five plus five?", "write": "?" },
+              { "say": "Let us look at our first group of five stars.", "write": null },
+              { "say": "One.", "popItem": { "group": "left", "index": 0, "num": 1 } },
+              { "say": "Two.", "popItem": { "group": "left", "index": 1, "num": 2 } },
+              { "say": "Three.", "popItem": { "group": "left", "index": 2, "num": 3 } },
+              { "say": "Four.", "popItem": { "group": "left", "index": 3, "num": 4 } },
+              { "say": "Five stars in the first group.", "popItem": { "group": "left", "index": 4, "num": 5 } },
+              { "say": "Now our second group: one...", "popItem": { "group": "right", "index": 0, "num": 1 } },
+              { "say": "...two...", "popItem": { "group": "right", "index": 1, "num": 2 } },
+              { "say": "...three...", "popItem": { "group": "right", "index": 2, "num": 3 } },
+              { "say": "...four...", "popItem": { "group": "right", "index": 3, "num": 4 } },
+              { "say": "...and five stars in the second group!", "popItem": { "group": "right", "index": 4, "num": 5 } },
+              { "say": "Let us count all of them together: one, two, three, four, five, six, seven, eight, nine, ten!", "write": null },
+              { "say": "Therefore, five plus five equals ten!", "write": "10", "isResult": true }
+            ],
+            "boardAction": {
+              "type": "DUAL_GROUP",
+              "icon": "⭐",
+              "leftCount": 5,
+              "rightCount": 5
+            },
+            "checkpoint": {
+              "questions": [
+                {
+                  "type": "multiple-choice",
+                  "prompt": "5 + 5 = ?",
+                  "spokenPrompt": "What is five plus five?",
+                  "options": ["8", "9", "10", "12"],
+                  "correctIndex": 2,
+                  "feedback": "5 plus 5 equals 10."
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "topicId": "top-subtraction",
+    "topicTitle": "3. Subtraction",
+    "lessons": [
+      {
+        "id": "p1-sub-taking-away",
+        "title": "Taking Away (3 − 2 = 1)",
+        "subtopic": "Reduces initial basket items",
+        "stages": [
+          {
+            "stageType": "example",
+            "title": "Taking Away Apples (3 − 2 = ?)",
+            "subtitle": "Stating 3 − 2 = ?, explaining minus, then solving",
+            "speech": "Let us state our subtraction question: 3 − 2 = ?",
+            "sequence": [
+              { "say": "Look at our board. We want to solve this subtraction problem.", "write": null },
+              { "say": "We begin with number three.", "write": "3" },
+              { "say": "Minus! The minus sign means taking things away.", "write": "-" },
+              { "say": "Two! We will take away two items.", "write": "2" },
+              { "say": "Equals! This will show what is left over.", "write": "=" },
+              { "say": "How many apples will remain in our basket?", "write": "?" },
+              { "say": "We start with three apples inside our green basket.", "write": null },
+              { "say": "One apple in the basket.", "popItem": { "group": "left", "index": 0, "num": 1 } },
+              { "say": "Two apples in the basket.", "popItem": { "group": "left", "index": 1, "num": 2 } },
+              { "say": "Three apples in the basket!", "popItem": { "group": "left", "index": 2, "num": 3 } },
+              { "say": "The minus sign tells us to take away two apples into the red box.", "write": null },
+              { "say": "Let us take away the first apple: that is one taken away.", "takeAwayAction": { "fromIndex": 2, "toIndex": 0, "num": 1 } },
+              { "say": "Now let us take away the second apple: that is two taken away!", "takeAwayAction": { "fromIndex": 1, "toIndex": 1, "num": 2 } },
+              { "say": "Look inside our basket now: only one apple is left!", "write": null },
+              { "say": "Therefore, three minus two equals one!", "write": "1", "isResult": true }
+            ],
+            "boardAction": {
+              "type": "SUBTRACTION_TAKEAWAY",
+              "icon": "🍎",
+              "startCount": 3,
+              "takeCount": 2
+            },
+            "checkpoint": {
+              "questions": [
+                {
+                  "type": "multiple-choice",
+                  "prompt": "You have 5 apples. You take away 2. How many are left (5 − 2)?",
+                  "spokenPrompt": "If you have five apples and you take away two, how many apples are left?",
+                  "options": ["2", "3", "4", "5"],
+                  "correctIndex": 1,
+                  "feedback": "5 minus 2 leaves 3."
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "topicId": "top-multiplication",
+    "topicTitle": "4. Multiplication",
+    "lessons": [
+      {
+        "id": "p1-mul-equal-groups",
+        "title": "Multiplication as Equal Groups (2 × 3 = 6)",
+        "subtopic": "3 plates with 2 apples each",
+        "stages": [
+          {
+            "stageType": "example",
+            "title": "2 × 3: Three Groups of Two",
+            "subtitle": "Counting 1 and 2 on each plate, then counting altogether!",
+            "speech": "Let us state our multiplication question: 2 × 3 = ?",
+            "sequence": [
+              { "say": "Look at our board. We want to solve this multiplication problem.", "write": null },
+              { "say": "Two! Each group has two items.", "write": "2" },
+              { "say": "Times! The times sign means equal groups repeated.", "write": "x" },
+              { "say": "Three! We have three equal groups.", "write": "3" },
+              { "say": "Equals! This gives our total count.", "write": "=" },
+              { "say": "How many apples will that give us in total?", "write": "?" },
+              { "say": "Two times three means we have three plates, and every plate has two apples!", "write": null },
+              { "say": "Look at plate one: One!", "popItem": { "group": "plate0", "index": 0, "num": 1 } },
+              { "say": "Two!", "popItem": { "group": "plate0", "index": 1, "num": 2 } },
+              { "say": "We have two apples on plate one.", "write": null },
+              { "say": "Now look at plate two: One!", "popItem": { "group": "plate1", "index": 0, "num": 1 } },
+              { "say": "Two!", "popItem": { "group": "plate1", "index": 1, "num": 2 } },
+              { "say": "We have two apples on plate two.", "write": null },
+              { "say": "Now look at plate three: One!", "popItem": { "group": "plate2", "index": 0, "num": 1 } },
+              { "say": "Two!", "popItem": { "group": "plate2", "index": 1, "num": 2 } },
+              { "say": "We have two apples on plate three.", "write": null },
+              { "say": "Now that we have two apples on each plate, let us count all of them altogether!", "write": null },
+              { "say": "One.", "recountItem": { "target": "plate0", "index": 0, "totalNum": 1 } },
+              { "say": "Two.", "recountItem": { "target": "plate0", "index": 1, "totalNum": 2 } },
+              { "say": "Three.", "recountItem": { "target": "plate1", "index": 0, "totalNum": 3 } },
+              { "say": "Four.", "recountItem": { "target": "plate1", "index": 1, "totalNum": 4 } },
+              { "say": "Five.", "recountItem": { "target": "plate2", "index": 0, "totalNum": 5 } },
+              { "say": "Six! Six apples altogether!", "recountItem": { "target": "plate2", "index": 1, "totalNum": 6 } },
+              { "say": "Therefore, two times three equals six!", "write": "6", "isResult": true }
+            ],
+            "boardAction": {
+              "type": "EQUAL_GROUPS_MULT",
+              "icon": "🍎",
+              "itemsPerGroup": 2,
+              "groupCount": 3
+            },
+            "checkpoint": {
+              "questions": [
+                {
+                  "type": "multiple-choice",
+                  "prompt": "What is 2 × 3 (3 groups of 2 apples)?",
+                  "spokenPrompt": "What is two times three?",
+                  "options": ["5", "6", "7", "8"],
+                  "correctIndex": 1,
+                  "feedback": "2 times 3 equals 6."
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "topicId": "top-division",
+    "topicTitle": "5. Division",
+    "lessons": [
+      {
+        "id": "p1-div-sharing-equally",
+        "title": "Sharing Equally (6 ÷ 2 = 3)",
+        "subtopic": "Step-by-step equal sharing",
+        "stages": [
+          {
+            "stageType": "example",
+            "title": "Sharing 6 Apples Between 2 People",
+            "subtitle": "Stating 6 ÷ 2 = ?, explaining divide, then sharing",
+            "speech": "Let us state our division question: 6 ÷ 2 = ?",
+            "sequence": [
+              { "say": "Look at our board. We want to solve this sharing problem.", "write": null },
+              { "say": "Six! We have six apples in total.", "write": "6" },
+              { "say": "Divided by! The divide sign means sharing equally between friends.", "write": "÷" },
+              { "say": "Two! We are sharing between two children.", "write": "2" },
+              { "say": "Equals! This shows each child's fair share.", "write": "=" },
+              { "say": "How many apples will each child receive?", "write": "?" },
+              { "say": "We want to share six apples equally into two plates.", "write": null },
+              { "say": "First, give two apples to child one.", "popItem": { "group": "child1", "index": 0, "num": 1 } },
+              { "say": "Two apples for child one.", "popItem": { "group": "child1", "index": 1, "num": 2 } },
+              { "say": "Next, give two apples to child two.", "popItem": { "group": "child2", "index": 0, "num": 1 } },
+              { "say": "Two apples for child two.", "popItem": { "group": "child2", "index": 1, "num": 2 } },
+              { "say": "We have two apples remaining, so let us share one more to child one...", "popItem": { "group": "child1", "index": 2, "num": 3 } },
+              { "say": "...and one more to child two!", "popItem": { "group": "child2", "index": 2, "num": 3 } },
+              { "say": "Look at both plates: each plate has exactly three apples. Nobody gets more, nobody gets less!", "write": null },
+              { "say": "Therefore, six divided by two equals three!", "write": "3", "isResult": true }
+            ],
+            "boardAction": {
+              "type": "DIVISION_SHARING_STEP",
+              "icon": "🍎",
+              "childCount": 2,
+              "eachFinal": 3
+            },
+            "checkpoint": {
+              "questions": [
+                {
+                  "type": "multiple-choice",
+                  "prompt": "Share 8 apples equally between 2 children. How many does each child get (8 ÷ 2)?",
+                  "spokenPrompt": "Share eight apples equally between two children. How many does each child get?",
+                  "options": ["2", "3", "4", "5"],
+                  "correctIndex": 2,
+                  "feedback": "8 divided by 2 equals 4."
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "topicId": "top-fractions",
+    "topicTitle": "6. Fractions",
+    "lessons": [
+      {
+        "id": "p1-frac-half",
+        "title": "One-Half (1/2)",
+        "subtopic": "Interactive half circle",
+        "stages": [
+          {
+            "stageType": "example",
+            "title": "One-Half of a Circle (1/2)",
+            "subtitle": "Stating 1 / 2 = ?, explaining fraction bar, then removing half",
+            "speech": "Look at this circle. We divide the circle into two equal parts.",
+            "sequence": [
+              { "say": "Let us write our fraction.", "write": null },
+              { "say": "One.", "write": "1" },
+              { "say": "Over! The slash line separates the parts from the whole.", "write": "/" },
+              { "say": "Two.", "write": "2" },
+              { "say": "Equals.", "write": "=" },
+              { "say": "What fraction do we have?", "write": "?" },
+              { "say": "Look at the circle. It is cut into two equal parts.", "write": null },
+              { "say": "Click on the blue slice to remove it!", "write": null },
+              { "say": "One of two equal parts is called one-half!", "write": "1", "isResult": true }
+            ],
+            "boardAction": {
+              "type": "FRACTION_INTERACTIVE_CIRCLE"
+            },
+            "checkpoint": {
+              "questions": [
+                {
+                  "type": "multiple-choice",
+                  "prompt": "When a whole circle is cut into 2 equal parts, what is each part called?",
+                  "spokenPrompt": "When a whole circle is cut into two equal parts, what is each part called?",
+                  "options": ["One-quarter", "One-half (1/2)", "One whole", "Zero"],
+                  "correctIndex": 1,
+                  "feedback": "Each equal part is one-half."
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "topicId": "top-word-problems",
+    "topicTitle": "14. Mathematical Word Problems",
+    "lessons": [
+      {
+        "id": "p1-word-chinedu-oranges",
+        "title": "Simple Addition Story (3 + 2 = 5)",
+        "subtopic": "Chinedu's Oranges",
+        "stages": [
+          {
+            "stageType": "example",
+            "title": "Chinedu's Oranges (3 + 2 = ?)",
+            "subtitle": "Stating 3 + 2 = ?, explaining addition story, then counting",
+            "speech": "Chinedu has 3 oranges and his mother gives him 2 more.",
+            "sequence": [
+              { "say": "Let us state the problem.", "write": null },
+              { "say": "Three oranges.", "write": "3" },
+              { "say": "Plus! We add his mother's oranges.", "write": "+" },
+              { "say": "Two oranges.", "write": "2" },
+              { "say": "Equals.", "write": "=" },
+              { "say": "How many oranges does Chinedu have altogether?", "write": "?" },
+              { "say": "Chinedu starts with three oranges.", "write": null },
+              { "say": "One.", "popItem": { "group": "left", "index": 0, "num": 1 } },
+              { "say": "Two.", "popItem": { "group": "left", "index": 1, "num": 2 } },
+              { "say": "Three oranges.", "popItem": { "group": "left", "index": 2, "num": 3 } },
+              { "say": "Now his mother gives him two more oranges.", "write": null },
+              { "say": "One.", "popItem": { "group": "right", "index": 0, "num": 1 } },
+              { "say": "Two oranges.", "popItem": { "group": "right", "index": 1, "num": 2 } },
+              { "say": "Counting all together: one, two, three, four, five oranges!", "write": null },
+              { "say": "Therefore, three plus two equals five!", "write": "5", "isResult": true }
+            ],
+            "boardAction": {
+              "type": "DUAL_GROUP",
+              "icon": "🍊",
+              "leftCount": 3,
+              "rightCount": 2
+            },
+            "checkpoint": {
+              "questions": [
+                {
+                  "type": "multiple-choice",
+                  "prompt": "Chinedu has 3 oranges and gets 2 more. How many altogether?",
+                  "spokenPrompt": "Chinedu has three oranges and gets two more. How many oranges does he have altogether?",
+                  "options": ["4", "5", "6", "7"],
+                  "correctIndex": 1,
+                  "feedback": "3 plus 2 equals 5 oranges."
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  }
+                ]
