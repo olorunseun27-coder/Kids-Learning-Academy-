@@ -3,15 +3,24 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>Interactive Mathematics Classroom - Nigerian AI Voices</title>
+  <title>Primary 1 Mathematics Classroom - Interactive Learning</title>
+
+  <!-- Firebase Compat SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+
   <style>
     :root {
       --bg-classroom: #f1f5f9;
-      --board-bg: #153324;
-      --board-frame: #6b3310;
+      --board-bg: #143224;
+      --board-frame: #5a280b;
+      --slate-bg: #0b1e16;
+      --slate-border: #234e38;
       --board-chalk: #f8fafc;
       --board-chalk-yellow: #fde047;
       --board-chalk-green: #86efac;
+      --board-chalk-cyan: #67e8f9;
+      --board-chalk-red: #fca5a5;
       --primary: #1e40af;
       --primary-hover: #1d4ed8;
       --accent: #d97706;
@@ -38,16 +47,24 @@
       min-height: 100vh;
     }
 
+    :fullscreen #app-container,
+    :-webkit-full-screen #app-container {
+      max-width: 100vw;
+      height: 100vh;
+      border-radius: 0;
+    }
+
     #app-container {
       display: flex;
       flex-direction: column;
-      max-width: 1150px;
+      max-width: 1240px;
       margin: 0 auto;
       min-height: 100vh;
       background: #ffffff;
+      transition: all 0.2s ease;
+      position: relative;
     }
 
-    /* TOP NAVIGATION */
     #top-nav {
       display: flex;
       justify-content: space-between;
@@ -86,6 +103,7 @@
       font-size: 0.85rem;
       font-weight: 700;
       outline: none;
+      max-width: 210px;
     }
 
     .control-btn-group {
@@ -114,7 +132,6 @@
 
     .btn-icon:active { transform: scale(0.93); background: #e2e8f0; }
     .btn-icon.play-btn { background: var(--success); color: white; border-color: var(--success); }
-    .btn-icon.active { background: #dbeafe; border-color: var(--primary); color: var(--primary); }
 
     .btn-pill {
       padding: 7px 12px;
@@ -126,15 +143,41 @@
       cursor: pointer;
       display: inline-flex;
       align-items: center;
-      gap: 4px;
+      gap: 5px;
+      transition: all 0.15s ease;
     }
 
     .btn-pill:active { transform: scale(0.96); }
     .btn-pill.primary { background: var(--primary); color: white; border: none; }
     .btn-pill.accent { background: #fef3c7; color: #92400e; border-color: #fde68a; }
-    .btn-pill.toggle-active { background: #ecfdf5; color: #065f46; border-color: #10b981; }
+    .btn-pill.toggle-active { background: #ecfdf5; color: #065f46; border-color: #10b981; font-weight: 800; box-shadow: 0 0 0 2px rgba(16,185,129,0.2); }
+    .btn-pill.fullscreen-active { background: #eff6ff; color: #1e40af; border-color: #93c5fd; }
 
-    /* STATUS BAR */
+    #cloud-status-badge {
+      font-size: 0.72rem;
+      font-weight: 800;
+      padding: 4px 8px;
+      border-radius: 12px;
+      background: #eff6ff;
+      color: #1e40af;
+      border: 1px solid #bfdbfe;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    #demo-banner {
+      background: #fffbeb;
+      color: #92400e;
+      border-bottom: 1px solid #fef08a;
+      padding: 4px 14px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
     #lesson-status-bar {
       display: flex;
       align-items: center;
@@ -144,6 +187,7 @@
       border-bottom: 1px solid var(--border);
       font-size: 0.85rem;
       font-weight: 600;
+      flex-wrap: wrap;
     }
 
     .badge {
@@ -163,6 +207,7 @@
     .progress-track {
       flex: 1;
       height: 8px;
+      min-width: 100px;
       background: #e2e8f0;
       border-radius: 4px;
       overflow: hidden;
@@ -175,7 +220,6 @@
       transition: width 0.3s ease;
     }
 
-    /* MAIN STAGE */
     #classroom-stage {
       flex: 1;
       display: flex;
@@ -184,126 +228,215 @@
       gap: 12px;
     }
 
-    /* THE TEACHING BOARD */
     .board-surface {
       background: var(--board-bg);
       border: 8px solid var(--board-frame);
       border-radius: 14px;
       color: var(--board-chalk);
-      min-height: 250px;
+      min-height: 440px;
       box-shadow: inset 0 0 35px rgba(0,0,0,0.65), var(--shadow);
       display: flex;
       flex-direction: column;
-      padding: 16px;
+      padding: 12px 14px;
+      gap: 10px;
+      position: relative;
+    }
+
+    #audio-unlock-overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.88);
+      border-radius: 6px;
+      z-index: 80;
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 14px;
+      padding: 20px;
+      text-align: center;
+      backdrop-filter: blur(4px);
+    }
+
+    .btn-unlock-audio {
+      background: #10b981;
+      color: #ffffff;
+      border: none;
+      padding: 14px 24px;
+      font-size: 1.15rem;
+      font-weight: 900;
+      border-radius: 30px;
+      cursor: pointer;
+      box-shadow: 0 0 20px rgba(16, 185, 129, 0.6);
+      animation: pulseBtn 1.2s infinite alternate ease-in-out;
+    }
+
+    @keyframes pulseBtn {
+      from { transform: scale(1); }
+      to { transform: scale(1.08); }
     }
 
     #board-header {
       text-align: center;
       border-bottom: 1px dashed rgba(255,255,255,0.25);
-      padding-bottom: 6px;
-      margin-bottom: 10px;
+      padding-bottom: 4px;
     }
 
     #board-title {
-      font-size: 1.3rem;
+      font-size: 1.28rem;
       color: var(--board-chalk-yellow);
       letter-spacing: 0.5px;
     }
 
     #board-subtitle {
-      font-size: 0.85rem;
-      opacity: 0.85;
+      font-size: 0.84rem;
+      opacity: 0.88;
     }
 
-    #board-viewport {
-      flex: 1;
+    #visual-workspace {
       display: flex;
       align-items: center;
       justify-content: center;
-      min-height: 150px;
-    }
-
-    .workspace {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 16px;
-      width: 100%;
+      gap: 12px;
+      min-height: 120px;
+      background: rgba(0, 0, 0, 0.22);
+      border-radius: 12px;
+      padding: 8px 12px;
+      overflow: visible;
       flex-wrap: wrap;
     }
 
-    .symbol-card-board {
-      background: rgba(255, 255, 255, 0.1);
-      border: 1.5px solid rgba(255, 255, 255, 0.25);
+    .equation-strip {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      min-height: 52px;
+      background: rgba(0, 0, 0, 0.38);
+      border: 2px solid rgba(253, 224, 71, 0.35);
       border-radius: 10px;
-      padding: 12px 20px;
-      text-align: center;
-      min-width: 120px;
-      animation: popIn 0.3s ease;
+      padding: 4px 10px;
+      box-shadow: inset 0 2px 8px rgba(0,0,0,0.4);
+      flex-wrap: wrap;
     }
 
-    .symbol-big {
-      font-size: 3rem;
+    .equation-label {
+      font-size: 0.72rem;
+      font-weight: 800;
+      color: #94a3b8;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .equation-tokens-holder {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .equation-token-pod {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: clamp(1.4rem, 4vw, 1.95rem);
       font-weight: 900;
       color: var(--board-chalk-yellow);
-      line-height: 1;
+      min-width: 36px;
+      padding: 2px 8px;
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.12);
+      border: 2px solid rgba(253, 224, 71, 0.5);
+      text-shadow: 0 0 10px rgba(253, 224, 71, 0.7);
+      animation: boldTokenPop 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
     }
 
-    .symbol-name {
-      font-weight: 700;
-      margin-top: 4px;
-      font-size: 0.9rem;
+    .equation-token-pod.operator {
+      color: var(--board-chalk-cyan);
+      border-color: rgba(103, 232, 249, 0.6);
+      text-shadow: 0 0 10px rgba(103, 232, 249, 0.7);
     }
 
-    .symbol-meaning {
-      font-size: 0.78rem;
+    .equation-token-pod.equals {
+      color: #ffffff;
+      border-color: rgba(255, 255, 255, 0.6);
+    }
+
+    .equation-token-pod.question-mark {
+      color: #f43f5e;
+      border-color: #f43f5e;
+      background: rgba(244, 63, 94, 0.18);
+      text-shadow: 0 0 12px rgba(244, 63, 94, 0.85);
+      animation: pulseQuestion 1.1s infinite alternate ease-in-out;
+    }
+
+    .equation-token-pod.result {
       color: var(--board-chalk-green);
+      border-color: var(--board-chalk-green);
+      text-shadow: 0 0 12px rgba(134, 239, 172, 0.85);
+      background: rgba(22, 163, 74, 0.25);
     }
 
-    .object-group {
+    @keyframes boldTokenPop {
+      0% { transform: scale(0.2) translateY(8px); opacity: 0; }
+      65% { transform: scale(1.4) translateY(-3px); opacity: 1; }
+      100% { transform: scale(1) translateY(0); opacity: 1; }
+    }
+
+    @keyframes pulseQuestion {
+      from { transform: scale(1); }
+      to { transform: scale(1.15); filter: drop-shadow(0 0 8px #f43f5e); }
+    }
+
+    .slate-container {
+      position: relative;
+      background: var(--slate-bg);
+      border: 2px solid var(--slate-border);
+      border-radius: 12px;
+      height: 165px;
+      width: 100%;
+      overflow: hidden;
       display: flex;
       flex-direction: column;
-      align-items: center;
-      gap: 4px;
-      padding: 10px 16px;
-      background: rgba(255, 255, 255, 0.08);
-      border-radius: 12px;
-      animation: popIn 0.35s ease;
+      box-shadow: inset 0 2px 10px rgba(0,0,0,0.5);
     }
 
-    .items-row {
-      font-size: 2.3rem;
-      display: flex;
-      gap: 8px;
-      justify-content: center;
-      flex-wrap: wrap;
+    .slate-label {
+      position: absolute;
+      top: 6px;
+      left: 10px;
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: #6ee7b7;
+      opacity: 0.85;
+      pointer-events: none;
+      z-index: 5;
     }
 
-    .group-count-tag {
-      font-size: 1.2rem;
-      font-weight: 800;
-      color: var(--board-chalk-yellow);
+    #writing-canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 10;
     }
 
-    .math-operator-sign {
-      font-size: 2.6rem;
-      font-weight: 900;
-      color: var(--board-chalk-yellow);
+    #teacher-hand-cursor {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 220px;
+      height: 220px;
+      pointer-events: none;
+      z-index: 20;
+      transform: translate(-999px, -999px);
+      transition: transform 0.05s ease-out;
+      filter: drop-shadow(0 10px 14px rgba(0, 0, 0, 0.5));
     }
 
-    .equation-banner {
-      margin-top: 10px;
-      text-align: center;
-      font-size: 1.9rem;
-      font-weight: 800;
-      color: #ffffff;
-      background: rgba(0, 0, 0, 0.35);
-      padding: 8px;
-      border-radius: 8px;
-      min-height: 44px;
-    }
-
-    /* TEACHER STRIP */
     #teacher-section {
       display: flex;
       flex-direction: column;
@@ -362,18 +495,13 @@
       line-height: 1.5;
       color: #1e293b;
       min-height: 56px;
-      position: relative;
     }
 
-    .audio-indicator {
-      display: inline-block;
-      margin-left: 6px;
-      font-size: 0.85rem;
-      color: #10b981;
-      animation: pulse 1.2s infinite;
+    .speech-bubble.checkpoint-mode {
+      background: #f0fdf4;
+      border-color: #86efac;
     }
 
-    /* BIG TOUCHABLE ACTION BUTTON */
     .action-toolbar {
       display: flex;
       gap: 8px;
@@ -398,7 +526,6 @@
 
     .btn-main-action:active { background: var(--primary-hover); transform: scale(0.98); }
 
-    /* CHECKPOINT & QUIZ PANEL */
     .interaction-card {
       background: #ffffff;
       border-radius: 14px;
@@ -409,6 +536,11 @@
       flex-direction: column;
       gap: 10px;
       animation: slideUp 0.25s ease-out;
+    }
+
+    .interaction-card.highlight {
+      border-color: #10b981;
+      box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2);
     }
 
     .interaction-card.hidden { display: none !important; }
@@ -422,70 +554,32 @@
     }
 
     .question-body {
-      font-size: 1.18rem;
+      font-size: 1.15rem;
       font-weight: 800;
       text-align: center;
       padding: 4px 0;
       color: var(--text-main);
     }
 
-    .hint-container {
-      display: flex;
-      justify-content: center;
-      gap: 8px;
-      font-size: 1.8rem;
-    }
-
-    .keypad-grid {
-      display: grid;
-      grid-template-columns: repeat(5, 1fr);
-      gap: 8px;
-      max-width: 330px;
-      margin: 0 auto;
-      width: 100%;
-    }
-
-    .key-btn {
-      background: #f1f5f9;
-      border: 1.5px solid #cbd5e1;
-      border-radius: 8px;
-      padding: 12px 0;
-      font-size: 1.3rem;
-      font-weight: 800;
-      cursor: pointer;
-      color: var(--text-main);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .key-btn:active {
-      background: var(--primary);
-      color: #ffffff;
-      border-color: var(--primary);
-      transform: scale(0.94);
-    }
-
     .options-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 8px;
+      gap: 10px;
     }
 
     .option-btn {
       background: #f8fafc;
-      border: 2px solid #cbd5e1;
-      border-radius: 10px;
-      padding: 12px 8px;
-      font-size: 0.95rem;
+      border: 2.5px solid #cbd5e1;
+      border-radius: 12px;
+      padding: 14px 10px;
+      font-size: 1.15rem;
       font-weight: 800;
       cursor: pointer;
       text-align: center;
+      transition: all 0.2s ease;
     }
 
     .option-btn:active {
-      border-color: var(--primary);
-      background: #eff6ff;
       transform: scale(0.96);
     }
 
@@ -501,7 +595,222 @@
     .feedback-alert.incorrect { background: #fee2e2; border: 1px solid #fca5a5; color: #991b1b; }
     .feedback-alert.hidden { display: none; }
 
-    /* TOAST NOTIFICATION */
+    .dual-group-wrap {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      width: 100%;
+      flex-wrap: nowrap;
+    }
+
+    .dual-operator-sign {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.8rem;
+      color: var(--board-chalk-yellow);
+      font-weight: 900;
+      flex-shrink: 0;
+      padding: 0 2px;
+    }
+
+    .subtraction-container {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      width: 100%;
+      flex-wrap: wrap;
+    }
+
+    .sub-box {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 8px 6px;
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.08);
+      border: 2px solid rgba(255, 255, 255, 0.2);
+      flex: 1 1 0;
+      min-width: 0;
+      max-width: 48%;
+      min-height: 90px;
+      position: relative;
+    }
+
+    .sub-box.take-away {
+      border: 2.5px dashed #f87171;
+      background: rgba(239, 68, 68, 0.12);
+    }
+
+    .sub-box-label {
+      font-size: 0.76rem;
+      font-weight: 800;
+      margin-bottom: 6px;
+      color: var(--board-chalk-yellow);
+    }
+
+    .sub-box.take-away .sub-box-label { color: #fca5a5; }
+
+    .mult-groups-container {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      width: 100%;
+      flex-wrap: wrap;
+    }
+
+    .mult-group-plate {
+      background: rgba(255, 255, 255, 0.08);
+      border: 2px solid #86efac;
+      border-radius: 12px;
+      padding: 8px 12px;
+      text-align: center;
+      min-width: 90px;
+    }
+
+    .mult-plate-title {
+      font-size: 0.7rem;
+      font-weight: 800;
+      color: var(--board-chalk-yellow);
+      margin-bottom: 4px;
+    }
+
+    .division-sharing-bench {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      width: 100%;
+      flex-wrap: wrap;
+    }
+
+    .sharing-tray {
+      background: rgba(255, 255, 255, 0.08);
+      border: 2px dashed #67e8f9;
+      border-radius: 12px;
+      padding: 8px 12px;
+      text-align: center;
+      min-width: 130px;
+    }
+
+    .sharing-tray-title {
+      font-size: 0.78rem;
+      font-weight: 800;
+      color: var(--board-chalk-yellow);
+      margin-bottom: 4px;
+    }
+
+    .interactive-circle-card {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      background: rgba(255, 255, 255, 0.08);
+      padding: 10px 16px;
+      border-radius: 12px;
+      border: 1.5px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .interactive-pie-container {
+      position: relative;
+      width: 110px;
+      height: 110px;
+      border-radius: 50%;
+      border: 3px solid #ffffff;
+      background: #0f172a;
+      overflow: hidden;
+      cursor: pointer;
+    }
+
+    .pie-half {
+      position: absolute;
+      width: 50%;
+      height: 100%;
+      top: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 900;
+      font-size: 1.1rem;
+      color: #ffffff;
+      transition: all 0.3s ease;
+    }
+
+    .pie-half.left { left: 0; background: #16a34a; border-right: 2px dashed #ffffff; }
+    .pie-half.right { right: 0; background: #2563eb; }
+    .pie-half.removed { opacity: 0; transform: scale(0.6); pointer-events: none; }
+
+    .items-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px 4px;
+      width: 100%;
+      justify-content: center;
+      align-items: center;
+      padding-top: 4px;
+      min-height: 48px;
+    }
+
+    .items-grid.dense-grid .fruit-item-pod .fruit-icon {
+      font-size: clamp(0.95rem, 2vw, 1.35rem);
+    }
+
+    .items-grid.dense-grid .fruit-counter-badge {
+      font-size: 0.65rem;
+      width: 17px;
+      height: 17px;
+      top: -10px;
+    }
+
+    .fruit-item-pod {
+      position: relative;
+      display: inline-flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      transform: scale(0.2);
+      transition: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+      line-height: 1;
+      padding: 2px;
+    }
+
+    .fruit-item-pod.visible { opacity: 1; transform: scale(1); }
+    .fruit-item-pod.pop-active { animation: fruitPop 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; }
+    .fruit-item-pod.recount-glow { transform: scale(1.18); filter: drop-shadow(0 0 8px #fde047); }
+    .fruit-item-pod.removed-item { opacity: 0 !important; transform: scale(0.1) !important; pointer-events: none; }
+
+    .fruit-item-pod .fruit-icon {
+      font-size: clamp(1rem, 2.8vw, 1.6rem);
+      display: block;
+      filter: drop-shadow(0 2px 4px rgba(0,0,0,0.4));
+    }
+
+    .fruit-counter-badge {
+      position: absolute;
+      top: -12px;
+      background: #fde047;
+      color: #0f172a;
+      font-weight: 900;
+      font-size: 0.68rem;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.5);
+      transform: scale(0);
+      transition: transform 0.22s cubic-bezier(0.34, 1.56, 0.64, 1);
+      border: 1.5px solid #ffffff;
+      z-index: 5;
+    }
+
+    .fruit-counter-badge.show { transform: scale(1); }
+
     #app-toast {
       position: fixed;
       bottom: 16px;
@@ -519,7 +828,6 @@
       gap: 6px;
     }
 
-    /* MODALS */
     .modal-overlay {
       position: fixed;
       inset: 0;
@@ -545,7 +853,7 @@
       box-shadow: 0 20px 25px -5px rgba(0,0,0,0.3);
     }
 
-    .modal-card.wide { max-width: 780px; height: 85vh; }
+    .modal-card.wide { max-width: 820px; height: 85vh; }
 
     .modal-header {
       padding: 12px 16px;
@@ -569,142 +877,147 @@
       overflow-y: auto;
       display: flex;
       flex-direction: column;
-      gap: 10px;
+      gap: 12px;
     }
 
-    .roster-input-row { display: flex; gap: 6px; }
-    .roster-input-row input {
-      flex: 1;
-      padding: 8px 12px;
-      border-radius: 8px;
-      border: 1px solid var(--border);
-      font-size: 0.95rem;
+    .roster-input-row { display: flex; gap: 8px; margin-top: 4px; }
+    .roster-input-row input { flex: 1; padding: 8px 12px; border-radius: 8px; border: 1.5px solid var(--border); font-size: 0.9rem; }
+
+    .item-list { list-style: none; display: flex; flex-direction: column; gap: 6px; max-height: 220px; overflow-y: auto; }
+    .item-list li { display: flex; justify-content: space-between; align-items: center; background: #f8fafc; padding: 8px 12px; border-radius: 8px; border: 1px solid var(--border); font-weight: 700; font-size: 0.9rem; }
+    .item-list li button { background: #fee2e2; border: none; color: #b91c1c; font-size: 1.1rem; width: 26px; height: 26px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+
+    .topic-selector-tabs { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+    .topic-selector-tabs select { flex: 1; padding: 6px 10px; border-radius: 8px; border: 1.5px solid var(--border); font-weight: 700; background: #f8fafc; }
+
+    #json-editor-textarea { flex: 1; width: 100%; min-height: 320px; font-family: monospace; font-size: 0.82rem; padding: 10px; border-radius: 8px; background: #1e293b; color: #e2e8f0; border: 1px solid #334155; outline: none; resize: none; }
+
+    @keyframes fruitPop {
+      0% { transform: scale(0.2); }
+      60% { transform: scale(1.35) rotate(-6deg); }
+      100% { transform: scale(1) rotate(0deg); }
     }
 
-    .item-list {
-      list-style: none;
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-    }
-
-    .item-list li {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 8px 12px;
-      background: #f1f5f9;
-      border-radius: 8px;
-      font-weight: 700;
-    }
-
-    .item-list li button {
-      background: none;
-      border: none;
-      color: var(--danger);
-      font-size: 1.2rem;
-      cursor: pointer;
-    }
-
-    #json-editor-textarea {
-      flex: 1;
-      width: 100%;
-      min-height: 320px;
-      font-family: monospace;
-      font-size: 0.8rem;
-      padding: 10px;
-      border-radius: 8px;
-      background: #1e293b;
-      color: #e2e8f0;
-      border: 1px solid #334155;
-      outline: none;
-      resize: none;
-    }
-
-    @keyframes popIn {
-      from { transform: scale(0.7); opacity: 0; }
-      to { transform: scale(1); opacity: 1; }
-    }
-    @keyframes slideUp {
-      from { transform: translateY(12px); opacity: 0; }
-      to { transform: translateY(0); opacity: 1; }
-    }
-    @keyframes pulse {
-      0% { opacity: 0.4; }
-      50% { opacity: 1; }
-      100% { opacity: 0.4; }
-    }
+    @keyframes slideUp { from { transform: translateY(12px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
   </style>
 </head>
 <body>
   <div id="app-container">
-    <!-- Top Navigation & Control Deck -->
     <header id="top-nav">
       <div class="nav-left">
         <div class="brand-badge">
           <span>📐</span>
-          <span>MathMaster</span>
+          <span>PrimaryMath</span>
         </div>
 
         <div class="lesson-picker">
-          <select id="class-select" aria-label="Select Class"></select>
-          <select id="topic-select" aria-label="Select Topic"></select>
+          <select id="topic-select" aria-label="Select Mathematics Topic"></select>
+          <select id="lesson-select" aria-label="Select Lesson"></select>
         </div>
 
-        <!-- Nigerian Teacher Voice Selector -->
         <div class="voice-picker">
           <select id="voice-select" aria-label="Select Teacher Voice">
-            <option value="en-NG-EzinneNeural">👩🏾‍🏫 Ezinne (Female)</option>
-            <option value="en-NG-AbeoNeural">👨🏾‍🏫 Abeo (Male)</option>
+            <option value="ezinne">👩🏾‍🏫 Teacher Ezinne</option>
+            <option value="abeo">👨🏾‍🏫 Teacher Abeo</option>
           </select>
         </div>
       </div>
 
       <div class="nav-right">
-        <!-- Control Buttons: Play, Pause, Replay, Next -->
+        <span id="cloud-status-badge">☁️ Cloud: Init</span>
+
         <div class="control-btn-group">
-          <button id="btn-play" title="Play Explanation" class="btn-icon play-btn">▶</button>
-          <button id="btn-pause" title="Pause Explanation" class="btn-icon">⏸</button>
-          <button id="btn-replay" title="Replay Explanation" class="btn-icon">🔁</button>
+          <button id="btn-play" title="Play Voice" class="btn-icon play-btn">▶</button>
+          <button id="btn-pause" title="Pause Voice" class="btn-icon">⏸</button>
+          <button id="btn-replay" title="Replay Voice" class="btn-icon">🔁</button>
           <button id="btn-next" title="Next Step" class="btn-icon">⏭</button>
         </div>
 
-        <!-- Continuous Play Mode Button -->
         <button id="btn-continuous" class="btn-pill" title="Toggle Continuous Lesson Flow">
-          🔄 <span>Auto Flow: Off</span>
+          🔄 <span id="auto-flow-label">Auto Flow: Off</span>
+        </button>
+
+        <button id="btn-fullscreen" class="btn-pill" title="Toggle Fullscreen Classroom Mode">
+          ⛶ <span id="fullscreen-label">Fullscreen</span>
         </button>
 
         <button id="btn-roster" class="btn-pill">👥 <span id="active-student-display">Class</span></button>
-        <button id="btn-editor" class="btn-pill accent">✏️ JSON</button>
+        <button id="btn-editor" class="btn-pill">✏️ Topic JSON</button>
       </div>
     </header>
 
-    <!-- Stage Area -->
+    <div id="demo-banner">
+      <span>ℹ️ DEMO CONTENT — REPLACE WITH TEXTBOOK CONTENT LATER</span>
+      <span style="font-weight: 400; opacity: 0.85;">Synced with Firebase Cloud Database</span>
+    </div>
+
     <main id="classroom-stage">
       <div id="lesson-status-bar">
         <span id="stage-badge" class="badge">INTRO</span>
-        <span id="voice-badge" class="badge voice">Voice: Ezinne (en-NG)</span>
-        <span id="lesson-topic-display">Primary 1 • Addition Basics</span>
+        <span id="voice-badge" class="badge voice">Voice: Teacher Ezinne</span>
+        <span id="lesson-topic-display">Primary 1 • Numbers and Counting</span>
         <div class="progress-track">
           <div id="progress-bar-fill"></div>
         </div>
       </div>
 
-      <!-- Teaching Chalkboard -->
       <section id="teaching-board" class="board-surface">
+        <div id="audio-unlock-overlay">
+          <div style="font-size: 2.6rem;">👩🏾‍🏫 🎒 🔊</div>
+          <h3 style="color: #fde047; font-size: 1.3rem;">Welcome to Primary 1 Classroom!</h3>
+          <p style="color: #cbd5e1; font-size: 0.9rem; max-width: 320px;">
+            Tap the green button to start your teacher's voice and animated board!
+          </p>
+          <button id="btn-unlock-audio" class="btn-unlock-audio">▶ Tap to Start Lesson 🔊</button>
+        </div>
+
         <div id="board-header">
           <h2 id="board-title">Welcome to Mathematics</h2>
           <p id="board-subtitle">Understanding Quantities</p>
         </div>
 
-        <div id="board-viewport">
-          <div id="visual-workspace" class="workspace"></div>
+        <!-- ZONE 1: TYPED OBJECTS & ANIMATED DEMONSTRATIONS -->
+        <div id="visual-workspace"></div>
+
+        <!-- ZONE 2: SYNCHRONIZED EQUATION BANNER (ABOVE SLATE) -->
+        <div id="equation-display-strip" class="equation-strip">
+          <span class="equation-label" id="equation-label">Math Sentence:</span>
+          <div id="equation-tokens-container" class="equation-tokens-holder"></div>
         </div>
 
-        <div id="board-equation-display" class="equation-banner"></div>
+        <!-- ZONE 3: DEDICATED TEACHER'S HANDWRITING SLATE -->
+        <div class="slate-container" id="slate-container">
+          <span class="slate-label">Teacher's Writing Slate</span>
+          <canvas id="writing-canvas"></canvas>
+
+          <svg id="teacher-hand-cursor" viewBox="0 0 320 320" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <linearGradient id="skinGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#ffd5b8"/>
+                <stop offset="60%" stop-color="#f5ba93"/>
+                <stop offset="100%" stop-color="#e0996f"/>
+              </linearGradient>
+              <linearGradient id="penBodyGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                <stop offset="0%" stop-color="#e5e7eb"/>
+                <stop offset="50%" stop-color="#9ca3af"/>
+                <stop offset="100%" stop-color="#4b5563"/>
+              </linearGradient>
+            </defs>
+            <g transform="rotate(-6, 12, 12)">
+              <polygon points="12,12 28,6 28,18" fill="#111827" />
+              <polygon points="28,6 40,3 40,21 28,18" fill="#374151" />
+              <rect x="40" y="3" width="135" height="18" rx="3" fill="url(#penBodyGrad)" />
+              <rect x="175" y="2" width="48" height="20" rx="3" fill="#1f2937" />
+              <path d="M78 80 C95 110 120 180 148 290 L215 260 C180 170 152 105 130 75 Z" fill="url(#skinGrad)" />
+              <path d="M50 42 C42 40 34 32 30 22 C26 12 32 8 42 12 C52 16 68 28 85 45 C98 56 102 70 94 76 C86 82 65 80 50 42 Z" fill="url(#skinGrad)"/>
+              <path d="M48 28 C42 22 45 15 54 16 C63 17 80 32 88 44 C82 48 70 52 58 40 Z" fill="#ffd1b3"/>
+              <path d="M58 42 C56 50 64 62 74 62 C82 62 86 54 84 46 Z" fill="#ebaa81"/>
+              <path d="M144 280 L218 250 L226 270 L152 300 Z" fill="#93c5fd" opacity="0.9"/>
+            </g>
+          </svg>
+        </div>
       </section>
 
-      <!-- Teacher Voice Strip -->
       <section id="teacher-section">
         <div class="teacher-box">
           <div class="teacher-avatar-wrapper">
@@ -712,7 +1025,7 @@
             <span id="teacher-label" class="teacher-name-tag">Teacher Ezinne</span>
           </div>
           <div id="teacher-speech" class="speech-bubble">
-            Loading your lesson...
+            Loading your Primary 1 lesson...
           </div>
         </div>
 
@@ -723,24 +1036,20 @@
         </div>
       </section>
 
-      <!-- Dual Question Checkpoint & Quiz Panel -->
       <section id="interaction-panel" class="interaction-card hidden">
         <div class="panel-header">
-          <span id="panel-type-tag" class="badge warning">CHECKPOINT • QUESTION 1 OF 2</span>
-          <span id="panel-instruction">Check your understanding</span>
+          <span id="panel-type-tag" class="badge warning">PRACTICE TIME • YOUR TURN</span>
+          <span id="panel-instruction">Tap the correct answer below</span>
         </div>
 
         <div id="panel-question-text" class="question-body">Question goes here</div>
-        <div id="panel-visual-hint" class="hint-container"></div>
         <div id="panel-interaction-zone"></div>
         <div id="panel-feedback" class="feedback-alert hidden"></div>
       </section>
     </main>
 
-    <!-- Small Toast Notification -->
     <div id="app-toast"></div>
 
-    <!-- Student Roster Modal -->
     <div id="roster-modal" class="modal-overlay hidden">
       <div class="modal-card">
         <div class="modal-header">
@@ -749,10 +1058,10 @@
         </div>
         <div class="modal-body">
           <p style="font-size: 0.85rem; color: var(--text-muted);">
-            Teacher will naturally call on registered students during practice.
+            Teacher naturally calls registered students during practice.
           </p>
           <div class="roster-input-row">
-            <input type="text" id="new-student-name" placeholder="Enter student name (e.g. Chidi, Amina)" />
+            <input type="text" id="new-student-name" placeholder="Enter student name (e.g. Chinedu, Amina)" />
             <button id="btn-add-student" class="btn-pill primary">Add</button>
           </div>
           <ul id="students-list" class="item-list"></ul>
@@ -760,21 +1069,24 @@
       </div>
     </div>
 
-    <!-- JSON Studio Modal -->
     <div id="editor-modal" class="modal-overlay hidden">
       <div class="modal-card wide">
         <div class="modal-header">
-          <h3>Lesson JSON Studio</h3>
+          <div>
+            <h3 style="font-size: 1.05rem;">Topic JSON Studio</h3>
+            <span style="font-size: 0.75rem; color: var(--text-muted);">View, edit, or replace individual topic content easily</span>
+          </div>
           <div style="display: flex; gap: 6px;">
-            <button id="btn-save-json" class="btn-pill primary">Save & Load</button>
+            <button id="btn-save-topic-json" class="btn-pill primary">Save Current Topic</button>
             <button class="btn-close" id="btn-close-editor">&times;</button>
           </div>
         </div>
         <div class="modal-body">
-          <div style="display:flex; justify-content:space-between; align-items:center;">
-            <span id="json-status" style="font-size: 0.8rem; font-weight: 700;">Ready</span>
-            <span style="font-size:0.75rem; color:var(--text-muted);">Azure Neural TTS Supported</span>
+          <div class="topic-selector-tabs">
+            <label style="font-size: 0.85rem; font-weight: 700;">Select Topic JSON:</label>
+            <select id="modal-topic-picker"></select>
           </div>
+          <span id="json-status" style="font-size: 0.8rem; font-weight: 700; color: var(--success);">Ready to edit topic</span>
           <textarea id="json-editor-textarea" spellcheck="false"></textarea>
         </div>
       </div>
@@ -785,602 +1097,697 @@
     (function () {
       "use strict";
 
-      // ======================================================================
-      // 1. CONFIGURATION & CONSTANTS
-      // ======================================================================
-      const TTS_ENDPOINT = "/api/tts"; // Secure backend proxy
-      const DEFAULT_VOICE = "en-NG-EzinneNeural";
+      // 1. FIREBASE INITIALIZATION
+      const formalFirebaseConfig = {
+        apiKey: "AIzaSyCRL0nXwiqQk4isamyt1UkGWyQ50t3DjYo",
+        authDomain: "kids-school-accademy.firebaseapp.com",
+        databaseURL: "https://kids-school-accademy-default-rtdb.firebaseio.com",
+        projectId: "kids-school-accademy",
+        storageBucket: "kids-school-accademy.firebasestorage.app",
+        messagingSenderId: "227052035126",
+        appId: "1:227052035126:web:432601b90f3d54a00e8c97",
+        measurementId: "G-B8DSN41S9K"
+      };
 
-      const CURRICULUM = [
-        {
-          id: "p1-math-addition",
-          classLevel: "Primary 1",
-          topic: "Addition Basics",
-          stages: [
-            {
-              stageType: "welcome",
-              title: "Welcome to Addition",
-              subtitle: "Putting Quantities Together",
-              speech: "Hello! Welcome to our Mathematics classroom. Today we are learning about Addition. Addition means putting quantities together to find how many we have altogether.",
-              boardAction: { type: "SHOW_WELCOME", text: "ADDITION: Putting Things Together" }
-            },
-            {
-              stageType: "foundation",
-              title: "Important Math Signs",
-              subtitle: "The Plus and Equals Signs",
-              speech: "Before calculating, let us meet two important signs. Look at the board. The cross sign is the PLUS sign. It means add or put together. The two flat lines make the EQUALS sign, showing the total answer.",
-              boardAction: {
-                type: "SHOW_SYMBOLS",
-                symbols: [
-                  { symbol: "+", name: "PLUS SIGN", meaning: "PUT TOGETHER / ADD" },
-                  { symbol: "=", name: "EQUALS SIGN", meaning: "TOTAL AMOUNT" }
-                ]
-              }
-            },
-            {
-              stageType: "example",
-              title: "Example 1: Adding Apples",
-              speech: "Look at the board. First, we have two sweet red apples. Then, we add one more apple. Let us count all of them together: one, two, three! So, two plus one equals three.",
-              boardAction: {
-                type: "SYNCED_ADDITION",
-                item: "apple",
-                icon: "🍎",
-                leftCount: 2,
-                rightCount: 1,
-                equation: "2 + 1 = 3"
-              },
-              checkpoint: {
-                questions: [
-                  {
-                    type: "procedural",
-                    prompt: "Now your turn! What is 2 + 2?",
-                    icon: "🍎",
-                    left: 2,
-                    right: 2,
-                    correctAnswer: 4,
-                    remediation: "Let us count together calmly: one, two, three, four! So two plus two equals four."
-                  },
-                  {
-                    type: "conceptual",
-                    prompt: "Chidi has 3 oranges. His mother gives him 1 more orange. How many oranges does Chidi have altogether?",
-                    icon: "🍊",
-                    left: 3,
-                    right: 1,
-                    correctAnswer: 4,
-                    remediation: "Chidi started with three oranges. Add one more: one, two, three, four oranges altogether!"
-                  }
-                ]
-              }
-            },
-            {
-              stageType: "example",
-              title: "Example 2: Adding Pencils",
-              speech: "{{student_name}}, look at the board. Here are three yellow pencils. We add two more pencils. Counting them all together gives: one, two, three, four, five. So, three plus two equals five.",
-              boardAction: {
-                type: "SYNCED_ADDITION",
-                item: "pencil",
-                icon: "✏️",
-                leftCount: 3,
-                rightCount: 2,
-                equation: "3 + 2 = 5"
-              },
-              checkpoint: {
-                questions: [
-                  {
-                    type: "procedural",
-                    prompt: "What is 3 + 1?",
-                    icon: "✏️",
-                    left: 3,
-                    right: 1,
-                    correctAnswer: 4,
-                    remediation: "Start with three pencils and add one more: one, two, three, four. The answer is four."
-                  },
-                  {
-                    type: "conceptual",
-                    prompt: "Amina has 4 notebooks. She buys 2 more notebooks. How many notebooks does Amina have in all?",
-                    icon: "📓",
-                    left: 4,
-                    right: 2,
-                    correctAnswer: 6,
-                    remediation: "Count forward two times from four: five, six! Amina has six notebooks."
-                  }
-                ]
-              }
-            },
-            {
-              stageType: "summary",
-              title: "Lesson Summary",
-              subtitle: "What We Learned Today",
-              speech: "You did wonderful work today! Remember: Addition means combining quantities. The plus sign means add, and the equals sign gives our final total. Now let's try our quiz!",
-              boardAction: {
-                type: "SHOW_SUMMARY",
-                points: [
-                  "Addition means putting amounts together",
-                  "+ (Plus) tells us to add",
-                  "= (Equals) shows our total answer"
-                ]
-              }
-            },
-            {
-              stageType: "quiz",
-              title: "Addition Mastery Quiz",
-              questions: [
-                {
-                  prompt: "What does the plus sign (+) mean?",
-                  options: ["Take away", "Put together / Add", "Share equally", "Measure"],
-                  correctIndex: 1,
-                  feedback: "The plus sign tells us to add or put items together."
-                },
-                {
-                  prompt: "What is 3 + 3?",
-                  options: ["5", "6", "7", "4"],
-                  correctIndex: 1,
-                  feedback: "Three plus three equals six."
-                },
-                {
-                  prompt: "Emeka has 4 mangos. He gets 1 more. How many mangos does Emeka have?",
-                  options: ["3", "5", "6", "4"],
-                  correctIndex: 1,
-                  feedback: "Four mangos plus one mango equals five mangos altogether."
-                }
-              ]
-            }
-          ]
-        },
-        {
-          id: "n1-math-counting",
-          classLevel: "Nursery 1",
-          topic: "Counting Numbers 1 to 5",
-          stages: [
-            {
-              stageType: "welcome",
-              title: "Let's Count Numbers!",
-              subtitle: "Numbers 1 to 5",
-              speech: "Hello little champions! Today we are learning to count from one to five with sweet fruits!",
-              boardAction: { type: "SHOW_WELCOME", text: "COUNTING 1 TO 5 🍎 🍌 🍊" }
-            },
-            {
-              stageType: "example",
-              title: "Counting 3 Mangoes",
-              speech: "{{student_name}}, look at these sweet mangoes on our board. Let us count together: one... two... three mangoes!",
-              boardAction: {
-                type: "SYNCED_ADDITION",
-                item: "mango",
-                icon: "🥭",
-                leftCount: 3,
-                rightCount: 0,
-                equation: "3 Sweet Mangoes"
-              },
-              checkpoint: {
-                questions: [
-                  {
-                    type: "procedural",
-                    prompt: "How many stars do you see? ⭐ ⭐",
-                    icon: "⭐",
-                    left: 2,
-                    right: 0,
-                    correctAnswer: 2,
-                    remediation: "Let us count: One... Two! There are two stars."
-                  },
-                  {
-                    type: "conceptual",
-                    prompt: "If you see 1 big balloon 🎈, what number is that?",
-                    icon: "🎈",
-                    left: 1,
-                    right: 0,
-                    correctAnswer: 1,
-                    remediation: "Only one balloon! The answer is one."
-                  }
-                ]
-              }
-            },
-            {
-              stageType: "summary",
-              title: "Counting Summary",
-              subtitle: "1, 2, 3, 4, 5",
-              speech: "Wonderful counting! Keep practicing your numbers every day.",
-              boardAction: {
-                type: "SHOW_SUMMARY",
-                points: ["1 = One", "2 = Two", "3 = Three", "4 = Four", "5 = Five"]
-              }
-            },
-            {
-              stageType: "quiz",
-              title: "Nursery Counting Quiz",
-              questions: [
-                {
-                  prompt: "How many apples are here: 🍎 🍎 🍎 ?",
-                  options: ["2", "3", "4", "5"],
-                  correctIndex: 1,
-                  feedback: "That's right! One, two, three apples!"
-                }
-              ]
-            }
-          ]
-        },
-        {
-          id: "jss1-math-integers",
-          classLevel: "Junior Secondary 1",
-          topic: "Directed Numbers (Integers)",
-          stages: [
-            {
-              stageType: "welcome",
-              title: "Directed Numbers",
-              subtitle: "Positive and Negative Integers",
-              speech: "Welcome class. Today we explore Directed Numbers. In real life, quantities have direction: earning money versus owing debt, or climbing up versus going down.",
-              boardAction: { type: "SHOW_WELCOME", text: "INTEGERS: (+ Positive) & (− Negative)" }
-            },
-            {
-              stageType: "foundation",
-              title: "Understanding The Signs",
-              subtitle: "Gains vs Losses",
-              speech: "Positive numbers represent quantities above zero or gains. Negative numbers have a minus sign and represent quantities below zero or debts.",
-              boardAction: {
-                type: "SHOW_SYMBOLS",
-                symbols: [
-                  { symbol: "+5", name: "POSITIVE FIVE", meaning: "5 units above zero / Gain" },
-                  { symbol: "−5", name: "NEGATIVE FIVE", meaning: "5 units below zero / Debt" }
-                ]
-              }
-            },
-            {
-              stageType: "example",
-              title: "Example: Combining Opposite Signs",
-              speech: "Imagine you have five Naira, written as positive five. You spend three Naira, written as negative three. Combining them leaves you with positive two Naira.",
-              boardAction: {
-                type: "SYNCED_ADDITION",
-                item: "coin",
-                icon: "🪙",
-                leftCount: 5,
-                rightCount: 3,
-                equation: "(+5) + (−3) = +2"
-              },
-              checkpoint: {
-                questions: [
-                  {
-                    type: "procedural",
-                    prompt: "Calculate: (+4) + (−2) = ?",
-                    icon: "🪙",
-                    left: 4,
-                    right: 2,
-                    correctAnswer: 2,
-                    remediation: "Starting at positive four and taking away two leaves you with positive two."
-                  },
-                  {
-                    type: "conceptual",
-                    prompt: "A temperature starts at 3 degrees and drops by 5 degrees. What is the new temperature?",
-                    icon: "🌡️",
-                    left: 3,
-                    right: 5,
-                    correctAnswer: -2,
-                    remediation: "Three minus five crosses below zero to minus two degrees."
-                  }
-                ]
-              }
-            },
-            {
-              stageType: "summary",
-              title: "Integers Summary",
-              subtitle: "Core Rules",
-              speech: "Remember: Numbers with different signs compete, and the sign of the larger absolute value wins.",
-              boardAction: {
-                type: "SHOW_SUMMARY",
-                points: ["+ = Positive (above zero)", "− = Negative (below zero)", "Zero is neutral"]
-              }
-            },
-            {
-              stageType: "quiz",
-              title: "Integers Quiz",
-              questions: [
-                {
-                  prompt: "Which integer represents owing 500 Naira?",
-                  options: ["+500", "−500", "0", "+50"],
-                  correctIndex: 1,
-                  feedback: "Owing debt is represented with a minus sign: minus 500."
-                }
-              ]
-            }
-          ]
-        }
-      ];
-
-      // ======================================================================
-      // 2. TEXT CLEANING & MATHEMATICS SPEECH CONVERTER
-      // ======================================================================
-      function cleanTextForSpeech(text) {
-        if (!text) return "";
-        let cleaned = text;
-
-        // 1. Strip HTML tags and code blocks
-        cleaned = cleaned.replace(/<[^>]*>/g, " ");
-        cleaned = cleaned.replace(/`[^`]*`/g, " ");
-
-        // 2. Remove JSON syntax remains if any
-        cleaned = cleaned.replace(/[{}\[\]"]/g, " ");
-
-        // 3. Remove Emojis & decorative Unicode symbols
-        cleaned = cleaned.replace(/([\u2700-\u27BF]|[\uE000-\uF8FF]|\uD83C[\uDC00-\uDFFF]|\uD83D[\uDC00-\uDFFF]|[\u2011-\u26FF]|\uD83E[\uDD10-\uDDFF])/g, "");
-
-        // 4. Convert Mathematics expressions naturally to spoken English
-        cleaned = cleaned.replace(/₦\s*(\d+)/g, "$1 Naira");
-        cleaned = cleaned.replace(/(\d+)\s*\/\s*2/g, "one half");
-        cleaned = cleaned.replace(/(\d+)\s*\/\s*4/g, "one quarter");
-        cleaned = cleaned.replace(/(\d+)\s*\+\s*(\d+)/g, "$1 plus $2");
-        cleaned = cleaned.replace(/(\d+)\s*[\-−]\s*(\d+)/g, "$1 minus $2");
-        cleaned = cleaned.replace(/(\d+)\s*[×*]\s*(\d+)/g, "$1 times $2");
-        cleaned = cleaned.replace(/(\d+)\s*[÷\/]\s*(\d+)/g, "$1 divided by $2");
-        cleaned = cleaned.replace(/\s*=\s*/g, " equals ");
-        cleaned = cleaned.replace(/\(\+(\d+)\)/g, "positive $1");
-        cleaned = cleaned.replace(/\([−\-](\d+)\)/g, "negative $1");
-
-        // 5. Clean punctuation and excess spacing
-        cleaned = cleaned.replace(/[\r\n\t]+/g, " ");
-        cleaned = cleaned.replace(/\s{2,}/g, " ").trim();
-
-        return cleaned;
-      }
-
-      // ======================================================================
-      // 3. INDEXED-DB AUDIO CACHE (lessonID + voice + text)
-      // ======================================================================
-      class AudioCache {
+      class ClassroomFirebaseBridge {
         constructor() {
+          this.isReady = false;
           this.db = null;
-          this.ready = this.init();
+          this.init();
         }
 
         init() {
-          return new Promise((resolve) => {
-            if (!window.indexedDB) return resolve(null);
-            const request = indexedDB.open("MathVoiceCache", 1);
-            request.onupgradeneeded = (e) => {
-              const db = e.target.result;
-              if (!db.objectStoreNames.contains("audio_snippets")) {
-                db.createObjectStore("audio_snippets");
-              }
-            };
-            request.onsuccess = (e) => {
-              this.db = e.target.result;
-              resolve(this.db);
-            };
-            request.onerror = () => resolve(null);
-          });
-        }
-
-        async get(key) {
-          await this.ready;
-          if (!this.db) return null;
-          return new Promise((resolve) => {
-            try {
-              const tx = this.db.transaction("audio_snippets", "readonly");
-              const store = tx.objectStore("audio_snippets");
-              const req = store.get(key);
-              req.onsuccess = () => resolve(req.result || null);
-              req.onerror = () => resolve(null);
-            } catch (err) {
-              resolve(null);
-            }
-          });
-        }
-
-        async set(key, blob) {
-          await this.ready;
-          if (!this.db) return;
           try {
-            const tx = this.db.transaction("audio_snippets", "readwrite");
-            const store = tx.objectStore("audio_snippets");
-            store.put(blob, key);
-          } catch (err) {}
+            if (typeof firebase !== "undefined") {
+              if (!firebase.apps.length) {
+                firebase.initializeApp(formalFirebaseConfig);
+              }
+              this.db = firebase.database();
+              this.isReady = true;
+              this.updateStatus(true);
+            } else {
+              this.updateStatus(false, "Offline");
+            }
+          } catch (e) {
+            this.updateStatus(false, "Local Only");
+          }
+        }
+
+        updateStatus(online, label = "Synced") {
+          const badge = document.getElementById("cloud-status-badge");
+          if (!badge) return;
+          if (online) {
+            badge.textContent = `☁️ Cloud: ${label}`;
+            badge.style.background = "#dcfce7";
+            badge.style.color = "#166534";
+            badge.style.borderColor = "#86efac";
+          } else {
+            badge.textContent = `☁️ Cloud: ${label}`;
+            badge.style.background = "#f1f5f9";
+            badge.style.color = "#64748b";
+            badge.style.borderColor = "#cbd5e1";
+          }
+        }
+
+        saveRoster(students) {
+          if (!this.isReady || !this.db) return;
+          this.db.ref("classrooms/primary1/roster").set(students).catch(() => {});
+        }
+
+        listenToRoster(callback) {
+          if (!this.isReady || !this.db) return;
+          this.db.ref("classrooms/primary1/roster").on("value", (snap) => {
+            const data = snap.val();
+            if (Array.isArray(data) && data.length > 0) callback(data);
+          });
+        }
+
+        saveTopic(topic) {
+          if (!this.isReady || !this.db) return;
+          this.db.ref(`classrooms/primary1/topics/${topic.topicId}`).set(topic).catch(() => {});
+        }
+
+        saveSession(state) {
+          if (!this.isReady || !this.db) return;
+          this.db.ref("classrooms/primary1/session").set(state).catch(() => {});
+        }
+      }
+      const cloudBridge = new ClassroomFirebaseBridge();
+
+      // SOUND FX GENERATOR
+      class ClassroomAudioFX {
+        constructor() { this.ctx = null; }
+        init() {
+          if (!this.ctx) {
+            const AudioContext = window.AudioContext || window.webkitAudioContext;
+            if (AudioContext) this.ctx = new AudioContext();
+          }
+        }
+        playPop(freq = 440) {
+          try {
+            this.init();
+            if (!this.ctx) return;
+            if (this.ctx.state === 'suspended') this.ctx.resume();
+            const osc = this.ctx.createOscillator();
+            const gain = this.ctx.createGain();
+            osc.type = 'sine';
+            const safeFreq = Math.min(1200, Math.max(120, freq));
+            osc.frequency.setValueAtTime(safeFreq, this.ctx.currentTime);
+            osc.frequency.exponentialRampToValueAtTime(safeFreq * 1.5, this.ctx.currentTime + 0.12);
+            gain.gain.setValueAtTime(0.25, this.ctx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.01, this.ctx.currentTime + 0.12);
+            osc.connect(gain);
+            gain.connect(this.ctx.destination);
+            osc.start();
+            osc.stop(this.ctx.currentTime + 0.12);
+          } catch (e) {}
+        }
+      }
+      const audioFX = new ClassroomAudioFX();
+
+      // VECTOR STROKE GLYPHS
+      const STROKE_GLYPHS = {
+        '0': [[[0.2,0.2],[0.8,0.2],[0.8,0.8],[0.2,0.8],[0.2,0.2]]],
+        '1': [[[0.3,0.3],[0.5,0.15],[0.5,0.85]], [[0.3,0.85],[0.7,0.85]]],
+        '2': [[[0.2,0.32],[0.5,0.15],[0.8,0.32],[0.2,0.85],[0.8,0.85]]],
+        '3': [[[0.2,0.2],[0.8,0.2],[0.45,0.5],[0.8,0.6],[0.4,0.85],[0.2,0.8]]],
+        '4': [[[0.7,0.85],[0.7,0.15],[0.15,0.6],[0.85,0.6]]],
+        '5': [[[0.8,0.2],[0.25,0.2],[0.2,0.5],[0.75,0.55],[0.65,0.85],[0.2,0.8]]],
+        '6': [[[0.7,0.2],[0.3,0.5],[0.75,0.55],[0.7,0.85],[0.3,0.85],[0.25,0.55]]],
+        '7': [[[0.15,0.2],[0.85,0.2],[0.4,0.85]]],
+        '8': [[[0.5,0.5],[0.3,0.3],[0.5,0.15],[0.7,0.3],[0.3,0.7],[0.5,0.85],[0.7,0.7],[0.5,0.5]]],
+        '9': [[[0.7,0.5],[0.3,0.45],[0.3,0.2],[0.7,0.15],[0.7,0.85]]],
+        '+': [[[0.15,0.5],[0.85,0.5]], [[0.5,0.15],[0.5,0.85]]],
+        '−': [[[0.15,0.5],[0.85,0.5]]],
+        '-': [[[0.15,0.5],[0.85,0.5]]],
+        '=': [[[0.15,0.38],[0.85,0.38]], [[0.15,0.62],[0.85,0.62]]],
+        'x': [[[0.2,0.2],[0.8,0.8]], [[0.8,0.2],[0.2,0.8]]],
+        'X': [[[0.2,0.2],[0.8,0.8]], [[0.8,0.2],[0.2,0.8]]],
+        '÷': [[[0.15,0.5],[0.85,0.5]], [[0.5,0.24],[0.5,0.28]], [[0.5,0.72],[0.5,0.76]]],
+        '/': [[[0.25,0.85],[0.75,0.15]]],
+        '?': [[[0.2, 0.3], [0.5, 0.15], [0.8, 0.3], [0.65, 0.45], [0.5, 0.55], [0.5, 0.68]], [[0.5, 0.8], [0.5, 0.86]]],
+        '.': [[[0.45, 0.82], [0.55, 0.82], [0.55, 0.88], [0.45, 0.88], [0.45, 0.82]]],
+        ' ': []
+      };
+
+      // TOPIC DEFINITIONS
+            // TOPIC CONTENT IS STORED IN EXTERNAL JSON FILES.
+      // The teaching engine and UI below remain unchanged; only the source of
+      // the default topic data has moved out of this HTML file.
+      let ALL_TOPICS_DEFAULT = [];
+      const EXTERNAL_TOPIC_FILES = [
+        "math-topics-json/numbers.json",
+        "math-topics-json/addition.json",
+        "math-topics-json/subtraction.json",
+        "math-topics-json/multiplication.json",
+        "math-topics-json/division.json",
+        "math-topics-json/fractions.json",
+        "math-topics-json/word-problems.json"
+      ];
+
+      async function loadExternalTopics() {
+        const responses = await Promise.all(EXTERNAL_TOPIC_FILES.map(async (file) => {
+          const response = await fetch(file, { cache: "no-store" });
+          if (!response.ok) throw new Error(`Could not load topic JSON: ${file}`);
+          return response.json();
+        }));
+        ALL_TOPICS_DEFAULT = responses;
+      }
+
+      // Default topics are populated by loadExternalTopics().
+
+      function cleanTextForSpeech(text) {
+        if (!text) return "";
+        let cleaned = text;
+        cleaned = cleaned.replace(/<[^>]*>/g, " ");
+        cleaned = cleaned.replace(/[{}\[\]"]/g, " ");
+        cleaned = cleaned.replace(/[🍎🍏🍊🍌⭐🔵🔺🟦⚪🟩🪙🐕✏️]/g, "");
+        cleaned = cleaned.replace(/₦\s*(\d+)/g, "$1 Naira");
+        cleaned = cleaned.replace(/(\d+)\s*\+\s*(\d+)/g, "$1 plus $2");
+        cleaned = cleaned.replace(/(\d+)\s*[\-−]\s*(\d+)/g, "$1 minus $2");
+        cleaned = cleaned.replace(/(\d+)\s*[xX×]\s*(\d+)/g, "$1 times $2");
+        cleaned = cleaned.replace(/(\d+)\s*[÷\/]\s*(\d+)/g, "$1 divided by $2");
+        cleaned = cleaned.replace(/\s*=\s*/g, " equals ");
+        cleaned = cleaned.replace(/1\/2/g, "one half");
+        cleaned = cleaned.replace(/[\r\n\t]+/g, " ");
+        return cleaned.replace(/\s{2,}/g, " ").trim();
+      }
+
+      /* ROBUST SLATE HANDWRITER SUPPORTING ARBITRARY AND MULTI-DIGIT NUMBERS */
+      class SlateHandWriter {
+        constructor(canvas, handElement) {
+          this.canvas = canvas;
+          this.ctx = canvas.getContext('2d');
+          this.hand = handElement;
+          this.isWriting = false;
+          this.currentAnimId = null;
+          this.dpr = window.devicePixelRatio || 1;
+          this.totalTokens = 0;
+          this.currentSlot = 0;
+          this.slotWidth = 55;
+          this.startX = 20;
+          this.startY = 35;
+          this.drawnTokens = {};
+          this.questionMarkLength = 1;
+
+          this.resize();
+          window.addEventListener('resize', () => this.resize());
+        }
+
+        recalculateLayout() {
+          const rect = this.canvas.parentElement.getBoundingClientRect();
+          const boardW = rect.width;
+          const boardH = rect.height;
+
+          let maxDrawnSlot = 0;
+          if (this.drawnTokens) {
+            for (const slotKey of Object.keys(this.drawnTokens)) {
+              const s = parseInt(slotKey, 10);
+              if (!isNaN(s) && s >= maxDrawnSlot) maxDrawnSlot = s + 1;
+            }
+          }
+
+          const slots = Math.max(this.totalTokens, maxDrawnSlot, 1);
+          const maxAvailW = Math.max(boardW - 32, 60);
+          this.slotWidth = Math.min(maxAvailW / (slots + 0.6), Math.min(boardH * 0.62, 48));
+          const totalWidth = slots * this.slotWidth;
+          this.startX = Math.max((boardW - totalWidth) / 2, 16);
+          this.startY = (boardH - this.slotWidth) / 2;
+        }
+
+        resize() {
+          const rect = this.canvas.parentElement.getBoundingClientRect();
+          if (rect.width === 0 || rect.height === 0) return;
+          this.dpr = window.devicePixelRatio || 1;
+          this.canvas.width = rect.width * this.dpr;
+          this.canvas.height = rect.height * this.dpr;
+          this.canvas.style.width = `${rect.width}px`;
+          this.canvas.style.height = `${rect.height}px`;
+          this.ctx.scale(this.dpr, this.dpr);
+
+          this.redrawAll();
+        }
+
+        redrawAll() {
+          const rect = this.canvas.parentElement.getBoundingClientRect();
+          this.ctx.clearRect(0, 0, rect.width, rect.height);
+          this.recalculateLayout();
+
+          this.ctx.strokeStyle = '#fde047';
+          this.ctx.lineWidth = Math.max(3.6, this.slotWidth * 0.1);
+          this.ctx.lineCap = 'round';
+          this.ctx.lineJoin = 'round';
+          this.ctx.shadowColor = 'rgba(253, 224, 71, 0.45)';
+          this.ctx.shadowBlur = 3;
+
+          for (const [slotStr, char] of Object.entries(this.drawnTokens)) {
+            const slot = parseInt(slotStr, 10);
+            this.renderStaticGlyph(char, slot);
+          }
+        }
+
+        renderStaticGlyph(char, slot) {
+          const glyph = STROKE_GLYPHS[char];
+          if (!glyph) return;
+          const charOffset = this.startX + (slot * this.slotWidth);
+
+          for (const stroke of glyph) {
+            if (!stroke || !stroke.length) continue;
+            this.ctx.beginPath();
+            const p0x = charOffset + (stroke[0][0] * this.slotWidth);
+            const p0y = this.startY + (stroke[0][1] * this.slotWidth);
+            this.ctx.moveTo(p0x, p0y);
+            for (let i = 1; i < stroke.length; i++) {
+              const px = charOffset + (stroke[i][0] * this.slotWidth);
+              const py = this.startY + (stroke[i][1] * this.slotWidth);
+              this.ctx.lineTo(px, py);
+            }
+            this.ctx.stroke();
+          }
+        }
+
+        clear() {
+          this.cancel();
+          this.drawnTokens = {};
+          this.questionMarkLength = 1;
+          const rect = this.canvas.parentElement.getBoundingClientRect();
+          this.ctx.clearRect(0, 0, rect.width, rect.height);
+          this.hideHand();
+          this.currentSlot = 0;
+        }
+
+        hideHand() {
+          this.hand.style.transform = `translate(-999px, -999px)`;
+        }
+
+        updateHandPosition(cssX, cssY) {
+          this.hand.style.transform = `translate(${cssX - 12}px, ${cssY - 12}px)`;
+        }
+
+        cancel() {
+          if (this.currentAnimId) {
+            cancelAnimationFrame(this.currentAnimId);
+            this.currentAnimId = null;
+          }
+          this.isWriting = false;
+        }
+
+        prepareSequence(tokens, minSlots = 0) {
+          this.clear();
+          const flattenedChars = [];
+          tokens.filter(t => t != null).forEach(t => {
+            const s = String(t);
+            for (let c of s) flattenedChars.push(c);
+          });
+
+          this.totalTokens = Math.max(flattenedChars.length, minSlots, 1);
+          this.currentSlot = 0;
+          this.recalculateLayout();
+        }
+
+        writeSingleToken(char, onComplete = null, targetSlot = null) {
+          const glyph = STROKE_GLYPHS[char];
+          if (!glyph || glyph.length === 0) {
+            if (targetSlot === null) this.currentSlot++;
+            if (onComplete) onComplete();
+            return;
+          }
+
+          const slot = (targetSlot !== null) ? targetSlot : this.currentSlot;
+          if (slot >= this.totalTokens) {
+            this.totalTokens = slot + 1;
+          }
+          const charOffset = this.startX + (slot * this.slotWidth);
+
+          this.ctx.clearRect(charOffset - 2, this.startY - 2, this.slotWidth + 4, this.slotWidth + 4);
+
+          const absoluteStrokes = glyph.map(stroke => stroke.map(([nx, ny]) => ({
+            x: charOffset + (nx * this.slotWidth),
+            y: this.startY + (ny * this.slotWidth)
+          })));
+
+          this.isWriting = true;
+          let strokeIdx = 0;
+          let pointIdx = 0;
+          let currentProgress = 0;
+          const speed = 0.045;
+
+          this.ctx.strokeStyle = '#fde047';
+          this.ctx.lineWidth = Math.max(3.6, this.slotWidth * 0.1);
+          this.ctx.lineCap = 'round';
+          this.ctx.lineJoin = 'round';
+          this.ctx.shadowColor = 'rgba(253, 224, 71, 0.45)';
+          this.ctx.shadowBlur = 3;
+
+          let lastX = absoluteStrokes[0][0].x;
+          let lastY = absoluteStrokes[0][0].y;
+
+          const animate = () => {
+            if (!this.isWriting) return;
+            const stroke = absoluteStrokes[strokeIdx];
+            const p1 = stroke[pointIdx];
+            const p2 = stroke[pointIdx + 1];
+
+            const curX = p1.x + (p2.x - p1.x) * currentProgress;
+            const curY = p1.y + (p2.y - p1.y) * currentProgress;
+
+            this.updateHandPosition(curX, curY);
+
+            this.ctx.beginPath();
+            this.ctx.moveTo(lastX, lastY);
+            this.ctx.lineTo(curX, curY);
+            this.ctx.stroke();
+
+            lastX = curX;
+            lastY = curY;
+            currentProgress += speed;
+
+            if (currentProgress >= 1) {
+              currentProgress = 0;
+              pointIdx++;
+
+              if (pointIdx >= stroke.length - 1) {
+                pointIdx = 0;
+                strokeIdx++;
+
+                if (strokeIdx < absoluteStrokes.length) {
+                  lastX = absoluteStrokes[strokeIdx][0].x;
+                  lastY = absoluteStrokes[strokeIdx][0].y;
+                } else {
+                  this.isWriting = false;
+                  this.drawnTokens[slot] = char;
+
+                  if (targetSlot === null) this.currentSlot++;
+                  const restX = curX + 26;
+                  const restY = curY + 22;
+                  this.updateHandPosition(restX, restY);
+                  if (onComplete) onComplete();
+                  return;
+                }
+              }
+            }
+
+            this.currentAnimId = requestAnimationFrame(animate);
+          };
+
+          this.currentAnimId = requestAnimationFrame(animate);
+        }
+
+        writeTokenString(tokenStr, onComplete = null, targetSlot = null) {
+          const chars = String(tokenStr).split("");
+          if (chars.length === 0) {
+            if (onComplete) onComplete();
+            return;
+          }
+
+          if (targetSlot !== null) {
+            const clearCount = Math.max(chars.length, this.questionMarkLength || 1);
+            for (let k = 0; k < clearCount; k++) {
+              const s = targetSlot + k;
+              delete this.drawnTokens[s];
+              const offset = this.startX + (s * this.slotWidth);
+              this.ctx.clearRect(offset - 2, this.startY - 2, this.slotWidth + 4, this.slotWidth + 4);
+            }
+          }
+
+          let idx = 0;
+          const writeNext = () => {
+            if (idx >= chars.length) {
+              if (targetSlot !== null) {
+                this.currentSlot = Math.max(this.currentSlot, targetSlot + chars.length);
+              }
+              if (onComplete) onComplete();
+              return;
+            }
+            const c = chars[idx];
+            const currentTargetSlot = (targetSlot !== null) ? (targetSlot + idx) : null;
+            idx++;
+            this.writeSingleToken(c, writeNext, currentTargetSlot);
+          };
+          writeNext();
         }
       }
 
-      // ======================================================================
-      // 4. NIGERIAN AI VOICE ENGINE (Azure Neural with Offline Fallback)
-      // ======================================================================
-      class NigerianVoiceEngine {
-        constructor(onStateChange, onToast) {
+      /* TEACHER VOICE ENGINE WITH CHROME AUTOPLAY PROTECTION */
+      class NativeTeacherVoiceEngine {
+        constructor(onStateChange, onAutoplayBlocked) {
           this.onStateChange = onStateChange;
-          this.onToast = onToast;
-          this.cache = new AudioCache();
-          this.audioPlayer = new Audio();
-          this.currentVoice = localStorage.getItem("math_teacher_voice") || DEFAULT_VOICE;
+          this.onAutoplayBlocked = onAutoplayBlocked;
+          this.teacherMode = localStorage.getItem("math_teacher_persona") || "ezinne";
           this.isPlaying = false;
           this.isPaused = false;
-          this.onEndedCallback = null;
+          this.currentUtterance = null;
+          this.watchdogTimer = null;
+          this.heartbeat = null;
+          this.hasInteracted = false;
 
-          this.audioPlayer.addEventListener("ended", () => {
-            this.isPlaying = false;
-            this.isPaused = false;
-            this.onStateChange(false);
-            if (this.onEndedCallback) this.onEndedCallback();
-          });
-
-          this.audioPlayer.addEventListener("error", () => {
-            this.isPlaying = false;
-            this.isPaused = false;
-            this.onStateChange(false);
-          });
+          if (window.speechSynthesis) {
+            window.speechSynthesis.onvoiceschanged = () => {};
+          }
         }
 
-        setVoice(voiceId) {
-          this.currentVoice = voiceId;
-          localStorage.setItem("math_teacher_voice", voiceId);
+        setPersona(mode) {
+          this.teacherMode = mode;
+          localStorage.setItem("math_teacher_persona", mode);
         }
 
-        getVoice() {
-          return this.currentVoice;
+        clearWatchdog() {
+          if (this.watchdogTimer) {
+            clearTimeout(this.watchdogTimer);
+            this.watchdogTimer = null;
+          }
+          if (this.heartbeat) {
+            clearInterval(this.heartbeat);
+            this.heartbeat = null;
+          }
         }
 
         stop() {
-          if (this.audioPlayer) {
-            this.audioPlayer.pause();
-            this.audioPlayer.currentTime = 0;
-          }
-          if (window.speechSynthesis) {
-            window.speechSynthesis.cancel();
-          }
+          this.clearWatchdog();
+          if (window.speechSynthesis) window.speechSynthesis.cancel();
           this.isPlaying = false;
           this.isPaused = false;
+          this.currentUtterance = null;
           this.onStateChange(false);
         }
 
         pause() {
-          if (this.isPlaying && !this.isPaused) {
-            this.audioPlayer.pause();
+          if (window.speechSynthesis && this.isPlaying) {
+            window.speechSynthesis.pause();
             this.isPaused = true;
             this.onStateChange(false);
           }
         }
 
         resume() {
-          if (this.isPaused) {
-            this.audioPlayer.play().then(() => {
-              this.isPlaying = true;
-              this.isPaused = false;
-              this.onStateChange(true);
-            }).catch(() => {
-              this.isPaused = false;
-              this.isPlaying = false;
-            });
-          }
-        }
-
-        async speak(cleanText, lessonId = "gen", onEnded = null) {
-          this.stop();
-          if (!cleanText) return;
-
-          this.onEndedCallback = onEnded;
-          const cacheKey = `${lessonId}_${this.currentVoice}_${cleanText}`;
-
-          // 1. Check IndexedDB Cache
-          const cachedBlob = await this.cache.get(cacheKey);
-          if (cachedBlob) {
-            this.playBlob(cachedBlob);
-            return;
-          }
-
-          // 2. Fetch from Secure Backend API
-          try {
-            const res = await fetch(TTS_ENDPOINT, {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({
-                text: cleanText,
-                voice: this.currentVoice
-              })
-            });
-
-            if (!res.ok) throw new Error("Azure TTS service response: " + res.status);
-
-            const blob = await res.blob();
-            await this.cache.set(cacheKey, blob);
-            this.playBlob(blob);
-          } catch (err) {
-            // 3. Graceful Offline Fallback to Browser SpeechSynthesis
-            this.onToast("Backend voice offline. Using device speech.", 3000);
-            this.speakWithSpeechSynthesis(cleanText);
-          }
-        }
-
-        playBlob(blob) {
-          const url = URL.createObjectURL(blob);
-          this.audioPlayer.src = url;
-          this.audioPlayer.play().then(() => {
+          if (window.speechSynthesis && this.isPaused) {
+            window.speechSynthesis.resume();
             this.isPlaying = true;
             this.isPaused = false;
             this.onStateChange(true);
-          }).catch((err) => {
-            // Handle mobile gesture autoplay restrictions
-            this.isPlaying = false;
-            this.isPaused = false;
-            this.onStateChange(false);
-          });
+          }
         }
 
-        speakWithSpeechSynthesis(text) {
-          if (!window.speechSynthesis) return;
-          try {
-            window.speechSynthesis.cancel();
-            const utterance = new SpeechSynthesisUtterance(text);
-            utterance.rate = 0.88; // Deliberate teacher pace
-            utterance.pitch = this.currentVoice.includes("Ezinne") ? 1.05 : 0.95;
+        speakText(text, onEnded = null) {
+          this.clearWatchdog();
+          if (!text || !window.speechSynthesis) {
+            if (onEnded) onEnded();
+            return;
+          }
 
-            // Pick closest English voice
+          try {
+            if (window.speechSynthesis.paused) {
+              window.speechSynthesis.resume();
+            }
+
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.rate = 0.86;
+            utterance.pitch = (this.teacherMode === "ezinne") ? 1.12 : 0.88;
+
             const voices = window.speechSynthesis.getVoices() || [];
-            const voice = voices.find(v => v && v.lang && (v.lang.includes("en-NG") || v.lang.startsWith("en")));
-            if (voice) utterance.voice = voice;
+            let bestVoice = voices.find(v => v && v.lang && (v.lang.toLowerCase() === "en-ng" || v.lang.toLowerCase() === "en_ng"));
+            if (!bestVoice) bestVoice = voices.find(v => v && v.lang && v.lang.toLowerCase().startsWith("en-gb"));
+            if (!bestVoice) bestVoice = voices.find(v => v && v.lang && v.lang.toLowerCase().startsWith("en"));
+            if (bestVoice) utterance.voice = bestVoice;
+
+            let finished = false;
+            const finishAction = () => {
+              if (finished) return;
+              finished = true;
+              this.clearWatchdog();
+              this.isPlaying = false;
+              this.onStateChange(false);
+              if (onEnded) onEnded();
+            };
 
             utterance.onstart = () => {
+              this.hasInteracted = true;
               this.isPlaying = true;
               this.onStateChange(true);
             };
 
-            utterance.onend = () => {
-              this.isPlaying = false;
-              this.onStateChange(false);
-              if (this.onEndedCallback) this.onEndedCallback();
+            utterance.onend = finishAction;
+
+            utterance.onerror = (event) => {
+              if (event.error === 'not-allowed' && !this.hasInteracted) {
+                console.warn("Chrome blocked speech autoplay. Awaiting user interaction.");
+                this.isPlaying = false;
+                this.onStateChange(false);
+                if (this.onAutoplayBlocked) {
+                  this.onAutoplayBlocked(() => {
+                    this.hasInteracted = true;
+                    this.speakText(text, onEnded);
+                  });
+                }
+                return;
+              }
+              finishAction();
             };
 
-            utterance.onerror = () => {
-              this.isPlaying = false;
-              this.onStateChange(false);
-            };
+            const estimatedDuration = Math.max(1400, (text.split(' ').length * 580) + 1400);
+            this.watchdogTimer = setTimeout(finishAction, estimatedDuration);
 
+            window._activeUtterance = utterance;
+
+            this.heartbeat = setInterval(() => {
+              if (!window.speechSynthesis.speaking) {
+                clearInterval(this.heartbeat);
+              } else if (window.speechSynthesis.paused) {
+                window.speechSynthesis.resume();
+              }
+            }, 3500);
+
+            this.currentUtterance = utterance;
             window.speechSynthesis.speak(utterance);
           } catch (err) {
             this.isPlaying = false;
             this.onStateChange(false);
+            if (onEnded) onEnded();
           }
         }
       }
 
-      // ======================================================================
-      // 5. MAIN TEACHING ENGINE CLASS
-      // ======================================================================
+      /* MAIN TEACHING ENGINE */
       class TeachingEngine {
         constructor() {
-          this.lessons = this.safeStorageGet("math_lessons_data", CURRICULUM);
-          this.students = this.safeStorageGet("math_students_data", ["David", "Mary", "Emeka", "Amina", "Sarah"]);
-          this.currentLesson = this.lessons[0];
-          this.currentStageIndex = 0;
-          this.checkpointIndex = 0;
-          this.quizIndex = 0;
-          this.quizScore = 0;
+          this.topics = this.loadTopicsFromStorage();
+          this.students = this.safeGet("math_students_data", ["Chinedu", "Amina", "Emeka", "Zainab", "David"]);
 
-          // Continuous Play mode
-          this.continuousPlay = false;
+          const savedTopicId = localStorage.getItem("p1_math_last_topic_id");
+          const savedLessonId = localStorage.getItem("p1_math_last_lesson_id");
+          const savedStageIdx = parseInt(localStorage.getItem("p1_math_last_stage_index") || "0", 10);
+          const savedAutoFlow = localStorage.getItem("p1_math_autoflow") === "true";
 
-          // Voice System Init
-          this.voiceEngine = new NigerianVoiceEngine(
-            (isSpeaking) => this.updateSpeakingUI(isSpeaking),
-            (msg, duration) => this.showToast(msg, duration)
-          );
+          this.currentTopic = this.topics.find(t => t.topicId === savedTopicId) || this.topics[0];
+          this.currentLesson = this.currentTopic.lessons.find(l => l.id === savedLessonId) || this.currentTopic.lessons[0];
+          this.currentStageIndex = (!isNaN(savedStageIdx) && savedStageIdx < this.currentLesson.stages.length) ? savedStageIdx : 0;
+
+          this.continuousPlay = savedAutoFlow;
+          this.isSequenceRunning = false;
+          this.questionMarkSlot = null;
+          this.currentIcon = "🍎";
 
           this.cacheDOMElements();
-          this.bindEvents();
-          this.populateSelectors();
-          this.renderRosterList();
-          this.loadLesson(this.currentLesson);
-        }
 
-        safeStorageGet(key, fallback) {
-          try {
-            const item = localStorage.getItem(key);
-            return item ? JSON.parse(item) : fallback;
-          } catch (e) {
-            return fallback;
+          this.voiceEngine = new NativeTeacherVoiceEngine(
+            (speaking) => this.updateSpeakingUI(speaking),
+            (resumeCallback) => this.showChromeAudioUnlockPrompt(resumeCallback)
+          );
+
+          this.slateWriter = new SlateHandWriter(
+            document.getElementById("writing-canvas"),
+            document.getElementById("teacher-hand-cursor")
+          );
+
+          this.bindEvents();
+          this.populateTopicDropdown();
+          this.renderRosterList();
+
+          this.btnContinuous.classList.toggle("toggle-active", this.continuousPlay);
+          this.autoFlowLabel.textContent = this.continuousPlay ? "Auto Flow: On" : "Auto Flow: Off";
+
+          cloudBridge.listenToRoster((cloudRoster) => {
+            if (cloudRoster && cloudRoster.length > 0) {
+              this.students = cloudRoster;
+              this.safeSet("math_students_data", this.students);
+              this.renderRosterList();
+            }
+          });
+
+          if (navigator.userActivation && !navigator.userActivation.hasBeenActive) {
+            this.showChromeAudioUnlockPrompt(() => {
+              this.loadLesson(this.currentLesson, this.currentStageIndex);
+            });
+          } else {
+            this.loadLesson(this.currentLesson, this.currentStageIndex);
           }
         }
 
-        safeStorageSet(key, value) {
+        showChromeAudioUnlockPrompt(resumeCallback) {
+          const overlay = document.getElementById("audio-unlock-overlay");
+          if (!overlay) return;
+          overlay.style.display = "flex";
+
+          const unlockBtn = document.getElementById("btn-unlock-audio");
+          const onUnlock = () => {
+            audioFX.init();
+            if (window.speechSynthesis) {
+              window.speechSynthesis.resume();
+              const prime = new SpeechSynthesisUtterance(" ");
+              window.speechSynthesis.speak(prime);
+            }
+            overlay.style.display = "none";
+            unlockBtn.removeEventListener("click", onUnlock);
+            if (resumeCallback) resumeCallback();
+          };
+
+          unlockBtn.addEventListener("click", onUnlock);
+        }
+
+        safeGet(key, fallback) {
           try {
-            localStorage.setItem(key, JSON.stringify(value));
+            const val = localStorage.getItem(key);
+            return val ? JSON.parse(val) : fallback;
+          } catch (e) { return fallback; }
+        }
+
+        safeSet(key, value) {
+          try { localStorage.setItem(key, JSON.stringify(value)); } catch (e) {}
+        }
+
+        loadTopicsFromStorage() {
+          const stored = localStorage.getItem("p1_math_topics_collection");
+          if (stored) {
+            try { return JSON.parse(stored); } catch (e) {}
+          }
+          return ALL_TOPICS_DEFAULT;
+        }
+
+        saveTopicsToStorage() {
+          this.safeSet("p1_math_topics_collection", this.topics);
+          cloudBridge.saveTopic(this.currentTopic);
+        }
+
+        saveCurrentSessionState() {
+          const state = {
+            topicId: this.currentTopic.topicId,
+            lessonId: this.currentLesson.id,
+            stageIndex: this.currentStageIndex,
+            autoFlow: this.continuousPlay,
+            timestamp: Date.now()
+          };
+          try {
+            localStorage.setItem("p1_math_last_topic_id", state.topicId);
+            localStorage.setItem("p1_math_last_lesson_id", state.lessonId);
+            localStorage.setItem("p1_math_last_stage_index", state.stageIndex.toString());
+            localStorage.setItem("p1_math_autoflow", state.autoFlow ? "true" : "false");
           } catch (e) {}
+          cloudBridge.saveSession(state);
         }
 
         cacheDOMElements() {
-          this.classSelect = document.getElementById("class-select");
           this.topicSelect = document.getElementById("topic-select");
+          this.lessonSelect = document.getElementById("lesson-select");
           this.voiceSelect = document.getElementById("voice-select");
           this.stageBadge = document.getElementById("stage-badge");
           this.voiceBadge = document.getElementById("voice-badge");
@@ -1390,128 +1797,133 @@
           this.boardTitle = document.getElementById("board-title");
           this.boardSubtitle = document.getElementById("board-subtitle");
           this.visualWorkspace = document.getElementById("visual-workspace");
-          this.boardEquation = document.getElementById("board-equation-display");
+
+          this.equationDisplayStrip = document.getElementById("equation-display-strip");
+          this.equationTokensContainer = document.getElementById("equation-tokens-container");
 
           this.teacherAvatar = document.getElementById("teacher-avatar");
           this.teacherLabel = document.getElementById("teacher-label");
           this.teacherSpeech = document.getElementById("teacher-speech");
           this.btnMainContinue = document.getElementById("btn-main-continue");
 
-          // Playback Control Buttons
           this.btnPlay = document.getElementById("btn-play");
           this.btnPause = document.getElementById("btn-pause");
           this.btnReplay = document.getElementById("btn-replay");
           this.btnNext = document.getElementById("btn-next");
+
           this.btnContinuous = document.getElementById("btn-continuous");
+          this.autoFlowLabel = document.getElementById("auto-flow-label");
+          this.btnFullscreen = document.getElementById("btn-fullscreen");
+          this.fullscreenLabel = document.getElementById("fullscreen-label");
+
+          this.activeStudentDisplay = document.getElementById("active-student-display");
 
           this.interactionPanel = document.getElementById("interaction-panel");
-          this.panelTypeTag = document.getElementById("panel-type-tag");
-          this.panelInstruction = document.getElementById("panel-instruction");
           this.panelQuestionText = document.getElementById("panel-question-text");
-          this.panelVisualHint = document.getElementById("panel-visual-hint");
           this.panelInteractionZone = document.getElementById("panel-interaction-zone");
           this.panelFeedback = document.getElementById("panel-feedback");
 
-          this.activeStudentDisplay = document.getElementById("active-student-display");
           this.toast = document.getElementById("app-toast");
-
           this.rosterModal = document.getElementById("roster-modal");
           this.editorModal = document.getElementById("editor-modal");
           this.jsonEditorTextarea = document.getElementById("json-editor-textarea");
           this.jsonStatus = document.getElementById("json-status");
+          this.modalTopicPicker = document.getElementById("modal-topic-picker");
         }
 
         bindEvents() {
-          // Selectors
-          this.classSelect.addEventListener("change", () => this.onClassChange());
           this.topicSelect.addEventListener("change", () => this.onTopicChange());
+          this.lessonSelect.addEventListener("change", () => this.onLessonChange());
 
-          // Voice Selector change
           this.voiceSelect.addEventListener("change", (e) => {
-            const selected = e.target.value;
-            this.voiceEngine.setVoice(selected);
+            this.voiceEngine.setPersona(e.target.value);
             this.updateVoiceLabel();
             this.voiceEngine.stop();
-            this.playCurrentStageSpeech();
+            this.playCurrentStageSequence();
           });
 
-          // Playback Buttons
           this.btnPlay.addEventListener("click", () => {
-            if (this.voiceEngine.isPaused) {
-              this.voiceEngine.resume();
-            } else {
-              this.playCurrentStageSpeech();
-            }
+            audioFX.init();
+            if (this.voiceEngine.isPaused) this.voiceEngine.resume();
+            else this.playCurrentStageSequence();
           });
 
           this.btnPause.addEventListener("click", () => {
             this.voiceEngine.pause();
+            this.isSequenceRunning = false;
           });
 
           this.btnReplay.addEventListener("click", () => {
-            this.playCurrentStageSpeech();
+            audioFX.init();
+            this.runCurrentStage();
           });
 
           this.btnNext.addEventListener("click", () => {
-            this.voiceEngine.stop();
+            audioFX.init();
+            this.stopAllActivities();
             this.handleNextStage();
           });
 
           this.btnMainContinue.addEventListener("click", () => {
-            this.voiceEngine.stop();
+            audioFX.init();
+            this.stopAllActivities();
             this.handleNextStage();
           });
 
-          // Continuous Play Mode Toggle
           this.btnContinuous.addEventListener("click", () => {
             this.continuousPlay = !this.continuousPlay;
             this.btnContinuous.classList.toggle("toggle-active", this.continuousPlay);
-            this.btnContinuous.querySelector("span").textContent = this.continuousPlay ? "Auto Flow: On" : "Auto Flow: Off";
-            this.showToast(this.continuousPlay ? "Continuous Play enabled" : "Continuous Play disabled", 2000);
+            this.autoFlowLabel.textContent = this.continuousPlay ? "Auto Flow: On" : "Auto Flow: Off";
+            this.saveCurrentSessionState();
+            this.showToast(this.continuousPlay ? "Auto Flow Enabled" : "Auto Flow Disabled");
           });
 
-          // Modals
+          this.btnFullscreen.addEventListener("click", () => {
+            this.toggleFullscreen();
+          });
+
+          document.addEventListener("fullscreenchange", () => this.updateFullscreenUI());
+          document.addEventListener("webkitfullscreenchange", () => this.updateFullscreenUI());
+
           document.getElementById("btn-roster").addEventListener("click", () => this.rosterModal.classList.remove("hidden"));
           document.getElementById("btn-close-roster").addEventListener("click", () => this.rosterModal.classList.add("hidden"));
 
-          document.getElementById("btn-editor").addEventListener("click", () => {
-            this.jsonEditorTextarea.value = JSON.stringify(this.currentLesson, null, 2);
-            this.jsonStatus.textContent = "Editing active lesson JSON";
-            this.jsonStatus.style.color = "var(--text-muted)";
-            this.editorModal.classList.remove("hidden");
-          });
-          document.getElementById("btn-close-editor").addEventListener("click", () => this.editorModal.classList.add("hidden"));
-
-          // Roster Actions
           document.getElementById("btn-add-student").addEventListener("click", () => {
             const input = document.getElementById("new-student-name");
             const val = input.value.trim();
             if (val) {
               this.students.push(val);
-              this.safeStorageSet("math_students_data", this.students);
+              this.safeSet("math_students_data", this.students);
+              cloudBridge.saveRoster(this.students);
               this.renderRosterList();
               input.value = "";
             }
           });
 
-          // Save JSON
-          document.getElementById("btn-save-json").addEventListener("click", () => {
+          document.getElementById("btn-editor").addEventListener("click", () => {
+            this.populateModalTopicPicker();
+            this.loadTopicIntoModalEditor(this.currentTopic.topicId);
+            this.editorModal.classList.remove("hidden");
+          });
+          document.getElementById("btn-close-editor").addEventListener("click", () => this.editorModal.classList.add("hidden"));
+
+          this.modalTopicPicker.addEventListener("change", (e) => {
+            this.loadTopicIntoModalEditor(e.target.value);
+          });
+
+          document.getElementById("btn-save-topic-json").addEventListener("click", () => {
             try {
               const parsed = JSON.parse(this.jsonEditorTextarea.value);
-              if (!parsed.id || !parsed.topic || !parsed.stages) {
-                throw new Error("Missing id, topic, or stages.");
-              }
-              const idx = this.lessons.findIndex(l => l.id === parsed.id);
-              if (idx >= 0) {
-                this.lessons[idx] = parsed;
-              } else {
-                this.lessons.push(parsed);
-              }
-              this.safeStorageSet("math_lessons_data", this.lessons);
-              this.populateSelectors();
-              this.loadLesson(parsed);
+              if (!parsed.topicId || !parsed.lessons) throw new Error("Topic must have 'topicId' and 'lessons' array.");
+              const idx = this.topics.findIndex(t => t.topicId === parsed.topicId);
+              if (idx >= 0) this.topics[idx] = parsed;
+              else this.topics.push(parsed);
+
+              this.currentTopic = parsed;
+              this.saveTopicsToStorage();
+              this.populateTopicDropdown();
               this.editorModal.classList.add("hidden");
-              this.showToast("Lesson saved & loaded successfully!", 2500);
+              this.showToast("Topic JSON saved & synced to Cloud!");
             } catch (err) {
               this.jsonStatus.textContent = "❌ " + err.message;
               this.jsonStatus.style.color = "var(--danger)";
@@ -1519,300 +1931,694 @@
           });
         }
 
-        populateSelectors() {
-          const classes = [...new Set(this.lessons.map(l => l.classLevel))];
-          this.classSelect.innerHTML = classes.map(c => `<option value="${c}">${c}</option>`).join("");
-          this.voiceSelect.value = this.voiceEngine.getVoice();
-          this.updateVoiceLabel();
-          this.onClassChange(false);
-        }
+        toggleFullscreen() {
+          const docEl = document.documentElement;
+          const isFull = document.fullscreenElement || document.webkitFullscreenElement;
 
-        updateVoiceLabel() {
-          const isEzinne = this.voiceEngine.getVoice().includes("Ezinne");
-          this.teacherAvatar.textContent = isEzinne ? "👩🏾‍🏫" : "👨🏾‍🏫";
-          this.teacherLabel.textContent = isEzinne ? "Teacher Ezinne" : "Teacher Abeo";
-          this.voiceBadge.textContent = isEzinne ? "Voice: Ezinne (en-NG)" : "Voice: Abeo (en-NG)";
-        }
-
-        onClassChange(autoStart = true) {
-          const selClass = this.classSelect.value;
-          const filtered = this.lessons.filter(l => l.classLevel === selClass);
-          this.topicSelect.innerHTML = filtered.map(t => `<option value="${t.id}">${t.topic}</option>`).join("");
-          if (autoStart && filtered.length > 0) {
-            this.loadLesson(filtered[0]);
+          if (!isFull) {
+            if (docEl.requestFullscreen) docEl.requestFullscreen().catch(() => {});
+            else if (docEl.webkitRequestFullscreen) docEl.webkitRequestFullscreen();
+          } else {
+            if (document.exitFullscreen) document.exitFullscreen().catch(() => {});
+            else if (document.webkitExitFullscreen) document.webkitExitFullscreen();
           }
         }
 
-        onTopicChange() {
-          const found = this.lessons.find(l => l.id === this.topicSelect.value);
-          if (found) this.loadLesson(found);
+        updateFullscreenUI() {
+          const isFull = !!(document.fullscreenElement || document.webkitFullscreenElement);
+          this.btnFullscreen.classList.toggle("fullscreen-active", isFull);
+          this.fullscreenLabel.textContent = isFull ? "Exit Fullscreen" : "Fullscreen";
+          setTimeout(() => this.slateWriter.resize(), 100);
         }
 
-        loadLesson(lesson) {
+        populateTopicDropdown() {
+          this.topicSelect.innerHTML = this.topics.map(t => `<option value="${t.topicId}">${t.topicTitle}</option>`).join("");
+          this.topicSelect.value = this.currentTopic.topicId;
+          this.onTopicChange(false);
+        }
+
+        onTopicChange(autoStart = true) {
+          const selTopicId = this.topicSelect.value;
+          this.currentTopic = this.topics.find(t => t.topicId === selTopicId) || this.topics[0];
+          this.lessonSelect.innerHTML = this.currentTopic.lessons.map(l => `<option value="${l.id}">${l.title}</option>`).join("");
+          if (autoStart && this.currentTopic.lessons.length > 0) {
+            this.currentStageIndex = 0;
+            this.loadLesson(this.currentTopic.lessons[0], 0);
+          }
+        }
+
+        onLessonChange() {
+          const selLessonId = this.lessonSelect.value;
+          const found = this.currentTopic.lessons.find(l => l.id === selLessonId);
+          if (found) {
+            this.currentStageIndex = 0;
+            this.loadLesson(found, 0);
+          }
+        }
+
+        populateModalTopicPicker() {
+          this.modalTopicPicker.innerHTML = this.topics.map(t => `<option value="${t.topicId}">${t.topicTitle}</option>`).join("");
+          this.modalTopicPicker.value = this.currentTopic.topicId;
+        }
+
+        loadTopicIntoModalEditor(topicId) {
+          const topic = this.topics.find(t => t.topicId === topicId) || this.currentTopic;
+          this.jsonEditorTextarea.value = JSON.stringify(topic, null, 2);
+          this.jsonStatus.textContent = `Ready to edit: ${topic.topicTitle}`;
+          this.jsonStatus.style.color = "var(--success)";
+        }
+
+        updateVoiceLabel() {
+          const isEzinne = this.voiceEngine.teacherMode === "ezinne";
+          this.teacherAvatar.textContent = isEzinne ? "👩🏾‍🏫" : "👨🏾‍🏫";
+          this.teacherLabel.textContent = isEzinne ? "Teacher Ezinne" : "Teacher Abeo";
+          this.voiceBadge.textContent = isEzinne ? "Voice: Teacher Ezinne" : "Voice: Teacher Abeo";
+        }
+
+        loadLesson(lesson, startStage = 0) {
           this.currentLesson = lesson;
-          this.currentStageIndex = 0;
-          this.classSelect.value = lesson.classLevel;
-          this.topicSelect.value = lesson.id;
-          this.lessonTopicDisplay.textContent = `${lesson.classLevel} • ${lesson.topic}`;
+          this.currentStageIndex = startStage;
+          this.topicSelect.value = this.currentTopic.topicId;
+          this.lessonSelect.value = lesson.id;
+          this.lessonTopicDisplay.textContent = `Primary 1 • ${this.currentTopic.topicTitle}`;
+          this.saveCurrentSessionState();
           this.runCurrentStage();
         }
 
+        stopAllActivities() {
+          this.isSequenceRunning = false;
+          this.voiceEngine.stop();
+          this.slateWriter.clear();
+          this.questionMarkSlot = null;
+          if (this.equationTokensContainer) {
+            this.equationTokensContainer.innerHTML = "";
+          }
+        }
+
         runCurrentStage() {
+          this.stopAllActivities();
           const stage = this.currentLesson.stages[this.currentStageIndex];
           if (!stage) return;
 
-          this.interactionPanel.classList.add("hidden");
-          this.panelFeedback.classList.add("hidden");
+          this.saveCurrentSessionState();
 
-          // Progress calculation
+          this.interactionPanel.classList.add("hidden");
+          this.interactionPanel.classList.remove("highlight");
+          this.panelFeedback.classList.add("hidden");
+          this.teacherSpeech.classList.remove("checkpoint-mode");
+
           const pct = Math.round(((this.currentStageIndex + 1) / this.currentLesson.stages.length) * 100);
           this.progressBar.style.width = pct + "%";
           this.stageBadge.textContent = stage.stageType.toUpperCase();
 
-          // Update Board Header
-          this.boardTitle.textContent = stage.title || this.currentLesson.topic;
+          this.boardTitle.textContent = stage.title || this.currentLesson.title;
           this.boardSubtitle.textContent = stage.subtitle || "";
 
-          // Render Visual Demonstration
-          this.renderBoardVisual(stage.boardAction);
+          this.renderBoardVisual(stage.boardAction, stage);
 
-          // Format teacher script with natural student callout
           let script = stage.speech || "";
           if (script.includes("{{student_name}}")) {
             const randomName = this.students.length > 0 ? this.students[Math.floor(Math.random() * this.students.length)] : "friend";
-            script = script.replace("{{student_name}}", randomName);
+            script = script.replace(/\{\{student_name\}\}/g, randomName);
             this.activeStudentDisplay.textContent = randomName;
           } else {
             this.activeStudentDisplay.textContent = "Class";
           }
 
           this.teacherSpeech.textContent = script;
+          this.btnMainContinue.textContent = stage.checkpoint ? "Practice Ahead ➔" : "Continue to Next Step ➔";
 
-          // Route stage modes
-          if (stage.stageType === "example" && stage.checkpoint) {
-            this.btnMainContinue.textContent = "Answer Checkpoint Below 👇";
-            this.checkpointIndex = 0;
-            this.renderCheckpoint(stage.checkpoint);
-          } else if (stage.stageType === "quiz") {
-            this.btnMainContinue.textContent = "Answer Quiz Below 👇";
-            this.quizIndex = 0;
-            this.quizScore = 0;
-            this.renderQuizQuestion(stage);
-          } else {
-            this.btnMainContinue.textContent = "Continue to Next Step ➔";
-          }
-
-          // Trigger Nigerian AI Speech
-          this.playCurrentStageSpeech();
+          this.playCurrentStageSequence();
         }
 
-        playCurrentStageSpeech() {
+        getGroupContainer(groupName) {
+          if (!groupName) return document.getElementById("group-items-left");
+          const g = String(groupName).toLowerCase().trim();
+          if (["left", "1", "first", "group1", "group-1", "leftgroup", "groupleft", "basket"].includes(g)) {
+            return document.getElementById("group-items-left");
+          }
+          if (["right", "2", "second", "group2", "group-2", "rightgroup", "groupright", "take", "takeaway"].includes(g)) {
+            return document.getElementById("group-items-right");
+          }
+          return document.getElementById(`group-items-${groupName}`) ||
+                 document.getElementById(groupName) ||
+                 document.getElementById("group-items-right") ||
+                 document.getElementById("group-items-left");
+        }
+
+        ensurePodExists(container, targetIndex) {
+          if (!container) return null;
+          let pods = container.querySelectorAll('.fruit-item-pod');
+          if (targetIndex >= pods.length) {
+            const icon = this.currentIcon || "🍎";
+            if (targetIndex >= 10) container.classList.add('dense-grid');
+            for (let i = pods.length; i <= targetIndex; i++) {
+              const pod = document.createElement('div');
+              pod.className = 'fruit-item-pod';
+              pod.setAttribute('data-idx', i);
+              pod.innerHTML = `<div class="fruit-counter-badge"></div><span class="fruit-icon">${icon}</span>`;
+              container.appendChild(pod);
+            }
+            pods = container.querySelectorAll('.fruit-item-pod');
+          }
+          return pods[targetIndex] || null;
+        }
+
+        revealAllPods(group) {
+          const container = this.getGroupContainer(group);
+          if (!container) return;
+          const pods = container.querySelectorAll('.fruit-item-pod');
+          pods.forEach((pod, idx) => {
+            if (!pod.classList.contains('visible') && !pod.classList.contains('removed-item')) {
+              pod.classList.remove('removed-item', 'recount-glow');
+              pod.classList.add('visible', 'pop-active');
+              const badge = pod.querySelector('.fruit-counter-badge');
+              if (badge) {
+                if (!badge.textContent) badge.textContent = idx + 1;
+                badge.classList.add('show');
+              }
+            }
+          });
+        }
+
+        triggerItemPop(group, index, number) {
+          const container = this.getGroupContainer(group);
+          if (!container) return;
+
+          let targetIdx = index;
+          const targetNum = number != null ? parseInt(number, 10) : null;
+
+          if (targetIdx == null) {
+            if (targetNum != null && !isNaN(targetNum)) {
+              targetIdx = Math.max(0, targetNum - 1);
+            } else {
+              const allPods = Array.from(container.querySelectorAll('.fruit-item-pod'));
+              const firstHidden = allPods.findIndex(p => !p.classList.contains('visible'));
+              targetIdx = firstHidden >= 0 ? firstHidden : allPods.length;
+            }
+          } else {
+            targetIdx = parseInt(targetIdx, 10);
+          }
+
+          this.ensurePodExists(container, targetIdx);
+
+          const pods = container.querySelectorAll('.fruit-item-pod');
+
+          // Auto-reveal any preceding unpopped pods so no blank/ghost spaces occur
+          for (let i = 0; i < targetIdx; i++) {
+            const priorPod = pods[i];
+            if (priorPod && !priorPod.classList.contains('visible')) {
+              priorPod.classList.remove('removed-item', 'recount-glow');
+              priorPod.classList.add('visible', 'pop-active');
+              const priorBadge = priorPod.querySelector('.fruit-counter-badge');
+              if (priorBadge) {
+                priorBadge.textContent = i + 1;
+                priorBadge.classList.add('show');
+              }
+            }
+          }
+
+          const pod = pods[targetIdx];
+          if (pod) {
+            pod.classList.remove('removed-item', 'recount-glow');
+            pod.classList.add('visible', 'pop-active');
+            const badge = pod.querySelector('.fruit-counter-badge');
+            if (badge) {
+              badge.textContent = targetNum != null ? targetNum : (targetIdx + 1);
+              badge.classList.add('show');
+            }
+            const soundPitch = Math.min(1200, 420 + (((targetNum || (targetIdx + 1)) % 25) * 30));
+            audioFX.playPop(soundPitch);
+          }
+        }
+
+        triggerRecountGlow(targetGroup, index, totalNumber) {
+          const container = this.getGroupContainer(targetGroup);
+          if (!container) return;
+
+          let targetIdx = index;
+          const totalNum = totalNumber != null ? parseInt(totalNumber, 10) : null;
+
+          if (targetIdx == null && totalNum != null) {
+            targetIdx = Math.max(0, totalNum - 1);
+          } else {
+            targetIdx = parseInt(targetIdx, 10);
+          }
+
+          const pod = this.ensurePodExists(container, targetIdx);
+          if (pod) {
+            pod.classList.remove('removed-item');
+            pod.classList.add('visible', 'recount-glow');
+            const badge = pod.querySelector('.fruit-counter-badge');
+            if (badge) {
+              badge.textContent = totalNum != null ? totalNum : (targetIdx + 1);
+              badge.style.background = '#86efac';
+              badge.classList.add('show');
+            }
+            const soundPitch = Math.min(1300, 480 + ((totalNum % 25) * 30));
+            audioFX.playPop(soundPitch);
+          }
+        }
+
+        triggerTakeAwayAction(fromIndex, toIndex, countNum) {
+          const leftContainer = document.getElementById('group-items-left');
+          const rightContainer = document.getElementById('group-items-right');
+          if (!leftContainer || !rightContainer) return;
+
+          const leftPods = leftContainer.querySelectorAll('.fruit-item-pod');
+          if (leftPods && leftPods[fromIndex]) {
+            leftPods[fromIndex].classList.add('removed-item');
+          }
+
+          const pod = this.ensurePodExists(rightContainer, toIndex);
+          if (pod) {
+            pod.classList.add('visible', 'pop-active');
+            const badge = pod.querySelector('.fruit-counter-badge');
+            if (badge) {
+              badge.textContent = countNum;
+              badge.style.background = '#fca5a5';
+              badge.classList.add('show');
+            }
+            audioFX.playPop(360 + (countNum * 35));
+          }
+        }
+
+        popEquationTokenBold(tokenStr, isResult = false) {
+          if (!this.equationTokensContainer) return;
+
+          const existingQMark = this.equationTokensContainer.querySelector('.question-mark');
+          if (existingQMark && isResult) {
+            existingQMark.textContent = tokenStr;
+            existingQMark.className = "equation-token-pod result";
+            audioFX.playPop(620);
+            return;
+          }
+
+          const span = document.createElement("span");
+          span.className = "equation-token-pod";
+
+          if (tokenStr === "?") {
+            span.classList.add("question-mark");
+            span.id = "active-q-mark";
+          } else if (["+", "-", "−", "x", "X", "÷", "/"].includes(tokenStr)) {
+            span.classList.add("operator");
+          } else if (tokenStr === "=") {
+            span.classList.add("equals");
+          } else if (isResult) {
+            span.classList.add("result");
+          }
+
+          span.textContent = tokenStr;
+          this.equationTokensContainer.appendChild(span);
+          audioFX.playPop(560);
+        }
+
+        playCurrentStageSequence() {
           const stage = this.currentLesson.stages[this.currentStageIndex];
           if (!stage) return;
 
-          const rawText = this.teacherSpeech.textContent || stage.speech;
-          const cleanText = cleanTextForSpeech(rawText);
+          this.stopAllActivities();
+          this.isSequenceRunning = true;
 
-          this.voiceEngine.speak(cleanText, this.currentLesson.id, () => {
-            // Handle Continuous Play Mode
-            if (this.continuousPlay && stage.stageType !== "quiz" && stage.stageType !== "example") {
-              setTimeout(() => {
-                if (this.continuousPlay) this.handleNextStage();
-              }, 1600);
+          const rawSteps = stage.sequence || [{ say: stage.speech, write: null }];
+          const studentName = this.activeStudentDisplay.textContent;
+
+          const steps = rawSteps.map(step => ({
+            say: step.say ? step.say.replace(/\{\{student_name\}\}/g, studentName) : "",
+            write: step.write != null ? String(step.write) : null,
+            isResult: !!step.isResult,
+            popItem: step.popItem || null,
+            recountItem: step.recountItem || null,
+            takeAwayAction: step.takeAwayAction || null
+          }));
+
+          const nonResultWrites = steps.filter(s => s.write && !s.isResult).map(s => s.write);
+          const resultStep = steps.find(s => s.write && s.isResult);
+
+          let totalCharsBeforeResult = 0;
+          let qMarkChars = 0;
+          let hasQMark = false;
+
+          nonResultWrites.forEach(token => {
+            const str = String(token);
+            totalCharsBeforeResult += str.length;
+            if (str.includes("?")) {
+              hasQMark = true;
+              qMarkChars += str.length;
             }
           });
+
+          let totalCharsWithResult = totalCharsBeforeResult;
+          if (resultStep) {
+            const resLen = String(resultStep.write).length;
+            if (hasQMark) {
+              totalCharsWithResult = totalCharsBeforeResult - qMarkChars + resLen;
+            } else if (totalCharsBeforeResult === 0) {
+              totalCharsWithResult = resLen;
+            } else {
+              totalCharsWithResult = totalCharsBeforeResult + resLen;
+            }
+          }
+
+          const totalSlotsNeeded = Math.max(totalCharsBeforeResult, totalCharsWithResult, 1);
+          const initialTokens = nonResultWrites.length > 0 ? nonResultWrites : (resultStep ? [resultStep.write] : []);
+          this.slateWriter.prepareSequence(initialTokens, totalSlotsNeeded);
+
+          let stepIndex = 0;
+
+          const executeNextStep = () => {
+            if (!this.isSequenceRunning) return;
+
+            if (stepIndex >= steps.length) {
+              this.isSequenceRunning = false;
+
+              if (stage.checkpoint) {
+                setTimeout(() => {
+                  this.announceCheckpoint(stage.checkpoint);
+                }, 600);
+              } else if (this.continuousPlay) {
+                setTimeout(() => {
+                  if (this.continuousPlay) this.handleNextStage();
+                }, 1800);
+              }
+              return;
+            }
+
+            const current = steps[stepIndex];
+            stepIndex++;
+
+            if (current.popItem) {
+              this.triggerItemPop(current.popItem.group, current.popItem.index, current.popItem.num);
+              this.voiceEngine.speakText(cleanTextForSpeech(current.say), () => {
+                setTimeout(executeNextStep, 380);
+              });
+            } else if (current.recountItem) {
+              this.triggerRecountGlow(current.recountItem.target, current.recountItem.index, current.recountItem.totalNum);
+              this.voiceEngine.speakText(cleanTextForSpeech(current.say), () => {
+                setTimeout(executeNextStep, 400);
+              });
+            } else if (current.takeAwayAction) {
+              this.triggerTakeAwayAction(current.takeAwayAction.fromIndex, current.takeAwayAction.toIndex, current.takeAwayAction.num);
+              this.voiceEngine.speakText(cleanTextForSpeech(current.say), () => {
+                setTimeout(executeNextStep, 420);
+              });
+            } else if (current.write) {
+              this.popEquationTokenBold(current.write, current.isResult);
+
+              // Reveal any remaining pods so final state is complete
+              if (current.isResult) {
+                this.revealAllPods('left');
+                this.revealAllPods('right');
+              }
+
+              let targetSlot = null;
+              if (String(current.write).includes("?")) {
+                this.questionMarkSlot = this.slateWriter.currentSlot;
+                this.slateWriter.questionMarkLength = String(current.write).length;
+              } else if (current.isResult && this.questionMarkSlot !== null) {
+                targetSlot = this.questionMarkSlot;
+              }
+
+              let voiceFinished = false, writeFinished = false;
+              const checkBoth = () => { if (voiceFinished && writeFinished) setTimeout(executeNextStep, 320); };
+
+              this.voiceEngine.speakText(cleanTextForSpeech(current.say), () => {
+                voiceFinished = true;
+                checkBoth();
+              });
+
+              this.slateWriter.writeTokenString(current.write, () => {
+                writeFinished = true;
+                checkBoth();
+              }, targetSlot);
+            } else {
+              this.voiceEngine.speakText(cleanTextForSpeech(current.say), () => {
+                setTimeout(executeNextStep, 320);
+              });
+            }
+          };
+
+          executeNextStep();
         }
 
-        // ====================================================================
-        // VISUAL DEMONSTRATION & SYNCHRONIZATION
-        // ====================================================================
-        renderBoardVisual(action) {
+        announceCheckpoint(checkpoint) {
+          const q = checkpoint.questions[0];
+          const studentName = this.students.length > 0 ? this.students[Math.floor(Math.random() * this.students.length)] : "my friend";
+          this.activeStudentDisplay.textContent = studentName;
+
+          this.interactionPanel.classList.remove("hidden");
+          this.interactionPanel.classList.add("highlight");
+          this.teacherSpeech.classList.add("checkpoint-mode");
+          this.btnMainContinue.textContent = "Tap Your Answer Below 👇";
+
+          this.renderCheckpoint(checkpoint);
+
+          const spokenPrompt = q.spokenPrompt || cleanTextForSpeech(q.prompt);
+          const teacherPrompt = `Now, it's your turn, ${studentName}! ${spokenPrompt} Tap the correct answer below.`;
+
+          this.teacherSpeech.textContent = teacherPrompt;
+          this.voiceEngine.speakText(cleanTextForSpeech(teacherPrompt));
+        }
+
+        renderBoardVisual(action, stage = null) {
           this.visualWorkspace.innerHTML = "";
-          this.boardEquation.innerHTML = "";
+          if (this.equationTokensContainer) this.equationTokensContainer.innerHTML = "";
           if (!action) return;
 
-          if (action.type === "SHOW_WELCOME") {
+          const icon = action.icon || "🍎";
+          this.currentIcon = icon;
+
+          if (action.type === "DYNAMIC_COUNT") {
+            const count = parseInt(action.count || 0, 10);
+            const isDense = count > 10 ? " dense-grid" : "";
+            const pods = Array.from({ length: count }, (_, i) => `
+              <div class="fruit-item-pod" data-idx="${i}">
+                <div class="fruit-counter-badge"></div>
+                <span class="fruit-icon">${icon}</span>
+              </div>
+            `).join("");
+            this.visualWorkspace.innerHTML = `<div class="items-grid${isDense}" id="group-items-left">${pods}</div>`;
+          } else if (action.type === "DUAL_GROUP") {
+            let leftCount = parseInt(action.leftCount ?? action.count1 ?? action.firstCount ?? action.left ?? action.group1Count ?? action.group1 ?? 0, 10);
+            let rightCount = parseInt(action.rightCount ?? action.count2 ?? action.secondCount ?? action.right ?? action.group2Count ?? action.group2 ?? 0, 10);
+
+            if (stage && Array.isArray(stage.sequence)) {
+              stage.sequence.forEach(st => {
+                if (st.popItem) {
+                  const g = String(st.popItem.group || '').toLowerCase();
+                  const idx = (st.popItem.index != null) ? parseInt(st.popItem.index, 10) : (st.popItem.num != null ? parseInt(st.popItem.num, 10) - 1 : 0);
+                  const countVal = Math.max(idx + 1, parseInt(st.popItem.num || 0, 10));
+                  if (["left", "1", "first", "group1"].includes(g)) {
+                    if (countVal > leftCount) leftCount = countVal;
+                  } else if (["right", "2", "second", "group2"].includes(g)) {
+                    if (countVal > rightCount) rightCount = countVal;
+                  }
+                }
+              });
+            }
+
+            const isLeftDense = leftCount > 10 ? " dense-grid" : "";
+            const isRightDense = rightCount > 10 ? " dense-grid" : "";
+
+            const leftPods = Array.from({ length: leftCount }, (_, i) => `
+              <div class="fruit-item-pod" data-idx="${i}">
+                <div class="fruit-counter-badge"></div>
+                <span class="fruit-icon">${icon}</span>
+              </div>
+            `).join("");
+
+            const rightPods = Array.from({ length: rightCount }, (_, i) => `
+              <div class="fruit-item-pod" data-idx="${i}">
+                <div class="fruit-counter-badge"></div>
+                <span class="fruit-icon">${icon}</span>
+              </div>
+            `).join("");
+
             this.visualWorkspace.innerHTML = `
-              <div style="text-align:center; padding: 12px;">
-                <div style="font-size: 3.5rem; margin-bottom: 6px;">🌟 📖 📐</div>
-                <div style="color: var(--board-chalk-green); font-size: 1.15rem; font-weight: 700;">
-                  ${action.text}
+              <div class="dual-group-wrap">
+                <div class="sub-box">
+                  <span class="sub-box-label">First Group (${leftCount})</span>
+                  <div class="items-grid${isLeftDense}" id="group-items-left">${leftPods}</div>
+                </div>
+                <div class="dual-operator-sign">+</div>
+                <div class="sub-box">
+                  <span class="sub-box-label">Second Group (${rightCount})</span>
+                  <div class="items-grid${isRightDense}" id="group-items-right">${rightPods}</div>
                 </div>
               </div>
             `;
-          } else if (action.type === "SHOW_SYMBOLS") {
-            this.visualWorkspace.innerHTML = action.symbols.map(s => `
-              <div class="symbol-card-board">
-                <div class="symbol-big">${s.symbol}</div>
-                <div class="symbol-name">${s.name}</div>
-                <div class="symbol-meaning">${s.meaning}</div>
+          } else if (action.type === "SUBTRACTION_TAKEAWAY") {
+            const startCount = parseInt(action.startCount || 0, 10);
+            const takeCount = parseInt(action.takeCount || 0, 10);
+            const isStartDense = startCount > 10 ? " dense-grid" : "";
+            const isTakeDense = takeCount > 10 ? " dense-grid" : "";
+
+            const startPods = Array.from({ length: startCount }, (_, i) => `
+              <div class="fruit-item-pod" data-idx="${i}">
+                <div class="fruit-counter-badge"></div>
+                <span class="fruit-icon">${icon}</span>
               </div>
             `).join("");
-          } else if (action.type === "SYNCED_ADDITION") {
-            // Visual step synchronization
-            const leftIcons = Array(action.leftCount).fill(action.icon).join(" ");
-            const rightIcons = Array(action.rightCount).fill(action.icon).join(" ");
 
-            let html = `
-              <div class="object-group">
-                <div class="items-row">${leftIcons || "·"}</div>
-                <div class="group-count-tag">${action.leftCount}</div>
+            const takePods = Array.from({ length: takeCount }, (_, i) => `
+              <div class="fruit-item-pod" data-idx="${i}">
+                <div class="fruit-counter-badge"></div>
+                <span class="fruit-icon">${icon}</span>
+              </div>
+            `).join("");
+
+            this.visualWorkspace.innerHTML = `
+              <div class="subtraction-container">
+                <div class="sub-box" id="initial-basket-box">
+                  <span class="sub-box-label">Basket (Starts with ${startCount})</span>
+                  <div class="items-grid${isStartDense}" id="group-items-left">${startPods}</div>
+                </div>
+                <div style="font-size:2rem; color:#f87171; font-weight:900;">−</div>
+                <div class="sub-box take-away">
+                  <span class="sub-box-label">Red Take-Away Box (${takeCount})</span>
+                  <div class="items-grid${isTakeDense}" id="group-items-right">${takePods}</div>
+                </div>
               </div>
             `;
+          } else if (action.type === "EQUAL_GROUPS_MULT") {
+            let platesHtml = "";
+            for (let g = 0; g < action.groupCount; g++) {
+              const pods = Array.from({ length: action.itemsPerGroup }, (_, i) => `
+                <div class="fruit-item-pod" data-idx="${i}">
+                  <div class="fruit-counter-badge"></div>
+                  <span class="fruit-icon">${icon}</span>
+                </div>
+              `).join("");
 
-            if (action.rightCount > 0) {
-              html += `
-                <div class="math-operator-sign">+</div>
-                <div class="object-group">
-                  <div class="items-row">${rightIcons}</div>
-                  <div class="group-count-tag">${action.rightCount}</div>
+              platesHtml += `
+                <div class="mult-group-plate">
+                  <div class="mult-plate-title">Plate ${g + 1} (${action.itemsPerGroup})</div>
+                  <div class="items-grid" id="group-items-plate${g}">${pods}</div>
                 </div>
               `;
             }
+            this.visualWorkspace.innerHTML = `<div class="mult-groups-container">${platesHtml}</div>`;
+          } else if (action.type === "DIVISION_SHARING_STEP") {
+            const child1Pods = Array.from({ length: action.eachFinal }, (_, i) => `
+              <div class="fruit-item-pod" data-idx="${i}">
+                <div class="fruit-counter-badge"></div>
+                <span class="fruit-icon">${icon}</span>
+              </div>
+            `).join("");
 
-            this.visualWorkspace.innerHTML = html;
-            this.boardEquation.textContent = action.equation || "";
-          } else if (action.type === "SHOW_SUMMARY") {
+            const child2Pods = Array.from({ length: action.eachFinal }, (_, i) => `
+              <div class="fruit-item-pod" data-idx="${i}">
+                <div class="fruit-counter-badge"></div>
+                <span class="fruit-icon">${icon}</span>
+              </div>
+            `).join("");
+
             this.visualWorkspace.innerHTML = `
-              <div style="background: rgba(255,255,255,0.1); padding: 12px 18px; border-radius: 10px; width: 100%; max-width: 440px;">
-                <ul style="list-style: none; display: flex; flex-direction: column; gap: 8px;">
-                  ${action.points.map(pt => `<li style="font-size: 1rem; color: var(--board-chalk-green); font-weight: 700;">✓ ${pt}</li>`).join("")}
-                </ul>
+              <div class="division-sharing-bench">
+                <div class="sharing-tray">
+                  <div class="sharing-tray-title">Child 1's Plate</div>
+                  <div class="items-grid" id="group-items-child1">${child1Pods}</div>
+                </div>
+                <div style="font-size:2rem; color:var(--board-chalk-cyan); font-weight:900;">÷</div>
+                <div class="sharing-tray">
+                  <div class="sharing-tray-title">Child 2's Plate</div>
+                  <div class="items-grid" id="group-items-child2">${child2Pods}</div>
+                </div>
               </div>
             `;
+          } else if (action.type === "FRACTION_INTERACTIVE_CIRCLE") {
+            this.visualWorkspace.innerHTML = `
+              <div class="interactive-circle-card">
+                <div style="font-size: 0.82rem; font-weight: 800; color: var(--board-chalk-yellow);">
+                  Interactive Circle: Click on the Blue Slice to remove it!
+                </div>
+                <div class="interactive-pie-container" id="interactive-circle-box" title="Click to remove slice">
+                  <div class="pie-half left" id="pie-left">½</div>
+                  <div class="pie-half right" id="pie-right">½</div>
+                </div>
+                <div style="font-size: 0.75rem; color: #86efac;" id="fraction-hint-text">
+                  Two equal halves make 1 whole
+                </div>
+              </div>
+            `;
+
+            const box = document.getElementById("interactive-circle-box");
+            const pieRight = document.getElementById("pie-right");
+            const hintText = document.getElementById("fraction-hint-text");
+
+            box.addEventListener("click", () => {
+              const isRemoved = pieRight.classList.toggle("removed");
+              audioFX.playPop(520);
+              if (isRemoved) {
+                hintText.textContent = "One half removed! Remaining: 1/2 (one-half)";
+                hintText.style.color = "var(--board-chalk-yellow)";
+              } else {
+                hintText.textContent = "Two equal halves make 1 whole";
+                hintText.style.color = "#86efac";
+              }
+            });
           }
         }
 
-        // ====================================================================
-        // CHECKPOINT (DUAL QUESTION RULE)
-        // ====================================================================
         renderCheckpoint(checkpoint) {
           this.interactionPanel.classList.remove("hidden");
-          const q = checkpoint.questions[this.checkpointIndex];
+          this.panelFeedback.classList.add("hidden");
+          const q = checkpoint.questions[0];
 
-          const isQ1 = this.checkpointIndex === 0;
-          this.panelTypeTag.textContent = isQ1 ? "CHECKPOINT • QUESTION 1 (PROCEDURAL)" : "CHECKPOINT • QUESTION 2 (CONCEPTUAL)";
-          this.panelTypeTag.className = isQ1 ? "badge warning" : "badge";
-          this.panelInstruction.textContent = "Check understanding before moving forward";
           this.panelQuestionText.textContent = q.prompt;
-
-          this.panelVisualHint.textContent = q.icon ? `${q.icon.repeat(q.left || 0)}  ${q.right ? "+ " + q.icon.repeat(q.right) : ""}` : "";
-
-          // Render keypad 0-9
-          this.panelInteractionZone.innerHTML = `
-            <div class="keypad-grid">
-              ${[0, 1, 2, 3, 4, 5, 6, 7, 8, 9].map(num => `
-                <button class="key-btn" data-val="${num}">${num}</button>
-              `).join("")}
-            </div>
-          `;
-
-          this.panelInteractionZone.querySelectorAll(".key-btn").forEach(btn => {
-            btn.addEventListener("click", () => {
-              const val = parseInt(btn.getAttribute("data-val"), 10);
-              this.handleCheckpointAnswer(checkpoint, q, val);
-            });
-          });
-        }
-
-        handleCheckpointAnswer(checkpoint, question, userValue) {
-          if (userValue === question.correctAnswer) {
-            this.panelFeedback.className = "feedback-alert correct";
-            this.panelFeedback.innerHTML = "🌟 <strong>Correct!</strong> Excellent thinking!";
-            this.panelFeedback.classList.remove("hidden");
-
-            const successScript = "Excellent work! That is correct!";
-            this.teacherSpeech.textContent = successScript;
-            this.voiceEngine.speak(cleanTextForSpeech(successScript), this.currentLesson.id);
-
-            setTimeout(() => {
-              this.panelFeedback.classList.add("hidden");
-              if (this.checkpointIndex === 0) {
-                this.checkpointIndex = 1;
-                this.renderCheckpoint(checkpoint);
-              } else {
-                this.interactionPanel.classList.add("hidden");
-                this.handleNextStage();
-              }
-            }, 1800);
-          } else {
-            this.panelFeedback.className = "feedback-alert incorrect";
-            this.panelFeedback.innerHTML = `💡 <strong>Let's look at this together:</strong> ${question.remediation}`;
-            this.panelFeedback.classList.remove("hidden");
-
-            this.teacherSpeech.textContent = question.remediation;
-            this.voiceEngine.speak(cleanTextForSpeech(question.remediation), this.currentLesson.id);
-          }
-        }
-
-        // ====================================================================
-        // QUIZ SYSTEM
-        // ====================================================================
-        renderQuizQuestion(stage) {
-          this.interactionPanel.classList.remove("hidden");
-          const q = stage.questions[this.quizIndex];
-
-          this.panelTypeTag.textContent = `QUIZ • QUESTION ${this.quizIndex + 1} OF ${stage.questions.length}`;
-          this.panelTypeTag.className = "badge success";
-          this.panelInstruction.textContent = "Select the correct answer";
-          this.panelQuestionText.textContent = q.prompt;
-          this.panelVisualHint.textContent = "";
 
           this.panelInteractionZone.innerHTML = `
             <div class="options-grid">
-              ${q.options.map((opt, i) => `
-                <button class="option-btn" data-idx="${i}">${opt}</button>
-              `).join("")}
+              ${q.options.map((opt, i) => `<button class="option-btn" data-idx="${i}">${opt}</button>`).join("")}
             </div>
           `;
+
+          let isAnswered = false;
 
           this.panelInteractionZone.querySelectorAll(".option-btn").forEach(btn => {
             btn.addEventListener("click", () => {
+              if (isAnswered) return;
               const idx = parseInt(btn.getAttribute("data-idx"), 10);
               const isCorrect = idx === q.correctIndex;
-              if (isCorrect) this.quizScore++;
+              const studentName = this.activeStudentDisplay.textContent || "my friend";
 
-              this.panelFeedback.className = isCorrect ? "feedback-alert correct" : "feedback-alert incorrect";
-              this.panelFeedback.innerHTML = isCorrect ? `✅ <strong>Correct!</strong> ${q.feedback}` : `❌ <strong>Review:</strong> ${q.feedback}`;
-              this.panelFeedback.classList.remove("hidden");
+              if (isCorrect) {
+                isAnswered = true;
+                btn.style.background = "#dcfce7";
+                btn.style.borderColor = "#164e63";
+                btn.style.color = "#166534";
+                btn.style.transform = "scale(1.05)";
 
-              this.teacherSpeech.textContent = q.feedback;
-              this.voiceEngine.speak(cleanTextForSpeech(q.feedback), this.currentLesson.id);
+                this.panelInteractionZone.querySelectorAll(".option-btn").forEach(b => {
+                  if (b !== btn) b.style.opacity = "0.45";
+                });
 
-              setTimeout(() => {
-                this.panelFeedback.classList.add("hidden");
-                if (this.quizIndex < stage.questions.length - 1) {
-                  this.quizIndex++;
-                  this.renderQuizQuestion(stage);
-                } else {
-                  this.showQuizResults(stage);
-                }
-              }, 2200);
+                this.panelFeedback.className = "feedback-alert correct";
+                this.panelFeedback.innerHTML = `🌟 <strong>Correct!</strong> ${q.feedback}`;
+                this.panelFeedback.classList.remove("hidden");
+
+                const commendSpeech = `Correct! Well done, ${studentName}! ${q.feedback}`;
+                this.teacherSpeech.textContent = commendSpeech;
+                this.voiceEngine.speakText(cleanTextForSpeech(commendSpeech));
+
+                setTimeout(() => {
+                  this.panelFeedback.classList.add("hidden");
+                  this.handleNextStage();
+                }, 2600);
+              } else {
+                btn.style.background = "#fee2e2";
+                btn.style.borderColor = "#dc2626";
+                btn.style.color = "#991b1b";
+
+                this.panelFeedback.className = "feedback-alert incorrect";
+                this.panelFeedback.innerHTML = `💡 <strong>Try again!</strong> Choose another answer.`;
+                this.panelFeedback.classList.remove("hidden");
+
+                const tryAgainSpeech = `Not quite, ${studentName}. Try again! Choose another answer below.`;
+                this.teacherSpeech.textContent = tryAgainSpeech;
+                this.voiceEngine.speakText(cleanTextForSpeech(tryAgainSpeech));
+              }
             });
-          });
-        }
-
-        showQuizResults(stage) {
-          const total = stage.questions.length;
-          const pct = Math.round((this.quizScore / total) * 100);
-
-          this.panelTypeTag.textContent = "LESSON COMPLETED";
-          this.panelInstruction.textContent = "Performance Report";
-          this.panelQuestionText.textContent = `You scored ${this.quizScore} / ${total} (${pct}%)`;
-          this.panelVisualHint.textContent = pct >= 70 ? "🏆 🌟 🎓" : "📖 ✏️ 💡";
-
-          const summarySpeech = `Lesson completed! You scored ${this.quizScore} out of ${total}. Wonderful effort!`;
-          this.teacherSpeech.textContent = summarySpeech;
-          this.voiceEngine.speak(cleanTextForSpeech(summarySpeech), this.currentLesson.id);
-
-          this.panelInteractionZone.innerHTML = `
-            <div style="text-align: center; width: 100%;">
-              <button id="btn-restart-quiz" class="btn-pill primary" style="padding: 10px 18px; font-size: 1rem;">🔄 Restart Lesson</button>
-            </div>
-          `;
-
-          document.getElementById("btn-restart-quiz").addEventListener("click", () => {
-            this.loadLesson(this.currentLesson);
           });
         }
 
@@ -1820,23 +2626,40 @@
           if (this.currentStageIndex < this.currentLesson.stages.length - 1) {
             this.currentStageIndex++;
             this.runCurrentStage();
+            return;
           }
+
+          const currentLessonIdx = this.currentTopic.lessons.findIndex(l => l.id === this.currentLesson.id);
+          if (currentLessonIdx >= 0 && currentLessonIdx < this.currentTopic.lessons.length - 1) {
+            this.showToast("Proceeding to next lesson...");
+            this.currentLesson = this.currentTopic.lessons[currentLessonIdx + 1];
+            this.currentStageIndex = 0;
+            this.lessonSelect.value = this.currentLesson.id;
+            this.saveCurrentSessionState();
+            this.runCurrentStage();
+            return;
+          }
+
+          const currentTopicIdx = this.topics.findIndex(t => t.topicId === this.currentTopic.topicId);
+          if (currentTopicIdx >= 0 && currentTopicIdx < this.topics.length - 1) {
+            this.showToast("Topic completed! Moving to next topic...");
+            this.currentTopic = this.topics[currentTopicIdx + 1];
+            this.currentLesson = this.currentTopic.lessons[0];
+            this.currentStageIndex = 0;
+            this.topicSelect.value = this.currentTopic.topicId;
+            this.onTopicChange(false);
+            this.saveCurrentSessionState();
+            this.runCurrentStage();
+            return;
+          }
+
+          this.showToast("Congratulations! You completed all topics.");
+          this.currentStageIndex = 0;
+          this.saveCurrentSessionState();
         }
 
         updateSpeakingUI(isSpeaking) {
           this.teacherAvatar.classList.toggle("speaking", isSpeaking);
-          let indicator = document.getElementById("audio-pulse");
-          if (isSpeaking) {
-            if (!indicator) {
-              indicator = document.createElement("span");
-              indicator.id = "audio-pulse";
-              indicator.className = "audio-indicator";
-              indicator.textContent = "🔊 Speaking...";
-              this.teacherSpeech.appendChild(indicator);
-            }
-          } else {
-            if (indicator) indicator.remove();
-          }
         }
 
         renderRosterList() {
@@ -1844,7 +2667,7 @@
           ul.innerHTML = this.students.map((st, i) => `
             <li>
               <span>👤 ${st}</span>
-              <button data-idx="${i}">&times;</button>
+              <button data-idx="${i}" title="Remove">&times;</button>
             </li>
           `).join("");
 
@@ -1852,7 +2675,8 @@
             b.addEventListener("click", (e) => {
               const index = parseInt(e.target.getAttribute("data-idx"), 10);
               this.students.splice(index, 1);
-              this.safeStorageSet("math_students_data", this.students);
+              this.safeSet("math_students_data", this.students);
+              cloudBridge.saveRoster(this.students);
               this.renderRosterList();
             });
           });
@@ -1861,19 +2685,30 @@
         showToast(msg, duration = 2500) {
           this.toast.textContent = msg;
           this.toast.style.display = "flex";
-          setTimeout(() => {
-            this.toast.style.display = "none";
-          }, duration);
+          setTimeout(() => { this.toast.style.display = "none"; }, duration);
         }
       }
 
-      // Initialize
+      async function startTeachingApp() {
+        try {
+          await loadExternalTopics();
+          new TeachingEngine();
+        } catch (error) {
+          console.error(error);
+          const message = document.createElement("div");
+          message.style.cssText = "position:fixed;inset:0;display:flex;align-items:center;justify-content:center;padding:24px;background:#f8fafc;color:#0f172a;font-family:Arial,sans-serif;text-align:center;z-index:99999";
+          message.innerHTML = "<div><h2>Lesson content could not be loaded</h2><p>Please open the app through a web server/hosting so the JSON lesson files can be loaded.</p></div>";
+          document.body.appendChild(message);
+        }
+      }
+
       if (document.readyState === "loading") {
-        document.addEventListener("DOMContentLoaded", () => new TeachingEngine());
+        document.addEventListener("DOMContentLoaded", startTeachingApp);
       } else {
-        new TeachingEngine();
+        startTeachingApp();
       }
     })();
   </script>
 </body>
-  </html>
+</html>
+
