@@ -947,7 +947,7 @@
     </header>
 
     <div id="demo-banner">
-      <span>ℹ️ DEMO CONTENT — REPLACE WITH TEXTBOOK CONTENT LATER</span>
+      <span>ℹ️ DEMO CONTENT — LOADED VIA TOPICS.JSON</span>
       <span style="font-weight: 400; opacity: 0.85;">Synced with Firebase Cloud Database</span>
     </div>
 
@@ -1230,32 +1230,6 @@
         ' ': []
       };
 
-      // TOPIC DEFINITIONS
-            // TOPIC CONTENT IS STORED IN EXTERNAL JSON FILES.
-      // The teaching engine and UI below remain unchanged; only the source of
-      // the default topic data has moved out of this HTML file.
-      let ALL_TOPICS_DEFAULT = [];
-      const EXTERNAL_TOPIC_FILES = [
-        "math-topics-json/numbers.json",
-        "math-topics-json/addition.json",
-        "math-topics-json/subtraction.json",
-        "math-topics-json/multiplication.json",
-        "math-topics-json/division.json",
-        "math-topics-json/fractions.json",
-        "math-topics-json/word-problems.json"
-      ];
-
-      async function loadExternalTopics() {
-        const responses = await Promise.all(EXTERNAL_TOPIC_FILES.map(async (file) => {
-          const response = await fetch(file, { cache: "no-store" });
-          if (!response.ok) throw new Error(`Could not load topic JSON: ${file}`);
-          return response.json();
-        }));
-        ALL_TOPICS_DEFAULT = responses;
-      }
-
-      // Default topics are populated by loadExternalTopics().
-
       function cleanTextForSpeech(text) {
         if (!text) return "";
         let cleaned = text;
@@ -1273,7 +1247,6 @@
         return cleaned.replace(/\s{2,}/g, " ").trim();
       }
 
-      /* ROBUST SLATE HANDWRITER SUPPORTING ARBITRARY AND MULTI-DIGIT NUMBERS */
       class SlateHandWriter {
         constructor(canvas, handElement) {
           this.canvas = canvas;
@@ -1528,7 +1501,6 @@
         }
       }
 
-      /* TEACHER VOICE ENGINE WITH CHROME AUTOPLAY PROTECTION */
       class NativeTeacherVoiceEngine {
         constructor(onStateChange, onAutoplayBlocked) {
           this.onStateChange = onStateChange;
@@ -1667,9 +1639,9 @@
         }
       }
 
-      /* MAIN TEACHING ENGINE */
       class TeachingEngine {
-        constructor() {
+        constructor(loadedTopics = []) {
+          this.externalTopics = loadedTopics;
           this.topics = this.loadTopicsFromStorage();
           this.students = this.safeGet("math_students_data", ["Chinedu", "Amina", "Emeka", "Zainab", "David"]);
 
@@ -1679,8 +1651,8 @@
           const savedAutoFlow = localStorage.getItem("p1_math_autoflow") === "true";
 
           this.currentTopic = this.topics.find(t => t.topicId === savedTopicId) || this.topics[0];
-          this.currentLesson = this.currentTopic.lessons.find(l => l.id === savedLessonId) || this.currentTopic.lessons[0];
-          this.currentStageIndex = (!isNaN(savedStageIdx) && savedStageIdx < this.currentLesson.stages.length) ? savedStageIdx : 0;
+          this.currentLesson = (this.currentTopic && this.currentTopic.lessons) ? (this.currentTopic.lessons.find(l => l.id === savedLessonId) || this.currentTopic.lessons[0]) : null;
+          this.currentStageIndex = (this.currentLesson && !isNaN(savedStageIdx) && savedStageIdx < this.currentLesson.stages.length) ? savedStageIdx : 0;
 
           this.continuousPlay = savedAutoFlow;
           this.isSequenceRunning = false;
@@ -1714,12 +1686,14 @@
             }
           });
 
-          if (navigator.userActivation && !navigator.userActivation.hasBeenActive) {
-            this.showChromeAudioUnlockPrompt(() => {
+          if (this.currentLesson) {
+            if (navigator.userActivation && !navigator.userActivation.hasBeenActive) {
+              this.showChromeAudioUnlockPrompt(() => {
+                this.loadLesson(this.currentLesson, this.currentStageIndex);
+              });
+            } else {
               this.loadLesson(this.currentLesson, this.currentStageIndex);
-            });
-          } else {
-            this.loadLesson(this.currentLesson, this.currentStageIndex);
+            }
           }
         }
 
@@ -1760,7 +1734,7 @@
           if (stored) {
             try { return JSON.parse(stored); } catch (e) {}
           }
-          return ALL_TOPICS_DEFAULT;
+          return this.externalTopics || [];
         }
 
         saveTopicsToStorage() {
@@ -1769,6 +1743,7 @@
         }
 
         saveCurrentSessionState() {
+          if (!this.currentTopic || !this.currentLesson) return;
           const state = {
             topicId: this.currentTopic.topicId,
             lessonId: this.currentLesson.id,
@@ -1952,14 +1927,16 @@
         }
 
         populateTopicDropdown() {
+          if (!this.topics || this.topics.length === 0) return;
           this.topicSelect.innerHTML = this.topics.map(t => `<option value="${t.topicId}">${t.topicTitle}</option>`).join("");
-          this.topicSelect.value = this.currentTopic.topicId;
+          this.topicSelect.value = this.currentTopic ? this.currentTopic.topicId : this.topics[0].topicId;
           this.onTopicChange(false);
         }
 
         onTopicChange(autoStart = true) {
           const selTopicId = this.topicSelect.value;
           this.currentTopic = this.topics.find(t => t.topicId === selTopicId) || this.topics[0];
+          if (!this.currentTopic) return;
           this.lessonSelect.innerHTML = this.currentTopic.lessons.map(l => `<option value="${l.id}">${l.title}</option>`).join("");
           if (autoStart && this.currentTopic.lessons.length > 0) {
             this.currentStageIndex = 0;
@@ -1978,11 +1955,12 @@
 
         populateModalTopicPicker() {
           this.modalTopicPicker.innerHTML = this.topics.map(t => `<option value="${t.topicId}">${t.topicTitle}</option>`).join("");
-          this.modalTopicPicker.value = this.currentTopic.topicId;
+          if (this.currentTopic) this.modalTopicPicker.value = this.currentTopic.topicId;
         }
 
         loadTopicIntoModalEditor(topicId) {
           const topic = this.topics.find(t => t.topicId === topicId) || this.currentTopic;
+          if (!topic) return;
           this.jsonEditorTextarea.value = JSON.stringify(topic, null, 2);
           this.jsonStatus.textContent = `Ready to edit: ${topic.topicTitle}`;
           this.jsonStatus.style.color = "var(--success)";
@@ -2124,7 +2102,6 @@
 
           const pods = container.querySelectorAll('.fruit-item-pod');
 
-          // Auto-reveal any preceding unpopped pods so no blank/ghost spaces occur
           for (let i = 0; i < targetIdx; i++) {
             const priorPod = pods[i];
             if (priorPod && !priorPod.classList.contains('visible')) {
@@ -2325,7 +2302,6 @@
             } else if (current.write) {
               this.popEquationTokenBold(current.write, current.isResult);
 
-              // Reveal any remaining pods so final state is complete
               if (current.isResult) {
                 this.revealAllPods('left');
                 this.revealAllPods('right');
@@ -2689,23 +2665,26 @@
         }
       }
 
-      async function startTeachingApp() {
-        try {
-          await loadExternalTopics();
-          new TeachingEngine();
-        } catch (error) {
-          console.error(error);
-          const message = document.createElement("div");
-          message.style.cssText = "position:fixed;inset:0;display:flex;align-items:center;justify-content:center;padding:24px;background:#f8fafc;color:#0f172a;font-family:Arial,sans-serif;text-align:center;z-index:99999";
-          message.innerHTML = "<div><h2>Lesson content could not be loaded</h2><p>Please open the app through a web server/hosting so the JSON lesson files can be loaded.</p></div>";
-          document.body.appendChild(message);
-        }
+      // STARTUP LOADER: Fetches external 'topics.json'
+      function launchApp() {
+        fetch("topics.json")
+          .then(res => {
+            if (!res.ok) throw new Error("File not found");
+            return res.json();
+          })
+          .then(topics => {
+            new TeachingEngine(topics);
+          })
+          .catch(err => {
+            console.warn("Could not load topics.json, attempting cached or cloud data...", err);
+            new TeachingEngine([]);
+          });
       }
 
       if (document.readyState === "loading") {
-        document.addEventListener("DOMContentLoaded", startTeachingApp);
+        document.addEventListener("DOMContentLoaded", launchApp);
       } else {
-        startTeachingApp();
+        launchApp();
       }
     })();
   </script>
