@@ -1,211 +1,608 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Kids Learning Academy — Mathematics</title>
-  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
-  <style>
-    *{box-sizing:border-box}
-    body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;background:linear-gradient(135deg,#eef2ff,#fdf2f8);color:#172033}
-    .wrap{max-width:900px;margin:auto;padding:18px}
-    .card{background:#fff;border-radius:22px;padding:22px;box-shadow:0 10px 30px #0001;margin:14px 0}
-    h1{margin:0 0 6px;color:#5b21b6}
-    h2{margin-top:0}
-    input,select,button{width:100%;padding:13px;margin:6px 0;border-radius:12px;border:1px solid #cbd5e1;font-size:16px}
-    button{background:#6d28d9;color:white;border:0;font-weight:700;cursor:pointer}
-    button.secondary{background:#e2e8f0;color:#172033}
-    .hidden{display:none}
-    .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
-    .room{padding:18px;border:2px solid #ddd6fe;border-radius:18px;background:#faf5ff}
-    .room h3{margin:0 0 5px}
-    .small{font-size:13px;color:#64748b}
-    .status{padding:10px;border-radius:10px;background:#f1f5f9;margin:8px 0}
-    .child{border:1px solid #ddd;padding:12px;border-radius:14px;margin:8px 0;display:flex;justify-content:space-between;gap:8px;align-items:center}
-    .child button{width:auto;margin:0;padding:9px 12px}
-    .badge-active{background:#dcfce7;color:#15803d;padding:4px 8px;border-radius:8px;font-size:12px;font-weight:700;display:inline-block;margin-top:4px}
-    .badge-away{background:#fee2e2;color:#b91c1c;padding:4px 8px;border-radius:8px;font-size:12px;font-weight:700;display:inline-block;margin-top:4px}
-    .badge-offline{background:#f1f5f9;color:#64748b;padding:4px 8px;border-radius:8px;font-size:12px;font-weight:700;display:inline-block;margin-top:4px}
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kids Learning Academy - Mathematics</title>
+
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+
+<style>
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: "Comic Sans MS", Trebuchet MS, sans-serif;
+    background: linear-gradient(135deg, #eef4ff, #fff1f8);
+    color: #333;
+}
+
+header {
+    background: linear-gradient(135deg, #6a3dcc, #8e5de7);
+    color: white;
+    padding: 22px 16px;
+    text-align: center;
+    border-radius: 0 0 25px 25px;
+}
+
+header h1 {
+    margin: 0;
+    font-size: 28px;
+}
+
+header p {
+    margin: 8px 0 0;
+}
+
+.container {
+    width: min(1000px, 94%);
+    margin: 25px auto;
+}
+
+.card {
+    background: white;
+    border-radius: 20px;
+    padding: 22px;
+    margin-bottom: 20px;
+    box-shadow: 0 6px 20px rgba(0,0,0,.08);
+}
+
+h2 {
+    color: #6038c8;
+}
+
+input,
+select,
+button {
+    width: 100%;
+    padding: 13px;
+    margin: 7px 0;
+    border-radius: 12px;
+    border: 1px solid #ccc;
+    font-size: 16px;
+    font-family: inherit;
+}
+
+button {
+    background: #6a3dcc;
+    color: white;
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+button:hover {
+    opacity: .9;
+}
+
+.secondary {
+    background: #eee;
+    color: #333;
+}
+
+.class-grid,
+.child-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 15px;
+}
+
+.class-card,
+.child-card {
+    padding: 20px;
+    border-radius: 18px;
+    background: #f7f3ff;
+    border: 2px solid #e3d8ff;
+    cursor: pointer;
+    text-align: center;
+    transition: transform 0.15s ease, border-color 0.15s ease;
+}
+
+.class-card:hover,
+.child-card:hover {
+    border-color: #6a3dcc;
+    transform: translateY(-2px);
+}
+
+.hidden {
+    display: none;
+}
+
+.status {
+    padding: 10px;
+    border-radius: 10px;
+    background: #f1f1f1;
+    margin: 10px 0;
+}
+
+.error {
+    color: #c62828;
+}
+
+.success {
+    color: #16823b;
+}
+
+/* Parent Live Monitoring Badges */
+.badge-active {
+    background: #dcfce7;
+    color: #15803d;
+    padding: 6px 12px;
+    border-radius: 10px;
+    font-size: 13px;
+    font-weight: bold;
+    display: inline-block;
+    margin-top: 6px;
+}
+
+.badge-away {
+    background: #fee2e2;
+    color: #b91c1c;
+    padding: 6px 12px;
+    border-radius: 10px;
+    font-size: 13px;
+    font-weight: bold;
+    display: inline-block;
+    margin-top: 6px;
+    animation: pulseAway 1.2s infinite ease-in-out;
+}
+
+.badge-offline {
+    background: #f1f1f1;
+    color: #666;
+    padding: 6px 12px;
+    border-radius: 10px;
+    font-size: 13px;
+    font-weight: bold;
+    display: inline-block;
+    margin-top: 6px;
+}
+
+@keyframes pulseAway {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.75; transform: scale(0.97); }
+}
+</style>
 </head>
+
 <body>
-<div class="wrap">
-  <div class="card">
+
+<header>
     <h1>📚 Kids Learning Academy</h1>
-    <div>Mathematics Classroom</div>
-    <div class="small">Parent account • Child profiles • Cloud progress</div>
-  </div>
+    <p>Mathematics Learning Centre</p>
+</header>
 
-  <div id="authCard" class="card">
-    <h2 id="authTitle">Parent Registration</h2>
-    <input id="name" placeholder="Parent name">
-    <input id="email" type="email" placeholder="Email address">
-    <input id="password" type="password" placeholder="Password (6+ characters)">
-    <button id="authBtn">Create Parent Account</button>
-    <button id="toggleAuth" class="secondary">Already have an account? Login</button>
-    <div id="authMsg" class="status"></div>
-  </div>
+<div class="container">
 
-  <div id="appCard" class="hidden">
-    <div class="card">
-      <h2>👨‍👩‍👧 Parent Dashboard</h2>
-      <div id="parentInfo" class="status"></div>
-      <button id="logout" class="secondary">Log out</button>
-    </div>
+    <!-- AUTHENTICATION -->
+    <section id="authSection" class="card">
+        <h2>👨‍👩‍👧 Parent Account</h2>
 
-    <div class="card">
-      <h2>👧 Add a Child</h2>
-      <input id="childName" placeholder="Child's name">
-      <select id="classLevel">
-        <option value="Nursery">Nursery</option>
-        <option value="Primary 1" selected>Primary 1</option>
-        <option>Primary 2</option>
-        <option>Primary 3</option>
-        <option>Primary 4</option>
-        <option>Primary 5</option>
-        <option>Primary 6</option>
-        <option>JSS 1</option>
-        <option>JSS 2</option>
-        <option>JSS 3</option>
-        <option>SS 1</option>
-        <option>SS 2</option>
-        <option>SS 3</option>
-      </select>
-      <button id="addChild">Save Child</button>
-      <div id="childMsg" class="status"></div>
-    </div>
+        <div id="loginBox">
+            <h3>Parent Login</h3>
 
-    <div class="card">
-      <h2>Children & Monitoring</h2>
-      <div id="children"></div>
-    </div>
+            <input id="loginEmail" type="email" placeholder="Parent email">
+            <input id="loginPassword" type="password" placeholder="Password">
 
-    <div id="classroomCard" class="card hidden">
-      <h2 id="selectedChildTitle">Choose a classroom</h2>
-      <div class="grid">
-        <div class="room">
-          <h3>🌱 Elementary</h3>
-          <div class="small">Your existing Elementary classroom.</div>
-          <button onclick="openRoom('Elementary')">Open Elementary</button>
+            <button onclick="loginParent()">Login</button>
+            <button class="secondary" onclick="showRegister()">Create Parent Account</button>
+
+            <p id="loginMessage"></p>
         </div>
-        <div class="room">
-          <h3>🔢 Tens and units(2).html </h3>
-          <div class="small">Tens & Units classroom.</div>
-          <button onclick="openRoom('Tens and units(2).html')">Open Tens and units(2).html</button>
+
+        <div id="registerBox" class="hidden">
+            <h3>Create Parent Account</h3>
+
+            <input id="registerName" type="text" placeholder="Parent name">
+            <input id="registerEmail" type="email" placeholder="Email">
+            <input id="registerPassword" type="password" placeholder="Password (6+ characters)">
+
+            <button onclick="registerParent()">Register</button>
+            <button class="secondary" onclick="showLogin()">Back to Login</button>
+
+            <p id="registerMessage"></p>
         </div>
-        <div class="room">
-          <h3>🏠 H T U</h3>
-          <div class="small">Hundreds, Tens & Units classroom.</div>
-          <button onclick="openRoom('H-T-U')">Open H T U</button>
+    </section>
+
+    <!-- DASHBOARD -->
+    <section id="dashboardSection" class="hidden">
+
+        <div class="card">
+            <h2>👋 Welcome, <span id="parentName"></span></h2>
+
+            <p>
+                Manage your children's Mathematics learning and monitor their activity in real time.
+            </p>
+
+            <button onclick="showAddChild()">➕ Add Child</button>
+            <button class="secondary" onclick="logoutParent()">Logout</button>
         </div>
-      </div>
-    </div>
-  </div>
+
+        <div id="childrenSection" class="card">
+            <h2>👧👦 Your Children & Live Monitoring</h2>
+
+            <div id="childrenList" class="child-grid">
+            </div>
+        </div>
+
+        <!-- ADD CHILD -->
+        <div id="addChildSection" class="card hidden">
+
+            <h2>➕ Register Child</h2>
+
+            <input id="childName" type="text" placeholder="Child's name">
+
+            <select id="childClass">
+                <option value="">Select class</option>
+
+                <option>Nursery</option>
+
+                <option selected>Primary 1</option>
+                <option>Primary 2</option>
+                <option>Primary 3</option>
+                <option>Primary 4</option>
+                <option>Primary 5</option>
+                <option>Primary 6</option>
+
+                <option>JSS 1</option>
+                <option>JSS 2</option>
+                <option>JSS 3</option>
+
+                <option>SS 1</option>
+                <option>SS 2</option>
+                <option>SS 3</option>
+            </select>
+
+            <button onclick="saveChild()">Save Child</button>
+            <button class="secondary" onclick="hideAddChild()">Cancel</button>
+
+            <p id="childMessage"></p>
+        </div>
+
+        <!-- CLASSROOM SELECTION -->
+        <div id="classroomSection" class="card hidden">
+
+            <h2>📖 Choose Mathematics Classroom</h2>
+
+            <p>
+                Child:
+                <strong id="selectedChildName"></strong>
+            </p>
+
+            <p>
+                Class:
+                <strong id="selectedChildClass"></strong>
+            </p>
+
+            <div class="class-grid">
+
+                <div class="class-card" onclick="openElementary()">
+                    <h2>🌱 Elementary</h2>
+                    <p>Beginner Mathematics</p>
+                    <button>Open Elementary</button>
+                </div>
+
+                <div class="class-card" onclick="openTU()">
+                    <h2>🔢 Tens and units(2).html</h2>
+                    <p>Tens & Units Classroom</p>
+                    <button>Open Tens and units(2).html</button>
+                </div>
+
+                <div class="class-card" onclick="openHTU()">
+                    <h2>🏠 H T U</h2>
+                    <p>Hundreds, Tens & Units</p>
+                    <button>Open H T U</button>
+                </div>
+
+            </div>
+
+            <button class="secondary" style="margin-top:16px" onclick="backToChildren()">
+                ← Back to Children
+            </button>
+        </div>
+
+    </section>
+
 </div>
 
 <script>
-const formalFirebaseConfig = {apiKey:"AIzaSyCRL0nXwiqQk4isamyt1UkGWyQ50t3DjYo",authDomain:"kids-school-accademy.firebaseapp.com",databaseURL:"https://kids-school-accademy-default-rtdb.firebaseio.com",projectId:"kids-school-accademy",storageBucket:"kids-school-accademy.firebasestorage.app",messagingSenderId:"227052035126",appId:"1:227052035126:web:432601b90f3d54a00e8c97",measurementId:"G-B8DSN41S9K"};
-if(!firebase.apps.length) firebase.initializeApp(formalFirebaseConfig);
-const auth=firebase.auth(), db=firebase.database();
-
-let loginMode=false, currentChild=null;
-const $=id=>document.getElementById(id), msg=(id,t)=>$(id).textContent=t;
-
-$('toggleAuth').onclick=()=>{
-  loginMode=!loginMode;
-  $('authTitle').textContent=loginMode?'Parent Login':'Parent Registration';
-  $('name').style.display=loginMode?'none':'block';
-  $('authBtn').textContent=loginMode?'Login':'Create Parent Account';
-  $('toggleAuth').textContent=loginMode?'Need an account? Register':'Already have an account? Login';
-  msg('authMsg','');
+const formalFirebaseConfig = {
+    apiKey: "AIzaSyCRL0nXwiqQk4isamyt1UkGWyQ50t3DjYo",
+    authDomain: "kids-school-accademy.firebaseapp.com",
+    databaseURL: "https://kids-school-accademy-default-rtdb.firebaseio.com",
+    projectId: "kids-school-accademy",
+    storageBucket: "kids-school-accademy.firebasestorage.app",
+    messagingSenderId: "227052035126",
+    appId: "1:227052035126:web:432601b90f3d54a00e8c97",
+    measurementId: "G-B8DSN41S9K"
 };
 
-$('authBtn').onclick=async()=>{
-  try{
-    const email=$('email').value.trim(), pw=$('password').value;
-    if(loginMode) await auth.signInWithEmailAndPassword(email,pw);
-    else{
-      const c=await auth.createUserWithEmailAndPassword(email,pw);
-      await db.ref('parents/'+c.user.uid+'/profile').set({name:$('name').value.trim(),email:email,createdAt:firebase.database.ServerValue.TIMESTAMP});
-    }
-  }catch(e){
-    msg('authMsg',e.message);
-  }
-};
-
-$('logout').onclick=()=>auth.signOut();
-
-$('addChild').onclick=async()=>{
-  const u=auth.currentUser, n=$('childName').value.trim(), cl=$('classLevel').value;
-  if(!u||!n) return msg('childMsg','Enter the child name.');
-  const id='child_'+Date.now();
-  await db.ref('parents/'+u.uid+'/children/'+id).set({
-    name:n,
-    classLevel:cl,
-    createdAt:firebase.database.ServerValue.TIMESTAMP,
-    progress:{},
-    presence:{status:'offline',detail:'Not opened yet'}
-  });
-  $('childName').value='';
-  msg('childMsg','Child saved to the cloud.');
-};
-
-function renderChildren(data){
-  const box=$('children');
-  box.innerHTML='';
-  if(!data){
-    box.innerHTML='<div class="small">No children added yet.</div>';
-    return;
-  }
-  Object.entries(data).forEach(([id,c])=>{
-    const d=document.createElement('div');
-    d.className='child';
-    const info=document.createElement('div');
-    const p=c.presence||{};
-    let statusBadge='<div class="badge-offline">⚪ Offline</div>';
-    if(p.status==='active'){
-      statusBadge='<div class="badge-active">🟢 Active in Classroom ('+String(p.detail||'Learning')+')</div>';
-    }else if(p.status==='away'){
-      statusBadge='<div class="badge-away">⚠️ AWAY: Tab switched (Playing games/watching videos)</div>';
-    }
-    info.innerHTML='<b>'+String(c.name||'Child').replace(/[<>&]/g,'')+'</b><br><span class="small">'+String(c.classLevel||'').replace(/[<>&]/g,'')+'</span>'+statusBadge;
-    const b=document.createElement('button');
-    b.textContent='Select';
-    b.onclick=()=>selectChild(id,c.name||'Child',c.classLevel||'');
-    d.append(info,b);
-    box.appendChild(d);
-  });
+if (!firebase.apps.length) {
+    firebase.initializeApp(formalFirebaseConfig);
 }
 
-window.selectChild=(id,name,cl)=>{
-  currentChild={id:id,name:name,classLevel:cl};
-  localStorage.setItem('kla_selected_child',JSON.stringify({...currentChild,parentUid:auth.currentUser.uid}));
-  localStorage.setItem('tu_pupil_name',name);
-  $('classroomCard').classList.remove('hidden');
-  $('selectedChildTitle').textContent='📖 '+name+' • '+cl;
-};
+const auth = firebase.auth();
+const database = firebase.database();
 
-window.openRoom=room=>{
-  if(!currentChild) return;
-  localStorage.setItem('kla_selected_child',JSON.stringify({...currentChild,parentUid:auth.currentUser.uid}));
-  localStorage.setItem('tu_pupil_name',currentChild.name);
-  const target={Elementary:'Elementary/New%20update%20math(1).html','T-U':'T-U/Tens%20and%20units(2).html','H-T-U':'H-T-U/Tens%20and%20units(2).html'}[room]; 
-  if(target) location.href=target;
-};
+let currentUser = null;
+let selectedChild = null;
+let childrenListener = null;
 
-auth.onAuthStateChanged(u=>{
-  if(!u){
-    $('authCard').classList.remove('hidden');
-    $('appCard').classList.add('hidden');
-    return;
-  }
-  $('authCard').classList.add('hidden');
-  $('appCard').classList.remove('hidden');
-  $('parentInfo').textContent='Signed in as '+(u.email||'parent');
-  db.ref('parents/'+u.uid+'/children').on('value',s=>renderChildren(s.val()));
+function showRegister() {
+    document.getElementById("loginBox").classList.add("hidden");
+    document.getElementById("registerBox").classList.remove("hidden");
+}
+
+function showLogin() {
+    document.getElementById("registerBox").classList.add("hidden");
+    document.getElementById("loginBox").classList.remove("hidden");
+}
+
+async function registerParent() {
+    const name = document.getElementById("registerName").value.trim();
+    const email = document.getElementById("registerEmail").value.trim();
+    const password = document.getElementById("registerPassword").value;
+    const message = document.getElementById("registerMessage");
+
+    if (!name || !email || !password) {
+        message.className = "error";
+        message.textContent = "Please complete all fields.";
+        return;
+    }
+
+    try {
+        const result = await auth.createUserWithEmailAndPassword(email, password);
+        currentUser = result.user;
+
+        await database.ref("parents/" + currentUser.uid + "/profile").set({
+            name: name,
+            email: email,
+            createdAt: firebase.database.ServerValue.TIMESTAMP
+        });
+
+        message.className = "success";
+        message.textContent = "Account created successfully.";
+        loadDashboard();
+    } catch (error) {
+        message.className = "error";
+        message.textContent = error.message;
+    }
+}
+
+async function loginParent() {
+    const email = document.getElementById("loginEmail").value.trim();
+    const password = document.getElementById("loginPassword").value;
+    const message = document.getElementById("loginMessage");
+
+    try {
+        const result = await auth.signInWithEmailAndPassword(email, password);
+        currentUser = result.user;
+        loadDashboard();
+    } catch (error) {
+        message.className = "error";
+        message.textContent = error.message;
+    }
+}
+
+auth.onAuthStateChanged(function(user) {
+    if (user) {
+        currentUser = user;
+        loadDashboard();
+    } else {
+        if (currentUser && childrenListener) {
+            database.ref("parents/" + currentUser.uid + "/children").off("value", childrenListener);
+            childrenListener = null;
+        }
+        currentUser = null;
+        document.getElementById("authSection").classList.remove("hidden");
+        document.getElementById("dashboardSection").classList.add("hidden");
+    }
 });
+
+async function loadDashboard() {
+    document.getElementById("authSection").classList.add("hidden");
+    document.getElementById("dashboardSection").classList.remove("hidden");
+    document.getElementById("classroomSection").classList.add("hidden");
+
+    const snapshot = await database.ref("parents/" + currentUser.uid + "/profile").once("value");
+    const profile = snapshot.val();
+
+    document.getElementById("parentName").textContent =
+        profile && profile.name ? profile.name : currentUser.email;
+
+    listenToChildren();
+}
+
+// Real-Time Parent Monitoring: Live Presence Updates
+function listenToChildren() {
+    if (!currentUser) return;
+    const childrenRef = database.ref("parents/" + currentUser.uid + "/children");
+
+    if (childrenListener) {
+        childrenRef.off("value", childrenListener);
+    }
+
+    childrenListener = childrenRef.on("value", function(snapshot) {
+        renderChildren(snapshot.val());
+    });
+}
+
+function renderChildren(children) {
+    const list = document.getElementById("childrenList");
+    list.innerHTML = "";
+
+    if (!children) {
+        list.innerHTML = "<p>No children registered yet.</p>";
+        return;
+    }
+
+    Object.keys(children).forEach(function(id) {
+        const child = children[id];
+        const presence = child.presence || {};
+
+        let statusBadge = '<div class="badge-offline">⚪ Classroom Offline</div>';
+        if (presence.status === 'active') {
+            statusBadge = '<div class="badge-active">🟢 Active in Classroom (' + escapeHTML(presence.detail || 'Learning') + ')</div>';
+        } else if (presence.status === 'away') {
+            statusBadge = '<div class="badge-away">⚠️ AWAY: Tab Switched (Playing Games / Watching Video)</div>';
+        }
+
+        const card = document.createElement("div");
+        card.className = "child-card";
+
+        card.innerHTML = `
+            <h3>👦 ${escapeHTML(child.name)}</h3>
+            <p style="margin:4px 0 8px">${escapeHTML(child.classLevel)}</p>
+            ${statusBadge}
+            <div style="margin-top:14px">
+                <button onclick="selectChild('${id}')">Open Mathematics</button>
+            </div>
+        `;
+
+        list.appendChild(card);
+    });
+}
+
+function showAddChild() {
+    document.getElementById("addChildSection").classList.remove("hidden");
+}
+
+function hideAddChild() {
+    document.getElementById("addChildSection").classList.add("hidden");
+}
+
+async function saveChild() {
+    const name = document.getElementById("childName").value.trim();
+    const classLevel = document.getElementById("childClass").value;
+    const message = document.getElementById("childMessage");
+
+    if (!name || !classLevel) {
+        message.className = "error";
+        message.textContent = "Please enter the child's name and class.";
+        return;
+    }
+
+    const childRef = database.ref("parents/" + currentUser.uid + "/children").push();
+
+    await childRef.set({
+        name: name,
+        classLevel: classLevel,
+        createdAt: firebase.database.ServerValue.TIMESTAMP,
+        progress: {
+            lessonsCompleted: 0,
+            quizAverage: 0
+        },
+        presence: {
+            status: 'offline',
+            detail: 'Registered'
+        }
+    });
+
+    message.className = "success";
+    message.textContent = "Child registered successfully.";
+
+    document.getElementById("childName").value = "";
+    document.getElementById("childClass").value = "Primary 1";
+
+    hideAddChild();
+}
+
+async function selectChild(childId) {
+    const snapshot = await database.ref(
+        "parents/" + currentUser.uid + "/children/" + childId
+    ).once("value");
+
+    selectedChild = {
+        id: childId,
+        ...snapshot.val()
+    };
+
+    // Synchronize to teaching app via local keys and cloud session
+    localStorage.setItem('kla_selected_child', JSON.stringify({
+        id: selectedChild.id,
+        name: selectedChild.name,
+        classLevel: selectedChild.classLevel,
+        parentUid: currentUser.uid
+    }));
+    localStorage.setItem('tu_pupil_name', selectedChild.name);
+
+    document.getElementById("selectedChildName").textContent = selectedChild.name;
+    document.getElementById("selectedChildClass").textContent = selectedChild.classLevel;
+
+    document.getElementById("childrenSection").classList.add("hidden");
+    document.getElementById("addChildSection").classList.add("hidden");
+    document.getElementById("classroomSection").classList.remove("hidden");
+}
+
+function backToChildren() {
+    selectedChild = null;
+    document.getElementById("classroomSection").classList.add("hidden");
+    document.getElementById("childrenSection").classList.remove("hidden");
+}
+
+// Classroom launcher & synchronized navigation
+function openElementary() {
+    launchClassroom("Elementary", "Elementary/New%20update%20math(1).html");
+}
+
+function openTU() {
+    launchClassroom("T-U", "T-U/Tens%20and%20units(2).html");
+}
+
+function openHTU() {
+    launchClassroom("H-T-U", "H-T-U/Tens%20and%20units(2).html");
+}
+
+// Compatibility helper if openRoom is called directly
+window.openRoom = function(room) {
+    if (room === 'Tens and units(2).html' || room === 'T-U') {
+        openTU();
+    } else if (room === 'Elementary') {
+        openElementary();
+    } else if (room === 'H-T-U') {
+        openHTU();
+    }
+};
+
+async function launchClassroom(roomCode, targetUrl) {
+    if (!currentUser || !selectedChild) return;
+
+    localStorage.setItem('kla_selected_child', JSON.stringify({
+        id: selectedChild.id,
+        name: selectedChild.name,
+        classLevel: selectedChild.classLevel,
+        parentUid: currentUser.uid,
+        selectedRoom: roomCode
+    }));
+    localStorage.setItem('tu_pupil_name', selectedChild.name);
+
+    await database.ref(
+        "parents/" + currentUser.uid + "/children/" + selectedChild.id + "/progress"
+    ).update({
+        lastClassroom: roomCode,
+        lastActivity: firebase.database.ServerValue.TIMESTAMP
+    });
+
+    window.location.href = targetUrl;
+}
+
+function logoutParent() {
+    auth.signOut();
+}
+
+function escapeHTML(value) {
+    return String(value)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+}
 </script>
+
 </body>
 </html>
