@@ -587,13 +587,9 @@ async function launchClassroom(roomCode, targetUrl) {
         lastActivity: firebase.database.ServerValue.TIMESTAMP
     });
 
-    window.location.href = targetUrl;
+    // Passes parent ID and child ID directly in the link so it works on any device
+    window.location.href = targetUrl + "?p=" + encodeURIComponent(currentUser.uid) + "&c=" + encodeURIComponent(selectedChild.id) + "&name=" + encodeURIComponent(selectedChild.name);
 }
-
-function logoutParent() {
-    auth.signOut();
-}
-
 function escapeHTML(value) {
     return String(value)
         .replace(/&/g, "&amp;")
