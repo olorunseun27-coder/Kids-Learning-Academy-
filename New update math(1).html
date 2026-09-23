@@ -424,6 +424,7 @@
       z-index: 10;
     }
 
+    /* TEACHER HAND IMAGE INTEGRATION */
     #teacher-hand-cursor {
       position: absolute;
       top: 0;
@@ -435,6 +436,9 @@
       transform: translate(-999px, -999px);
       transition: transform 0.05s ease-out;
       filter: drop-shadow(0 10px 14px rgba(0, 0, 0, 0.5));
+      object-fit: contain;
+      user-select: none;
+      -webkit-user-drag: none;
     }
 
     #teacher-section {
@@ -991,31 +995,8 @@
           <span class="slate-label">Teacher's Writing Slate</span>
           <canvas id="writing-canvas"></canvas>
 
-          <svg id="teacher-hand-cursor" viewBox="0 0 320 320" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <defs>
-              <linearGradient id="skinGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                <stop offset="0%" stop-color="#ffd5b8"/>
-                <stop offset="60%" stop-color="#f5ba93"/>
-                <stop offset="100%" stop-color="#e0996f"/>
-              </linearGradient>
-              <linearGradient id="penBodyGrad" x1="0%" y1="0%" x2="0%" y2="100%">
-                <stop offset="0%" stop-color="#e5e7eb"/>
-                <stop offset="50%" stop-color="#9ca3af"/>
-                <stop offset="100%" stop-color="#4b5563"/>
-              </linearGradient>
-            </defs>
-            <g transform="rotate(-6, 12, 12)">
-              <polygon points="12,12 28,6 28,18" fill="#111827" />
-              <polygon points="28,6 40,3 40,21 28,18" fill="#374151" />
-              <rect x="40" y="3" width="135" height="18" rx="3" fill="url(#penBodyGrad)" />
-              <rect x="175" y="2" width="48" height="20" rx="3" fill="#1f2937" />
-              <path d="M78 80 C95 110 120 180 148 290 L215 260 C180 170 152 105 130 75 Z" fill="url(#skinGrad)" />
-              <path d="M50 42 C42 40 34 32 30 22 C26 12 32 8 42 12 C52 16 68 28 85 45 C98 56 102 70 94 76 C86 82 65 80 50 42 Z" fill="url(#skinGrad)"/>
-              <path d="M48 28 C42 22 45 15 54 16 C63 17 80 32 88 44 C82 48 70 52 58 40 Z" fill="#ffd1b3"/>
-              <path d="M58 42 C56 50 64 62 74 62 C82 62 86 54 84 46 Z" fill="#ebaa81"/>
-              <path d="M144 280 L218 250 L226 270 L152 300 Z" fill="#93c5fd" opacity="0.9"/>
-            </g>
-          </svg>
+          <!-- INTEGRATED TEACHER HAND PNG -->
+          <img id="teacher-hand-cursor" src="teacher-hand.png" alt="Teacher Hand" draggable="false" />
         </div>
       </section>
 
@@ -2245,7 +2226,6 @@
           this.topics = this.loadTopicsFromStorage();
           this.students = this.safeGet("math_students_data", ["Chinedu", "Amina", "Emeka", "Zainab", "David"]);
 
-          // Extract registered child name from URL or local storage
           const urlParams = new URLSearchParams(window.location.search);
           const passedName = urlParams.get("name") || localStorage.getItem("tu_pupil_name");
           this.registeredStudent = passedName ? decodeURIComponent(passedName).trim() : null;
@@ -2255,7 +2235,6 @@
             this.safeSet("math_students_data", this.students);
           }
 
-          // Check if specific topic is passed from container
           const passedTopic = urlParams.get("topic");
           let initialTopic = null;
           let initialLesson = null;
@@ -2288,7 +2267,6 @@
 
           this.cacheDOMElements();
 
-          // Reflect registered pupil name into badge and active display
           if (this.registeredStudent) {
             if (this.pupilBadge) this.pupilBadge.textContent = `🎒 Pupil: ${this.registeredStudent}`;
             if (this.activeStudentDisplay) this.activeStudentDisplay.textContent = this.registeredStudent;
