@@ -98,6 +98,61 @@ button:hover { opacity: .9; }
     margin-top: 10px;
     width: auto;
 }
+
+/* ================= LIVE PARENT MONITORING ================= */
+.monitor-header {
+    display:flex; justify-content:space-between; align-items:center;
+    gap:12px; flex-wrap:wrap;
+}
+.monitor-grid {
+    display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:15px;
+}
+.monitor-card {
+    background:#fff; border:2px solid #e7defb; border-radius:18px;
+    padding:18px; box-shadow:0 4px 14px rgba(0,0,0,.06);
+}
+.monitor-top { display:flex; justify-content:space-between; gap:10px; align-items:flex-start; }
+.monitor-name { font-size:20px; font-weight:bold; color:#4c2aa8; margin:0; }
+.monitor-class { color:#666; margin:4px 0 12px; }
+.monitor-status {
+    display:inline-block; padding:6px 10px; border-radius:999px;
+    font-size:12px; font-weight:bold; white-space:nowrap;
+}
+.monitor-studying { background:#dcfce7; color:#15803d; }
+.monitor-away { background:#fef3c7; color:#a16207; }
+.monitor-offline { background:#f1f5f9; color:#64748b; }
+.monitor-row {
+    display:flex; justify-content:space-between; gap:10px;
+    padding:8px 0; border-bottom:1px solid #eee; font-size:14px;
+}
+.monitor-row:last-child { border-bottom:0; }
+.monitor-label { color:#777; }
+.monitor-value { font-weight:bold; text-align:right; }
+.progress-wrap {
+    background:#eee; height:10px; border-radius:999px; overflow:hidden; margin-top:8px;
+}
+.progress-bar {
+    height:100%; width:0%; background:#6a3dcc; transition:width .3s ease;
+}
+.monitor-actions { display:flex; gap:8px; margin-top:12px; }
+.monitor-actions button { margin:0; padding:10px; }
+.monitor-empty { color:#777; text-align:center; padding:20px; }
+.monitor-summary {
+    display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:12px;
+    margin-top:15px;
+}
+.summary-box {
+    background:#f7f3ff; border:1px solid #e3d8ff; border-radius:15px;
+    padding:15px; text-align:center;
+}
+.summary-number { display:block; font-size:25px; font-weight:bold; color:#6038c8; }
+.summary-label { font-size:12px; color:#666; }
+.live-dot {
+    width:9px; height:9px; border-radius:50%; display:inline-block;
+    margin-right:5px; background:#16a34a;
+}
+.activity-list { margin:8px 0 0; padding-left:20px; color:#555; font-size:13px; }
+
 </style>
 </head>
 
@@ -176,6 +231,27 @@ button:hover { opacity: .9; }
             <div id="childrenList" class="child-grid"></div>
         </div>
 
+
+        <!-- LIVE PARENT MONITORING DASHBOARD -->
+        <div id="monitoringSection" class="card">
+            <div class="monitor-header">
+                <div>
+                    <h2 style="margin-bottom:4px">📡 Live Parent Monitoring</h2>
+                    <p style="margin:0;color:#666">
+                        <span class="live-dot"></span>
+                        Updates automatically when your children use a lesson.
+                    </p>
+                </div>
+                <button class="secondary" onclick="refreshMonitoring()">🔄 Refresh</button>
+            </div>
+
+            <div id="monitorSummary" class="monitor-summary"></div>
+
+            <div id="monitoringGrid" class="monitor-grid" style="margin-top:15px">
+                <div class="monitor-empty">Loading live monitoring...</div>
+            </div>
+        </div>
+
         <!-- ADD CHILD -->
         <div id="addChildSection" class="card hidden">
             <h2>➕ Register Child</h2>
@@ -234,6 +310,10 @@ let currentUser = null;
 let selectedChild = null;
 let childrenListener = null;
 let topicsListener = null;
+let monitoringChildrenListener = null;
+let monitoringStatusListeners = {};
+let monitoringStatusData = {};
+
 
 // Initial starter topics if database is completely fresh
 const DEFAULT_TOPICS = [
@@ -310,6 +390,12 @@ async function loginParent() {
 }
 
 function logoutParent() {
+    Object.keys(monitoringStatusListeners).forEach(function(childId) {
+        database.ref("parents/" + currentUser.uid + "/children/" + childId + "/learningStatus")
+            .off("value", monitoringStatusListeners[childId]);
+    });
+    monitoringStatusListeners = {};
+    monitoringStatusData = {};
     auth.signOut();
 }
 
@@ -321,6 +407,14 @@ auth.onAuthStateChanged(function(user) {
         if (currentUser && childrenListener) {
             database.ref("parents/" + currentUser.uid + "/children").off("value", childrenListener);
         }
+        Object.keys(monitoringStatusListeners).forEach(function(childId) {
+            if (currentUser) {
+                database.ref("parents/" + currentUser.uid + "/children/" + childId + "/learningStatus")
+                    .off("value", monitoringStatusListeners[childId]);
+            }
+        });
+        monitoringStatusListeners = {};
+        monitoringStatusData = {};
         currentUser = null;
         document.getElementById("authSection").classList.remove("hidden");
         document.getElementById("dashboardSection").classList.add("hidden");
@@ -472,7 +566,252 @@ function renderChildren(children) {
         `;
         list.appendChild(card);
     });
+
+    // Keep the live monitoring dashboard synchronized with the same children.
+    startLiveMonitoring(children);
 }
+
+
+// -------------------------------------------------------------
+// LIVE PARENT MONITORING
+// -------------------------------------------------------------
+function startLiveMonitoring(children) {
+    if (!currentUser) return;
+
+    const grid = document.getElementById("monitoringGrid");
+    if (!grid) return;
+
+    // Remove listeners for children that no longer exist.
+    Object.keys(monitoringStatusListeners).forEach(function(childId) {
+        if (!children || !children[childId]) {
+            database.ref("parents/" + currentUser.uid + "/children/" + childId + "/learningStatus")
+                .off("value", monitoringStatusListeners[childId]);
+            delete monitoringStatusListeners[childId];
+            delete monitoringStatusData[childId];
+        }
+    });
+
+    if (!children || Object.keys(children).length === 0) {
+        renderMonitoringCards({});
+        return;
+    }
+
+    Object.keys(children).forEach(function(childId) {
+        if (monitoringStatusListeners[childId]) return;
+
+        const statusRef = database.ref(
+            "parents/" + currentUser.uid + "/children/" + childId + "/learningStatus"
+        );
+
+        const listener = function(snapshot) {
+            monitoringStatusData[childId] = snapshot.val() || {
+                status: "offline"
+            };
+            renderMonitoringCards(children);
+        };
+
+        monitoringStatusListeners[childId] = listener;
+        statusRef.on("value", listener);
+    });
+
+    renderMonitoringCards(children);
+}
+
+function renderMonitoringCards(children) {
+    const grid = document.getElementById("monitoringGrid");
+    const summary = document.getElementById("monitorSummary");
+    if (!grid || !summary) return;
+
+    if (!children || Object.keys(children).length === 0) {
+        grid.innerHTML = '<div class="monitor-empty">Add a child to begin live monitoring.</div>';
+        summary.innerHTML = "";
+        return;
+    }
+
+    let studying = 0;
+    let away = 0;
+    let offline = 0;
+    let totalMinutes = 0;
+
+    grid.innerHTML = "";
+
+    Object.keys(children).forEach(function(childId) {
+        const child = children[childId];
+        const data = monitoringStatusData[childId] || {};
+        const status = getSafeStatus(data);
+
+        if (status === "studying") studying++;
+        else if (status === "away") away++;
+        else offline++;
+
+        totalMinutes += Number(data.todayMinutes || 0);
+
+        const progress = Math.max(0, Math.min(100, Number(data.progress || 0)));
+        const statusClass =
+            status === "studying" ? "monitor-studying" :
+            status === "away" ? "monitor-away" : "monitor-offline";
+
+        const statusText =
+            status === "studying" ? "🟢 STUDYING NOW" :
+            status === "away" ? "🟡 AWAY" : "⚪ OFFLINE";
+
+        const lastActivity = formatTimeAgo(data.lastActivity);
+        const started = formatClock(data.startedAt);
+        const todayTime = formatMinutes(Number(data.todayMinutes || 0));
+
+        const card = document.createElement("div");
+        card.className = "monitor-card";
+        card.innerHTML = `
+            <div class="monitor-top">
+                <div>
+                    <p class="monitor-name">👦 ${escapeHTML(child.name || "Child")}</p>
+                    <p class="monitor-class">${escapeHTML(child.classLevel || "")}</p>
+                </div>
+                <span class="monitor-status ${statusClass}">${statusText}</span>
+            </div>
+
+            <div class="monitor-row">
+                <span class="monitor-label">Subject</span>
+                <span class="monitor-value">${escapeHTML(data.subject || "—")}</span>
+            </div>
+
+            <div class="monitor-row">
+                <span class="monitor-label">Current lesson</span>
+                <span class="monitor-value">${escapeHTML(data.topic || "—")}</span>
+            </div>
+
+            <div class="monitor-row">
+                <span class="monitor-label">Started</span>
+                <span class="monitor-value">${started}</span>
+            </div>
+
+            <div class="monitor-row">
+                <span class="monitor-label">Last activity</span>
+                <span class="monitor-value">${lastActivity}</span>
+            </div>
+
+            <div class="monitor-row">
+                <span class="monitor-label">Today's study time</span>
+                <span class="monitor-value">${todayTime}</span>
+            </div>
+
+            <div style="margin-top:10px">
+                <div style="display:flex;justify-content:space-between;font-size:13px">
+                    <span>Lesson progress</span>
+                    <strong>${progress}%</strong>
+                </div>
+                <div class="progress-wrap">
+                    <div class="progress-bar" style="width:${progress}%"></div>
+                </div>
+            </div>
+
+            ${data.quizScore !== undefined ? `
+            <div class="monitor-row" style="margin-top:8px">
+                <span class="monitor-label">Latest quiz</span>
+                <span class="monitor-value">${escapeHTML(String(data.quizScore))}</span>
+            </div>` : ""}
+
+            <div class="monitor-actions">
+                <button onclick="openChildMonitoring('${childId}')">📊 Details</button>
+            </div>
+        `;
+
+        grid.appendChild(card);
+    });
+
+    summary.innerHTML = `
+        <div class="summary-box">
+            <span class="summary-number">${studying}</span>
+            <span class="summary-label">Studying now</span>
+        </div>
+        <div class="summary-box">
+            <span class="summary-number">${away}</span>
+            <span class="summary-label">Away</span>
+        </div>
+        <div class="summary-box">
+            <span class="summary-number">${offline}</span>
+            <span class="summary-label">Offline</span>
+        </div>
+        <div class="summary-box">
+            <span class="summary-number">${formatMinutes(totalMinutes)}</span>
+            <span class="summary-label">Tracked today</span>
+        </div>
+    `;
+}
+
+function getSafeStatus(data) {
+    const raw = String(data.status || "offline").toLowerCase();
+
+    // If a lesson stops sending heartbeats for 2 minutes,
+    // don't continue showing "studying".
+    const last = Number(data.lastActivity || 0);
+    if (raw === "studying" && last && Date.now() - last > 120000) {
+        return "away";
+    }
+
+    if (raw === "studying") return "studying";
+    if (raw === "away") return "away";
+    return "offline";
+}
+
+function formatMinutes(minutes) {
+    if (!Number.isFinite(minutes) || minutes <= 0) return "0 min";
+    const m = Math.round(minutes);
+    const h = Math.floor(m / 60);
+    const min = m % 60;
+    if (h > 0) return h + "h " + min + "m";
+    return min + " min";
+}
+
+function formatClock(timestamp) {
+    if (!timestamp) return "—";
+    const d = new Date(Number(timestamp));
+    if (isNaN(d.getTime())) return "—";
+    return d.toLocaleTimeString([], {hour:"numeric", minute:"2-digit"});
+}
+
+function formatTimeAgo(timestamp) {
+    if (!timestamp) return "No activity yet";
+    const t = Number(timestamp);
+    const diff = Math.max(0, Date.now() - t);
+
+    if (diff < 60000) return "Just now";
+    const mins = Math.floor(diff / 60000);
+    if (mins < 60) return mins + " min ago";
+    const hours = Math.floor(mins / 60);
+    if (hours < 24) return hours + "h " + (mins % 60) + "m ago";
+    return new Date(t).toLocaleString();
+}
+
+function refreshMonitoring() {
+    if (!currentUser) return;
+    database.ref("parents/" + currentUser.uid + "/children").once("value")
+        .then(function(snapshot) {
+            startLiveMonitoring(snapshot.val() || {});
+        });
+}
+
+function openChildMonitoring(childId) {
+    const data = monitoringStatusData[childId] || {};
+    const childrenRef = database.ref("parents/" + currentUser.uid + "/children/" + childId);
+
+    childrenRef.once("value").then(function(snapshot) {
+        const child = snapshot.val() || {};
+        const message =
+            "Child: " + (child.name || "Unknown") + "\\n" +
+            "Class: " + (child.classLevel || "—") + "\\n" +
+            "Status: " + getSafeStatus(data).toUpperCase() + "\\n" +
+            "Subject: " + (data.subject || "—") + "\\n" +
+            "Lesson: " + (data.topic || "—") + "\\n" +
+            "Progress: " + (data.progress || 0) + "%\\n" +
+            "Today's study time: " + formatMinutes(Number(data.todayMinutes || 0)) + "\\n" +
+            "Quiz: " + (data.quizScore !== undefined ? data.quizScore : "—") + "\\n" +
+            "Last activity: " + formatTimeAgo(data.lastActivity);
+
+        alert(message);
+    });
+}
+
 
 function showAddChild() { document.getElementById("addChildSection").classList.remove("hidden"); }
 function hideAddChild() { document.getElementById("addChildSection").classList.add("hidden"); }
@@ -532,4 +871,4 @@ function escapeHTML(value) {
 </script>
 
 </body>
-</html>
+    </html>
