@@ -10,17 +10,13 @@
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
 
 <style>
-* {
-    box-sizing: border-box;
-}
-
+* { box-sizing: border-box; }
 body {
     margin: 0;
     font-family: "Comic Sans MS", Trebuchet MS, sans-serif;
     background: linear-gradient(135deg, #eef4ff, #fff1f8);
     color: #333;
 }
-
 header {
     background: linear-gradient(135deg, #6a3dcc, #8e5de7);
     color: white;
@@ -28,21 +24,9 @@ header {
     text-align: center;
     border-radius: 0 0 25px 25px;
 }
-
-header h1 {
-    margin: 0;
-    font-size: 28px;
-}
-
-header p {
-    margin: 8px 0 0;
-}
-
-.container {
-    width: min(1000px, 94%);
-    margin: 25px auto;
-}
-
+header h1 { margin: 0; font-size: 28px; }
+header p { margin: 8px 0 0; }
+.container { width: min(1000px, 94%); margin: 25px auto; }
 .card {
     background: white;
     border-radius: 20px;
@@ -50,14 +34,8 @@ header p {
     margin-bottom: 20px;
     box-shadow: 0 6px 20px rgba(0,0,0,.08);
 }
-
-h2 {
-    color: #6038c8;
-}
-
-input,
-select,
-button {
+h2 { color: #6038c8; }
+input, select, button {
     width: 100%;
     padding: 13px;
     margin: 7px 0;
@@ -66,7 +44,6 @@ button {
     font-size: 16px;
     font-family: inherit;
 }
-
 button {
     background: #6a3dcc;
     color: white;
@@ -74,25 +51,15 @@ button {
     cursor: pointer;
     font-weight: bold;
 }
-
-button:hover {
-    opacity: .9;
-}
-
-.secondary {
-    background: #eee;
-    color: #333;
-}
-
-.class-grid,
-.child-grid {
+button:hover { opacity: .9; }
+.secondary { background: #eee; color: #333; }
+.btn-green { background: #16a34a; }
+.class-grid, .child-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
     gap: 15px;
 }
-
-.class-card,
-.child-card {
+.class-card, .child-card {
     padding: 20px;
     border-radius: 18px;
     background: #f7f3ff;
@@ -100,71 +67,36 @@ button:hover {
     cursor: pointer;
     text-align: center;
     transition: transform 0.15s ease, border-color 0.15s ease;
+    position: relative;
 }
-
-.class-card:hover,
-.child-card:hover {
+.class-card:hover, .child-card:hover {
     border-color: #6a3dcc;
     transform: translateY(-2px);
 }
-
-.hidden {
-    display: none;
-}
-
-.status {
-    padding: 10px;
-    border-radius: 10px;
-    background: #f1f1f1;
-    margin: 10px 0;
-}
-
-.error {
-    color: #c62828;
-}
-
-.success {
-    color: #16823b;
-}
-
-/* Parent Live Monitoring Badges */
+.hidden { display: none; }
+.error { color: #c62828; }
+.success { color: #16823b; }
 .badge-active {
-    background: #dcfce7;
-    color: #15803d;
-    padding: 6px 12px;
-    border-radius: 10px;
-    font-size: 13px;
-    font-weight: bold;
-    display: inline-block;
-    margin-top: 6px;
+    background: #dcfce7; color: #15803d; padding: 6px 12px;
+    border-radius: 10px; font-size: 13px; font-weight: bold; display: inline-block; margin-top: 6px;
 }
-
 .badge-away {
+    background: #fee2e2; color: #b91c1c; padding: 6px 12px;
+    border-radius: 10px; font-size: 13px; font-weight: bold; display: inline-block; margin-top: 6px;
+}
+.badge-offline {
+    background: #f1f1f1; color: #666; padding: 6px 12px;
+    border-radius: 10px; font-size: 13px; font-weight: bold; display: inline-block; margin-top: 6px;
+}
+.delete-btn {
     background: #fee2e2;
     color: #b91c1c;
-    padding: 6px 12px;
-    border-radius: 10px;
-    font-size: 13px;
-    font-weight: bold;
-    display: inline-block;
-    margin-top: 6px;
-    animation: pulseAway 1.2s infinite ease-in-out;
-}
-
-.badge-offline {
-    background: #f1f1f1;
-    color: #666;
-    padding: 6px 12px;
-    border-radius: 10px;
-    font-size: 13px;
-    font-weight: bold;
-    display: inline-block;
-    margin-top: 6px;
-}
-
-@keyframes pulseAway {
-    0%, 100% { opacity: 1; transform: scale(1); }
-    50% { opacity: 0.75; transform: scale(0.97); }
+    border: 1px solid #f87171;
+    padding: 4px 8px;
+    font-size: 11px;
+    border-radius: 8px;
+    margin-top: 10px;
+    width: auto;
 }
 </style>
 </head>
@@ -184,129 +116,99 @@ button:hover {
 
         <div id="loginBox">
             <h3>Parent Login</h3>
-
             <input id="loginEmail" type="email" placeholder="Parent email">
             <input id="loginPassword" type="password" placeholder="Password">
-
             <button onclick="loginParent()">Login</button>
             <button class="secondary" onclick="showRegister()">Create Parent Account</button>
-
             <p id="loginMessage"></p>
         </div>
 
         <div id="registerBox" class="hidden">
             <h3>Create Parent Account</h3>
-
             <input id="registerName" type="text" placeholder="Parent name">
             <input id="registerEmail" type="email" placeholder="Email">
             <input id="registerPassword" type="password" placeholder="Password (6+ characters)">
-
             <button onclick="registerParent()">Register</button>
             <button class="secondary" onclick="showLogin()">Back to Login</button>
-
             <p id="registerMessage"></p>
         </div>
     </section>
 
     <!-- DASHBOARD -->
     <section id="dashboardSection" class="hidden">
-
         <div class="card">
             <h2>👋 Welcome, <span id="parentName"></span></h2>
+            <p>Manage your children's learning and add new topics anytime.</p>
+            <div style="display:flex;gap:10px;flex-wrap:wrap">
+                <button onclick="showAddChild()">➕ Add Child</button>
+                <button class="btn-green" onclick="showUploadTopicModal()">📤 Upload / Add New Topic HTML</button>
+                <button class="secondary" onclick="logoutParent()">Logout</button>
+            </div>
+        </div>
 
-            <p>
-                Manage your children's Mathematics learning and monitor their activity in real time.
+        <!-- UPLOAD NEW TOPIC FORM -->
+        <div id="uploadTopicSection" class="card hidden">
+            <h2>📤 Add New Topic to Container</h2>
+            <p style="font-size:14px;color:#666">
+                Whenever you add a new HTML lesson to your repository, add it here and it will appear on the classroom board automatically!
             </p>
 
-            <button onclick="showAddChild()">➕ Add Child</button>
-            <button class="secondary" onclick="logoutParent()">Logout</button>
+            <label style="font-weight:bold;font-size:14px">1. Topic Title (Display Name):</label>
+            <input id="newTopicTitle" type="text" placeholder="e.g. 🍕 Fractions & Shapes">
+
+            <label style="font-weight:bold;font-size:14px">2. Topic Description:</label>
+            <input id="newTopicDesc" type="text" placeholder="e.g. Primary 2 - Parts of a Whole">
+
+            <label style="font-weight:bold;font-size:14px">3. HTML File Name (or Pick from your computer):</label>
+            <input id="newTopicFileName" type="text" placeholder="e.g. fractions.html or Tens and units(2).html">
+            <input type="file" id="htmlFilePicker" accept=".html,.htm" onchange="handleFilePicked(event)">
+
+            <label style="font-weight:bold;font-size:14px">4. Sub-Topic Query Parameter (Optional):</label>
+            <input id="newTopicParam" type="text" placeholder="Optional e.g. addition_htu">
+
+            <button class="btn-green" onclick="saveNewTopic()">💾 Save & Publish Topic</button>
+            <button class="secondary" onclick="hideUploadTopicModal()">Cancel</button>
+            <p id="topicMessage"></p>
         </div>
 
         <div id="childrenSection" class="card">
             <h2>👧👦 Your Children & Live Monitoring</h2>
-
-            <div id="childrenList" class="child-grid">
-            </div>
+            <div id="childrenList" class="child-grid"></div>
         </div>
 
         <!-- ADD CHILD -->
         <div id="addChildSection" class="card hidden">
-
             <h2>➕ Register Child</h2>
-
             <input id="childName" type="text" placeholder="Child's name">
-
             <select id="childClass">
-                <option value="">Select class</option>
-
                 <option>Nursery</option>
-
                 <option selected>Primary 1</option>
                 <option>Primary 2</option>
                 <option>Primary 3</option>
                 <option>Primary 4</option>
                 <option>Primary 5</option>
                 <option>Primary 6</option>
-
-                <option>JSS 1</option>
-                <option>JSS 2</option>
-                <option>JSS 3</option>
-
-                <option>SS 1</option>
-                <option>SS 2</option>
-                <option>SS 3</option>
             </select>
-
             <button onclick="saveChild()">Save Child</button>
             <button class="secondary" onclick="hideAddChild()">Cancel</button>
-
             <p id="childMessage"></p>
         </div>
 
-        <!-- CLASSROOM SELECTION -->
+        <!-- CLASSROOM SELECTION (DYNAMIC CONTAINER) -->
         <div id="classroomSection" class="card hidden">
-
             <h2>📖 Choose Mathematics Classroom</h2>
+            <p>Child: <strong id="selectedChildName"></strong> | Class: <strong id="selectedChildClass"></strong></p>
 
-            <p>
-                Child:
-                <strong id="selectedChildName"></strong>
-            </p>
-
-            <p>
-                Class:
-                <strong id="selectedChildClass"></strong>
-            </p>
-
-            <div class="class-grid">
-
-                <div class="class-card" onclick="openElementary()">
-                    <h2>🌱 Beginner Math</h2>
-                    <p>New update math(1).html</p>
-                    <button>Open Beginner Math</button>
-                </div>
-
-                <div class="class-card" onclick="openTU()">
-                    <h2>🔢 Tens & Units (T U)</h2>
-                    <p>Tens and units(2).html</p>
-                    <button>Open Tens & Units</button>
-                </div>
-
-                <div class="class-card" onclick="openHTU()">
-                    <h2>🏠 Hundreds, Tens & Units</h2>
-                    <p>H T U Classroom</p>
-                    <button>Open H T U</button>
-                </div>
-
+            <!-- THIS CONTAINER RECEIVES ALL UPLOADED TOPICS AUTOMATICALLY -->
+            <div class="class-grid" id="dynamicClassGrid">
+                <!-- Dynamically populated from database / defaults -->
             </div>
 
             <button class="secondary" style="margin-top:16px" onclick="backToChildren()">
                 ← Back to Children
             </button>
         </div>
-
     </section>
-
 </div>
 
 <script>
@@ -331,6 +233,29 @@ const database = firebase.database();
 let currentUser = null;
 let selectedChild = null;
 let childrenListener = null;
+let topicsListener = null;
+
+// Initial starter topics if database is completely fresh
+const DEFAULT_TOPICS = [
+    {
+        title: "🌱 Beginner Math",
+        desc: "Basic Numbers & Counting",
+        fileName: "New update math(1).html",
+        topicParam: ""
+    },
+    {
+        title: "🔢 Tens & Units (T U)",
+        desc: "2-Digit Operations & Chair Rule",
+        fileName: "Tens and units(2).html",
+        topicParam: "addition"
+    },
+    {
+        title: "🏠 Hundreds, Tens & Units (H T U)",
+        desc: "3-Digit Operations & 3-Chair Rule",
+        fileName: "Tens and units(2).html",
+        topicParam: "addition_htu"
+    }
+];
 
 function showRegister() {
     document.getElementById("loginBox").classList.add("hidden");
@@ -357,15 +282,11 @@ async function registerParent() {
     try {
         const result = await auth.createUserWithEmailAndPassword(email, password);
         currentUser = result.user;
-
         await database.ref("parents/" + currentUser.uid + "/profile").set({
             name: name,
             email: email,
             createdAt: firebase.database.ServerValue.TIMESTAMP
         });
-
-        message.className = "success";
-        message.textContent = "Account created successfully.";
         loadDashboard();
     } catch (error) {
         message.className = "error";
@@ -388,6 +309,10 @@ async function loginParent() {
     }
 }
 
+function logoutParent() {
+    auth.signOut();
+}
+
 auth.onAuthStateChanged(function(user) {
     if (user) {
         currentUser = user;
@@ -395,7 +320,6 @@ auth.onAuthStateChanged(function(user) {
     } else {
         if (currentUser && childrenListener) {
             database.ref("parents/" + currentUser.uid + "/children").off("value", childrenListener);
-            childrenListener = null;
         }
         currentUser = null;
         document.getElementById("authSection").classList.remove("hidden");
@@ -410,23 +334,118 @@ async function loadDashboard() {
 
     const snapshot = await database.ref("parents/" + currentUser.uid + "/profile").once("value");
     const profile = snapshot.val();
-
-    document.getElementById("parentName").textContent =
-        profile && profile.name ? profile.name : currentUser.email;
+    document.getElementById("parentName").textContent = profile && profile.name ? profile.name : currentUser.email;
 
     listenToChildren();
+    listenToTopics();
 }
 
-// Real-Time Parent Monitoring: Live Presence Updates
-function listenToChildren() {
-    if (!currentUser) return;
-    const childrenRef = database.ref("parents/" + currentUser.uid + "/children");
+// -------------------------------------------------------------
+// DYNAMIC TOPIC CONTAINER (Listens & Auto-Renders New Lessons)
+// -------------------------------------------------------------
+function listenToTopics() {
+    const topicsRef = database.ref("curriculum/topics");
+    topicsRef.on("value", function(snapshot) {
+        const data = snapshot.val();
+        if (!data) {
+            // Seed database with defaults if empty
+            DEFAULT_TOPICS.forEach(t => topicsRef.push(t));
+        } else {
+            renderTopics(data);
+        }
+    });
+}
 
-    if (childrenListener) {
-        childrenRef.off("value", childrenListener);
+function renderTopics(topicsObj) {
+    const grid = document.getElementById("dynamicClassGrid");
+    grid.innerHTML = "";
+
+    Object.keys(topicsObj).forEach(key => {
+        const item = topicsObj[key];
+        const card = document.createElement("div");
+        card.className = "class-card";
+
+        card.innerHTML = `
+            <h2>${escapeHTML(item.title)}</h2>
+            <p>${escapeHTML(item.desc || '')}</p>
+            <span style="font-size:11px;color:#888;display:block;margin-bottom:8px">📄 ${escapeHTML(item.fileName)}</span>
+            <button onclick="launchClassroom('${escapeHTML(item.title)}', '${escapeHTML(item.fileName)}', '${escapeHTML(item.topicParam || '')}')">Open Lesson</button>
+            <button class="delete-btn" onclick="deleteTopic(event, '${key}')">🗑 Delete Topic</button>
+        `;
+
+        grid.appendChild(card);
+    });
+}
+
+function showUploadTopicModal() {
+    document.getElementById("uploadTopicSection").classList.remove("hidden");
+}
+
+function hideUploadTopicModal() {
+    document.getElementById("uploadTopicSection").classList.add("hidden");
+}
+
+function handleFilePicked(event) {
+    const file = event.target.files[0];
+    if (file) {
+        document.getElementById("newTopicFileName").value = file.name;
+        if (!document.getElementById("newTopicTitle").value) {
+            document.getElementById("newTopicTitle").value = "📖 " + file.name.replace(/\.[^/.]+$/, "");
+        }
+    }
+}
+
+async function saveNewTopic() {
+    const title = document.getElementById("newTopicTitle").value.trim();
+    const desc = document.getElementById("newTopicDesc").value.trim();
+    let fileName = document.getElementById("newTopicFileName").value.trim();
+    const topicParam = document.getElementById("newTopicParam").value.trim();
+    const message = document.getElementById("topicMessage");
+
+    if (!title || !fileName) {
+        message.className = "error";
+        message.textContent = "Please provide both a Title and HTML file name.";
+        return;
     }
 
-    childrenListener = childrenRef.on("value", function(snapshot) {
+    // Strip any folder path to keep flat in GitHub root
+    fileName = fileName.replace(/^.*[\\\/]/, '');
+
+    await database.ref("curriculum/topics").push({
+        title: title,
+        desc: desc,
+        fileName: fileName,
+        topicParam: topicParam,
+        createdAt: firebase.database.ServerValue.TIMESTAMP
+    });
+
+    message.className = "success";
+    message.textContent = "Topic added! New card created in the classroom container.";
+    
+    document.getElementById("newTopicTitle").value = "";
+    document.getElementById("newTopicDesc").value = "";
+    document.getElementById("newTopicFileName").value = "";
+    document.getElementById("newTopicParam").value = "";
+
+    setTimeout(() => {
+        message.textContent = "";
+        hideUploadTopicModal();
+    }, 1200);
+}
+
+async function deleteTopic(event, topicKey) {
+    event.stopPropagation();
+    if (confirm("Are you sure you want to remove this topic card?")) {
+        await database.ref("curriculum/topics/" + topicKey).remove();
+    }
+}
+
+// -------------------------------------------------------------
+// CHILDREN SELECTION & LAUNCHER
+// -------------------------------------------------------------
+function listenToChildren() {
+    if (!currentUser) return;
+    database.ref("parents/" + currentUser.uid + "/children").on("value", function(snapshot) {
         renderChildren(snapshot.val());
     });
 }
@@ -442,187 +461,63 @@ function renderChildren(children) {
 
     Object.keys(children).forEach(function(id) {
         const child = children[id];
-        const presence = child.presence || {};
-
-        let statusBadge = '<div class="badge-offline">⚪ Classroom Offline</div>';
-        if (presence.status === 'active') {
-            statusBadge = '<div class="badge-active">🟢 Active in Classroom (' + escapeHTML(presence.detail || 'Learning') + ')</div>';
-        } else if (presence.status === 'away') {
-            statusBadge = '<div class="badge-away">⚠️ AWAY: Tab Switched (Playing Games / Watching Video)</div>';
-        }
-
         const card = document.createElement("div");
         card.className = "child-card";
-
         card.innerHTML = `
             <h3>👦 ${escapeHTML(child.name)}</h3>
             <p style="margin:4px 0 8px">${escapeHTML(child.classLevel)}</p>
-            ${statusBadge}
             <div style="margin-top:14px">
                 <button onclick="selectChild('${id}')">Open Mathematics</button>
             </div>
         `;
-
         list.appendChild(card);
     });
 }
 
-function showAddChild() {
-    document.getElementById("addChildSection").classList.remove("hidden");
-}
-
-function hideAddChild() {
-    document.getElementById("addChildSection").classList.add("hidden");
-}
+function showAddChild() { document.getElementById("addChildSection").classList.remove("hidden"); }
+function hideAddChild() { document.getElementById("addChildSection").classList.add("hidden"); }
 
 async function saveChild() {
     const name = document.getElementById("childName").value.trim();
     const classLevel = document.getElementById("childClass").value;
-    const message = document.getElementById("childMessage");
+    if (!name) return;
 
-    if (!name || !classLevel) {
-        message.className = "error";
-        message.textContent = "Please enter the child's name and class.";
-        return;
-    }
-
-    const childRef = database.ref("parents/" + currentUser.uid + "/children").push();
-
-    await childRef.set({
+    await database.ref("parents/" + currentUser.uid + "/children").push({
         name: name,
         classLevel: classLevel,
-        createdAt: firebase.database.ServerValue.TIMESTAMP,
-        progress: {
-            lessonsCompleted: 0,
-            quizAverage: 0
-        },
-        presence: {
-            status: 'offline',
-            detail: 'Registered'
-        }
+        createdAt: firebase.database.ServerValue.TIMESTAMP
     });
 
-    message.className = "success";
-    message.textContent = "Child registered successfully.";
-
     document.getElementById("childName").value = "";
-    document.getElementById("childClass").value = "Primary 1";
-
     hideAddChild();
 }
 
 async function selectChild(childId) {
-    const snapshot = await database.ref(
-        "parents/" + currentUser.uid + "/children/" + childId
-    ).once("value");
+    const snapshot = await database.ref("parents/" + currentUser.uid + "/children/" + childId).once("value");
+    selectedChild = { id: childId, ...snapshot.val() };
 
-    selectedChild = {
-        id: childId,
-        ...snapshot.val()
-    };
-
-    localStorage.setItem('kla_selected_child', JSON.stringify({
-        id: selectedChild.id,
-        name: selectedChild.name,
-        classLevel: selectedChild.classLevel,
-        parentUid: currentUser.uid
-    }));
     localStorage.setItem('tu_pupil_name', selectedChild.name);
-
     document.getElementById("selectedChildName").textContent = selectedChild.name;
     document.getElementById("selectedChildClass").textContent = selectedChild.classLevel;
 
     document.getElementById("childrenSection").classList.add("hidden");
-    document.getElementById("addChildSection").classList.add("hidden");
     document.getElementById("classroomSection").classList.remove("hidden");
 }
 
 function backToChildren() {
-    selectedChild = null;
     document.getElementById("classroomSection").classList.add("hidden");
     document.getElementById("childrenSection").classList.remove("hidden");
 }
 
-// -------------------------------------------------------------
-// PLAIN ROOT NAVIGATION (No subfolders, works directly on GitHub)
-// -------------------------------------------------------------
-function openElementary() {
-    launchClassroom("New update math(1).html", "New update math(1).html");
-}
-
-function openTU() {
-    launchClassroom("Tens and units(2).html", "Tens and units(2).html", "addition");
-}
-
-async function openHTU() {
-    // Automatically checks if you have htu.html, HTU.html, or Tens and units(2).html in the root
-    let target = "Tens and units(2).html";
-    if (window.location.protocol.startsWith("http")) {
-        try {
-            const htuCheck = await fetch("htu.html", { method: "HEAD" });
-            if (htuCheck.ok) {
-                target = "htu.html";
-            } else {
-                const HTUCheck = await fetch("HTU.html", { method: "HEAD" });
-                if (HTUCheck.ok) target = "HTU.html";
-            }
-        } catch (e) {
-            target = "Tens and units(2).html";
-        }
-    }
-    launchClassroom("H-T-U", target, "addition_htu");
-}
-
-// Compatibility helper if openRoom is called directly
-window.openRoom = function(room) {
-    if (room === 'Tens and units(2).html' || room === 'T-U') {
-        openTU();
-    } else if (room === 'New update math(1).html' || room === 'Elementary') {
-        openElementary();
-    } else if (room === 'H-T-U' || room === 'HTU') {
-        openHTU();
-    }
-};
-
 async function launchClassroom(roomCode, targetUrl, topic) {
     if (!currentUser || !selectedChild) return;
 
-    if (!targetUrl) {
-        targetUrl = roomCode;
-    }
+    targetUrl = (targetUrl || roomCode).replace(/^.*[\\\/]/, '');
 
-    // Force strip any directory/folder paths so it always opens from root
-    targetUrl = targetUrl.replace(/^.*[\\\/]/, '');
-
-    localStorage.setItem('kla_selected_child', JSON.stringify({
-        id: selectedChild.id,
-        name: selectedChild.name,
-        classLevel: selectedChild.classLevel,
-        parentUid: currentUser.uid,
-        selectedRoom: roomCode
-    }));
-    localStorage.setItem('tu_pupil_name', selectedChild.name);
-    if (topic) {
-        localStorage.setItem('tu_selected_topic', topic);
-    }
-
-    try {
-        await database.ref(
-            "parents/" + currentUser.uid + "/children/" + selectedChild.id + "/progress"
-        ).update({
-            lastClassroom: roomCode,
-            lastActivity: firebase.database.ServerValue.TIMESTAMP
-        });
-    } catch (err) {
-        console.warn("Could not update progress in Firebase:", err);
-    }
-
-    // Safely encode URL for spaces in filenames (e.g. New update math(1).html)
     let url = encodeURI(targetUrl) + "?p=" + encodeURIComponent(currentUser.uid) + "&c=" + encodeURIComponent(selectedChild.id) + "&name=" + encodeURIComponent(selectedChild.name);
     if (topic) {
         url += "&topic=" + encodeURIComponent(topic);
     }
-
     window.location.href = url;
 }
 
