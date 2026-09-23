@@ -281,20 +281,20 @@ button:hover {
             <div class="class-grid">
 
                 <div class="class-card" onclick="openElementary()">
-                    <h2>🌱 New update math(1).html</h2>
-                    <p>Beginner Mathematics</p>
-                    <button>Open New update math(1).html</button>
+                    <h2>🌱 Beginner Math</h2>
+                    <p>New update math(1).html</p>
+                    <button>Open Beginner Math</button>
                 </div>
 
                 <div class="class-card" onclick="openTU()">
-                    <h2>🔢 Tens and units(2).html</h2>
-                    <p>Tens & Units Classroom</p>
-                    <button>Open Tens and units(2).html</button>
+                    <h2>🔢 Tens & Units (T U)</h2>
+                    <p>Tens and units(2).html</p>
+                    <button>Open Tens & Units</button>
                 </div>
 
                 <div class="class-card" onclick="openHTU()">
-                    <h2>🏠 H T U</h2>
-                    <p>Hundreds, Tens & Units</p>
+                    <h2>🏠 Hundreds, Tens & Units</h2>
+                    <p>H T U Classroom</p>
                     <button>Open H T U</button>
                 </div>
 
@@ -521,7 +521,6 @@ async function selectChild(childId) {
         ...snapshot.val()
     };
 
-    // Synchronize to teaching app via local keys and cloud session
     localStorage.setItem('kla_selected_child', JSON.stringify({
         id: selectedChild.id,
         name: selectedChild.name,
@@ -544,32 +543,56 @@ function backToChildren() {
     document.getElementById("childrenSection").classList.remove("hidden");
 }
 
-// Classroom launcher & synchronized navigation
+// -------------------------------------------------------------
+// PLAIN ROOT NAVIGATION (No subfolders, works directly on GitHub)
+// -------------------------------------------------------------
 function openElementary() {
-    launchClassroom("New update math(1).html");
+    launchClassroom("New update math(1).html", "New update math(1).html");
 }
 
 function openTU() {
-    launchClassroom("Tens and units(2).html", "Tens and units(2).html");
+    launchClassroom("Tens and units(2).html", "Tens and units(2).html", "addition");
 }
 
-function openHTU() {
-    launchClassroom("H-T-U", "H-T-U/Tens%20and%20units(2).html");
+async function openHTU() {
+    // Automatically checks if you have htu.html, HTU.html, or Tens and units(2).html in the root
+    let target = "Tens and units(2).html";
+    if (window.location.protocol.startsWith("http")) {
+        try {
+            const htuCheck = await fetch("htu.html", { method: "HEAD" });
+            if (htuCheck.ok) {
+                target = "htu.html";
+            } else {
+                const HTUCheck = await fetch("HTU.html", { method: "HEAD" });
+                if (HTUCheck.ok) target = "HTU.html";
+            }
+        } catch (e) {
+            target = "Tens and units(2).html";
+        }
+    }
+    launchClassroom("H-T-U", target, "addition_htu");
 }
 
 // Compatibility helper if openRoom is called directly
 window.openRoom = function(room) {
     if (room === 'Tens and units(2).html' || room === 'T-U') {
         openTU();
-    } else if (room === 'New update math(1).html') {
+    } else if (room === 'New update math(1).html' || room === 'Elementary') {
         openElementary();
-    } else if (room === 'H-T-U') {
+    } else if (room === 'H-T-U' || room === 'HTU') {
         openHTU();
     }
 };
 
-async function launchClassroom(roomCode, targetUrl) {
+async function launchClassroom(roomCode, targetUrl, topic) {
     if (!currentUser || !selectedChild) return;
+
+    if (!targetUrl) {
+        targetUrl = roomCode;
+    }
+
+    // Force strip any directory/folder paths so it always opens from root
+    targetUrl = targetUrl.replace(/^.*[\\\/]/, '');
 
     localStorage.setItem('kla_selected_child', JSON.stringify({
         id: selectedChild.id,
@@ -579,17 +602,30 @@ async function launchClassroom(roomCode, targetUrl) {
         selectedRoom: roomCode
     }));
     localStorage.setItem('tu_pupil_name', selectedChild.name);
+    if (topic) {
+        localStorage.setItem('tu_selected_topic', topic);
+    }
 
-    await database.ref(
-        "parents/" + currentUser.uid + "/children/" + selectedChild.id + "/progress"
-    ).update({
-        lastClassroom: roomCode,
-        lastActivity: firebase.database.ServerValue.TIMESTAMP
-    });
+    try {
+        await database.ref(
+            "parents/" + currentUser.uid + "/children/" + selectedChild.id + "/progress"
+        ).update({
+            lastClassroom: roomCode,
+            lastActivity: firebase.database.ServerValue.TIMESTAMP
+        });
+    } catch (err) {
+        console.warn("Could not update progress in Firebase:", err);
+    }
 
-    // Passes parent ID and child ID directly in the link so it works on any device
-    window.location.href = targetUrl + "?p=" + encodeURIComponent(currentUser.uid) + "&c=" + encodeURIComponent(selectedChild.id) + "&name=" + encodeURIComponent(selectedChild.name);
+    // Safely encode URL for spaces in filenames (e.g. New update math(1).html)
+    let url = encodeURI(targetUrl) + "?p=" + encodeURIComponent(currentUser.uid) + "&c=" + encodeURIComponent(selectedChild.id) + "&name=" + encodeURIComponent(selectedChild.name);
+    if (topic) {
+        url += "&topic=" + encodeURIComponent(topic);
+    }
+
+    window.location.href = url;
 }
+
 function escapeHTML(value) {
     return String(value)
         .replace(/&/g, "&amp;")
@@ -601,4 +637,4 @@ function escapeHTML(value) {
 </script>
 
 </body>
-    </html>
+</html>
