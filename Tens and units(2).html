@@ -39,13 +39,6 @@ button{cursor:pointer;border:0}
   border-radius:999px;font-size:13px;letter-spacing:0.5px;
 }
 
-#awayAlertBanner{
-  display:none;background:#fee2e2;color:#991b1b;border:2px solid #ef4444;
-  padding:12px 18px;border-radius:14px;font-weight:900;font-size:15px;
-  margin:12px auto;max-width:1100px;text-align:center;animation:pulseAway 1.2s infinite ease-in-out;
-}
-@keyframes pulseAway{0%,100%{transform:scale(1)}50%{transform:scale(0.99);opacity:0.85}}
-
 main{max-width:1200px;margin:auto;padding:16px}
 .screen{display:none}
 .screen.active{display:block}
@@ -65,7 +58,7 @@ main{max-width:1200px;margin:auto;padding:16px}
 .board-header{
   text-align:center;border-bottom:2px dashed rgba(255,255,255,.25);
   padding-bottom:8px;font-weight:900;font-size:14px;letter-spacing:1px;color:#a7f3d0;
-  display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px;
+  display:flex;justify-content:space-between;align-items:center;flex-wrap:gap;gap:6px;
 }
 .board-header-title{flex:1;text-align:center}
 
@@ -224,7 +217,8 @@ main{max-width:1200px;margin:auto;padding:16px}
 
 .topic-select, .voice-select{
   width:100%;padding:8px;border-radius:10px;border:2px solid #a7f3d0;
-  font-weight:800;color:var(--green-dark);background:#f0fdf4;margin-top:4px;margin-bottom:8px;font-size:13px}
+  font-weight:800;color:var(--green-dark);background:#f0fdf4;margin-top:4px;margin-bottom:8px;font-size:13px;
+}
 
 .checkpoint-box{
   background:#eff6ff;border:3px solid #60a5fa;border-radius:16px;
@@ -299,10 +293,6 @@ main{max-width:1200px;margin:auto;padding:16px}
     <input type="text" id="pupilNameInput" class="pupil-input" placeholder="e.g. Flourish" value="Flourish" onchange="updatePupilName(this.value)">
     <button class="btn primary" style="padding:4px 10px;font-size:12px" onclick="savePupilNameBtn()">Save Name</button>
     <span class="pupil-badge" id="currentPupilBadge">Active Pupil: Flourish</span>
-  </div>
-
-  <div id="awayAlertBanner">
-    ⚠️ CLASSROOM PAUSED: You switched away from class! Don't play games or watch videos during mathematics lesson.
   </div>
 
   <main>
@@ -468,101 +458,64 @@ main{max-width:1200px;margin:auto;padding:16px}
 </div>
 
 <script>
-// --- BULLETPROOF DUAL-CHANNEL HEARTBEAT PRESENCE ENGINE ---
+// --- FIREBASE PRESENCE & PARENT MONITORING BRIDGE ---
 const formalFirebaseConfig = {
-  apiKey: "AIzaSyCRL0nXwiqQk4isamyt1UkGWyQ50t3DjYo",
-  authDomain: "kids-school-accademy.firebaseapp.com",
-  databaseURL: "https://kids-school-accademy-default-rtdb.firebaseio.com",
-  projectId: "kids-school-accademy",
-  storageBucket: "kids-school-accademy.firebasestorage.app",
-  messagingSenderId: "227052035126",
-  appId: "1:227052035126:web:432601b90f3d54a00e8c97",
-  measurementId: "G-B8DSN41S9K"
+  apiKey:"AIzaSyCRL0nXwiqQk4isamyt1UkGWyQ50t3DjYo",
+  authDomain:"kids-school-accademy.firebaseapp.com",
+  databaseURL:"https://kids-school-accademy-default-rtdb.firebaseio.com",
+  projectId:"kids-school-accademy",
+  storageBucket:"kids-school-accademy.firebasestorage.app",
+  messagingSenderId:"227052035126",
+  appId:"1:227052035126:web:432601b90f3d54a00e8c97",
+  measurementId:"G-B8DSN41S9K"
 };
-if (!firebase.apps.length) firebase.initializeApp(formalFirebaseConfig);
+if(!firebase.apps.length) firebase.initializeApp(formalFirebaseConfig);
 const klaDb = firebase.database();
 
-// Retrieve Parent UID & Child ID from URL parameters first, then LocalStorage
+// Read from URL parameters first (works across multiple devices), fallback to localStorage
 const urlParams = new URLSearchParams(window.location.search);
-let targetParentUid = urlParams.get('p');
-let targetChildId = urlParams.get('c');
-let targetName = urlParams.get('name');
+let klaSelectedChild = null;
 
-if (!targetParentUid || !targetChildId) {
+if (urlParams.get('p') && urlParams.get('c')) {
+    klaSelectedChild = {
+        parentUid: urlParams.get('p'),
+        id: urlParams.get('c'),
+        name: urlParams.get('name') || 'Flourish'
+    };
+    localStorage.setItem('kla_selected_child', JSON.stringify(klaSelectedChild));
+    if(urlParams.get('name')) localStorage.setItem('tu_pupil_name', urlParams.get('name'));
+} else {
     try {
-        const stored = JSON.parse(localStorage.getItem('kla_selected_child') || '{}');
-        if (stored.parentUid) targetParentUid = stored.parentUid;
-        if (stored.id) targetChildId = stored.id;
-        if (stored.name) targetName = stored.name;
+        klaSelectedChild = JSON.parse(localStorage.getItem('kla_selected_child') || 'null');
     } catch(e){}
 }
 
-// 1. Direct Browser Memory Bus (Zero-latency communication on same device)
-let klaBus = null;
-if ('BroadcastChannel' in window) {
-    klaBus = new BroadcastChannel('kla_presence_bus');
-}
-
-function sendPresencePulse() {
-    if (!targetChildId) return;
-    const isAway = document.hidden;
-    const currentStatus = isAway ? 'away' : 'active';
-    const detailMsg = isAway ? 'Switched tab (Video / Games)' : 'Chalkboard Mathematics';
-
-    // Broadcast across browser memory to parent dashboard
-    if (klaBus) {
-        klaBus.postMessage({
-            childId: targetChildId,
-            status: currentStatus,
-            detail: detailMsg
-        });
-    }
-
-    // Active Cloud Heartbeat Ping to Firebase (Every 3 seconds)
-    if (targetParentUid && targetChildId) {
-        klaDb.ref(`parents/${targetParentUid}/children/${targetChildId}/presence`).set({
-            status: currentStatus,
-            detail: detailMsg,
-            lastPing: firebase.database.ServerValue.TIMESTAMP
-        });
-    }
-}
-
-// Pulse every 3 seconds while child is in the classroom
-setInterval(sendPresencePulse, 3000);
-sendPresencePulse();
-
-// Instant detection when child minimizes tab or opens YouTube / Games
-let hasWarnedAway = false;
 document.addEventListener('visibilitychange', () => {
-    sendPresencePulse();
-    const banner = document.getElementById('awayAlertBanner');
-    if (document.hidden) {
-        hasWarnedAway = true;
-        if (banner) banner.style.display = 'block';
-        if (isPlaying && !isPaused) {
-            pauseLesson();
-        }
-    } else {
-        if (banner) banner.style.display = 'none';
-        if (hasWarnedAway) {
-            hasWarnedAway = false;
-            const pupil = getPupilName();
-            const warningSpeech = `${pupil}, teacher noticed you left the classroom! Focus on your mathematics! No games or film during lessons!`;
-            updateSubtitle(`⚠️ ${warningSpeech}`);
-            speakAsync(warningSpeech, animToken);
-        }
-    }
+  if(document.hidden){
+    updateParentPresence('away', 'Left classroom / Tab switched (playing game or watching film?)');
+  } else {
+    updateParentPresence('active', 'Actively learning on chalkboard');
+  }
+});
+window.addEventListener('blur', () => {
+  if(document.hidden){
+    updateParentPresence('away', 'Left classroom / Window minimized or unfocused');
+  }
+});
+window.addEventListener('focus', () => {
+  updateParentPresence('active', 'Actively learning on chalkboard');
+});
+window.addEventListener('beforeunload', () => {
+  updateParentPresence('closed', 'Exited the classroom');
 });
 
-window.addEventListener('beforeunload', () => {
-    if (targetParentUid && targetChildId) {
-        klaDb.ref(`parents/${targetParentUid}/children/${targetChildId}/presence`).set({
-            status: 'offline',
-            detail: 'Exited classroom',
-            lastPing: 0
-        });
-    }
+window.addEventListener('storage', (e) => {
+  if((e.key === 'kla_selected_child' || e.key === 'tu_pupil_name') && e.newValue){
+    try {
+      const val = e.key === 'tu_pupil_name' ? e.newValue : JSON.parse(e.newValue).name;
+      if(val) updatePupilName(val);
+    }catch(err){}
+  }
 });
 
 const STROKE_DATA = {
@@ -647,19 +600,16 @@ let animToken = 0;
 let hasPlayedIntro = false;
 let stats = JSON.parse(localStorage.getItem('tu_spaced_stats') || '{"completed":0,"practiceCorrect":0,"practiceTotal":0}');
 
-// Initialize pupil name from URL params, container session, or fallback
-let pupilName = targetName || 'Flourish';
-if (!targetName) {
-  try {
-    const syncObj = JSON.parse(localStorage.getItem('kla_selected_child') || 'null');
-    if(syncObj && syncObj.name) {
-      pupilName = syncObj.name;
-    } else if(localStorage.getItem('tu_pupil_name')) {
-      pupilName = localStorage.getItem('tu_pupil_name');
-    }
-  } catch(e){
-    pupilName = localStorage.getItem('tu_pupil_name') || 'Flourish';
+let pupilName = 'Flourish';
+try {
+  const syncObj = JSON.parse(localStorage.getItem('kla_selected_child') || 'null');
+  if(syncObj && syncObj.name) {
+    pupilName = syncObj.name;
+  } else if(localStorage.getItem('tu_pupil_name')) {
+    pupilName = localStorage.getItem('tu_pupil_name');
   }
+} catch(e){
+  pupilName = localStorage.getItem('tu_pupil_name') || 'Flourish';
 }
 
 let currentVoiceRole = localStorage.getItem('tu_selected_voice') || 'abeo';
@@ -728,6 +678,7 @@ function switchTopic(topic){
   selectedProblemIndex = 0;
   hasPlayedIntro = false;
   localStorage.setItem('tu_selected_topic', topic);
+  updateParentPresence('active', `Switched topic to ${topic}`);
   stopSpeech();
   isPlaying = false;
   isPaused = false;
@@ -2193,7 +2144,6 @@ function renderProgress(){
 
 function sleep(ms){ return new Promise(r => setTimeout(r, ms)); }
 
-// Initialize
 initializeQuestionsBank();
 populateQuestionDropdown();
 initGrid();
@@ -2201,4 +2151,4 @@ renderPractice();
 renderProgress();
 </script>
 </body>
-              </html>
+</html>
