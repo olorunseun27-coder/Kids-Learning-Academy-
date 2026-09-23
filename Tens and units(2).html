@@ -5,11 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Nigerian Primary Maths: T U & H T U Chalkboard</title>
 <script src="maths_questions.js"></script>
-
-<!-- FIREBASE SDK COMPAT LIBRARIES -->
-<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
-
 <style>
 :root{
   --green:#047857;--green-dark:#064e3b;--board-bg:#10362a;
@@ -40,10 +35,6 @@ button{cursor:pointer;border:0}
 .pupil-badge{
   background:var(--green-dark);color:#fde047;padding:3px 10px;
   border-radius:999px;font-size:13px;letter-spacing:0.5px;
-}
-.sync-badge{
-  background:#e0f2fe;color:#0369a1;padding:3px 10px;
-  border-radius:999px;font-size:12px;font-weight:800;border:1px solid #bae6fd;
 }
 
 main{max-width:1200px;margin:auto;padding:16px}
@@ -199,10 +190,11 @@ main{max-width:1200px;margin:auto;padding:16px}
 .rough-step{font-size:13px;margin-top:8px;line-height:1.45;color:#e2e8f0}
 
 .hand{
-  position:absolute;width:160px;height:160px;z-index:45;pointer-events:none;
+  position:absolute;width:150px;height:auto;z-index:45;pointer-events:none;
   left:-300px;top:-300px;
   filter:drop-shadow(6px 12px 14px rgba(0,0,0,.55));
   will-change:left,top;
+  user-select:none;
 }
 .hand.hidden{opacity:0}
 
@@ -303,7 +295,6 @@ main{max-width:1200px;margin:auto;padding:16px}
     <input type="text" id="pupilNameInput" class="pupil-input" placeholder="e.g. Flourish" value="Flourish" onchange="updatePupilName(this.value)">
     <button class="btn primary" style="padding:4px 10px;font-size:12px" onclick="savePupilNameBtn()">Save Name</button>
     <span class="pupil-badge" id="currentPupilBadge">Active Pupil: Flourish</span>
-    <span class="sync-badge" id="parentSyncBadge">📡 Parent Live Sync: Standalone</span>
   </div>
 
   <main>
@@ -317,14 +308,8 @@ main{max-width:1200px;margin:auto;padding:16px}
             </div>
             
             <div class="chalk-area" id="chalkArea">
-              <svg id="teacherHand" class="hand hidden" viewBox="-4 -4 160 160" overflow="visible">
-                <polygon points="0,0 14,24 28,15 10,-3" fill="#f8fafc" stroke="#94a3b8" stroke-width="1.5"/>
-                <polygon points="0,0 4,8 10,-3" fill="#e2e8f0"/>
-                <path d="M12,18 C18,10, 34,10, 40,22 C46,32, 38,42, 24,36 Z" fill="#8d5b4c"/>
-                <path d="M24,24 C34,16, 54,18, 60,32 C66,46, 50,58, 34,50 Z" fill="#714234"/>
-                <path d="M32,36 C54,24, 90,40, 100,62 C110,84, 94,120, 72,135 C56,145, 42,130, 36,108 Z" fill="#8d5b4c"/>
-                <path d="M72,130 L135,175 L115,195 L58,145 Z" fill="#334155"/>
-              </svg>
+              <!-- INTEGRATED TEACHER HAND IMAGE -->
+              <img id="teacherHand" class="hand hidden" src="teacher-hand.png" alt="Teacher Hand">
 
               <div class="main-calc">
                 <div id="statedQuestion" class="stated-question"></div>
@@ -469,184 +454,6 @@ main{max-width:1200px;margin:auto;padding:16px}
 </div>
 
 <script>
-// =============================================================
-// FIREBASE LIVE TRACKING & MULTI-DEVICE MONITORING ENGINE
-// =============================================================
-const formalFirebaseConfig = {
-    apiKey: "AIzaSyCRL0nXwiqQk4isamyt1UkGWyQ50t3DjYo",
-    authDomain: "kids-school-accademy.firebaseapp.com",
-    databaseURL: "https://kids-school-accademy-default-rtdb.firebaseio.com",
-    projectId: "kids-school-accademy",
-    storageBucket: "kids-school-accademy.firebasestorage.app",
-    messagingSenderId: "227052035126",
-    appId: "1:227052035126:web:432601b90f3d54a00e8c97",
-    measurementId: "G-B8DSN41S9K"
-};
-
-if (!firebase.apps.length) {
-    firebase.initializeApp(formalFirebaseConfig);
-}
-
-const db = firebase.database();
-let statusRef = null;
-let connectedRef = null;
-let isAway = false;
-let idleTimer = null;
-const IDLE_TIMEOUT_MS = 60000;       // 60 sec idle marks status as "away"
-const HEARTBEAT_INTERVAL_MS = 20000; // syncs every 20 sec
-
-const KidTracker = {
-    parentUid: null,
-    childId: null,
-    childName: null,
-    
-    init: function() {
-        const params = new URLSearchParams(window.location.search);
-        this.parentUid = params.get("p");
-        this.childId = params.get("c");
-        const urlName = params.get("name");
-        const urlTopic = params.get("topic");
-
-        if (urlName) {
-            updatePupilName(urlName);
-        }
-        if (urlTopic) {
-            currentTopic = urlTopic;
-            localStorage.setItem('tu_selected_topic', currentTopic);
-        }
-
-        const badge = document.getElementById("parentSyncBadge");
-        if (!this.parentUid || !this.childId) {
-            if (badge) badge.textContent = "📡 Parent Live Sync: Standalone Mode";
-            return;
-        }
-
-        if (badge) {
-            badge.style.background = "#dcfce7";
-            badge.style.color = "#15803d";
-            badge.style.borderColor = "#86efac";
-            badge.textContent = "🟢 Live Connected to Parent Device";
-        }
-
-        statusRef = db.ref("parents/" + this.parentUid + "/children/" + this.childId + "/learningStatus");
-        connectedRef = db.ref(".info/connected");
-
-        // Real-time automatic disconnect handler
-        connectedRef.on("value", function(snap) {
-            if (snap.val() === true) {
-                statusRef.onDisconnect().update({
-                    status: "offline",
-                    lastActivity: firebase.database.ServerValue.TIMESTAMP
-                });
-                KidTracker.pushStatus("studying");
-            }
-        });
-
-        // Tab focus & visibility change detection
-        document.addEventListener("visibilitychange", function() {
-            if (document.hidden) {
-                isAway = true;
-                KidTracker.pushStatus("away");
-            } else {
-                isAway = false;
-                KidTracker.pushStatus("studying");
-                KidTracker.resetIdle();
-            }
-        });
-
-        // Physical touch/mouse interaction detection
-        ["pointerdown", "touchstart", "mousemove", "keydown", "scroll"].forEach(evt => {
-            window.addEventListener(evt, () => {
-                if (document.hidden) return;
-                if (isAway) {
-                    isAway = false;
-                    KidTracker.pushStatus("studying");
-                }
-                KidTracker.resetIdle();
-            }, { passive: true });
-        });
-
-        // Periodic background heartbeat
-        setInterval(() => {
-            if (!document.hidden && !isAway && statusRef) {
-                KidTracker.pushStatus("studying");
-            }
-        }, HEARTBEAT_INTERVAL_MS);
-
-        this.resetIdle();
-    },
-
-    resetIdle: function() {
-        clearTimeout(idleTimer);
-        idleTimer = setTimeout(() => {
-            if (!document.hidden && statusRef) {
-                isAway = true;
-                KidTracker.pushStatus("away");
-            }
-        }, IDLE_TIMEOUT_MS);
-    },
-
-    pushStatus: function(statusText) {
-        if (!statusRef) return;
-        const now = Date.now();
-        const dateKey = new Date().toISOString().slice(0, 10);
-        const topicTitles = {
-            addition: "Addition (T U)", subtraction: "Subtraction (T U)",
-            multiplication: "Multiplication (T U)", division: "Division (T U)",
-            addition_htu: "Addition (H T U)", subtraction_htu: "Subtraction (H T U)",
-            multiplication_htu: "Multiplication (H T U)", division_htu: "Division (H T U)"
-        };
-        const activeTopic = topicTitles[currentTopic] || currentTopic;
-
-        statusRef.transaction(current => {
-            const data = current || {};
-            let todayMins = data.todayMinutes || 0;
-            if (data.todayDate !== dateKey) todayMins = 0;
-
-            if (data.status === "studying" && data.lastActivity) {
-                const diffSec = (now - data.lastActivity) / 1000;
-                if (diffSec > 0 && diffSec < 60) {
-                    todayMins += diffSec / 60;
-                }
-            }
-
-            return {
-                status: statusText,
-                subject: "Mathematics",
-                topic: activeTopic,
-                startedAt: data.startedAt || now,
-                lastActivity: now,
-                todayMinutes: Math.round(todayMins * 10) / 10,
-                todayDate: dateKey,
-                progress: data.progress !== undefined ? data.progress : 0,
-                quizScore: data.quizScore !== undefined ? data.quizScore : (stats.practiceTotal ? `${stats.practiceCorrect}/${stats.practiceTotal}` : "—")
-            };
-        });
-    },
-
-    reportProgress: function(percent) {
-        if (!statusRef) return;
-        const clamped = Math.max(0, Math.min(100, Math.round(percent)));
-        statusRef.update({
-            progress: clamped,
-            lastActivity: firebase.database.ServerValue.TIMESTAMP
-        });
-    },
-
-    reportPracticeScore: function() {
-        if (!statusRef) return;
-        const percent = stats.practiceTotal ? Math.round((stats.practiceCorrect / stats.practiceTotal) * 100) : 0;
-        statusRef.update({
-            quizScore: `${stats.practiceCorrect} / ${stats.practiceTotal} (${percent}%)`,
-            progress: percent,
-            lastActivity: firebase.database.ServerValue.TIMESTAMP
-        });
-    }
-};
-
-// =============================================================
-// ORIGINAL LESSON & CHALKBOARD ENGINE
-// =============================================================
 const STROKE_DATA = {
   'H': ['M 25,14 L 25,60', 'M 75,14 L 75,60', 'M 25,37 L 75,37'],
   'T': ['M 18,14 L 82,14', 'M 50,14 L 50,56'],
@@ -763,14 +570,10 @@ function getPupilName(){
 function updatePupilName(val){
   pupilName = val.trim() || 'Flourish';
   localStorage.setItem('tu_pupil_name', pupilName);
-  const input = document.getElementById('pupilNameInput');
-  if (input) input.value = pupilName;
-  const curBadge = document.getElementById('currentPupilBadge');
-  if (curBadge) curBadge.textContent = `Active Pupil: ${pupilName}`;
-  const brdBadge = document.getElementById('boardPupilBadge');
-  if (brdBadge) brdBadge.textContent = `PUPIL: ${pupilName.toUpperCase()}`;
-  const progTitle = document.getElementById('progressTitle');
-  if (progTitle) progTitle.textContent = `${pupilName}'s Term Progress 📈`;
+  document.getElementById('pupilNameInput').value = pupilName;
+  document.getElementById('currentPupilBadge').textContent = `Active Pupil: ${pupilName}`;
+  document.getElementById('boardPupilBadge').textContent = `PUPIL: ${pupilName.toUpperCase()}`;
+  document.getElementById('progressTitle').textContent = `${pupilName}'s Term Progress 📈`;
 }
 
 function savePupilNameBtn(){
@@ -807,7 +610,6 @@ function switchTopic(topic){
   populateQuestionDropdown();
   initGrid();
   renderPractice();
-  KidTracker.pushStatus("studying");
 }
 
 function onQuestionSelectChange(val){
@@ -822,7 +624,6 @@ function onQuestionSelectChange(val){
 
 function populateQuestionDropdown(){
   const select = document.getElementById('questionSelect');
-  if (!select) return;
   select.innerHTML = '';
   const list = (masterQuestionBank && masterQuestionBank[currentTopic]) ? masterQuestionBank[currentTopic] : [];
   list.forEach((item, idx) => {
@@ -1067,7 +868,6 @@ function showScreen(id){
   if(id !== 'lesson') pauseLesson();
   if(id === 'practice') renderPractice();
   if(id === 'progress') renderProgress();
-  KidTracker.pushStatus("studying");
 }
 
 document.querySelectorAll('.nav button').forEach(b => {
@@ -1100,8 +900,6 @@ function startIntroOnly(){
   isPaused = false;
   document.getElementById('playBtn').textContent = '⏸ Pause Teaching';
   document.getElementById('statusIndicator').textContent = '👨‍🏫 Explaining Chair Rule...';
-  KidTracker.pushStatus("studying");
-
   runTopicIntroduction(token).then(() => {
     isPlaying = false;
     document.getElementById('playBtn').textContent = '▶ Start Live Teaching (Continuous)';
@@ -1117,7 +915,6 @@ function pauseLesson(){
   stopSpeech();
   document.getElementById('playBtn').textContent = '▶ Resume Teaching';
   document.getElementById('statusIndicator').textContent = '⏸ Paused';
-  KidTracker.pushStatus("away");
 }
 
 function resumeLesson(){
@@ -1125,7 +922,6 @@ function resumeLesson(){
   isPaused = false;
   document.getElementById('playBtn').textContent = '⏸ Pause Teaching';
   document.getElementById('statusIndicator').textContent = '👨‍🏫 Teacher is solving problem on board...';
-  KidTracker.pushStatus("studying");
 }
 
 function replayLesson(){
@@ -1151,6 +947,7 @@ async function runTopicIntroduction(token){
   stage.style.display = 'block';
 
   if(!isHTU){
+    // 2-CHAIR SETUP (T U)
     document.getElementById('introStageTitle').textContent = '💺 THE TENS & UNITS CHAIR RULE';
     document.getElementById('statedQuestion').textContent = 'LESSON: TENS AND UNITS (T U)';
     row.innerHTML = `
@@ -1176,6 +973,7 @@ async function runTopicIntroduction(token){
     updateSubtitle(`Welcome, ${pupil}! Let teacher explain Tens and Units in a very sweet and simple way!`);
     await speakAsync(`Welcome, ${pupil}! Let teacher explain Tens and Units in a very sweet and simple way!`, token);
 
+    // Units
     resetFruitTray("Units: Single Lonely Oranges (0 to 9)");
     const fGrid = document.getElementById('fruitGrid');
     for(let i = 1; i <= 9; i++){
@@ -1187,6 +985,7 @@ async function runTopicIntroduction(token){
     updateSubtitle(`What is a Unit? A Unit is a single, lonely item from 0 to 9. Look at 1 orange, 2 oranges, up to 9 oranges!`);
     await speakAsync(`What is a Unit? A Unit is a single, lonely item from 0 to 9. Look at 1 orange, 2 oranges, up to 9 oranges! Each single fruit is a Unit!`, token);
 
+    // Tens
     resetFruitTray("Tens: 10 Units Bundled Together into 1 Basket");
     document.getElementById('trayBody').innerHTML = `
       <div class="basket-item" style="font-size:24px;padding:8px 16px">
@@ -1196,6 +995,7 @@ async function runTopicIntroduction(token){
     updateSubtitle(`What is a Ten? When single units gather up to 10, they join hands and form 1 bundle of Ten! 10 Units make 1 Ten!`);
     await speakAsync(`What is a Ten? When single units gather up to 10, they join hands and form 1 bundle of Ten! 10 Units make 1 Ten!`, token);
 
+    // Chair Squeeze
     const uOcc = document.getElementById('introUOccupant');
     const tOcc = document.getElementById('introTOccupant');
     uOcc.innerHTML = `<span style="color:#f87171;font-size:28px;animation:fruitPop 0.3s">1 2 💺💥</span>`;
@@ -1212,6 +1012,7 @@ async function runTopicIntroduction(token){
     await speakAsync(`So 2 stays seated on the Units chair, and the 1 carries over into the bright RED circle on top of Tens for easy identification!`, token);
 
   } else {
+    // 3-CHAIR SETUP (H T U)
     document.getElementById('introStageTitle').textContent = '💺 THE H T U CHAIR RULE';
     document.getElementById('statedQuestion').textContent = 'LESSON: HUNDREDS, TENS & UNITS (H T U)';
     row.innerHTML = `
@@ -1243,6 +1044,7 @@ async function runTopicIntroduction(token){
     updateSubtitle(`Welcome, ${pupil}! Today we are mastering Hundreds, Tens, and Units: H, T, and U!`);
     await speakAsync(`Welcome, ${pupil}! Today we are mastering Hundreds, Tens, and Units: H, T, and U!`, token);
 
+    // Units
     resetFruitTray("Units: Single Lonely Oranges (0 to 9)");
     const fGrid = document.getElementById('fruitGrid');
     for(let i = 1; i <= 9; i++){
@@ -1254,6 +1056,7 @@ async function runTopicIntroduction(token){
     updateSubtitle(`What is a Unit? A Unit is a single, lonely item from 0 to 9. Look at 1 orange up to 9 oranges!`);
     await speakAsync(`What is a Unit? A Unit is a single, lonely item from 0 to 9. Look at 1 orange up to 9 oranges! Each single fruit is a Unit!`, token);
 
+    // Tens
     resetFruitTray("Tens: 10 Units Bundled into 1 Basket");
     document.getElementById('trayBody').innerHTML = `
       <div class="basket-item" style="font-size:24px;padding:8px 16px">
@@ -1263,6 +1066,7 @@ async function runTopicIntroduction(token){
     updateSubtitle(`What is a Ten? When single units gather up to 10, they join hands and form 1 bundle of Ten!`);
     await speakAsync(`What is a Ten? When single units gather up to 10, they join hands and form 1 bundle of Ten!`, token);
 
+    // Hundreds
     resetFruitTray("Hundreds: 10 Baskets Packed into 1 Crate (100 Units)");
     document.getElementById('trayBody').innerHTML = `
       <div class="crate-item" style="font-size:24px;padding:8px 16px">
@@ -1272,6 +1076,7 @@ async function runTopicIntroduction(token){
     updateSubtitle(`What is a Hundred? When 10 baskets of ten gather together, they pack into 1 big Crate of 100!`);
     await speakAsync(`What is a Hundred? When 10 baskets of ten gather together, they pack into 1 big Crate of 100!`, token);
 
+    // 3-Chair Rule
     const uOcc = document.getElementById('introUOccupant');
     const tOcc = document.getElementById('introTOccupant');
     uOcc.innerHTML = `<span style="color:#f87171;font-size:24px;animation:fruitPop 0.3s">1 4 💺💥</span>`;
@@ -1312,7 +1117,6 @@ async function runContinuousLessons(){
   isPlaying = true;
   isPaused = false;
   document.getElementById('playBtn').textContent = '⏸ Pause Teaching';
-  KidTracker.pushStatus("studying");
 
   const questions = (masterQuestionBank && masterQuestionBank[currentTopic]) ? masterQuestionBank[currentTopic] : [];
   if(!questions.length){
@@ -1340,9 +1144,6 @@ async function runContinuousLessons(){
     const currentNum = selectedProblemIndex + 1;
     document.getElementById('statusIndicator').textContent = `👨‍🏫 Solving Example ${currentNum} of ${total}...`;
 
-    // Report real-time lesson progress to parent dashboard
-    KidTracker.reportProgress((selectedProblemIndex / total) * 100);
-
     initGrid();
 
     try {
@@ -1365,8 +1166,6 @@ async function runContinuousLessons(){
       await checkWait(token);
       updateSubtitle(`🎉 Hurray, ${getPupilName()}! We have completed all ${total} examples for this topic! Excellent focus!`);
       await speakAsync(`Hurray, ${getPupilName()}! We have completed all ${total} examples for this topic! Excellent focus, clap for yourself!`, token);
-      
-      KidTracker.reportProgress(100);
       isPlaying = false;
       selectedProblemIndex = 0;
       if(select) select.value = 0;
@@ -1479,7 +1278,7 @@ async function teachCurrentProblem(token, exampleNum, totalExamples){
     const hSum = isHTU ? (tCarry + h1 + h2) : 0;
     const hAns = hSum;
 
-    // UNITS
+    // STEP A: UNITS ADDITION
     resetFruitTray(`Units: Group 1 (${u1}) + Group 2 (${u2})`);
     const bodyEl = document.getElementById('trayBody');
     bodyEl.innerHTML = `
@@ -1544,7 +1343,7 @@ async function teachCurrentProblem(token, exampleNum, totalExamples){
       await speakAndDraw('ans-u', String(uAns), `Adding Units: ${u1} plus ${u2} gives ${uAns}. It sits peacefully on the Units chair!`, `We write ${uAns} under Units!`, false, token);
     }
 
-    // TENS
+    // STEP B: FULL DETAILED EXPLANATION FOR TENS ("T")
     await checkWait(token);
     updateSubtitle(`Now, our Units house is settled with ${uAns}. Let us give full attention to the Tens house!`);
     await speakAsync(`Now, our Units house is settled with ${uAns}. Let us give full attention to the Tens house!`, token);
@@ -1607,7 +1406,7 @@ async function teachCurrentProblem(token, exampleNum, totalExamples){
         await speakAndDraw('ans-t', String(tAns), `Under Tens: ${tAns} sits peacefully on the Tens chair!`, `We write ${tAns} under Tens!`, false, token);
       }
 
-      // HUNDREDS
+      // STEP C: HUNDREDS ADDITION
       await checkWait(token);
       updateSubtitle(`Now, let us move to the Hundreds house on the far left!`);
       await speakAsync(`Now, let us move to the Hundreds house on the far left!`, token);
@@ -1648,6 +1447,7 @@ async function teachCurrentProblem(token, exampleNum, totalExamples){
 
       await finishLessonSuccess(`${num1} + ${num2} = ${currentItem.a}`, `Units: ${u1}+${u2}=${uSum}<br>Tens: ${uCarry>0?'<span style="color:#ef4444">1 carried</span>+':''}${t1}+${t2}=${tSum}<br>Hundreds: ${tCarry>0?'<span style="color:#ef4444">1 carried</span>+':''}${h1}+${h2}=${hAns}<br><b>ANSWER = ${currentItem.a}</b>`, token);
     } else {
+      // TU Mode Tens
       await speakAndDraw('ans-t', String(tAns), `Under Tens: ${tAns} Tens sit down!`, `We write ${tAns} under Tens!`, false, token);
       await finishLessonSuccess(`${num1} + ${num2} = ${currentItem.a}`, `Units: ${u1}+${u2}=${uSum}<br>Tens: ${uCarry>0?'<span style="color:#ef4444">1 carried</span>+':''}${t1}+${t2}=${tAns}<br><b>ANSWER = ${currentItem.a}</b>`, token);
     }
@@ -1661,6 +1461,7 @@ async function teachCurrentProblem(token, exampleNum, totalExamples){
     let curT1 = t1;
     let curH1 = h1;
 
+    // Units Borrow
     if(curU1 < u2){
       await checkWait(token);
       updateSubtitle(`In Units: ${curU1} take away ${u2}. We cannot! We must borrow 1 Ten from ${curT1} Tens.`);
@@ -1685,6 +1486,7 @@ async function teachCurrentProblem(token, exampleNum, totalExamples){
     const uDiff = curU1 - u2;
     await speakAndDraw('ans-u', String(uDiff), `Subtract Units: ${curU1} take away ${u2} leaves ${uDiff}.`, `We write ${uDiff} under Units!`, false, token);
 
+    // Tens Borrow (if HTU)
     if(isHTU && curT1 < t2){
       await checkWait(token);
       updateSubtitle(`In Tens: ${curT1} take away ${t2}. We cannot! We must borrow 1 Hundred from ${curH1} Hundreds.`);
@@ -1739,6 +1541,7 @@ async function teachCurrentProblem(token, exampleNum, totalExamples){
     updateSubtitle(`Golden rule: The bottom multiplier ${multiplier} MUST multiply Units first, then Tens${isHTU ? ', then Hundreds' : ''}!`);
     await speakAsync(`Golden rule: The bottom multiplier ${multiplier} MUST multiply Units first, then Tens${isHTU ? ', then Hundreds' : ''}!`, token);
 
+    // Units
     if(uCarry > 0){
       await speakAndDraw('ans-u', String(uAns), `${multiplier} times ${u1} Units = ${uProd}. ${uAns} stays on Units chair, and ${uCarry} carries in RED to Tens!`, `We write ${uAns} under Units!`, false, token);
       gridCells['carry-t'].innerHTML = `<div class="popping-circle">${uCarry}</div>`;
@@ -1746,6 +1549,7 @@ async function teachCurrentProblem(token, exampleNum, totalExamples){
       await speakAndDraw('ans-u', String(uAns), `${multiplier} times ${u1} Units = ${uAns}. It sits on the Units chair!`, `We write ${uAns} under Units!`, false, token);
     }
 
+    // Tens
     if(isHTU){
       if(tCarry > 0){
         await speakAndDraw('ans-t', String(tAns), `Now in Tens: ${multiplier} times ${t1} Tens is ${multiplier * t1}, plus ${uCarry} carried gives ${tProd}. ${tAns} stays on Tens, and ${tCarry} carries in RED to Hundreds!`, `We write ${tAns} under Tens!`, false, token);
@@ -1754,9 +1558,12 @@ async function teachCurrentProblem(token, exampleNum, totalExamples){
         await speakAndDraw('ans-t', String(tAns), `Now in Tens: ${multiplier} times ${t1} Tens is ${tAns}.`, `We write ${tAns} under Tens!`, false, token);
       }
 
+      // Hundreds
       await speakAndDraw('ans-h', String(hAns), `Now in Hundreds: ${multiplier} times ${h1} Hundreds is ${multiplier * h1}${tCarry > 0 ? ', plus ' + tCarry + ' carried gives ' + hAns : ''}.`, `We write ${hAns} under Hundreds!`, false, token);
+
       await finishLessonSuccess(`${num1} × ${num2} = ${currentItem.a}`, `Units: ${multiplier}×${u1}=${uProd}<br>Tens: ${multiplier}×${t1}+${uCarry}=${tProd}<br>Hundreds: ${hAns}<br><b>ANSWER = ${currentItem.a}</b>`, token);
     } else {
+      // TU Mode Tens
       await speakAndDraw('ans-t', String(tAns), `Now in Tens: ${multiplier} times ${t1} Tens is ${multiplier * t1}${uCarry > 0 ? ', plus ' + uCarry + ' carried gives ' + tAns : ''}.`, `We write ${tAns} under Tens!`, false, token);
       await finishLessonSuccess(`${num1} × ${num2} = ${currentItem.a}`, `Units: ${multiplier}×${u1}=${uProd}<br>Tens: ${tAns}<br><b>ANSWER = ${currentItem.a}</b>`, token);
     }
@@ -1773,10 +1580,12 @@ async function teachCurrentProblem(token, exampleNum, totalExamples){
       updateSubtitle(`In Division, we always start from the BIGGEST house on your far left: the Hundreds house!`);
       await speakAsync(`In Division, we always start from the BIGGEST house on your far left: the Hundreds house!`, token);
 
+      // Hundreds
       const hQuot = Math.floor(h1 / divisor);
       const hRem = h1 % divisor;
       await speakAndDraw('ans-h', String(hQuot), `Share Hundreds: ${h1} Hundreds divided by ${divisor} gives ${hQuot} Hundreds each${hRem > 0 ? ', remainder ' + hRem : ''}.`, `We write ${hQuot} under Hundreds!`, false, token);
 
+      // Unbundle to Tens
       const unbundledTens = (hRem * 10) + t1;
       if(hRem > 0){
         await checkWait(token);
@@ -1794,6 +1603,7 @@ async function teachCurrentProblem(token, exampleNum, totalExamples){
       const tRem = unbundledTens % divisor;
       await speakAndDraw('ans-t', String(tQuot), `Now share Tens: ${unbundledTens} Tens divided by ${divisor} gives ${tQuot} Tens each${tRem > 0 ? ', remainder ' + tRem : ''}.`, `We write ${tQuot} under Tens!`, false, token);
 
+      // Unbundle to Units
       const unbundledUnits = (tRem * 10) + u1;
       if(tRem > 0){
         await checkWait(token);
@@ -1813,6 +1623,7 @@ async function teachCurrentProblem(token, exampleNum, totalExamples){
       await finishLessonSuccess(`${num1} ÷ ${num2} = ${currentItem.a}`, `Hundreds: ${h1}÷${divisor}=${hQuot}<br>Tens: ${unbundledTens}÷${divisor}=${tQuot}<br>Units: ${unbundledUnits}÷${divisor}=${uQuot}<br><b>ANSWER = ${currentItem.a}</b>`, token);
 
     } else {
+      // TU Division
       await checkWait(token);
       updateSubtitle(`In Division, we start from the BIGGEST house: the Tens house! We share ${t1} Tens among ${divisor} first.`);
       await speakAsync(`In Division, we start from the BIGGEST house: the Tens house! We share ${t1} Tens among ${divisor} first.`, token);
@@ -2242,8 +2053,12 @@ function checkPractice(idx, expectedAns){
   }
   saveStats();
 
-  // Stream practice results to parent live dashboard
-  KidTracker.reportPracticeScore();
+  // Updates parent live monitor automatically if kid-tracker.js is active
+  if(window.KidTracker && window.KidTracker.setQuizScore){
+    const pct = stats.practiceTotal ? Math.round((stats.practiceCorrect / stats.practiceTotal) * 100) : 0;
+    window.KidTracker.setQuizScore(`${stats.practiceCorrect} / ${stats.practiceTotal} (${pct}%)`);
+    window.KidTracker.setProgress(pct);
+  }
 }
 
 function toggleJsonPanel(){
@@ -2325,15 +2140,18 @@ function renderProgress(){
 
 function sleep(ms){ return new Promise(r => setTimeout(r, ms)); }
 
-// Initialize all modules
+// Initialize
 initializeQuestionsBank();
 populateQuestionDropdown();
 initGrid();
 renderPractice();
 renderProgress();
-
-// Launch multi-device synchronization engine
-KidTracker.init();
 </script>
+
+<!-- FIREBASE LIVE MONITORING SYNC -->
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+<script src="kid-tracker.js"></script>
+
 </body>
-</html>
+  </html>
