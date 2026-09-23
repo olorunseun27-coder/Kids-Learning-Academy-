@@ -10,13 +10,17 @@
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
 
 <style>
-* { box-sizing: border-box; }
+* {
+    box-sizing: border-box;
+}
+
 body {
     margin: 0;
     font-family: "Comic Sans MS", Trebuchet MS, sans-serif;
     background: linear-gradient(135deg, #eef4ff, #fff1f8);
     color: #333;
 }
+
 header {
     background: linear-gradient(135deg, #6a3dcc, #8e5de7);
     color: white;
@@ -24,9 +28,21 @@ header {
     text-align: center;
     border-radius: 0 0 25px 25px;
 }
-header h1 { margin: 0; font-size: 28px; }
-header p { margin: 8px 0 0; }
-.container { width: min(1000px, 94%); margin: 25px auto; }
+
+header h1 {
+    margin: 0;
+    font-size: 28px;
+}
+
+header p {
+    margin: 8px 0 0;
+}
+
+.container {
+    width: min(1000px, 94%);
+    margin: 25px auto;
+}
+
 .card {
     background: white;
     border-radius: 20px;
@@ -34,8 +50,14 @@ header p { margin: 8px 0 0; }
     margin-bottom: 20px;
     box-shadow: 0 6px 20px rgba(0,0,0,.08);
 }
-h2 { color: #6038c8; }
-input, select, button {
+
+h2 {
+    color: #6038c8;
+}
+
+input,
+select,
+button {
     width: 100%;
     padding: 13px;
     margin: 7px 0;
@@ -44,6 +66,7 @@ input, select, button {
     font-size: 16px;
     font-family: inherit;
 }
+
 button {
     background: #6a3dcc;
     color: white;
@@ -51,50 +74,101 @@ button {
     cursor: pointer;
     font-weight: bold;
 }
-button:hover { opacity: .9; }
-.secondary { background: #eee; color: #333; }
-.class-grid, .child-grid {
+
+button:hover {
+    opacity: .9;
+}
+
+.secondary {
+    background: #eee;
+    color: #333;
+}
+
+.class-grid,
+.child-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
     gap: 15px;
 }
-.class-card, .child-card {
+
+.class-card,
+.child-card {
     padding: 20px;
     border-radius: 18px;
     background: #f7f3ff;
     border: 2px solid #e3d8ff;
     cursor: pointer;
     text-align: center;
+    transition: transform 0.15s ease, border-color 0.15s ease;
 }
-.hidden { display: none; }
-.error { color: #c62828; }
-.success { color: #16823b; }
 
-.badge-active {
-    background: #dcfce7; color: #15803d;
-    padding: 6px 12px; border-radius: 10px;
-    font-size: 13px; font-weight: bold;
-    display: inline-block; margin-top: 6px;
+.class-card:hover,
+.child-card:hover {
+    border-color: #6a3dcc;
+    transform: translateY(-2px);
 }
+
+.hidden {
+    display: none;
+}
+
+.status {
+    padding: 10px;
+    border-radius: 10px;
+    background: #f1f1f1;
+    margin: 10px 0;
+}
+
+.error {
+    color: #c62828;
+}
+
+.success {
+    color: #16823b;
+}
+
+/* Parent Live Monitoring Badges */
+.badge-active {
+    background: #dcfce7;
+    color: #15803d;
+    padding: 6px 12px;
+    border-radius: 10px;
+    font-size: 13px;
+    font-weight: bold;
+    display: inline-block;
+    margin-top: 6px;
+}
+
 .badge-away {
-    background: #fee2e2; color: #b91c1c;
-    padding: 6px 12px; border-radius: 10px;
-    font-size: 13px; font-weight: bold;
-    display: inline-block; margin-top: 6px;
+    background: #fee2e2;
+    color: #b91c1c;
+    padding: 6px 12px;
+    border-radius: 10px;
+    font-size: 13px;
+    font-weight: bold;
+    display: inline-block;
+    margin-top: 6px;
     animation: pulseAway 1.2s infinite ease-in-out;
 }
+
 .badge-offline {
-    background: #f1f1f1; color: #666;
-    padding: 6px 12px; border-radius: 10px;
-    font-size: 13px; font-weight: bold;
-    display: inline-block; margin-top: 6px;
+    background: #f1f1f1;
+    color: #666;
+    padding: 6px 12px;
+    border-radius: 10px;
+    font-size: 13px;
+    font-weight: bold;
+    display: inline-block;
+    margin-top: 6px;
 }
+
 @keyframes pulseAway {
     0%, 100% { opacity: 1; transform: scale(1); }
     50% { opacity: 0.75; transform: scale(0.97); }
 }
 </style>
 </head>
+
 <body>
 
 <header>
@@ -103,69 +177,136 @@ button:hover { opacity: .9; }
 </header>
 
 <div class="container">
+
+    <!-- AUTHENTICATION -->
     <section id="authSection" class="card">
         <h2>👨‍👩‍👧 Parent Account</h2>
+
         <div id="loginBox">
             <h3>Parent Login</h3>
+
             <input id="loginEmail" type="email" placeholder="Parent email">
             <input id="loginPassword" type="password" placeholder="Password">
+
             <button onclick="loginParent()">Login</button>
             <button class="secondary" onclick="showRegister()">Create Parent Account</button>
+
             <p id="loginMessage"></p>
         </div>
+
         <div id="registerBox" class="hidden">
             <h3>Create Parent Account</h3>
+
             <input id="registerName" type="text" placeholder="Parent name">
             <input id="registerEmail" type="email" placeholder="Email">
             <input id="registerPassword" type="password" placeholder="Password (6+ characters)">
+
             <button onclick="registerParent()">Register</button>
             <button class="secondary" onclick="showLogin()">Back to Login</button>
+
             <p id="registerMessage"></p>
         </div>
     </section>
 
+    <!-- DASHBOARD -->
     <section id="dashboardSection" class="hidden">
+
         <div class="card">
             <h2>👋 Welcome, <span id="parentName"></span></h2>
-            <p>Real-time Child Presence & Activity Monitoring</p>
+
+            <p>
+                Manage your children's Mathematics learning and monitor their activity in real time.
+            </p>
+
             <button onclick="showAddChild()">➕ Add Child</button>
             <button class="secondary" onclick="logoutParent()">Logout</button>
         </div>
 
         <div id="childrenSection" class="card">
-            <h2>👧👦 Your Children & Live Activity</h2>
-            <div id="childrenList" class="child-grid"></div>
+            <h2>👧👦 Your Children & Live Monitoring</h2>
+
+            <div id="childrenList" class="child-grid">
+            </div>
         </div>
 
+        <!-- ADD CHILD -->
         <div id="addChildSection" class="card hidden">
+
             <h2>➕ Register Child</h2>
+
             <input id="childName" type="text" placeholder="Child's name">
+
             <select id="childClass">
+                <option value="">Select class</option>
+
+                <option>Nursery</option>
+
                 <option selected>Primary 1</option>
                 <option>Primary 2</option>
                 <option>Primary 3</option>
                 <option>Primary 4</option>
                 <option>Primary 5</option>
                 <option>Primary 6</option>
+
+                <option>JSS 1</option>
+                <option>JSS 2</option>
+                <option>JSS 3</option>
+
+                <option>SS 1</option>
+                <option>SS 2</option>
+                <option>SS 3</option>
             </select>
+
             <button onclick="saveChild()">Save Child</button>
             <button class="secondary" onclick="hideAddChild()">Cancel</button>
+
             <p id="childMessage"></p>
         </div>
 
+        <!-- CLASSROOM SELECTION -->
         <div id="classroomSection" class="card hidden">
+
             <h2>📖 Choose Mathematics Classroom</h2>
-            <p>Child: <strong id="selectedChildName"></strong> (<span id="selectedChildClass"></span>)</p>
+
+            <p>
+                Child:
+                <strong id="selectedChildName"></strong>
+            </p>
+
+            <p>
+                Class:
+                <strong id="selectedChildClass"></strong>
+            </p>
+
             <div class="class-grid">
-                <div class="class-card" onclick="openClassroom('T-U/Tens%20and%20units(2).html')">
-                    <h2>🔢 Tens & Units (T U)</h2>
-                    <p>Live Classroom</p>
+
+                <div class="class-card" onclick="openElementary()">
+                    <h2>🌱 Elementary</h2>
+                    <p>Beginner Mathematics</p>
+                    <button>Open Elementary</button>
+                </div>
+
+                <div class="class-card" onclick="openTU()">
+                    <h2>🔢 Tens and units(2).html</h2>
+                    <p>Tens & Units Classroom</p>
                     <button>Open Tens and units(2).html</button>
                 </div>
+
+                <div class="class-card" onclick="openHTU()">
+                    <h2>🏠 H T U</h2>
+                    <p>Hundreds, Tens & Units</p>
+                    <button>Open H T U</button>
+                </div>
+
             </div>
-            <button class="secondary" style="margin-top:16px" onclick="backToChildren()">← Back to Children</button>
+
+            <button class="secondary" style="margin-top:16px" onclick="backToChildren()">
+                ← Back to Children
+            </button>
         </div>
+
     </section>
+
 </div>
 
 <script>
@@ -180,39 +321,22 @@ const formalFirebaseConfig = {
     measurementId: "G-B8DSN41S9K"
 };
 
-if (!firebase.apps.length) firebase.initializeApp(formalFirebaseConfig);
+if (!firebase.apps.length) {
+    firebase.initializeApp(formalFirebaseConfig);
+}
+
 const auth = firebase.auth();
 const database = firebase.database();
 
 let currentUser = null;
 let selectedChild = null;
-let localChildStatus = {}; // Stores zero-latency browser channel heartbeats
-
-// 1. DIRECT BROWSER CHANNEL (Works 100% on same browser/device without network delay)
-if ('BroadcastChannel' in window) {
-    const channel = new BroadcastChannel('kla_presence_bus');
-    channel.onmessage = (event) => {
-        const data = event.data;
-        if (data && data.childId) {
-            localChildStatus[data.childId] = {
-                status: data.status,
-                detail: data.detail,
-                timestamp: Date.now()
-            };
-            refreshChildrenUI();
-        }
-    };
-}
-
-// Check every 2 seconds if child heartbeat stopped
-setInterval(() => {
-    refreshChildrenUI();
-}, 2000);
+let childrenListener = null;
 
 function showRegister() {
     document.getElementById("loginBox").classList.add("hidden");
     document.getElementById("registerBox").classList.remove("hidden");
 }
+
 function showLogin() {
     document.getElementById("registerBox").classList.add("hidden");
     document.getElementById("loginBox").classList.remove("hidden");
@@ -222,152 +346,259 @@ async function registerParent() {
     const name = document.getElementById("registerName").value.trim();
     const email = document.getElementById("registerEmail").value.trim();
     const password = document.getElementById("registerPassword").value;
-    const msg = document.getElementById("registerMessage");
-    if (!name || !email || !password) return (msg.className = "error", msg.textContent = "Fill all fields");
+    const message = document.getElementById("registerMessage");
+
+    if (!name || !email || !password) {
+        message.className = "error";
+        message.textContent = "Please complete all fields.";
+        return;
+    }
 
     try {
-        const res = await auth.createUserWithEmailAndPassword(email, password);
-        currentUser = res.user;
-        await database.ref("parents/" + currentUser.uid + "/profile").set({ name: name, email: email });
+        const result = await auth.createUserWithEmailAndPassword(email, password);
+        currentUser = result.user;
+
+        await database.ref("parents/" + currentUser.uid + "/profile").set({
+            name: name,
+            email: email,
+            createdAt: firebase.database.ServerValue.TIMESTAMP
+        });
+
+        message.className = "success";
+        message.textContent = "Account created successfully.";
         loadDashboard();
-    } catch(e) {
-        msg.className = "error";
-        msg.textContent = e.message;
+    } catch (error) {
+        message.className = "error";
+        message.textContent = error.message;
     }
 }
 
 async function loginParent() {
     const email = document.getElementById("loginEmail").value.trim();
     const password = document.getElementById("loginPassword").value;
-    const msg = document.getElementById("loginMessage");
+    const message = document.getElementById("loginMessage");
+
     try {
-        const res = await auth.signInWithEmailAndPassword(email, password);
-        currentUser = res.user;
+        const result = await auth.signInWithEmailAndPassword(email, password);
+        currentUser = result.user;
         loadDashboard();
-    } catch(e) {
-        msg.className = "error";
-        msg.textContent = e.message;
+    } catch (error) {
+        message.className = "error";
+        message.textContent = error.message;
     }
 }
 
-auth.onAuthStateChanged(user => {
+auth.onAuthStateChanged(function(user) {
     if (user) {
         currentUser = user;
         loadDashboard();
     } else {
+        if (currentUser && childrenListener) {
+            database.ref("parents/" + currentUser.uid + "/children").off("value", childrenListener);
+            childrenListener = null;
+        }
         currentUser = null;
         document.getElementById("authSection").classList.remove("hidden");
         document.getElementById("dashboardSection").classList.add("hidden");
     }
 });
 
-let cachedChildren = null;
-function loadDashboard() {
+async function loadDashboard() {
     document.getElementById("authSection").classList.add("hidden");
     document.getElementById("dashboardSection").classList.remove("hidden");
-    document.getElementById("parentName").textContent = currentUser.email;
+    document.getElementById("classroomSection").classList.add("hidden");
 
-    database.ref("parents/" + currentUser.uid + "/children").on("value", snap => {
-        cachedChildren = snap.val();
-        refreshChildrenUI();
+    const snapshot = await database.ref("parents/" + currentUser.uid + "/profile").once("value");
+    const profile = snapshot.val();
+
+    document.getElementById("parentName").textContent =
+        profile && profile.name ? profile.name : currentUser.email;
+
+    listenToChildren();
+}
+
+// Real-Time Parent Monitoring: Live Presence Updates
+function listenToChildren() {
+    if (!currentUser) return;
+    const childrenRef = database.ref("parents/" + currentUser.uid + "/children");
+
+    if (childrenListener) {
+        childrenRef.off("value", childrenListener);
+    }
+
+    childrenListener = childrenRef.on("value", function(snapshot) {
+        renderChildren(snapshot.val());
     });
 }
 
-function refreshChildrenUI() {
-    if (!cachedChildren) return;
+function renderChildren(children) {
     const list = document.getElementById("childrenList");
     list.innerHTML = "";
-    const now = Date.now();
 
-    Object.keys(cachedChildren).forEach(id => {
-        const child = cachedChildren[id];
-        const cloudPresence = child.presence || {};
-        const local = localChildStatus[id];
+    if (!children) {
+        list.innerHTML = "<p>No children registered yet.</p>";
+        return;
+    }
 
-        let isOnline = false;
-        let isAway = false;
-        let detail = "Offline";
+    Object.keys(children).forEach(function(id) {
+        const child = children[id];
+        const presence = child.presence || {};
 
-        // Check Local Memory Channel first, then Cloud Firebase Ping (within last 8 seconds)
-        if (local && (now - local.timestamp < 7000)) {
-            isOnline = true;
-            isAway = local.status === 'away';
-            detail = local.detail || 'In Classroom';
-        } else if (cloudPresence.lastPing && (now - cloudPresence.lastPing < 8000)) {
-            isOnline = true;
-            isAway = cloudPresence.status === 'away';
-            detail = cloudPresence.detail || 'In Classroom';
-        }
-
-        let badge = '<div class="badge-offline">⚪ Classroom Offline</div>';
-        if (isOnline && !isAway) {
-            badge = `<div class="badge-active">🟢 Active in Classroom (${escapeHTML(detail)})</div>`;
-        } else if (isOnline && isAway) {
-            badge = `<div class="badge-away">⚠️ AWAY: Tab Switched / Video / Games</div>`;
+        let statusBadge = '<div class="badge-offline">⚪ Classroom Offline</div>';
+        if (presence.status === 'active') {
+            statusBadge = '<div class="badge-active">🟢 Active in Classroom (' + escapeHTML(presence.detail || 'Learning') + ')</div>';
+        } else if (presence.status === 'away') {
+            statusBadge = '<div class="badge-away">⚠️ AWAY: Tab Switched (Playing Games / Watching Video)</div>';
         }
 
         const card = document.createElement("div");
         card.className = "child-card";
+
         card.innerHTML = `
             <h3>👦 ${escapeHTML(child.name)}</h3>
-            <p>${escapeHTML(child.classLevel)}</p>
-            ${badge}
-            <div style="margin-top:12px">
+            <p style="margin:4px 0 8px">${escapeHTML(child.classLevel)}</p>
+            ${statusBadge}
+            <div style="margin-top:14px">
                 <button onclick="selectChild('${id}')">Open Mathematics</button>
             </div>
         `;
+
         list.appendChild(card);
     });
 }
 
-function showAddChild() { document.getElementById("addChildSection").classList.remove("hidden"); }
-function hideAddChild() { document.getElementById("addChildSection").classList.add("hidden"); }
+function showAddChild() {
+    document.getElementById("addChildSection").classList.remove("hidden");
+}
+
+function hideAddChild() {
+    document.getElementById("addChildSection").classList.add("hidden");
+}
 
 async function saveChild() {
     const name = document.getElementById("childName").value.trim();
-    const cl = document.getElementById("childClass").value;
-    if (!name) return;
-    const ref = database.ref("parents/" + currentUser.uid + "/children").push();
-    await ref.set({
+    const classLevel = document.getElementById("childClass").value;
+    const message = document.getElementById("childMessage");
+
+    if (!name || !classLevel) {
+        message.className = "error";
+        message.textContent = "Please enter the child's name and class.";
+        return;
+    }
+
+    const childRef = database.ref("parents/" + currentUser.uid + "/children").push();
+
+    await childRef.set({
         name: name,
-        classLevel: cl,
+        classLevel: classLevel,
         createdAt: firebase.database.ServerValue.TIMESTAMP,
-        presence: { status: 'offline', lastPing: 0 }
+        progress: {
+            lessonsCompleted: 0,
+            quizAverage: 0
+        },
+        presence: {
+            status: 'offline',
+            detail: 'Registered'
+        }
     });
+
+    message.className = "success";
+    message.textContent = "Child registered successfully.";
+
     document.getElementById("childName").value = "";
+    document.getElementById("childClass").value = "Primary 1";
+
     hideAddChild();
 }
 
-function selectChild(id) {
-    const child = cachedChildren[id];
-    selectedChild = { id: id, ...child };
-    document.getElementById("selectedChildName").textContent = child.name;
-    document.getElementById("selectedChildClass").textContent = child.classLevel;
-    document.getElementById("childrenSection").classList.add("hidden");
-    document.getElementById("classroomSection").classList.remove("hidden");
+async function selectChild(childId) {
+    const snapshot = await database.ref(
+        "parents/" + currentUser.uid + "/children/" + childId
+    ).once("value");
 
+    selectedChild = {
+        id: childId,
+        ...snapshot.val()
+    };
+
+    // Synchronize to teaching app via local keys and cloud session
     localStorage.setItem('kla_selected_child', JSON.stringify({
-        id: id,
-        name: child.name,
-        classLevel: child.classLevel,
+        id: selectedChild.id,
+        name: selectedChild.name,
+        classLevel: selectedChild.classLevel,
         parentUid: currentUser.uid
     }));
-    localStorage.setItem('tu_pupil_name', child.name);
+    localStorage.setItem('tu_pupil_name', selectedChild.name);
+
+    document.getElementById("selectedChildName").textContent = selectedChild.name;
+    document.getElementById("selectedChildClass").textContent = selectedChild.classLevel;
+
+    document.getElementById("childrenSection").classList.add("hidden");
+    document.getElementById("addChildSection").classList.add("hidden");
+    document.getElementById("classroomSection").classList.remove("hidden");
 }
 
 function backToChildren() {
+    selectedChild = null;
     document.getElementById("classroomSection").classList.add("hidden");
     document.getElementById("childrenSection").classList.remove("hidden");
 }
 
-function openClassroom(targetUrl) {
-    if (!currentUser || !selectedChild) return;
-    const finalUrl = targetUrl + "?p=" + encodeURIComponent(currentUser.uid) + "&c=" + encodeURIComponent(selectedChild.id) + "&name=" + encodeURIComponent(selectedChild.name);
-    window.location.href = finalUrl;
+// Classroom launcher & synchronized navigation
+function openElementary() {
+    launchClassroom("Tens and units(2).html");
 }
 
-function logoutParent() { auth.signOut(); }
-function escapeHTML(v) { return String(v).replace(/[<>&"']/g, ''); }
+function openTU() {
+    launchClassroom("Tens and units(2).html", "Tens and units(2).html");
+}
+
+function openHTU() {
+    launchClassroom("H-T-U", "H-T-U/Tens%20and%20units(2).html");
+}
+
+// Compatibility helper if openRoom is called directly
+window.openRoom = function(room) {
+    if (room === 'Tens and units(2).html' || room === 'T-U') {
+        openTU();
+    } else if (room === 'Elementary') {
+        openElementary();
+    } else if (room === 'H-T-U') {
+        openHTU();
+    }
+};
+
+async function launchClassroom(roomCode, targetUrl) {
+    if (!currentUser || !selectedChild) return;
+
+    localStorage.setItem('kla_selected_child', JSON.stringify({
+        id: selectedChild.id,
+        name: selectedChild.name,
+        classLevel: selectedChild.classLevel,
+        parentUid: currentUser.uid,
+        selectedRoom: roomCode
+    }));
+    localStorage.setItem('tu_pupil_name', selectedChild.name);
+
+    await database.ref(
+        "parents/" + currentUser.uid + "/children/" + selectedChild.id + "/progress"
+    ).update({
+        lastClassroom: roomCode,
+        lastActivity: firebase.database.ServerValue.TIMESTAMP
+    });
+
+    // Passes parent ID and child ID directly in the link so it works on any device
+    window.location.href = targetUrl + "?p=" + encodeURIComponent(currentUser.uid) + "&c=" + encodeURIComponent(selectedChild.id) + "&name=" + encodeURIComponent(selectedChild.name);
+}
+function escapeHTML(value) {
+    return String(value)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+}
 </script>
+
 </body>
-</html>
+    </html>
