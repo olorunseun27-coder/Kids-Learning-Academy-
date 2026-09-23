@@ -4,9 +4,12 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Nigerian Primary Maths: T U & H T U Chalkboard</title>
+<script src="maths_questions.js"></script>
+
+<!-- FIREBASE SDK COMPAT LIBRARIES -->
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
-<script src="maths_questions.js"></script>
+
 <style>
 :root{
   --green:#047857;--green-dark:#064e3b;--board-bg:#10362a;
@@ -38,6 +41,10 @@ button{cursor:pointer;border:0}
   background:var(--green-dark);color:#fde047;padding:3px 10px;
   border-radius:999px;font-size:13px;letter-spacing:0.5px;
 }
+.sync-badge{
+  background:#e0f2fe;color:#0369a1;padding:3px 10px;
+  border-radius:999px;font-size:12px;font-weight:800;border:1px solid #bae6fd;
+}
 
 main{max-width:1200px;margin:auto;padding:16px}
 .screen{display:none}
@@ -58,7 +65,7 @@ main{max-width:1200px;margin:auto;padding:16px}
 .board-header{
   text-align:center;border-bottom:2px dashed rgba(255,255,255,.25);
   padding-bottom:8px;font-weight:900;font-size:14px;letter-spacing:1px;color:#a7f3d0;
-  display:flex;justify-content:space-between;align-items:center;flex-wrap:gap;gap:6px;
+  display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px;
 }
 .board-header-title{flex:1;text-align:center}
 
@@ -73,6 +80,7 @@ main{max-width:1200px;margin:auto;padding:16px}
   text-align:center;
 }
 
+/* Dynamically styled in JS for TU vs HTU */
 .calc-grid{
   display:grid;
   justify-content:center;align-items:center;
@@ -94,6 +102,7 @@ main{max-width:1200px;margin:auto;padding:16px}
   pointer-events:none;overflow:visible;
 }
 
+/* Glowing Red Carried Digit Circle */
 .popping-circle{
   display:inline-flex;align-items:center;justify-content:center;
   width:42px;height:42px;border-radius:50%;
@@ -111,6 +120,7 @@ main{max-width:1200px;margin:auto;padding:16px}
   100%{transform:scale(0.92);box-shadow:0 0 10px rgba(239,68,68,.7)}
 }
 
+/* Chair Introduction Stage */
 .intro-stage{
   background:rgba(0,0,0,.35);border:2.5px dashed var(--yellow);
   border-radius:16px;padding:12px;margin-bottom:12px;width:100%;max-width:460px;
@@ -293,6 +303,7 @@ main{max-width:1200px;margin:auto;padding:16px}
     <input type="text" id="pupilNameInput" class="pupil-input" placeholder="e.g. Flourish" value="Flourish" onchange="updatePupilName(this.value)">
     <button class="btn primary" style="padding:4px 10px;font-size:12px" onclick="savePupilNameBtn()">Save Name</button>
     <span class="pupil-badge" id="currentPupilBadge">Active Pupil: Flourish</span>
+    <span class="sync-badge" id="parentSyncBadge">📡 Parent Live Sync: Standalone</span>
   </div>
 
   <main>
@@ -458,66 +469,184 @@ main{max-width:1200px;margin:auto;padding:16px}
 </div>
 
 <script>
-// --- FIREBASE PRESENCE & PARENT MONITORING BRIDGE ---
+// =============================================================
+// FIREBASE LIVE TRACKING & MULTI-DEVICE MONITORING ENGINE
+// =============================================================
 const formalFirebaseConfig = {
-  apiKey:"AIzaSyCRL0nXwiqQk4isamyt1UkGWyQ50t3DjYo",
-  authDomain:"kids-school-accademy.firebaseapp.com",
-  databaseURL:"https://kids-school-accademy-default-rtdb.firebaseio.com",
-  projectId:"kids-school-accademy",
-  storageBucket:"kids-school-accademy.firebasestorage.app",
-  messagingSenderId:"227052035126",
-  appId:"1:227052035126:web:432601b90f3d54a00e8c97",
-  measurementId:"G-B8DSN41S9K"
+    apiKey: "AIzaSyCRL0nXwiqQk4isamyt1UkGWyQ50t3DjYo",
+    authDomain: "kids-school-accademy.firebaseapp.com",
+    databaseURL: "https://kids-school-accademy-default-rtdb.firebaseio.com",
+    projectId: "kids-school-accademy",
+    storageBucket: "kids-school-accademy.firebasestorage.app",
+    messagingSenderId: "227052035126",
+    appId: "1:227052035126:web:432601b90f3d54a00e8c97",
+    measurementId: "G-B8DSN41S9K"
 };
-if(!firebase.apps.length) firebase.initializeApp(formalFirebaseConfig);
-const klaDb = firebase.database();
 
-// Read from URL parameters first (works across multiple devices), fallback to localStorage
-const urlParams = new URLSearchParams(window.location.search);
-let klaSelectedChild = null;
-
-if (urlParams.get('p') && urlParams.get('c')) {
-    klaSelectedChild = {
-        parentUid: urlParams.get('p'),
-        id: urlParams.get('c'),
-        name: urlParams.get('name') || 'Flourish'
-    };
-    localStorage.setItem('kla_selected_child', JSON.stringify(klaSelectedChild));
-    if(urlParams.get('name')) localStorage.setItem('tu_pupil_name', urlParams.get('name'));
-} else {
-    try {
-        klaSelectedChild = JSON.parse(localStorage.getItem('kla_selected_child') || 'null');
-    } catch(e){}
+if (!firebase.apps.length) {
+    firebase.initializeApp(formalFirebaseConfig);
 }
 
-document.addEventListener('visibilitychange', () => {
-  if(document.hidden){
-    updateParentPresence('away', 'Left classroom / Tab switched (playing game or watching film?)');
-  } else {
-    updateParentPresence('active', 'Actively learning on chalkboard');
-  }
-});
-window.addEventListener('blur', () => {
-  if(document.hidden){
-    updateParentPresence('away', 'Left classroom / Window minimized or unfocused');
-  }
-});
-window.addEventListener('focus', () => {
-  updateParentPresence('active', 'Actively learning on chalkboard');
-});
-window.addEventListener('beforeunload', () => {
-  updateParentPresence('closed', 'Exited the classroom');
-});
+const db = firebase.database();
+let statusRef = null;
+let connectedRef = null;
+let isAway = false;
+let idleTimer = null;
+const IDLE_TIMEOUT_MS = 60000;       // 60 sec idle marks status as "away"
+const HEARTBEAT_INTERVAL_MS = 20000; // syncs every 20 sec
 
-window.addEventListener('storage', (e) => {
-  if((e.key === 'kla_selected_child' || e.key === 'tu_pupil_name') && e.newValue){
-    try {
-      const val = e.key === 'tu_pupil_name' ? e.newValue : JSON.parse(e.newValue).name;
-      if(val) updatePupilName(val);
-    }catch(err){}
-  }
-});
+const KidTracker = {
+    parentUid: null,
+    childId: null,
+    childName: null,
+    
+    init: function() {
+        const params = new URLSearchParams(window.location.search);
+        this.parentUid = params.get("p");
+        this.childId = params.get("c");
+        const urlName = params.get("name");
+        const urlTopic = params.get("topic");
 
+        if (urlName) {
+            updatePupilName(urlName);
+        }
+        if (urlTopic) {
+            currentTopic = urlTopic;
+            localStorage.setItem('tu_selected_topic', currentTopic);
+        }
+
+        const badge = document.getElementById("parentSyncBadge");
+        if (!this.parentUid || !this.childId) {
+            if (badge) badge.textContent = "📡 Parent Live Sync: Standalone Mode";
+            return;
+        }
+
+        if (badge) {
+            badge.style.background = "#dcfce7";
+            badge.style.color = "#15803d";
+            badge.style.borderColor = "#86efac";
+            badge.textContent = "🟢 Live Connected to Parent Device";
+        }
+
+        statusRef = db.ref("parents/" + this.parentUid + "/children/" + this.childId + "/learningStatus");
+        connectedRef = db.ref(".info/connected");
+
+        // Real-time automatic disconnect handler
+        connectedRef.on("value", function(snap) {
+            if (snap.val() === true) {
+                statusRef.onDisconnect().update({
+                    status: "offline",
+                    lastActivity: firebase.database.ServerValue.TIMESTAMP
+                });
+                KidTracker.pushStatus("studying");
+            }
+        });
+
+        // Tab focus & visibility change detection
+        document.addEventListener("visibilitychange", function() {
+            if (document.hidden) {
+                isAway = true;
+                KidTracker.pushStatus("away");
+            } else {
+                isAway = false;
+                KidTracker.pushStatus("studying");
+                KidTracker.resetIdle();
+            }
+        });
+
+        // Physical touch/mouse interaction detection
+        ["pointerdown", "touchstart", "mousemove", "keydown", "scroll"].forEach(evt => {
+            window.addEventListener(evt, () => {
+                if (document.hidden) return;
+                if (isAway) {
+                    isAway = false;
+                    KidTracker.pushStatus("studying");
+                }
+                KidTracker.resetIdle();
+            }, { passive: true });
+        });
+
+        // Periodic background heartbeat
+        setInterval(() => {
+            if (!document.hidden && !isAway && statusRef) {
+                KidTracker.pushStatus("studying");
+            }
+        }, HEARTBEAT_INTERVAL_MS);
+
+        this.resetIdle();
+    },
+
+    resetIdle: function() {
+        clearTimeout(idleTimer);
+        idleTimer = setTimeout(() => {
+            if (!document.hidden && statusRef) {
+                isAway = true;
+                KidTracker.pushStatus("away");
+            }
+        }, IDLE_TIMEOUT_MS);
+    },
+
+    pushStatus: function(statusText) {
+        if (!statusRef) return;
+        const now = Date.now();
+        const dateKey = new Date().toISOString().slice(0, 10);
+        const topicTitles = {
+            addition: "Addition (T U)", subtraction: "Subtraction (T U)",
+            multiplication: "Multiplication (T U)", division: "Division (T U)",
+            addition_htu: "Addition (H T U)", subtraction_htu: "Subtraction (H T U)",
+            multiplication_htu: "Multiplication (H T U)", division_htu: "Division (H T U)"
+        };
+        const activeTopic = topicTitles[currentTopic] || currentTopic;
+
+        statusRef.transaction(current => {
+            const data = current || {};
+            let todayMins = data.todayMinutes || 0;
+            if (data.todayDate !== dateKey) todayMins = 0;
+
+            if (data.status === "studying" && data.lastActivity) {
+                const diffSec = (now - data.lastActivity) / 1000;
+                if (diffSec > 0 && diffSec < 60) {
+                    todayMins += diffSec / 60;
+                }
+            }
+
+            return {
+                status: statusText,
+                subject: "Mathematics",
+                topic: activeTopic,
+                startedAt: data.startedAt || now,
+                lastActivity: now,
+                todayMinutes: Math.round(todayMins * 10) / 10,
+                todayDate: dateKey,
+                progress: data.progress !== undefined ? data.progress : 0,
+                quizScore: data.quizScore !== undefined ? data.quizScore : (stats.practiceTotal ? `${stats.practiceCorrect}/${stats.practiceTotal}` : "—")
+            };
+        });
+    },
+
+    reportProgress: function(percent) {
+        if (!statusRef) return;
+        const clamped = Math.max(0, Math.min(100, Math.round(percent)));
+        statusRef.update({
+            progress: clamped,
+            lastActivity: firebase.database.ServerValue.TIMESTAMP
+        });
+    },
+
+    reportPracticeScore: function() {
+        if (!statusRef) return;
+        const percent = stats.practiceTotal ? Math.round((stats.practiceCorrect / stats.practiceTotal) * 100) : 0;
+        statusRef.update({
+            quizScore: `${stats.practiceCorrect} / ${stats.practiceTotal} (${percent}%)`,
+            progress: percent,
+            lastActivity: firebase.database.ServerValue.TIMESTAMP
+        });
+    }
+};
+
+// =============================================================
+// ORIGINAL LESSON & CHALKBOARD ENGINE
+// =============================================================
 const STROKE_DATA = {
   'H': ['M 25,14 L 25,60', 'M 75,14 L 75,60', 'M 25,37 L 75,37'],
   'T': ['M 18,14 L 82,14', 'M 50,14 L 50,56'],
@@ -539,6 +668,7 @@ const STROKE_DATA = {
 };
 
 const DEFAULT_FALLBACK_BANK = {
+  // 1. TENS & UNITS (T U)
   "addition": [
     { "q": "36 + 26", "a": "62", "hint": "Units: 6 + 6 = 12 (write 2, carry 1). Tens: 1 + 3 + 2 = 6. Answer = 62!" },
     { "q": "62 + 21", "a": "83", "hint": "Units: 2 + 1 = 3. Tens: 6 + 2 = 8. Answer = 83!" },
@@ -565,6 +695,8 @@ const DEFAULT_FALLBACK_BANK = {
     { "q": "74 ÷ 4", "a": "18 R 2", "hint": "Tens: 7 ÷ 4 = 1 Ten (rem 3). 34 ÷ 4 = 8 rem 2. Answer = 18 R 2!" },
     { "q": "54 ÷ 6", "a": "9", "hint": "6 × 9 = 54, so 54 ÷ 6 = 9!" }
   ],
+
+  // 2. HUNDREDS, TENS & UNITS (H T U)
   "addition_htu": [
     { "q": "246 + 138", "a": "384", "hint": "Units: 6+8=14 (write 4, carry 1). Tens: 1+4+3=8. Hundreds: 2+1=3. Answer = 384!" },
     { "q": "357 + 265", "a": "622", "hint": "Units: 7+5=12 (write 2, carry 1). Tens: 1+5+6=12 (write 2, carry 1). Hundreds: 1+3+2=6. Answer = 622!" },
@@ -600,18 +732,7 @@ let animToken = 0;
 let hasPlayedIntro = false;
 let stats = JSON.parse(localStorage.getItem('tu_spaced_stats') || '{"completed":0,"practiceCorrect":0,"practiceTotal":0}');
 
-let pupilName = 'Flourish';
-try {
-  const syncObj = JSON.parse(localStorage.getItem('kla_selected_child') || 'null');
-  if(syncObj && syncObj.name) {
-    pupilName = syncObj.name;
-  } else if(localStorage.getItem('tu_pupil_name')) {
-    pupilName = localStorage.getItem('tu_pupil_name');
-  }
-} catch(e){
-  pupilName = localStorage.getItem('tu_pupil_name') || 'Flourish';
-}
-
+let pupilName = localStorage.getItem('tu_pupil_name') || 'Flourish';
 let currentVoiceRole = localStorage.getItem('tu_selected_voice') || 'abeo';
 let currentTopic = localStorage.getItem('tu_selected_topic') || 'addition';
 let availableVoices = [];
@@ -643,13 +764,13 @@ function updatePupilName(val){
   pupilName = val.trim() || 'Flourish';
   localStorage.setItem('tu_pupil_name', pupilName);
   const input = document.getElementById('pupilNameInput');
-  if(input) input.value = pupilName;
-  const currentBadge = document.getElementById('currentPupilBadge');
-  if(currentBadge) currentBadge.textContent = `Active Pupil: ${pupilName}`;
-  const boardBadge = document.getElementById('boardPupilBadge');
-  if(boardBadge) boardBadge.textContent = `PUPIL: ${pupilName.toUpperCase()}`;
-  const pTitle = document.getElementById('progressTitle');
-  if(pTitle) pTitle.textContent = `${pupilName}'s Term Progress 📈`;
+  if (input) input.value = pupilName;
+  const curBadge = document.getElementById('currentPupilBadge');
+  if (curBadge) curBadge.textContent = `Active Pupil: ${pupilName}`;
+  const brdBadge = document.getElementById('boardPupilBadge');
+  if (brdBadge) brdBadge.textContent = `PUPIL: ${pupilName.toUpperCase()}`;
+  const progTitle = document.getElementById('progressTitle');
+  if (progTitle) progTitle.textContent = `${pupilName}'s Term Progress 📈`;
 }
 
 function savePupilNameBtn(){
@@ -678,7 +799,6 @@ function switchTopic(topic){
   selectedProblemIndex = 0;
   hasPlayedIntro = false;
   localStorage.setItem('tu_selected_topic', topic);
-  updateParentPresence('active', `Switched topic to ${topic}`);
   stopSpeech();
   isPlaying = false;
   isPaused = false;
@@ -687,6 +807,7 @@ function switchTopic(topic){
   populateQuestionDropdown();
   initGrid();
   renderPractice();
+  KidTracker.pushStatus("studying");
 }
 
 function onQuestionSelectChange(val){
@@ -701,6 +822,7 @@ function onQuestionSelectChange(val){
 
 function populateQuestionDropdown(){
   const select = document.getElementById('questionSelect');
+  if (!select) return;
   select.innerHTML = '';
   const list = (masterQuestionBank && masterQuestionBank[currentTopic]) ? masterQuestionBank[currentTopic] : [];
   list.forEach((item, idx) => {
@@ -744,6 +866,9 @@ function getTargetVoice(role){
       || voices[0] || null;
 }
 
+// -------------------------------------------------------------
+// STRICT SYNCHRONIZATION ENGINE
+// -------------------------------------------------------------
 function speakAsync(text, token, onStartCallback){
   return new Promise((resolve) => {
     if(!('speechSynthesis' in window)){
@@ -942,6 +1067,7 @@ function showScreen(id){
   if(id !== 'lesson') pauseLesson();
   if(id === 'practice') renderPractice();
   if(id === 'progress') renderProgress();
+  KidTracker.pushStatus("studying");
 }
 
 document.querySelectorAll('.nav button').forEach(b => {
@@ -974,6 +1100,8 @@ function startIntroOnly(){
   isPaused = false;
   document.getElementById('playBtn').textContent = '⏸ Pause Teaching';
   document.getElementById('statusIndicator').textContent = '👨‍🏫 Explaining Chair Rule...';
+  KidTracker.pushStatus("studying");
+
   runTopicIntroduction(token).then(() => {
     isPlaying = false;
     document.getElementById('playBtn').textContent = '▶ Start Live Teaching (Continuous)';
@@ -989,6 +1117,7 @@ function pauseLesson(){
   stopSpeech();
   document.getElementById('playBtn').textContent = '▶ Resume Teaching';
   document.getElementById('statusIndicator').textContent = '⏸ Paused';
+  KidTracker.pushStatus("away");
 }
 
 function resumeLesson(){
@@ -996,6 +1125,7 @@ function resumeLesson(){
   isPaused = false;
   document.getElementById('playBtn').textContent = '⏸ Pause Teaching';
   document.getElementById('statusIndicator').textContent = '👨‍🏫 Teacher is solving problem on board...';
+  KidTracker.pushStatus("studying");
 }
 
 function replayLesson(){
@@ -1007,6 +1137,9 @@ function replayLesson(){
   startContinuousTeaching();
 }
 
+// -------------------------------------------------------------
+// ADAPTIVE TOPIC INTRODUCTION: T U OR H T U
+// -------------------------------------------------------------
 async function runTopicIntroduction(token){
   const pupil = getPupilName();
   const isHTU = currentTopic.includes('htu');
@@ -1156,7 +1289,7 @@ async function runTopicIntroduction(token){
   await executeVoicedCheckpointWithRetry({
     title: "Classroom Chair Rule Check",
     question: `How many digits are allowed to sit on each chair 💺 at a time?`,
-    speechPrompt: `${pupil}, it's your turn to answer questions! Tell teacher: How many digits can sit on each chair? Tap the correct rule!`,
+    speechPrompt: `Tell teacher, ${pupil}: How many digits can sit on each chair? Tap the correct rule!`,
     options: [
       { text: `👉 Only 1 single digit can sit on each chair 💺`, correct: true },
       { text: `👉 2 or 3 digits can squeeze on one chair`, correct: false }
@@ -1171,11 +1304,15 @@ async function runTopicIntroduction(token){
   await speakAsync(`Brilliant, ${pupil}! Now let us solve our first problem step-by-step!`, token);
 }
 
+// -------------------------------------------------------------
+// CONTINUOUS AUTO-ADVANCE LOOP THROUGH ALL EXAMPLES
+// -------------------------------------------------------------
 async function runContinuousLessons(){
   const token = ++animToken;
   isPlaying = true;
   isPaused = false;
   document.getElementById('playBtn').textContent = '⏸ Pause Teaching';
+  KidTracker.pushStatus("studying");
 
   const questions = (masterQuestionBank && masterQuestionBank[currentTopic]) ? masterQuestionBank[currentTopic] : [];
   if(!questions.length){
@@ -1203,6 +1340,9 @@ async function runContinuousLessons(){
     const currentNum = selectedProblemIndex + 1;
     document.getElementById('statusIndicator').textContent = `👨‍🏫 Solving Example ${currentNum} of ${total}...`;
 
+    // Report real-time lesson progress to parent dashboard
+    KidTracker.reportProgress((selectedProblemIndex / total) * 100);
+
     initGrid();
 
     try {
@@ -1225,6 +1365,8 @@ async function runContinuousLessons(){
       await checkWait(token);
       updateSubtitle(`🎉 Hurray, ${getPupilName()}! We have completed all ${total} examples for this topic! Excellent focus!`);
       await speakAsync(`Hurray, ${getPupilName()}! We have completed all ${total} examples for this topic! Excellent focus, clap for yourself!`, token);
+      
+      KidTracker.reportProgress(100);
       isPlaying = false;
       selectedProblemIndex = 0;
       if(select) select.value = 0;
@@ -1235,6 +1377,9 @@ async function runContinuousLessons(){
   }
 }
 
+// -------------------------------------------------------------
+// TEACH CURRENT PROBLEM: DYNAMICALLY SUPPORTS T U AND H T U
+// -------------------------------------------------------------
 async function teachCurrentProblem(token, exampleNum, totalExamples){
   const pupil = getPupilName();
   const isHTU = currentTopic.includes('htu');
@@ -1272,16 +1417,19 @@ async function teachCurrentProblem(token, exampleNum, totalExamples){
   const t2 = Math.floor((num2 % 100) / 10);
   const u2 = num2 % 10;
 
+  // 1. GREETING
   await checkWait(token);
   updateSubtitle(`Example ${exampleNum} of ${totalExamples}: Let us solve ${num1} ${signWord} ${num2} together, ${pupil}!`);
   await speakAsync(`Example ${exampleNum} of ${totalExamples}: Let us solve ${num1} ${signWord} ${num2} together, ${pupil}!`, token);
 
+  // 2. COLUMN HEADERS
   if(isHTU){
     await speakAndDraw('head-h', 'H', "First, on the far left, we write H for Hundreds...", "We write H for Hundreds!", true, token);
   }
   await speakAndDraw('head-t', 'T', isHTU ? "Next in the middle, we write T for Tens..." : "First, on the left, we write T for Tens...", "We write T for Tens!", true, token);
   await speakAndDraw('head-u', 'U', "And on the right, we write U for Units...", "We write U for Units!", true, token);
 
+  // 3. STATED QUESTION BANNER
   await checkWait(token);
   updateSubtitle(`Today's question is: ${num1} ${sign} ${num2} = ?`);
   let qPromise = null;
@@ -1290,12 +1438,14 @@ async function teachCurrentProblem(token, exampleNum, totalExamples){
   });
   if(qPromise) await qPromise;
 
+  // 4. ROW 1
   if(isHTU && h1 > 0){
     await speakAndDraw('r1-h', String(h1), `In ${num1}, we have ${h1} Hundreds.`, `We write ${h1} under Hundreds!`, false, token);
   }
   await speakAndDraw('r1-t', String(t1), `In ${num1}, we have ${t1} Tens.`, `We write ${t1} under Tens!`, false, token);
   await speakAndDraw('r1-u', String(u1), `And in ${num1}, we have ${u1} Units.`, `We write ${u1} under Units!`, false, token);
 
+  // 5. ROW 2 & OPERATION SIGN
   await speakAndDraw('r2-sign', sign, `Now look at our operation:`, `We write the ${signWord} sign on the left!`, true, token);
   if(isHTU && h2 > 0){
     await speakAndDraw('r2-h', String(h2), `In ${num2}, there are ${h2} Hundreds.`, `We write ${h2} under Hundreds!`, false, token);
@@ -1305,6 +1455,7 @@ async function teachCurrentProblem(token, exampleNum, totalExamples){
   }
   await speakAndDraw('r2-u', String(u2), `And in ${num2}, there are ${u2} Units.`, `We write ${u2} under Units!`, false, token);
 
+  // 6. RULER LINE
   await checkWait(token);
   updateSubtitle("Now take your ruler and rule our answer line across.");
   let rulerPromise = null;
@@ -1313,6 +1464,9 @@ async function teachCurrentProblem(token, exampleNum, totalExamples){
   });
   if(rulerPromise) await rulerPromise;
 
+  // ===========================================================
+  // OPERATION 1: ADDITION (T U & H T U)
+  // ===========================================================
   if(sign === '+'){
     const uSum = u1 + u2;
     const uCarry = Math.floor(uSum / 10);
@@ -1325,6 +1479,7 @@ async function teachCurrentProblem(token, exampleNum, totalExamples){
     const hSum = isHTU ? (tCarry + h1 + h2) : 0;
     const hAns = hSum;
 
+    // UNITS
     resetFruitTray(`Units: Group 1 (${u1}) + Group 2 (${u2})`);
     const bodyEl = document.getElementById('trayBody');
     bodyEl.innerHTML = `
@@ -1362,7 +1517,7 @@ async function teachCurrentProblem(token, exampleNum, totalExamples){
     await executeVoicedCheckpointWithRetry({
       title: "Count Total Units",
       question: `Count Group 1 (${u1} oranges) and Group 2 (${u2} oranges) together. What is ${u1} + ${u2}?`,
-      speechPrompt: `${pupil}, it's your turn to answer questions! Count all the sweet oranges in both groups! What is ${u1} plus ${u2}? Tap your answer!`,
+      speechPrompt: `Count all the sweet oranges in both groups, ${pupil}! What is ${u1} plus ${u2}? Tap your answer!`,
       options: [
         { text: `👉 ${uSum} sweet oranges (${u1} + ${u2} = ${uSum})`, correct: true },
         { text: `👉 ${uSum + 1} sweet oranges`, correct: false },
@@ -1389,6 +1544,7 @@ async function teachCurrentProblem(token, exampleNum, totalExamples){
       await speakAndDraw('ans-u', String(uAns), `Adding Units: ${u1} plus ${u2} gives ${uAns}. It sits peacefully on the Units chair!`, `We write ${uAns} under Units!`, false, token);
     }
 
+    // TENS
     await checkWait(token);
     updateSubtitle(`Now, our Units house is settled with ${uAns}. Let us give full attention to the Tens house!`);
     await speakAsync(`Now, our Units house is settled with ${uAns}. Let us give full attention to the Tens house!`, token);
@@ -1430,7 +1586,7 @@ async function teachCurrentProblem(token, exampleNum, totalExamples){
     await executeVoicedCheckpointWithRetry({
       title: "Count Total Tens",
       question: `Add all Tens: ${uCarry > 0 ? uCarry + ' carried (RED) + ' : ''}${t1} + ${t2}. How many Tens altogether?`,
-      speechPrompt: `${pupil}, it's your turn to answer questions! Count all the baskets of Ten! What is the total? Tap your answer!`,
+      speechPrompt: `Count all the baskets of Ten, ${pupil}! What is the total? Tap your answer!`,
       options: [
         { text: `👉 ${tSum} Tens`, correct: true },
         { text: `👉 ${tSum >= 2 ? tSum - 1 : tSum + 2} Tens`, correct: false }
@@ -1451,6 +1607,7 @@ async function teachCurrentProblem(token, exampleNum, totalExamples){
         await speakAndDraw('ans-t', String(tAns), `Under Tens: ${tAns} sits peacefully on the Tens chair!`, `We write ${tAns} under Tens!`, false, token);
       }
 
+      // HUNDREDS
       await checkWait(token);
       updateSubtitle(`Now, let us move to the Hundreds house on the far left!`);
       await speakAsync(`Now, let us move to the Hundreds house on the far left!`, token);
@@ -1494,7 +1651,12 @@ async function teachCurrentProblem(token, exampleNum, totalExamples){
       await speakAndDraw('ans-t', String(tAns), `Under Tens: ${tAns} Tens sit down!`, `We write ${tAns} under Tens!`, false, token);
       await finishLessonSuccess(`${num1} + ${num2} = ${currentItem.a}`, `Units: ${u1}+${u2}=${uSum}<br>Tens: ${uCarry>0?'<span style="color:#ef4444">1 carried</span>+':''}${t1}+${t2}=${tAns}<br><b>ANSWER = ${currentItem.a}</b>`, token);
     }
-  } else if(sign === '-'){
+  }
+
+  // ===========================================================
+  // OPERATION 2: SUBTRACTION (T U & H T U)
+  // ===========================================================
+  else if(sign === '-'){
     let curU1 = u1;
     let curT1 = t1;
     let curH1 = h1;
@@ -1554,7 +1716,12 @@ async function teachCurrentProblem(token, exampleNum, totalExamples){
     } else {
       await finishLessonSuccess(`${num1} - ${num2} = ${currentItem.a}`, `Units: ${curU1}-${u2}=${uDiff}<br>Tens: ${curT1}-${t2}=${tDiff}<br><b>ANSWER = ${currentItem.a}</b>`, token);
     }
-  } else if(sign === '×'){
+  }
+
+  // ===========================================================
+  // OPERATION 3: MULTIPLICATION (T U & H T U)
+  // ===========================================================
+  else if(sign === '×'){
     const multiplier = num2;
 
     const uProd = multiplier * u1;
@@ -1588,13 +1755,17 @@ async function teachCurrentProblem(token, exampleNum, totalExamples){
       }
 
       await speakAndDraw('ans-h', String(hAns), `Now in Hundreds: ${multiplier} times ${h1} Hundreds is ${multiplier * h1}${tCarry > 0 ? ', plus ' + tCarry + ' carried gives ' + hAns : ''}.`, `We write ${hAns} under Hundreds!`, false, token);
-
       await finishLessonSuccess(`${num1} × ${num2} = ${currentItem.a}`, `Units: ${multiplier}×${u1}=${uProd}<br>Tens: ${multiplier}×${t1}+${uCarry}=${tProd}<br>Hundreds: ${hAns}<br><b>ANSWER = ${currentItem.a}</b>`, token);
     } else {
       await speakAndDraw('ans-t', String(tAns), `Now in Tens: ${multiplier} times ${t1} Tens is ${multiplier * t1}${uCarry > 0 ? ', plus ' + uCarry + ' carried gives ' + tAns : ''}.`, `We write ${tAns} under Tens!`, false, token);
       await finishLessonSuccess(`${num1} × ${num2} = ${currentItem.a}`, `Units: ${multiplier}×${u1}=${uProd}<br>Tens: ${tAns}<br><b>ANSWER = ${currentItem.a}</b>`, token);
     }
-  } else if(sign === '÷'){
+  }
+
+  // ===========================================================
+  // OPERATION 4: DIVISION (T U & H T U)
+  // ===========================================================
+  else if(sign === '÷'){
     const divisor = num2;
 
     if(isHTU){
@@ -1640,6 +1811,7 @@ async function teachCurrentProblem(token, exampleNum, totalExamples){
       await speakAndDraw('ans-u', String(uQuot), `Now share Units: ${unbundledUnits} Units divided by ${divisor} gives ${uQuot}!`, `We write ${uQuot} under Units!`, false, token);
 
       await finishLessonSuccess(`${num1} ÷ ${num2} = ${currentItem.a}`, `Hundreds: ${h1}÷${divisor}=${hQuot}<br>Tens: ${unbundledTens}÷${divisor}=${tQuot}<br>Units: ${unbundledUnits}÷${divisor}=${uQuot}<br><b>ANSWER = ${currentItem.a}</b>`, token);
+
     } else {
       await checkWait(token);
       updateSubtitle(`In Division, we start from the BIGGEST house: the Tens house! We share ${t1} Tens among ${divisor} first.`);
@@ -1687,6 +1859,9 @@ async function finishLessonSuccess(equation, roughText, token){
   saveStats();
 }
 
+// -------------------------------------------------------------
+// CHALKBOARD DIGIT & MULTI-DIGIT HANDWRITING ENGINE
+// -------------------------------------------------------------
 async function drawNumberStroke(cellKey, strVal, isYellow, token){
   const cell = gridCells[cellKey];
   if(!cell) return;
@@ -1916,7 +2091,7 @@ async function checkWait(token){
 }
 
 function updateSubtitle(text){
-  document.getElementById('speechText').innerHTML = text.replace(new RegExp(`(Hundreds|Tens|Units|H|T|U|bundles of ten|crates of 100|basket of ten|sweet oranges|oranges|baskets of ten|rough work|write down 2|carry 1|borrow|borrowing|sharing|division|multiplication|subtraction|addition|cross out|popping circle|chair|unbundle|leftover|Group 1|Group 2|Chair Rule|RED|red|${getPupilName()})`, 'gi'), '<span class="highlight">$1</span>');
+  document.getElementById('speechText').innerHTML = text.replace(/(Hundreds|Tens|Units|H|T|U|bundles of ten|crates of 100|basket of ten|sweet oranges|oranges|baskets of ten|rough work|write down 2|carry 1|borrow|borrowing|sharing|division|multiplication|subtraction|addition|cross out|popping circle|chair|unbundle|leftover|Flourish|Group 1|Group 2|Chair Rule|RED|red)/gi, '<span class="highlight">$1</span>');
 }
 
 async function executeVoicedCheckpointWithRetry(cfg, token){
@@ -1964,7 +2139,7 @@ async function executeVoicedCheckpointWithRetry(cfg, token){
     if(chosen.correct){
       answeredCorrectly = true;
       const pupil = getPupilName();
-      const commendation = `Good! ${pupil}, you are following, keep focusing!`;
+      const commendation = `Correct! ${pupil}, you are following, keep focusing!`;
       
       feedback.textContent = `🌟 ${commendation}`;
       feedback.style.color = "#166534";
@@ -1996,6 +2171,9 @@ function finishCheckpoint(){
   if(box) box.classList.remove('show');
 }
 
+// -------------------------------------------------------------
+// PRACTICE QUESTIONS VIEW & MANAGEMENT
+// -------------------------------------------------------------
 function renderPractice(){
   const topicNames = {
     addition: "Addition (Tens & Units)",
@@ -2063,6 +2241,9 @@ function checkPractice(idx, expectedAns){
     hint.classList.add('show');
   }
   saveStats();
+
+  // Stream practice results to parent live dashboard
+  KidTracker.reportPracticeScore();
 }
 
 function toggleJsonPanel(){
@@ -2144,11 +2325,15 @@ function renderProgress(){
 
 function sleep(ms){ return new Promise(r => setTimeout(r, ms)); }
 
+// Initialize all modules
 initializeQuestionsBank();
 populateQuestionDropdown();
 initGrid();
 renderPractice();
 renderProgress();
+
+// Launch multi-device synchronization engine
+KidTracker.init();
 </script>
 </body>
 </html>
