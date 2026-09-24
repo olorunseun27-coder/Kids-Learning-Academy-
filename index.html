@@ -3,8 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Kids Learning Academy - Mathematics</title>
+<title>Kids Learning Academy - Multi-Subject Learning Portal</title>
 
+<!-- Firebase SDK Compat -->
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
@@ -13,7 +14,7 @@
 * { box-sizing: border-box; }
 body {
     margin: 0;
-    font-family: "Comic Sans MS", Trebuchet MS, sans-serif;
+    font-family: "Comic Sans MS", "Trebuchet MS", sans-serif;
     background: linear-gradient(135deg, #eef4ff, #fff1f8);
     color: #333;
 }
@@ -23,10 +24,11 @@ header {
     padding: 22px 16px;
     text-align: center;
     border-radius: 0 0 25px 25px;
+    box-shadow: 0 4px 15px rgba(106, 61, 204, 0.2);
 }
 header h1 { margin: 0; font-size: 28px; }
-header p { margin: 8px 0 0; }
-.container { width: min(1000px, 94%); margin: 25px auto; }
+header p { margin: 8px 0 0; opacity: 0.95; }
+.container { width: min(1060px, 94%); margin: 25px auto; }
 .card {
     background: white;
     border-radius: 20px;
@@ -50,62 +52,142 @@ button {
     border: none;
     cursor: pointer;
     font-weight: bold;
+    transition: transform 0.1s ease, opacity 0.15s ease;
 }
-button:hover { opacity: .9; }
+button:hover { opacity: .92; transform: translateY(-1px); }
+button:active { transform: translateY(0); }
 .secondary { background: #eee; color: #333; }
 .btn-green { background: #16a34a; }
+
+/* SUBJECT ORGANIZATION & TABS */
+.subject-filter-bar {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin: 14px 0 20px;
+    padding-bottom: 8px;
+    border-bottom: 1.5px solid #f1e9fe;
+}
+.subject-pill {
+    width: auto;
+    padding: 8px 16px;
+    margin: 0;
+    border-radius: 999px;
+    font-size: 14px;
+    font-weight: 800;
+    background: #f7f3ff;
+    color: #6038c8;
+    border: 1.5px solid #e3d8ff;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+.subject-pill:hover {
+    background: #ede4ff;
+    border-color: #6a3dcc;
+}
+.subject-pill.active {
+    background: #6a3dcc;
+    color: white;
+    border-color: #6a3dcc;
+    box-shadow: 0 3px 10px rgba(106, 61, 204, 0.3);
+}
+
+.subject-group-box {
+    margin-bottom: 28px;
+    background: #faf8ff;
+    border: 2px solid #e9dffc;
+    border-radius: 20px;
+    padding: 18px;
+}
+.subject-group-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 2px dashed #dac8fb;
+    padding-bottom: 10px;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+.subject-group-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 0;
+    font-size: 20px;
+    color: #4c2aa8;
+}
+.subject-counter {
+    background: #ede4ff;
+    color: #6a3dcc;
+    font-size: 12px;
+    font-weight: 900;
+    padding: 4px 10px;
+    border-radius: 999px;
+}
+
 .class-grid, .child-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
     gap: 15px;
 }
 .class-card, .child-card {
-    padding: 20px;
+    padding: 18px;
     border-radius: 18px;
-    background: #f7f3ff;
+    background: #ffffff;
     border: 2px solid #e3d8ff;
-    cursor: pointer;
     text-align: center;
-    transition: transform 0.15s ease, border-color 0.15s ease;
+    transition: transform 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
     position: relative;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
 }
 .class-card:hover, .child-card:hover {
     border-color: #6a3dcc;
     transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(106, 61, 204, 0.12);
 }
-.hidden { display: none; }
+.class-card h3 {
+    margin: 8px 0 4px;
+    color: #3b188c;
+    font-size: 18px;
+}
+.subject-badge-pill {
+    display: inline-block;
+    align-self: center;
+    font-size: 11px;
+    font-weight: 800;
+    padding: 3px 8px;
+    border-radius: 999px;
+    background: #f0ebfc;
+    color: #6a3dcc;
+    margin-bottom: 6px;
+}
+
+.hidden { display: none !important; }
 .error { color: #c62828; }
 .success { color: #16823b; }
-.badge-active {
-    background: #dcfce7; color: #15803d; padding: 6px 12px;
-    border-radius: 10px; font-size: 13px; font-weight: bold; display: inline-block; margin-top: 6px;
-}
-.badge-away {
-    background: #fee2e2; color: #b91c1c; padding: 6px 12px;
-    border-radius: 10px; font-size: 13px; font-weight: bold; display: inline-block; margin-top: 6px;
-}
-.badge-offline {
-    background: #f1f1f1; color: #666; padding: 6px 12px;
-    border-radius: 10px; font-size: 13px; font-weight: bold; display: inline-block; margin-top: 6px;
-}
+
 .delete-btn {
     background: #fee2e2;
     color: #b91c1c;
     border: 1px solid #f87171;
-    padding: 4px 8px;
-    font-size: 11px;
+    padding: 6px 10px;
+    font-size: 12px;
     border-radius: 8px;
-    margin-top: 10px;
+    margin-top: 8px;
     width: auto;
 }
 
-/* ================= LIVE PARENT MONITORING ================= */
+/* LIVE PARENT MONITORING */
 .monitor-header {
     display:flex; justify-content:space-between; align-items:center;
     gap:12px; flex-wrap:wrap;
 }
 .monitor-grid {
-    display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:15px;
+    display:grid; grid-template-columns:repeat(auto-fit,minmax(270px,1fr)); gap:15px;
 }
 .monitor-card {
     background:#fff; border:2px solid #e7defb; border-radius:18px;
@@ -151,8 +233,6 @@ button:hover { opacity: .9; }
     width:9px; height:9px; border-radius:50%; display:inline-block;
     margin-right:5px; background:#16a34a;
 }
-.activity-list { margin:8px 0 0; padding-left:20px; color:#555; font-size:13px; }
-
 </style>
 </head>
 
@@ -160,12 +240,12 @@ button:hover { opacity: .9; }
 
 <header>
     <h1>📚 Kids Learning Academy</h1>
-    <p>Mathematics Learning Centre</p>
+    <p>Multi-Subject Digital Learning & Monitoring Centre</p>
 </header>
 
 <div class="container">
 
-    <!-- AUTHENTICATION -->
+    <!-- AUTHENTICATION SECTION -->
     <section id="authSection" class="card">
         <h2>👨‍👩‍👧 Parent Account</h2>
 
@@ -189,60 +269,71 @@ button:hover { opacity: .9; }
         </div>
     </section>
 
-    <!-- DASHBOARD -->
+    <!-- DASHBOARD SECTION -->
     <section id="dashboardSection" class="hidden">
         <div class="card">
             <h2>👋 Welcome, <span id="parentName"></span></h2>
-            <p>Manage your children's learning and add new topics anytime.</p>
+            <p>Manage your children's learning across all curriculum subjects.</p>
             <div style="display:flex;gap:10px;flex-wrap:wrap">
-                <button onclick="showAddChild()">➕ Add Child</button>
-                <button class="btn-green" onclick="showUploadTopicModal()">📤 Upload / Add New Topic HTML</button>
-                <button class="secondary" onclick="logoutParent()">Logout</button>
+                <button style="flex:1;min-width:140px" onclick="showAddChild()">➕ Add Child</button>
+                <button style="flex:1;min-width:180px" class="btn-green" onclick="showUploadTopicModal()">📤 Add / Publish Lesson HTML</button>
+                <button style="flex:1;min-width:100px" class="secondary" onclick="logoutParent()">Logout</button>
             </div>
         </div>
 
         <!-- UPLOAD NEW TOPIC FORM -->
         <div id="uploadTopicSection" class="card hidden">
-            <h2>📤 Add New Topic to Container</h2>
+            <h2>📤 Add New Lesson to Academy</h2>
             <p style="font-size:14px;color:#666">
-                Whenever you add a new HTML lesson to your repository, add it here and it will appear on the classroom board automatically!
+                Organize your lesson by selecting its academic Subject. It will automatically categorize on the classroom board!
             </p>
 
-            <label style="font-weight:bold;font-size:14px">1. Topic Title (Display Name):</label>
-            <input id="newTopicTitle" type="text" placeholder="e.g. 🍕 Fractions & Shapes">
+            <label style="font-weight:bold;font-size:14px">1. Academic Subject Category:</label>
+            <select id="newTopicSubject">
+                <option value="Mathematics" selected>📐 Mathematics</option>
+                <option value="English Language">📖 English Language (Literacy & Phonics)</option>
+                <option value="Basic Science">🔬 Basic Science & Technology</option>
+                <option value="Social Studies">🌍 Social Studies & Civic Education</option>
+                <option value="Computer Studies">💻 Computer Studies / ICT</option>
+                <option value="Agricultural Science">🌱 Agricultural Science</option>
+                <option value="Cultural Arts">🎨 Creative & Cultural Arts</option>
+                <option value="General Studies">💡 General Knowledge</option>
+            </select>
 
-            <label style="font-weight:bold;font-size:14px">2. Topic Description:</label>
-            <input id="newTopicDesc" type="text" placeholder="e.g. Primary 2 - Parts of a Whole">
+            <label style="font-weight:bold;font-size:14px">2. Lesson Title (Display Name):</label>
+            <input id="newTopicTitle" type="text" placeholder="e.g. 🍕 Fractions & Shapes or 🅰️ Phonics Blends">
 
-            <label style="font-weight:bold;font-size:14px">3. HTML File Name (or Pick from your computer):</label>
-            <input id="newTopicFileName" type="text" placeholder="e.g. fractions.html or Tens and units(2).html">
+            <label style="font-weight:bold;font-size:14px">3. Lesson Description:</label>
+            <input id="newTopicDesc" type="text" placeholder="e.g. Primary 1 - Sounds of Two-Letter Words">
+
+            <label style="font-weight:bold;font-size:14px">4. HTML File Name (or Pick from your computer):</label>
+            <input id="newTopicFileName" type="text" placeholder="e.g. New update edu.html or Tens and units(2).html">
             <input type="file" id="htmlFilePicker" accept=".html,.htm" onchange="handleFilePicked(event)">
 
-            <label style="font-weight:bold;font-size:14px">4. Sub-Topic Query Parameter (Optional):</label>
-            <input id="newTopicParam" type="text" placeholder="Optional e.g. addition_htu">
+            <label style="font-weight:bold;font-size:14px">5. Sub-Topic Query Parameter (Optional):</label>
+            <input id="newTopicParam" type="text" placeholder="Optional e.g. addition_htu or fractions">
 
-            <button class="btn-green" onclick="saveNewTopic()">💾 Save & Publish Topic</button>
+            <button class="btn-green" onclick="saveNewTopic()">💾 Save & Categorize Lesson</button>
             <button class="secondary" onclick="hideUploadTopicModal()">Cancel</button>
             <p id="topicMessage"></p>
         </div>
 
         <div id="childrenSection" class="card">
-            <h2>👧👦 Your Children & Live Monitoring</h2>
+            <h2>👧👦 Registered Children</h2>
             <div id="childrenList" class="child-grid"></div>
         </div>
-
 
         <!-- LIVE PARENT MONITORING DASHBOARD -->
         <div id="monitoringSection" class="card">
             <div class="monitor-header">
                 <div>
-                    <h2 style="margin-bottom:4px">📡 Live Parent Monitoring</h2>
+                    <h2 style="margin-bottom:4px">📡 Live Parent Multi-Device Monitoring</h2>
                     <p style="margin:0;color:#666">
                         <span class="live-dot"></span>
-                        Updates automatically when your children use a lesson.
+                        Live streams which subject and exact topic each child is studying across their devices.
                     </p>
                 </div>
-                <button class="secondary" onclick="refreshMonitoring()">🔄 Refresh</button>
+                <button class="secondary" style="width:auto;padding:8px 16px" onclick="refreshMonitoring()">🔄 Refresh</button>
             </div>
 
             <div id="monitorSummary" class="monitor-summary"></div>
@@ -252,7 +343,7 @@ button:hover { opacity: .9; }
             </div>
         </div>
 
-        <!-- ADD CHILD -->
+        <!-- ADD CHILD MODAL -->
         <div id="addChildSection" class="card hidden">
             <h2>➕ Register Child</h2>
             <input id="childName" type="text" placeholder="Child's name">
@@ -270,18 +361,21 @@ button:hover { opacity: .9; }
             <p id="childMessage"></p>
         </div>
 
-        <!-- CLASSROOM SELECTION (DYNAMIC CONTAINER) -->
+        <!-- CLASSROOM SELECTION (DYNAMIC SUBJECT CONTAINER) -->
         <div id="classroomSection" class="card hidden">
-            <h2>📖 Choose Mathematics Classroom</h2>
-            <p>Child: <strong id="selectedChildName"></strong> | Class: <strong id="selectedChildClass"></strong></p>
+            <h2>📖 Choose Academic Classroom & Subject</h2>
+            <p>Pupil: <strong id="selectedChildName" style="color:#6a3dcc"></strong> | Class: <strong id="selectedChildClass"></strong></p>
 
-            <!-- THIS CONTAINER RECEIVES ALL UPLOADED TOPICS AUTOMATICALLY -->
-            <div class="class-grid" id="dynamicClassGrid">
-                <!-- Dynamically populated from database / defaults -->
+            <!-- SUBJECT FILTER TABS -->
+            <div class="subject-filter-bar" id="subjectFilterBar">
+                <button class="subject-pill active" onclick="filterBySubject('all', this)">✨ All Subjects</button>
             </div>
 
+            <!-- CONTAINER ORGANIZED BY SUBJECT GROUPS -->
+            <div id="subjectGroupsContainer"></div>
+
             <button class="secondary" style="margin-top:16px" onclick="backToChildren()">
-                ← Back to Children
+                ← Back to Children List
             </button>
         </div>
     </section>
@@ -310,32 +404,53 @@ let currentUser = null;
 let selectedChild = null;
 let childrenListener = null;
 let topicsListener = null;
-let monitoringChildrenListener = null;
 let monitoringStatusListeners = {};
 let monitoringStatusData = {};
+let cachedTopics = {};
+let currentSubjectFilter = "all";
 
-
-// Initial starter topics if database is completely fresh
+// Starter topics categorized by subject
 const DEFAULT_TOPICS = [
     {
-        title: "🌱 Beginner Math",
-        desc: "Basic Numbers & Counting",
-        fileName: "New update math(1).html",
-        topicParam: ""
+        subject: "Mathematics",
+        title: "🌱 Numbers & Counting",
+        desc: "Primary 1 - Quantities, Count & State",
+        fileName: "New update edu.html",
+        topicParam: "numbers"
     },
     {
+        subject: "Mathematics",
+        title: "➕ Addition & Subtraction",
+        desc: "Primary 1 - Concrete Fruit Trays & Sums",
+        fileName: "New update edu.html",
+        topicParam: "addition"
+    },
+    {
+        subject: "Mathematics",
         title: "🔢 Tens & Units (T U)",
-        desc: "2-Digit Operations & Chair Rule",
+        desc: "2-Digit Operations & 2-Chair Rule",
         fileName: "Tens and units(2).html",
         topicParam: "addition"
     },
     {
+        subject: "Mathematics",
         title: "🏠 Hundreds, Tens & Units (H T U)",
         desc: "3-Digit Operations & 3-Chair Rule",
         fileName: "Tens and units(2).html",
         topicParam: "addition_htu"
     }
 ];
+
+const SUBJECT_ICONS = {
+    "Mathematics": "📐",
+    "English Language": "📖",
+    "Basic Science": "🔬",
+    "Social Studies": "🌍",
+    "Computer Studies": "💻",
+    "Agricultural Science": "🌱",
+    "Cultural Arts": "🎨",
+    "General Studies": "💡"
+};
 
 function showRegister() {
     document.getElementById("loginBox").classList.add("hidden");
@@ -435,40 +550,93 @@ async function loadDashboard() {
 }
 
 // -------------------------------------------------------------
-// DYNAMIC TOPIC CONTAINER (Listens & Auto-Renders New Lessons)
+// DYNAMIC SUBJECT-GROUPED TOPIC CONTAINER
 // -------------------------------------------------------------
 function listenToTopics() {
     const topicsRef = database.ref("curriculum/topics");
     topicsRef.on("value", function(snapshot) {
         const data = snapshot.val();
         if (!data) {
-            // Seed database with defaults if empty
             DEFAULT_TOPICS.forEach(t => topicsRef.push(t));
         } else {
-            renderTopics(data);
+            cachedTopics = data;
+            renderSubjectOrganizedTopics(cachedTopics);
         }
     });
 }
 
-function renderTopics(topicsObj) {
-    const grid = document.getElementById("dynamicClassGrid");
-    grid.innerHTML = "";
+function renderSubjectOrganizedTopics(topicsObj) {
+    const container = document.getElementById("subjectGroupsContainer");
+    const filterBar = document.getElementById("subjectFilterBar");
+    if (!container || !filterBar) return;
 
+    // Group items by Subject
+    const grouped = {};
     Object.keys(topicsObj).forEach(key => {
         const item = topicsObj[key];
-        const card = document.createElement("div");
-        card.className = "class-card";
+        const subject = item.subject || "Mathematics";
+        if (!grouped[subject]) grouped[subject] = [];
+        grouped[subject].push({ key, ...item });
+    });
 
-        card.innerHTML = `
-            <h2>${escapeHTML(item.title)}</h2>
-            <p>${escapeHTML(item.desc || '')}</p>
-            <span style="font-size:11px;color:#888;display:block;margin-bottom:8px">📄 ${escapeHTML(item.fileName)}</span>
-            <button onclick="launchClassroom('${escapeHTML(item.title)}', '${escapeHTML(item.fileName)}', '${escapeHTML(item.topicParam || '')}')">Open Lesson</button>
-            <button class="delete-btn" onclick="deleteTopic(event, '${key}')">🗑 Delete Topic</button>
+    // Populate Subject Filter Buttons
+    const subjects = Object.keys(grouped);
+    filterBar.innerHTML = `<button class="subject-pill ${currentSubjectFilter === 'all' ? 'active' : ''}" onclick="filterBySubject('all', this)">✨ All Subjects</button>`;
+    subjects.forEach(sub => {
+        const icon = SUBJECT_ICONS[sub] || "📚";
+        const isActive = currentSubjectFilter === sub ? "active" : "";
+        filterBar.innerHTML += `<button class="subject-pill ${isActive}" onclick="filterBySubject('${sub}', this)">${icon} ${escapeHTML(sub)}</button>`;
+    });
+
+    container.innerHTML = "";
+
+    // Render Each Subject Section
+    subjects.forEach(sub => {
+        if (currentSubjectFilter !== "all" && currentSubjectFilter !== sub) {
+            return;
+        }
+
+        const icon = SUBJECT_ICONS[sub] || "📚";
+        const items = grouped[sub];
+
+        const section = document.createElement("div");
+        section.className = "subject-group-box";
+
+        let cardsHtml = items.map(item => `
+            <div class="class-card">
+                <div>
+                    <span class="subject-badge-pill">${icon} ${escapeHTML(sub)}</span>
+                    <h3>${escapeHTML(item.title)}</h3>
+                    <p style="font-size:13px;color:#555;margin:6px 0">${escapeHTML(item.desc || '')}</p>
+                    <span style="font-size:11px;color:#888;display:block;margin-bottom:8px">📄 ${escapeHTML(item.fileName)}</span>
+                </div>
+                <div>
+                    <button onclick="launchClassroom('${escapeHTML(item.title)}', '${escapeHTML(item.fileName)}', '${escapeHTML(item.topicParam || '')}', '${escapeHTML(sub)}')">Open Lesson ▶</button>
+                    <button class="delete-btn" onclick="deleteTopic(event, '${item.key}')">🗑 Remove</button>
+                </div>
+            </div>
+        `).join("");
+
+        section.innerHTML = `
+            <div class="subject-group-header">
+                <h3 class="subject-group-title">
+                    <span>${icon}</span>
+                    <span>${escapeHTML(sub)}</span>
+                </h3>
+                <span class="subject-counter">${items.length} ${items.length === 1 ? 'lesson' : 'lessons'} available</span>
+            </div>
+            <div class="class-grid">${cardsHtml}</div>
         `;
 
-        grid.appendChild(card);
+        container.appendChild(section);
     });
+}
+
+function filterBySubject(subjectName, btnElement) {
+    currentSubjectFilter = subjectName;
+    document.querySelectorAll(".subject-pill").forEach(p => p.classList.remove("active"));
+    if (btnElement) btnElement.classList.add("active");
+    renderSubjectOrganizedTopics(cachedTopics);
 }
 
 function showUploadTopicModal() {
@@ -490,6 +658,7 @@ function handleFilePicked(event) {
 }
 
 async function saveNewTopic() {
+    const subject = document.getElementById("newTopicSubject").value;
     const title = document.getElementById("newTopicTitle").value.trim();
     const desc = document.getElementById("newTopicDesc").value.trim();
     let fileName = document.getElementById("newTopicFileName").value.trim();
@@ -498,14 +667,14 @@ async function saveNewTopic() {
 
     if (!title || !fileName) {
         message.className = "error";
-        message.textContent = "Please provide both a Title and HTML file name.";
+        message.textContent = "Please provide both a Lesson Title and HTML file name.";
         return;
     }
 
-    // Strip any folder path to keep flat in GitHub root
     fileName = fileName.replace(/^.*[\\\/]/, '');
 
     await database.ref("curriculum/topics").push({
+        subject: subject,
         title: title,
         desc: desc,
         fileName: fileName,
@@ -514,8 +683,8 @@ async function saveNewTopic() {
     });
 
     message.className = "success";
-    message.textContent = "Topic added! New card created in the classroom container.";
-    
+    message.textContent = `Lesson added under ${subject}!`;
+
     document.getElementById("newTopicTitle").value = "";
     document.getElementById("newTopicDesc").value = "";
     document.getElementById("newTopicFileName").value = "";
@@ -529,7 +698,7 @@ async function saveNewTopic() {
 
 async function deleteTopic(event, topicKey) {
     event.stopPropagation();
-    if (confirm("Are you sure you want to remove this topic card?")) {
+    if (confirm("Are you sure you want to remove this lesson card?")) {
         await database.ref("curriculum/topics/" + topicKey).remove();
     }
 }
@@ -559,29 +728,25 @@ function renderChildren(children) {
         card.className = "child-card";
         card.innerHTML = `
             <h3>👦 ${escapeHTML(child.name)}</h3>
-            <p style="margin:4px 0 8px">${escapeHTML(child.classLevel)}</p>
+            <p style="margin:4px 0 8px;color:#666">${escapeHTML(child.classLevel)}</p>
             <div style="margin-top:14px">
-                <button onclick="selectChild('${id}')">Open Lessons</button>
+                <button onclick="selectChild('${id}')">Open Classrooms ➔</button>
             </div>
         `;
         list.appendChild(card);
     });
 
-    // Keep the live monitoring dashboard synchronized with the same children.
     startLiveMonitoring(children);
 }
-
 
 // -------------------------------------------------------------
 // LIVE PARENT MONITORING
 // -------------------------------------------------------------
 function startLiveMonitoring(children) {
     if (!currentUser) return;
-
     const grid = document.getElementById("monitoringGrid");
     if (!grid) return;
 
-    // Remove listeners for children that no longer exist.
     Object.keys(monitoringStatusListeners).forEach(function(childId) {
         if (!children || !children[childId]) {
             database.ref("parents/" + currentUser.uid + "/children/" + childId + "/learningStatus")
@@ -672,7 +837,7 @@ function renderMonitoringCards(children) {
 
             <div class="monitor-row">
                 <span class="monitor-label">Subject</span>
-                <span class="monitor-value">${escapeHTML(data.subject || "—")}</span>
+                <span class="monitor-value" style="color:#6a3dcc">${escapeHTML(data.subject || "—")}</span>
             </div>
 
             <div class="monitor-row">
@@ -741,14 +906,10 @@ function renderMonitoringCards(children) {
 
 function getSafeStatus(data) {
     const raw = String(data.status || "offline").toLowerCase();
-
-    // If a lesson stops sending heartbeats for 2 minutes,
-    // don't continue showing "studying".
     const last = Number(data.lastActivity || 0);
     if (raw === "studying" && last && Date.now() - last > 120000) {
         return "away";
     }
-
     if (raw === "studying") return "studying";
     if (raw === "away") return "away";
     return "offline";
@@ -798,20 +959,19 @@ function openChildMonitoring(childId) {
     childrenRef.once("value").then(function(snapshot) {
         const child = snapshot.val() || {};
         const message =
-            "Child: " + (child.name || "Unknown") + "\\n" +
-            "Class: " + (child.classLevel || "—") + "\\n" +
-            "Status: " + getSafeStatus(data).toUpperCase() + "\\n" +
-            "Subject: " + (data.subject || "—") + "\\n" +
-            "Lesson: " + (data.topic || "—") + "\\n" +
-            "Progress: " + (data.progress || 0) + "%\\n" +
-            "Today's study time: " + formatMinutes(Number(data.todayMinutes || 0)) + "\\n" +
-            "Quiz: " + (data.quizScore !== undefined ? data.quizScore : "—") + "\\n" +
+            "Child: " + (child.name || "Unknown") + "\n" +
+            "Class: " + (child.classLevel || "—") + "\n" +
+            "Status: " + getSafeStatus(data).toUpperCase() + "\n" +
+            "Subject: " + (data.subject || "—") + "\n" +
+            "Lesson: " + (data.topic || "—") + "\n" +
+            "Progress: " + (data.progress || 0) + "%\n" +
+            "Today's study time: " + formatMinutes(Number(data.todayMinutes || 0)) + "\n" +
+            "Quiz: " + (data.quizScore !== undefined ? data.quizScore : "—") + "\n" +
             "Last activity: " + formatTimeAgo(data.lastActivity);
 
         alert(message);
     });
 }
-
 
 function showAddChild() { document.getElementById("addChildSection").classList.remove("hidden"); }
 function hideAddChild() { document.getElementById("addChildSection").classList.add("hidden"); }
@@ -848,12 +1008,19 @@ function backToChildren() {
     document.getElementById("childrenSection").classList.remove("hidden");
 }
 
-async function launchClassroom(roomCode, targetUrl, topic) {
+async function launchClassroom(roomCode, targetUrl, topic, subject) {
     if (!currentUser || !selectedChild) return;
 
     targetUrl = (targetUrl || roomCode).replace(/^.*[\\\/]/, '');
 
-    let url = encodeURI(targetUrl) + "?p=" + encodeURIComponent(currentUser.uid) + "&c=" + encodeURIComponent(selectedChild.id) + "&name=" + encodeURIComponent(selectedChild.name);
+    let url = encodeURI(targetUrl) + 
+              "?p=" + encodeURIComponent(currentUser.uid) + 
+              "&c=" + encodeURIComponent(selectedChild.id) + 
+              "&name=" + encodeURIComponent(selectedChild.name);
+
+    if (subject) {
+        url += "&subject=" + encodeURIComponent(subject);
+    }
     if (topic) {
         url += "&topic=" + encodeURIComponent(topic);
     }
