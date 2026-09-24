@@ -424,7 +424,6 @@
       z-index: 10;
     }
 
-    /* TEACHER HAND IMAGE INTEGRATION */
     #teacher-hand-cursor {
       position: absolute;
       top: 0;
@@ -921,8 +920,8 @@
 
         <div class="voice-picker">
           <select id="voice-select" aria-label="Select Teacher Voice">
-            <option value="ezinne">👩🏾‍🏫 Teacher Ezinne</option>
-            <option value="abeo">👨🏾‍🏫 Teacher Abeo</option>
+            <option value="ezinne">👩🏾‍🏫 Teacher Ezinne (Nigerian Female)</option>
+            <option value="abeo">👨🏾‍🏫 Teacher Abeo (Nigerian Male)</option>
           </select>
         </div>
       </div>
@@ -1826,6 +1825,18 @@
         return cleaned.replace(/\s{2,}/g, " ").trim();
       }
 
+      // GLOBAL VOICE REGISTRATION & CACHING FOR NATURAL NIGERIAN SPEECH
+      let availableVoicesList = [];
+      function refreshSystemVoices() {
+        if (typeof window !== "undefined" && "speechSynthesis" in window) {
+          availableVoicesList = window.speechSynthesis.getVoices();
+        }
+      }
+      if (typeof window !== "undefined" && "speechSynthesis" in window) {
+        window.speechSynthesis.onvoiceschanged = refreshSystemVoices;
+        refreshSystemVoices();
+      }
+
       /* ROBUST SLATE HANDWRITER */
       class SlateHandWriter {
         constructor(canvas, handElement) {
@@ -2081,7 +2092,7 @@
         }
       }
 
-      /* TEACHER VOICE ENGINE WITH CHROME AUTOPLAY PROTECTION */
+      /* TEACHER VOICE ENGINE WITH NATURAL NIGERIAN AUDIO */
       class NativeTeacherVoiceEngine {
         constructor(onStateChange, onAutoplayBlocked) {
           this.onStateChange = onStateChange;
@@ -2093,15 +2104,47 @@
           this.watchdogTimer = null;
           this.heartbeat = null;
           this.hasInteracted = false;
-
-          if (window.speechSynthesis) {
-            window.speechSynthesis.onvoiceschanged = () => {};
-          }
         }
 
         setPersona(mode) {
           this.teacherMode = mode;
           localStorage.setItem("math_teacher_persona", mode);
+        }
+
+        getTargetVoice(role) {
+          const voices = (availableVoicesList && availableVoicesList.length)
+            ? availableVoicesList
+            : (window.speechSynthesis ? window.speechSynthesis.getVoices() : []);
+          if (!voices || !voices.length) return null;
+
+          if (role === 'abeo') {
+            let v = voices.find(v => /abeo/i.test(v.name));
+            if (v) return v;
+            v = voices.find(v => (/en[-_]NG/i.test(v.lang) || /Nigeria/i.test(v.name) || /Nigerian/i.test(v.name)) && /male/i.test(v.name));
+            if (v) return v;
+            v = voices.find(v => /en[-_]NG/i.test(v.lang) || /Nigeria/i.test(v.name) || /Nigerian/i.test(v.name));
+            if (v) return v;
+            v = voices.find(v => v.lang.startsWith('en') && /male/i.test(v.name));
+            if (v) return v;
+            v = voices.find(v => v.lang.startsWith('en'));
+            if (v) return v;
+          } else {
+            // Ezinne (Nigerian Female)
+            let v = voices.find(v => /ezinne/i.test(v.name));
+            if (v) return v;
+            v = voices.find(v => (/en[-_]NG/i.test(v.lang) || /Nigeria/i.test(v.name) || /Nigerian/i.test(v.name)) && /female/i.test(v.name));
+            if (v) return v;
+            v = voices.find(v => /en[-_]NG/i.test(v.lang) || /Nigeria/i.test(v.name) || /Nigerian/i.test(v.name));
+            if (v) return v;
+            v = voices.find(v => v.lang.startsWith('en') && /female/i.test(v.name));
+            if (v) return v;
+            v = voices.find(v => v.lang.startsWith('en'));
+            if (v) return v;
+          }
+
+          return voices.find(v => v.default && v.lang.startsWith('en'))
+              || voices.find(v => v.lang.startsWith('en'))
+              || voices[0] || null;
         }
 
         clearWatchdog() {
@@ -2154,14 +2197,20 @@
             }
 
             const utterance = new SpeechSynthesisUtterance(text);
-            utterance.rate = 0.86;
-            utterance.pitch = (this.teacherMode === "ezinne") ? 1.12 : 0.88;
+            const targetVoice = this.getTargetVoice(this.teacherMode);
+            if (targetVoice) utterance.voice = targetVoice;
 
-            const voices = window.speechSynthesis.getVoices() || [];
-            let bestVoice = voices.find(v => v && v.lang && (v.lang.toLowerCase() === "en-ng" || v.lang.toLowerCase() === "en_ng"));
-            if (!bestVoice) bestVoice = voices.find(v => v && v.lang && v.lang.toLowerCase().startsWith("en-gb"));
-            if (!bestVoice) bestVoice = voices.find(v => v && v.lang && v.lang.toLowerCase().startsWith("en"));
-            if (bestVoice) utterance.voice = bestVoice;
+            // Pitch & Rate for warm, clear Nigerian teaching cadence
+            if (this.teacherMode === "ezinne") {
+              utterance.pitch = 1.08;
+              utterance.rate = 0.88;
+            } else if (this.teacherMode === "abeo") {
+              utterance.pitch = 0.95;
+              utterance.rate = 0.86;
+            } else {
+              utterance.pitch = 1.0;
+              utterance.rate = 0.88;
+            }
 
             let finished = false;
             const finishAction = () => {
@@ -2183,7 +2232,7 @@
 
             utterance.onerror = (event) => {
               if (event.error === 'not-allowed' && !this.hasInteracted) {
-                console.warn("Chrome blocked speech autoplay. Awaiting user interaction.");
+                console.warn("Speech playback blocked until user interacts.");
                 this.isPlaying = false;
                 this.onStateChange(false);
                 if (this.onAutoplayBlocked) {
@@ -2241,8 +2290,8 @@
 
           if (passedTopic) {
             const clean = passedTopic.toLowerCase().trim();
-            initialTopic = this.topics.find(t => 
-              t.topicId.toLowerCase().includes(clean) || 
+            initialTopic = this.topics.find(t =>
+              t.topicId.toLowerCase().includes(clean) ||
               t.topicTitle.toLowerCase().includes(clean) ||
               t.lessons.some(l => l.id.toLowerCase().includes(clean) || l.title.toLowerCase().includes(clean))
             );
@@ -2276,6 +2325,11 @@
             (speaking) => this.updateSpeakingUI(speaking),
             (resumeCallback) => this.showChromeAudioUnlockPrompt(resumeCallback)
           );
+
+          if (this.voiceSelect) {
+            this.voiceSelect.value = this.voiceEngine.teacherMode;
+            this.updateVoiceLabel();
+          }
 
           this.slateWriter = new SlateHandWriter(
             document.getElementById("writing-canvas"),
@@ -2314,6 +2368,7 @@
           const unlockBtn = document.getElementById("btn-unlock-audio");
           const onUnlock = () => {
             audioFX.init();
+            refreshSystemVoices();
             if (window.speechSynthesis) {
               window.speechSynthesis.resume();
               const prime = new SpeechSynthesisUtterance(" ");
@@ -2428,6 +2483,7 @@
 
           this.btnPlay.addEventListener("click", () => {
             audioFX.init();
+            refreshSystemVoices();
             if (this.voiceEngine.isPaused) this.voiceEngine.resume();
             else this.playCurrentStageSequence();
           });
@@ -2439,6 +2495,7 @@
 
           this.btnReplay.addEventListener("click", () => {
             audioFX.init();
+            refreshSystemVoices();
             this.runCurrentStage();
           });
 
@@ -2576,7 +2633,7 @@
           const isEzinne = this.voiceEngine.teacherMode === "ezinne";
           this.teacherAvatar.textContent = isEzinne ? "👩🏾‍🏫" : "👨🏾‍🏫";
           this.teacherLabel.textContent = isEzinne ? "Teacher Ezinne" : "Teacher Abeo";
-          this.voiceBadge.textContent = isEzinne ? "Voice: Teacher Ezinne" : "Voice: Teacher Abeo";
+          this.voiceBadge.textContent = isEzinne ? "Voice: Teacher Ezinne (Nigerian Female)" : "Voice: Teacher Abeo (Nigerian Male)";
         }
 
         loadLesson(lesson, startStage = 0) {
@@ -2618,7 +2675,6 @@
           this.boardTitle.textContent = stage.title || this.currentLesson.title;
           this.boardSubtitle.textContent = stage.subtitle || "";
 
-          // SPLIT OUT SPECIFIC TOPIC & REPORT TO PARENT MONITORING
           const specificTopicDetail = `${this.currentTopic.topicTitle} • ${this.currentLesson.title} (${stage.title || 'Stage ' + (this.currentStageIndex + 1)})`;
           parentTracker.updateSpecificTopic(specificTopicDetail, pct);
 
@@ -3287,10 +3343,6 @@
       }
     })();
   </script>
-<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
-<script src="kid-tracker.js"></script>
 </body>
 </html>
-</body>
-</html>
+
