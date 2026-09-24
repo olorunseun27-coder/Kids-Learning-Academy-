@@ -1,56 +1,76 @@
 /**
- * Kids Learning Academy - Live Activity & Heartbeat Tracking Engine
- * Works automatically across devices using URL query parameters (?p=parentUid&c=childId)
+ * Kids Learning Academy - Universal Multi-Subject Live Activity Tracker
+ * Automatically monitors student activity, tab switches, study minutes, and scores across devices.
  */
 
 (function () {
-    // 1. Extract Parent ID and Child ID passed by School_Live_Monitoring.html
-    const params = new URLSearchParams(window.location.search);
-    const parentUid = params.get("p");
-    const childId = params.get("c");
-    const childName = params.get("name") || "Student";
-    const subTopic = params.get("topic") || "";
+    "use strict";
 
+    // 1. Extract URL Parameters forwarded from the Parent Container
+    const urlParams = new URLSearchParams(window.location.search);
+    const parentUid = urlParams.get("p");
+    const childId = urlParams.get("c");
+    const childName = urlParams.get("name") || localStorage.getItem("tu_pupil_name") || "Student";
+    const subTopicParam = urlParams.get("topic") || "";
+
+    // Dynamic Subject Detection (URL > window global > Document Title fallback)
+    const detectedSubject = urlParams.get("subject") || window.LESSON_SUBJECT || "Mathematics";
+
+    // Friendly page/lesson title
+    const rawFileName = window.location.pathname.split("/").pop().replace(/\.[^/.]+$/, "");
+    const pageTitle = document.title ? document.title.split("-")[0].trim() : rawFileName;
+    let activeLessonName = subTopicParam ? `${pageTitle} (${subTopicParam})` : pageTitle;
+
+    // If standalone preview (opened directly without parent launcher)
     if (!parentUid || !childId) {
-        console.warn("[KidTracker] Running in standalone preview mode (no parent or child ID found in URL).");
+        console.info(`[KidTracker] Preview Mode: Active Pupil: "${childName}", Subject: "${detectedSubject}". (No parent ID attached)`);
+        window.KidTracker = {
+            setProgress: (pct) => console.log(`[KidTracker Preview] Progress: ${pct}%`),
+            setQuizScore: (score) => console.log(`[KidTracker Preview] Quiz Score: ${score}`),
+            setTopic: (name) => console.log(`[KidTracker Preview] Topic: ${name}`),
+            setSubject: (sub) => console.log(`[KidTracker Preview] Subject: ${sub}`)
+        };
         return;
     }
 
-    // 2. Initialize Firebase if not already initialized on this page
-    const firebaseConfig = {
+    // 2. Firebase Configuration
+    const formalFirebaseConfig = {
         apiKey: "AIzaSyCRL0nXwiqQk4isamyt1UkGWyQ50t3DjYo",
         authDomain: "kids-school-accademy.firebaseapp.com",
         databaseURL: "https://kids-school-accademy-default-rtdb.firebaseio.com",
         projectId: "kids-school-accademy",
         storageBucket: "kids-school-accademy.firebasestorage.app",
         messagingSenderId: "227052035126",
-        appId: "1:227052035126:web:432601b90f3d54a00e8c97"
+        appId: "1:227052035126:web:432601b90f3d54a00e8c97",
+        measurementId: "G-B8DSN41S9K"
     };
 
     if (typeof firebase === "undefined") {
-        console.error("[KidTracker] Firebase library not loaded. Please include firebase-app and firebase-database scripts.");
+        console.error("[KidTracker] Firebase library not loaded. Include firebase-app and firebase-database in your HTML.");
         return;
     }
 
     if (!firebase.apps.length) {
-        firebase.initializeApp(firebaseConfig);
+        firebase.initializeApp(formalFirebaseConfig);
     }
 
     const db = firebase.database();
-    const statusRef = db.ref("parents/" + parentUid + "/children/" + childId + "/learningStatus");
+    const statusRef = db.ref(`parents/${parentUid}/children/${childId}/learningStatus`);
     const connectedRef = db.ref(".info/connected");
 
-    // 3. State variables
+    // 3. State Management
     let isAway = false;
     let idleTimer = null;
-    const IDLE_TIMEOUT_MS = 60000; // After 60 seconds without touch/click/typing, child is marked "away"
-    const HEARTBEAT_INTERVAL_MS = 20000; // Push heartbeat every 20 seconds
-    const lessonTitle = document.title || window.location.pathname.split("/").pop();
+    let currentSubject = detectedSubject;
+    let currentProgress = 0;
+    let latestQuizScore = null;
 
-    // 4. Clean shutdown when child closes tab, crashes, or loses internet
-    connectedRef.on("value", function (snap) {
-        if (snap.val() === true) {
-            // When disconnected (browser closed or connection lost), automatically set to offline
+    const IDLE_TIMEOUT_MS = 60000;       // 60 seconds without touch/mouse marks pupil as 'away'
+    const HEARTBEAT_INTERVAL_MS = 20000; // Accrues minutes studied every 20 seconds
+
+    // 4. Automatic Disconnection Handler (Triggers immediately on tab close or screen sleep)
+    connectedRef.on("value", function (snapshot) {
+        if (snapshot.val() === true) {
             statusRef.onDisconnect().update({
                 status: "offline",
                 lastActivity: firebase.database.ServerValue.TIMESTAMP
@@ -61,21 +81,22 @@
         }
     });
 
-    // 5. Update Status Helper
+    // 5. Update Status in Firebase Realtime Database
     function pushStatusUpdate(statusText) {
+        if (!statusRef) return;
         const now = Date.now();
         const dateKey = new Date().toISOString().slice(0, 10); // YYYY-MM-DD
 
         statusRef.transaction(function (current) {
             const data = current || {};
-            let todayMins = data.todayMinutes || 0;
+            let todayMins = Number(data.todayMinutes || 0);
 
-            // Reset study minutes if it's a brand new day
+            // Reset study minutes if studying on a brand new day
             if (data.todayDate !== dateKey) {
                 todayMins = 0;
             }
 
-            // If previously studying, increment time spent based on heartbeat interval
+            // Increment elapsed study minutes while active
             if (data.status === "studying" && data.lastActivity) {
                 const diffSec = (now - data.lastActivity) / 1000;
                 if (diffSec > 0 && diffSec < 60) {
@@ -85,19 +106,19 @@
 
             return {
                 status: statusText,
-                subject: "Mathematics",
-                topic: subTopic ? `${lessonTitle} (${subTopic})` : lessonTitle,
+                subject: currentSubject,
+                topic: activeLessonName,
                 startedAt: data.startedAt || now,
                 lastActivity: now,
                 todayMinutes: Math.round(todayMins * 10) / 10,
                 todayDate: dateKey,
-                progress: data.progress !== undefined ? data.progress : 0,
-                quizScore: data.quizScore !== undefined ? data.quizScore : null
+                progress: currentProgress !== 0 ? currentProgress : (data.progress || 0),
+                quizScore: latestQuizScore !== null ? latestQuizScore : (data.quizScore || "—")
             };
         });
     }
 
-    // 6. Detect when child minimizes browser or switches tabs (e.g., YouTube or games)
+    // 6. Detect Window Minimize or Tab Switching (e.g. child switches to YouTube or games)
     document.addEventListener("visibilitychange", function () {
         if (document.hidden) {
             isAway = true;
@@ -109,15 +130,13 @@
         }
     });
 
-    // 7. Detect active physical interactions (Mouse, Finger Touch, Keys)
-    function onUserActivity() {
+    // 7. Detect Physical Screen Interactions (Touch, Click, Keyboard, Scrolling)
+    function onUserActive() {
         if (document.hidden) return;
-
         if (isAway) {
             isAway = false;
             pushStatusUpdate("studying");
         }
-
         resetIdleTimer();
     }
 
@@ -131,42 +150,58 @@
         }, IDLE_TIMEOUT_MS);
     }
 
-    ["pointerdown", "touchstart", "mousemove", "keydown", "scroll"].forEach(function (evt) {
-        window.addEventListener(evt, onUserActivity, { passive: true });
+    ["pointerdown", "touchstart", "mousemove", "keydown", "scroll", "click"].forEach(function (eventName) {
+        window.addEventListener(eventName, onUserActive, { passive: true });
     });
 
-    // 8. Background Heartbeat (Sends progress every 20 seconds while tab remains open)
+    // 8. Background Heartbeat (Keeps active time accurate while tab stays open)
     setInterval(function () {
         if (!document.hidden && !isAway) {
             pushStatusUpdate("studying");
         }
     }, HEARTBEAT_INTERVAL_MS);
 
-    // Initial timer setup
     resetIdleTimer();
 
-    // 9. Expose Global Hook so lesson exercises can report live Quiz Scores & Progress
+    // 9. Global KidTracker API for lessons to call
     window.KidTracker = {
         setProgress: function (percent) {
-            const clamped = Math.max(0, Math.min(100, Math.round(percent)));
-            statusRef.update({
-                progress: clamped,
-                lastActivity: firebase.database.ServerValue.TIMESTAMP
-            });
+            currentProgress = Math.max(0, Math.min(100, Math.round(Number(percent) || 0)));
+            if (statusRef) {
+                statusRef.update({
+                    progress: currentProgress,
+                    lastActivity: firebase.database.ServerValue.TIMESTAMP
+                });
+            }
         },
         setQuizScore: function (score) {
-            statusRef.update({
-                quizScore: score,
-                lastActivity: firebase.database.ServerValue.TIMESTAMP
-            });
+            latestQuizScore = String(score);
+            if (statusRef) {
+                statusRef.update({
+                    quizScore: latestQuizScore,
+                    lastActivity: firebase.database.ServerValue.TIMESTAMP
+                });
+            }
         },
         setTopic: function (topicName) {
-            statusRef.update({
-                topic: topicName,
-                lastActivity: firebase.database.ServerValue.TIMESTAMP
-            });
+            activeLessonName = String(topicName);
+            if (statusRef) {
+                statusRef.update({
+                    topic: activeLessonName,
+                    lastActivity: firebase.database.ServerValue.TIMESTAMP
+                });
+            }
+        },
+        setSubject: function (subjectName) {
+            currentSubject = String(subjectName);
+            if (statusRef) {
+                statusRef.update({
+                    subject: currentSubject,
+                    lastActivity: firebase.database.ServerValue.TIMESTAMP
+                });
+            }
         }
     };
 
-    console.log("[KidTracker] Connected and monitoring child: " + childName);
+    console.info(`[KidTracker] Successfully synchronized for ${childName} | Subject: ${currentSubject} | Lesson: ${activeLessonName}`);
 })();
