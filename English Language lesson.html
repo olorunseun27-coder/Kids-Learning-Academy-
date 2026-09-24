@@ -1,0 +1,5020 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Kids Learning Academy - Smart Classroom &amp; Universal Hub</title>
+
+<style>
+*{box-sizing:border-box}
+
+body{
+  margin:0;
+  font-family:"Comic Sans MS","Trebuchet MS",Arial,sans-serif;
+  background:linear-gradient(135deg,#e5f6ff,#fff0f8);
+  color:#202040;
+  user-select:none;
+  -webkit-tap-highlight-color:transparent;
+  transition:font-size 0.2s ease;
+}
+
+button,input,select,textarea{font:inherit}
+
+.app{
+  max-width:1150px;
+  margin:auto;
+  padding:10px;
+  transition:all 0.2s ease;
+}
+
+/* TOPBAR */
+.topbar{
+  background:linear-gradient(135deg,#4338ca,#673de6);
+  color:white;
+  border-radius:20px;
+  padding:10px 16px;
+  box-shadow:0 8px 22px rgba(0,0,0,0.15);
+  position:sticky;
+  top:6px;
+  z-index:90;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  flex-wrap:wrap;
+  gap:8px;
+}
+
+.topbar-left{
+  display:flex;
+  align-items:center;
+  gap:12px;
+}
+
+.menu-toggle-btn{
+  background:rgba(255,255,255,0.22);
+  border:2px solid rgba(255,255,255,0.4);
+  color:white;
+  border-radius:14px;
+  width:44px;
+  height:44px;
+  font-size:1.5rem;
+  font-weight:900;
+  cursor:pointer;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  box-shadow:0 4px 10px rgba(0,0,0,0.15);
+  transition:all 0.15s ease;
+}
+
+.menu-toggle-btn:hover{
+  background:rgba(255,255,255,0.35);
+  transform:scale(1.05);
+}
+
+.menu-toggle-btn:active{
+  transform:scale(0.92);
+}
+
+.brand-info h1{
+  margin:0;
+  font-size:clamp(1.1rem,3.4vw,1.55rem);
+  font-weight:900;
+  letter-spacing:0.3px;
+}
+
+.brand-info small{
+  opacity:.92;
+  font-weight:700;
+  font-size:clamp(0.72rem, 2vw, 0.82rem);
+  display:block;
+}
+
+.topbar-right{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  flex-wrap:wrap;
+}
+
+.student-tag{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  background:rgba(255, 255, 255, 0.22);
+  padding:5px 12px;
+  border-radius:14px;
+  font-size:0.84rem;
+  font-weight:800;
+  border:1px solid rgba(255,255,255,0.4);
+  cursor:pointer;
+  transition:0.15s;
+}
+
+.student-tag:hover{
+  background:rgba(255,255,255,0.35);
+}
+
+.cloud-pill{
+  display:inline-flex;
+  align-items:center;
+  gap:5px;
+  background:rgba(255,255,255,0.2);
+  color:white;
+  padding:5px 10px;
+  border-radius:16px;
+  font-size:0.78rem;
+  font-weight:bold;
+  border:1px solid rgba(255,255,255,0.4);
+}
+
+.cloud-dot{
+  width:8px;
+  height:8px;
+  border-radius:50%;
+  background:#ffb31a;
+}
+
+.cloud-dot.connected{
+  background:#00ff88;
+  box-shadow:0 0 8px #00ff88;
+}
+
+/* ☰ SIDEBAR DRAWER */
+.sidebar-backdrop{
+  position:fixed;
+  inset:0;
+  background:rgba(10, 15, 28, 0.65);
+  backdrop-filter:blur(4px);
+  z-index:10000;
+  opacity:0;
+  visibility:hidden;
+  transition:opacity 0.28s ease, visibility 0.28s ease;
+}
+
+.sidebar-backdrop.open{
+  opacity:1;
+  visibility:visible;
+}
+
+.sidebar-drawer{
+  position:fixed;
+  top:0;
+  left:0;
+  bottom:0;
+  width:320px;
+  max-width:85vw;
+  background:#ffffff;
+  z-index:10001;
+  transform:translateX(-100%);
+  transition:transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  display:flex;
+  flex-direction:column;
+  box-shadow:8px 0 32px rgba(0,0,0,0.3);
+  overflow-y:auto;
+}
+
+.sidebar-drawer.open{
+  transform:translateX(0);
+}
+
+.sidebar-header{
+  background:linear-gradient(135deg, #4338ca, #673de6);
+  color:white;
+  padding:16px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+}
+
+.sidebar-header h3{
+  margin:0;
+  font-size:1.25rem;
+  font-weight:900;
+}
+
+.sidebar-close-btn{
+  background:rgba(255,255,255,0.25);
+  border:0;
+  color:white;
+  font-size:1.3rem;
+  font-weight:900;
+  border-radius:50%;
+  width:36px;
+  height:36px;
+  cursor:pointer;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  transition:background 0.15s;
+}
+
+.sidebar-student-card{
+  padding:12px 16px;
+  background:#f7f3ff;
+  border-bottom:2px solid #ede5ff;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  cursor:pointer;
+}
+
+.sidebar-nav{
+  padding:12px;
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+  flex:1;
+}
+
+.sidebar-link{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  padding:12px 14px;
+  border-radius:14px;
+  border:2px solid #eef2f6;
+  background:#fcfdfe;
+  color:#2b1f4d;
+  font-weight:800;
+  font-size:0.98rem;
+  text-decoration:none;
+  cursor:pointer;
+  transition:all 0.15s ease;
+}
+
+.sidebar-link:hover{
+  background:#f3edff;
+  border-color:#c4b5fd;
+  color:#5b21b6;
+  transform:translateX(4px);
+}
+
+.sidebar-link.active{
+  background:#4338ca;
+  color:white;
+  border-color:#4338ca;
+  box-shadow:0 4px 12px rgba(67, 56, 202, 0.3);
+}
+
+.sidebar-link.warn{
+  background:#fffbeb;
+  border-color:#fde68a;
+  color:#92400e;
+}
+
+.sidebar-footer{
+  padding:14px;
+  border-top:1px solid #e2e8f0;
+  background:#fafbfc;
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+}
+
+/* GENERAL BUTTONS */
+.btn{
+  border:0;
+  border-radius:12px;
+  padding:8px 14px;
+  background:white;
+  color:#4338ca;
+  font-weight:800;
+  cursor:pointer;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:5px;
+  transition:transform 0.1s, background-color 0.2s, box-shadow 0.2s;
+  box-shadow:0 2px 5px rgba(0,0,0,0.1);
+}
+
+.btn:active{transform:scale(0.96)}
+.btn.primary{background:#16a34a;color:white}
+.btn.warn{background:#f59e0b;color:#2c1900}
+.btn.danger{background:#ef4444;color:white}
+.btn.purple{background:#6366f1;color:white}
+.btn.tv-btn{background:#ff5722;color:white;border:2px solid #fff}
+.btn.tv-btn.active{background:#ffeb3b;color:#d84315;border-color:#ff9800;box-shadow:0 0 10px #ffeb3b}
+.btn-sm{padding:5px 10px;font-size:0.82rem;border-radius:10px}
+.btn:disabled{opacity:0.45;cursor:not-allowed}
+
+.screen{display:none;margin-top:12px}
+.screen.active{display:block}
+
+.panel{
+  background:white;
+  border-radius:20px;
+  padding:16px;
+  box-shadow:0 6px 18px rgba(0,0,0,0.06);
+  margin-bottom:14px;
+}
+
+.lesson-header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  flex-wrap:wrap;
+  gap:8px;
+  margin-bottom:8px;
+}
+
+h2{margin-top:0}
+
+.hero{
+  text-align:center;
+  background:linear-gradient(135deg,#fff9c9,#fff);
+  border:3px dashed #f0c62d;
+}
+
+.hero .emoji{font-size:2.8rem}
+
+.grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+  gap:12px;
+}
+
+.topic-card{
+  border:2px solid #e2e8f0;
+  border-radius:16px;
+  padding:14px;
+  background:#fbfcff;
+  cursor:pointer;
+  transition:.15s;
+  text-align:left;
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+}
+
+.topic-card:hover{
+  transform:translateY(-3px);
+  box-shadow:0 8px 18px rgba(0,0,0,0.08);
+}
+
+.topic-card .icon{font-size:2.2rem}
+.topic-card h3{margin:4px 0 2px; font-weight:900}
+.topic-card p{margin:0 0 8px 0; color:#64748b; font-size:0.85rem}
+
+.topic-actions{
+  display:flex;
+  gap:5px;
+  margin-top:8px;
+  border-top:1px solid #eee;
+  padding-top:6px;
+  flex-wrap:wrap;
+}
+
+.meta{font-size:.85rem;color:#64748b}
+
+.badge{
+  display:inline-block;
+  padding:4px 9px;
+  border-radius:16px;
+  background:#eee8ff;
+  color:#4338ca;
+  font-weight:800;
+  font-size:0.8rem;
+}
+
+.class-badge{
+  background:#fef3c7;
+  color:#92400e;
+  border:1px solid #fde68a;
+}
+
+.progress{
+  height:7px;
+  background:#e9edf3;
+  border-radius:20px;
+  overflow:hidden;
+  margin:4px 0 8px 0;
+}
+
+.progress>div{
+  height:100%;
+  background:#16a34a;
+  width:0;
+  transition:.3s ease;
+}
+
+/* SMARTBOARD THEATER */
+.fullscreen-player{
+  position:relative;
+  display:flex;
+  flex-direction:column;
+  width:100%;
+  height:auto;
+}
+
+.fullscreen-player.is-fullscreen{
+  position:fixed;
+  inset:0;
+  z-index:99999;
+  background:#0d140f;
+  padding:6px;
+  max-width:100vw;
+  height:100vh;
+  margin:0;
+  border-radius:0;
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+  overflow:hidden;
+}
+
+.classroom-smartboard{
+  background:radial-gradient(circle at center, #1b222d 0%, #10141c 100%);
+  border:7px solid #4a3424;
+  border-radius:20px;
+  box-shadow:0 10px 25px rgba(0,0,0,0.4), inset 0 0 20px rgba(0,0,0,0.7);
+  color:#ffffff;
+  display:flex;
+  flex-direction:column;
+  margin:2px 0 8px 0;
+  overflow:hidden;
+  position:relative;
+  flex:1 1 auto;
+  min-height:510px;
+}
+
+.fullscreen-player.is-fullscreen .classroom-smartboard{
+  flex:1 1 auto;
+  min-height:0;
+  margin-bottom:6px;
+}
+
+.smartboard-header{
+  flex:0 0 auto;
+  background:rgba(13, 17, 24, 0.95);
+  border-bottom:2px solid rgba(255, 255, 255, 0.12);
+  padding:6px 12px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:6px;
+  z-index:5;
+}
+
+.board-tag{
+  background:#252e3e;
+  color:#ffeb3b;
+  padding:2px 8px;
+  border-radius:8px;
+  font-size:0.8rem;
+  font-weight:900;
+  letter-spacing:0.5px;
+}
+
+.teacher-indicator{
+  display:flex;
+  align-items:center;
+  gap:6px;
+  font-size:0.8rem;
+  color:#c8e6c9;
+  font-weight:800;
+}
+
+.wake-lock-badge{
+  display:inline-flex;
+  align-items:center;
+  gap:4px;
+  background:rgba(255, 235, 59, 0.18);
+  border:1px solid #ffeb3b;
+  color:#fff9c4;
+  padding:2px 6px;
+  border-radius:8px;
+  font-size:0.72rem;
+  font-weight:bold;
+}
+
+.pulse-dot{
+  width:8px;
+  height:8px;
+  background:#4caf50;
+  border-radius:50%;
+  box-shadow:0 0 6px #4caf50;
+  transition:background-color 0.3s;
+}
+
+.pulse-dot.speaking{
+  background:#ff5252;
+  box-shadow:0 0 10px #ff5252;
+  animation:pulseAnim 0.7s infinite alternate;
+}
+
+@keyframes pulseAnim{
+  0%{transform:scale(0.9); opacity:0.7}
+  100%{transform:scale(1.3); opacity:1}
+}
+
+.board-content-split{
+  display:flex;
+  flex-direction:column;
+  flex:1 1 auto;
+  min-height:0;
+  overflow:hidden;
+  position:relative;
+}
+
+.board-main-stage{
+  flex:1 1 auto;
+  min-height:0;
+  overflow-y:auto;
+  padding:12px 10px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:flex-start;
+  text-align:center;
+  position:relative;
+}
+
+.stage-title{
+  flex:0 0 auto;
+  font-size:clamp(1.25rem, 4vw, 2.1rem);
+  font-weight:900;
+  color:#ffffff;
+  margin:2px 0 4px 0;
+  letter-spacing:0.5px;
+}
+
+.board-chalk-text{
+  font-size:clamp(1.15rem, 3.2vw, 1.8rem);
+  font-weight:900;
+  color:#fef08a;
+  margin:2px 0 8px;
+  text-shadow:0 2px 10px rgba(0,0,0,0.6);
+  white-space:pre-wrap;
+  line-height:1.35;
+}
+
+/* 🎬 16:9 DUAL SCENE CONTAINER & EMOJI ACTORS */
+.scene-container{
+  width:100%;
+  max-width:580px;
+  aspect-ratio:16 / 9;
+  border-radius:18px;
+  background:#000000;
+  border:3px solid #334e68;
+  position:relative;
+  overflow:hidden;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  box-shadow:0 6px 18px rgba(0,0,0,0.4);
+  margin:4px auto;
+}
+
+.scene-ground{
+  position:absolute;
+  left:0;
+  right:0;
+  bottom:0;
+  height:40%;
+  background:#bbf7d0;
+  border-top:4px solid #86efac;
+  z-index:1;
+}
+
+.emoji-object{
+  position:absolute;
+  top:50%;
+  font-size:clamp(60px,11vw,95px);
+  line-height:1;
+  transform:translate(-50%,-50%);
+  will-change:transform;
+  user-select:none;
+  z-index:2;
+  filter:drop-shadow(0 6px 8px rgba(0,0,0,0.22));
+}
+
+.emoji-object.single{left:50%}
+.emoji-object.subject{left:38%}
+.emoji-object.object{left:64%;font-size:clamp(48px,8vw,75px)}
+
+.action-caption{
+  position:absolute;
+  bottom:10px;
+  left:50%;
+  transform:translateX(-50%);
+  background:#ffffff;
+  padding:5px 14px;
+  border-radius:999px;
+  font-weight:900;
+  font-size:0.9rem;
+  box-shadow:0 4px 14px rgba(0,0,0,0.25);
+  white-space:nowrap;
+  z-index:4;
+  color:#1e293b;
+}
+
+.speech-bubble{
+  position:absolute;
+  top:16px;
+  left:50%;
+  transform:translateX(-50%);
+  background:#fff;
+  border:3px solid #18243a;
+  color:#18243a;
+  padding:6px 16px;
+  border-radius:20px;
+  font-weight:900;
+  font-size:1.15rem;
+  z-index:4;
+  box-shadow:0 6px 20px rgba(0,0,0,0.15);
+  animation:popBubble .25s cubic-bezier(.18,.89,.32,1.28);
+}
+
+@keyframes popBubble{
+  from{transform:translateX(-50%) scale(.6);opacity:0}
+  to{transform:translateX(-50%) scale(1);opacity:1}
+}
+
+.stage-video{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  background:#000;
+  border-radius:14px;
+  z-index:3;
+}
+
+.video-manager-bar{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:8px;
+  width:100%;
+  max-width:580px;
+  margin:6px auto 0;
+  background:rgba(255,255,255,0.06);
+  padding:6px 12px;
+  border-radius:12px;
+  border:1px solid rgba(255,255,255,0.15);
+}
+
+/* 🥧 FRACTION PIE STYLES */
+.fraction-stage-container{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  width:100%;
+  max-width:650px;
+  margin:0 auto;
+}
+
+.fraction-pies-row{
+  display:flex;
+  flex-wrap:wrap;
+  gap:16px;
+  justify-content:center;
+  align-items:center;
+  margin-top:10px;
+}
+
+.fraction-pie-card{
+  background:#1e293b;
+  border:3px solid #475569;
+  border-radius:20px;
+  padding:12px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  box-shadow:0 8px 20px rgba(0,0,0,0.4);
+  transition:transform 0.25s ease, border-color 0.25s ease;
+  cursor:pointer;
+}
+
+.fraction-pie-card:hover, .fraction-pie-card.active-pie{
+  transform:scale(1.08);
+  border-color:#ffeb3b;
+}
+
+.fraction-svg-pie{
+  width:160px;
+  height:160px;
+  overflow:visible;
+}
+
+.pie-slice{
+  cursor:pointer;
+  transition:transform 0.3s cubic-bezier(0.18, 0.89, 0.32, 1.28), fill 0.2s;
+  transform-origin:80px 80px;
+}
+
+.pie-slice.shaded{
+  filter:drop-shadow(0 4px 6px rgba(0,0,0,0.3));
+}
+
+.pie-slice.detached{
+  transform:scale(1.08) translate(8px, -8px);
+}
+
+.fraction-label-text{
+  font-family:inherit;
+  font-weight:900;
+  fill:#000;
+  pointer-events:none;
+}
+
+/* ➖ SUBTRACTION STAGE */
+.subtraction-container{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  width:100%;
+  max-width:620px;
+  margin:0 auto;
+}
+
+.sub-stage-row{
+  display:flex;
+  gap:14px;
+  justify-content:center;
+  width:96%;
+  max-width:580px;
+  margin-top:4px;
+}
+
+.sub-tray-card{
+  flex:1.2;
+  background:#182333;
+  border:3px solid #22c55e;
+  border-radius:20px;
+  padding:12px 10px;
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+  align-items:center;
+  min-height:190px;
+  box-shadow:0 6px 18px rgba(0,0,0,0.35);
+  transition:all 0.25s ease;
+}
+
+.sub-taken-card{
+  flex:0.9;
+  background:#25161c;
+  border:3px dashed #ef4444;
+  border-radius:20px;
+  padding:12px 10px;
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+  align-items:center;
+  min-height:190px;
+  box-shadow:0 6px 18px rgba(0,0,0,0.35);
+  transition:all 0.25s ease;
+}
+
+.sub-card-header{
+  font-size:0.85rem;
+  font-weight:900;
+  letter-spacing:1.2px;
+  text-transform:uppercase;
+}
+
+.sub-items-area{
+  display:flex;
+  flex-wrap:wrap;
+  justify-content:center;
+  align-items:center;
+  gap:8px;
+  flex:1;
+  padding:8px 4px;
+  min-height:70px;
+}
+
+.sub-counter{
+  font-size:clamp(1rem, 3.2vw, 1.25rem);
+  font-weight:900;
+  color:#ffffff;
+}
+
+/* ➗ DIVISION STAGE */
+.division-container{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  width:100%;
+  max-width:580px;
+  margin:0 auto;
+}
+
+.div-equation-title{
+  font-size:clamp(2rem, 6.5vw, 3rem);
+  font-weight:900;
+  color:#ffffff;
+  margin:4px 0 6px 0;
+  letter-spacing:1px;
+  text-shadow:0 3px 10px rgba(0,0,0,0.5);
+}
+
+.div-prompt-subtitle{
+  font-size:clamp(0.95rem, 3.2vw, 1.3rem);
+  color:#f1f5f9;
+  font-weight:800;
+  text-align:center;
+  max-width:90%;
+  line-height:1.35;
+  margin-bottom:12px;
+  min-height:30px;
+}
+
+.div-pool-card{
+  background:#1c2331;
+  border:2px solid rgba(255, 255, 255, 0.15);
+  border-radius:20px;
+  padding:12px 16px;
+  width:92%;
+  max-width:440px;
+  text-align:center;
+  margin-bottom:14px;
+  box-shadow:0 6px 18px rgba(0,0,0,0.35);
+}
+
+.div-pool-header{
+  font-size:0.9rem;
+  font-weight:900;
+  color:#cbd5e1;
+  letter-spacing:1.5px;
+  margin-bottom:8px;
+  text-transform:uppercase;
+}
+
+.div-pool-items{
+  display:flex;
+  flex-wrap:wrap;
+  justify-content:center;
+  align-items:center;
+  gap:10px;
+  min-height:50px;
+}
+
+.div-groups-row{
+  display:flex;
+  gap:14px;
+  justify-content:center;
+  width:96%;
+  max-width:520px;
+}
+
+.div-group-box{
+  flex:1;
+  min-height:190px;
+  max-width:210px;
+  border:3px dashed #64748b;
+  border-radius:22px;
+  background:rgba(255, 255, 255, 0.03);
+  padding:12px 8px;
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+  align-items:center;
+  transition:all 0.25s ease;
+  box-shadow:inset 0 0 15px rgba(0,0,0,0.25);
+}
+
+.div-group-box.receiving{
+  border-color:#ffeb3b;
+  background:rgba(255, 235, 59, 0.18);
+  transform:scale(1.05);
+}
+
+.div-group-header{
+  font-size:clamp(0.9rem, 3vw, 1.2rem);
+  font-weight:900;
+  color:#ffffff;
+  letter-spacing:0.8px;
+  text-transform:uppercase;
+}
+
+.div-group-items{
+  display:flex;
+  flex-wrap:wrap;
+  justify-content:center;
+  align-items:center;
+  gap:8px;
+  flex:1;
+  padding:10px 4px;
+  min-height:75px;
+}
+
+.div-group-counter{
+  font-size:clamp(1rem, 3.4vw, 1.3rem);
+  font-weight:900;
+  color:#ffffff;
+}
+
+/* 📖 ENGLISH CARD */
+.english-card{
+  background:#1e293b;
+  border:3px solid #6366f1;
+  border-radius:20px;
+  padding:16px 20px;
+  max-width:520px;
+  width:95%;
+  margin:10px auto;
+  text-align:center;
+  box-shadow:0 8px 24px rgba(0,0,0,0.4);
+}
+
+.english-badge{
+  display:inline-block;
+  background:#4f46e5;
+  color:#fff;
+  font-size:0.85rem;
+  font-weight:900;
+  padding:4px 12px;
+  border-radius:12px;
+  text-transform:uppercase;
+  letter-spacing:1px;
+  margin-bottom:8px;
+}
+
+.english-word{
+  font-size:clamp(2rem, 6vw, 3.2rem);
+  font-weight:900;
+  color:#ffeb3b;
+  margin:4px 0;
+}
+
+.english-sentence{
+  font-size:clamp(1.05rem, 3.2vw, 1.35rem);
+  color:#f1f5f9;
+  font-weight:bold;
+  background:rgba(255,255,255,0.06);
+  border-left:4px solid #22c55e;
+  padding:10px 14px;
+  border-radius:8px;
+  margin-top:10px;
+}
+
+/* ➕ OBJECT GROUPS & INTERACTIVE ITEMS */
+.groups-container{
+  display:flex;
+  flex-wrap:wrap;
+  justify-content:center;
+  align-items:center;
+  gap:10px;
+  width:100%;
+  max-width:100%;
+  margin:auto 0;
+}
+
+.object-group{
+  background:rgba(255, 255, 255, 0.08);
+  border:2.5px dashed rgba(255, 255, 255, 0.45);
+  border-radius:16px;
+  padding:8px 12px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:6px;
+  min-width:75px;
+  max-width:calc(50% - 8px);
+  transition:transform 0.25s ease, border-color 0.25s ease, background-color 0.25s ease;
+  position:relative;
+}
+
+.object-group.active-group{
+  border:3px solid #ffcc00;
+  background:rgba(255, 204, 0, 0.22);
+  transform:scale(1.05);
+  box-shadow:0 0 20px rgba(255, 204, 0, 0.5);
+}
+
+.group-tag{
+  font-size:0.8rem;
+  font-weight:900;
+  color:#ffffff;
+  background:rgba(0, 0, 0, 0.55);
+  padding:3px 8px;
+  border-radius:8px;
+  text-transform:uppercase;
+  letter-spacing:0.5px;
+}
+
+.items-row{
+  display:flex;
+  flex-wrap:wrap;
+  justify-content:center;
+  gap:6px;
+}
+
+.interactive-item{
+  font-size:clamp(2.2rem, 5.5vw, 3rem);
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  cursor:pointer;
+  position:relative;
+  transition:transform 0.15s ease, opacity 0.3s ease;
+  line-height:1;
+  padding:2px;
+}
+
+.interactive-item:hover{
+  transform:scale(1.2);
+}
+
+@keyframes popAndBounce{
+  0%{transform:scale(1) translateY(0)}
+  20%{transform:scale(1.35, 0.7) translateY(3px)}
+  45%{transform:scale(0.9, 1.35) translateY(-26px); filter:drop-shadow(0 12px 10px rgba(255, 204, 0, 0.7))}
+  70%{transform:scale(1.15, 0.9) translateY(-6px)}
+  85%{transform:scale(0.95, 1.05) translateY(0)}
+  100%{transform:scale(1) translateY(0)}
+}
+
+.interactive-item.bounce{
+  animation:popAndBounce 0.65s cubic-bezier(0.28, 0.84, 0.42, 1) forwards;
+  z-index:10;
+}
+
+.count-indicator{
+  position:absolute;
+  top:-14px;
+  background:#ff4757;
+  color:white;
+  font-size:0.9rem;
+  font-weight:900;
+  border-radius:50%;
+  width:25px;
+  height:25px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  box-shadow:0 3px 6px rgba(0,0,0,0.4);
+}
+
+/* TRANSCRIPT BAR */
+.board-transcript-container{
+  flex:0 0 auto;
+  background:#0b1017;
+  border-top:2px solid rgba(255, 255, 255, 0.14);
+  padding:6px 10px;
+  display:flex;
+  flex-direction:column;
+  max-height:105px;
+  z-index:5;
+}
+
+.transcript-bar-header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  font-size:0.75rem;
+  color:#a3c9a8;
+  font-weight:800;
+  margin-bottom:3px;
+  text-transform:uppercase;
+  letter-spacing:0.5px;
+}
+
+.transcript-feed{
+  max-height:70px;
+  overflow-y:auto;
+  scroll-behavior:smooth;
+  padding:5px 8px;
+  background:rgba(0, 0, 0, 0.45);
+  border-radius:8px;
+  border:1px solid rgba(255, 255, 255, 0.08);
+  font-size:clamp(0.9rem, 2.5vw, 1.15rem);
+  line-height:1.45;
+  color:#e0f2e9;
+  text-align:center;
+  font-weight:700;
+}
+
+.transcript-step-badge{
+  display:inline-block;
+  background:#252e3e;
+  color:#ffeb3b;
+  font-size:0.75rem;
+  padding:2px 7px;
+  border-radius:6px;
+  margin:1px 0 3px 0;
+  font-weight:900;
+}
+
+.chunk{
+  display:inline-block;
+  margin:1px 3px;
+  padding:1px 5px;
+  border-radius:6px;
+  transition:background-color 0.15s, transform 0.15s, color 0.15s;
+}
+
+.chunk.active{
+  background:#ffe600;
+  color:#8b0000;
+  font-weight:900;
+  transform:scale(1.06);
+  box-shadow:0 2px 8px rgba(255, 230, 0, 0.45);
+}
+
+/* CHECKPOINT OVERLAY */
+.checkpoint-overlay{
+  position:absolute;
+  inset:0;
+  background:rgba(10, 20, 14, 0.96);
+  border-radius:14px;
+  z-index:50;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  padding:16px;
+  text-align:center;
+  border:4px solid #ffcc00;
+  animation:popIn 0.3s ease-out;
+}
+
+.checkpoint-mic-btn{
+  background:#ff4757;
+  color:white;
+  border:2px solid white;
+  border-radius:50px;
+  padding:9px 20px;
+  font-size:1.05rem;
+  font-weight:900;
+  cursor:pointer;
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  margin-top:6px;
+  transition:transform 0.2s, background 0.2s;
+}
+
+.checkpoint-mic-btn.listening{
+  background:#00e676;
+  color:#0b3d1b;
+  box-shadow:0 0 18px #00e676;
+  animation:micPulse 1s infinite alternate;
+}
+
+@keyframes micPulse{
+  0%{transform:scale(1)}
+  100%{transform:scale(1.08)}
+}
+
+@keyframes popIn{
+  0%{transform:scale(0.85);opacity:0}
+  100%{transform:scale(1);opacity:1}
+}
+
+/* PLAYER TOOLBAR */
+.player-toolbar{
+  flex:0 0 auto;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  flex-wrap:wrap;
+  gap:6px;
+  background:#ffffff;
+  border:2px solid #e2e8f0;
+  border-radius:16px;
+  padding:6px 10px;
+  box-shadow:0 4px 12px rgba(0,0,0,0.06);
+}
+
+.player-left-group, .player-center-group, .player-right-group{
+  display:flex;
+  align-items:center;
+  gap:5px;
+  flex-wrap:wrap;
+}
+
+.autoplay-pill{
+  display:inline-flex;
+  align-items:center;
+  gap:5px;
+  background:#f8fafc;
+  padding:5px 10px;
+  border-radius:10px;
+  font-size:0.8rem;
+  font-weight:900;
+  cursor:pointer;
+  border:2px solid #cbd5e1;
+  transition:all 0.2s;
+}
+
+.autoplay-pill.active{
+  background:#4338ca;
+  color:white;
+  border-color:#4338ca;
+}
+
+.auto-dot{
+  width:6px;
+  height:6px;
+  border-radius:50%;
+  background:#aaa;
+}
+
+.autoplay-pill.active .auto-dot{
+  background:#00ff88;
+}
+
+.settings-drawer{
+  display:grid;
+  grid-template-columns:repeat(auto-fit, minmax(180px, 1fr));
+  gap:8px;
+  background:#f8fbff;
+  border:1px solid #e0e9f5;
+  border-radius:14px;
+  padding:8px 12px;
+  margin-top:6px;
+}
+
+.status{
+  min-height:18px;
+  margin-top:4px;
+  font-weight:800;
+  text-align:center;
+  font-size:0.85rem;
+}
+
+/* PRACTICE & MULTI-QUESTION QUIZ AREA */
+.quiz-section{
+  background:#fdfdff;
+  border:2px solid #e2e8f0;
+  border-radius:16px;
+  padding:14px;
+  margin-top:12px;
+}
+
+.quiz-header-bar{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:8px;
+  font-size:0.82rem;
+  font-weight:800;
+  color:#64748b;
+}
+
+.quiz-question{
+  font-weight:900;
+  margin-bottom:10px;
+  font-size:1.05rem;
+  color:#1e293b;
+}
+
+.hint-box{
+  background:#fffbeb;
+  border:1px solid #fde68a;
+  color:#92400e;
+  padding:6px 10px;
+  border-radius:8px;
+  font-size:0.8rem;
+  margin-bottom:8px;
+}
+
+.options-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit, minmax(220px, 1fr));
+  gap:8px;
+}
+
+.option{
+  display:block;
+  width:100%;
+  text-align:left;
+  border:2px solid #ddd;
+  background:white;
+  border-radius:12px;
+  padding:9px 12px;
+  cursor:pointer;
+  font-weight:800;
+  font-size:0.92rem;
+  transition:all 0.15s;
+}
+
+.option:hover:not(:disabled){
+  border-color:#4338ca;
+  background:#f8fafc;
+}
+
+.option.correct{
+  border-color:#16a34a;
+  background:#ecfdf5;
+  color:#166534;
+}
+
+.option.wrong{
+  border-color:#dc2626;
+  background:#fef2f2;
+  color:#991b1b;
+}
+
+.feedback{
+  font-weight:800;
+  min-height:22px;
+  margin-top:10px;
+  padding:8px 12px;
+  border-radius:10px;
+  font-size:0.92rem;
+}
+.feedback.correct-text, .feedback.good{background:#e6fffa;color:#0d9488}
+.feedback.wrong-text, .feedback.try{background:#fff5f5;color:#e53e3e}
+
+.quiz-nav-row{
+  display:flex;
+  justify-content:flex-end;
+  gap:8px;
+  margin-top:10px;
+}
+
+/* 📺 TV / JUMBO MODE */
+body.tv-mode{
+  font-size:1.22rem;
+  background:#060911;
+  color:#f8fafc;
+}
+
+body.tv-mode .app{max-width:1400px;padding:14px}
+body.tv-mode .panel{background:#131b27;color:#ffffff;border:3px solid #334155;box-shadow:0 12px 32px rgba(0,0,0,0.5)}
+body.tv-mode .topbar{background:linear-gradient(135deg,#312e81,#4338ca);border:3px solid rgba(255,255,255,0.25)}
+body.tv-mode .brand-info h1{font-size:2.1rem}
+body.tv-mode .btn{font-size:1.15rem;padding:12px 20px;border-radius:16px}
+body.tv-mode .classroom-smartboard{min-height:580px;border-width:12px;border-color:#634124}
+body.tv-mode .interactive-item{font-size:clamp(3.2rem, 8vw, 4.6rem);padding:6px}
+body.tv-mode .div-equation-title{font-size:clamp(3.2rem, 9vw, 4.8rem)}
+body.tv-mode .div-prompt-subtitle{font-size:clamp(1.4rem, 4vw, 1.9rem)}
+body.tv-mode .sub-stage-row{max-width:780px;gap:20px}
+body.tv-mode .sub-tray-card, body.tv-mode .sub-taken-card{min-height:240px;border-width:4px}
+body.tv-mode .sub-card-header{font-size:1.2rem}
+body.tv-mode .sub-counter{font-size:1.55rem}
+body.tv-mode .stage-title{font-size:2.8rem}
+body.tv-mode .transcript-feed{font-size:1.45rem;line-height:1.55;max-height:95px}
+body.tv-mode .player-toolbar{background:#1e293b;border-color:#475569}
+body.tv-mode .settings-drawer{background:#1e293b;border-color:#475569}
+body.tv-mode .quiz-section{background:#1e293b;border-color:#475569}
+body.tv-mode .quiz-question{font-size:1.35rem;color:#ffffff}
+body.tv-mode .option{background:#0f172a;color:#fff;border-color:#334155;font-size:1.15rem;padding:12px}
+
+/* FORM ELEMENTS & TABLES */
+.info-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(130px,1fr));
+  gap:8px;
+  margin-top:10px;
+}
+
+.info-card{
+  padding:10px;
+  border-radius:14px;
+  background:#f7f2ff;
+  text-align:center;
+}
+
+body.tv-mode .info-card{background:#232d3f;color:#fff}
+.info-card b{display:block;font-size:1.3rem}
+
+.import-box{
+  border:2px dashed #b8a2ed;
+  border-radius:14px;
+  padding:12px;
+  background:#faf8ff;
+}
+
+textarea{
+  width:100%;
+  min-height:140px;
+  border:2px solid #ddd;
+  border-radius:10px;
+  padding:8px;
+  font-family:monospace;
+  font-size:0.8rem;
+}
+
+input[type=file], input[type=text], input[type=password], input[type=number]{
+  width:100%;
+  padding:7px 10px;
+  background:#f5f5f5;
+  border-radius:8px;
+  border:1px solid #ccc;
+  font-size:0.85rem;
+}
+
+label{font-weight:800;display:block;margin:3px 0 1px;font-size:0.8rem}
+
+select{
+  padding:6px 8px;
+  border-radius:10px;
+  border:2px solid #ccc;
+  width:100%;
+  font-size:0.85rem;
+  background:white;
+}
+
+.empty{text-align:center;padding:20px;color:#777}
+.hidden{display:none!important}
+
+.modal-overlay{
+  position:fixed;
+  inset:0;
+  background:rgba(0, 0, 0, 0.65);
+  z-index:999999;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:14px;
+}
+
+.modal-card{
+  background:white;
+  border-radius:24px;
+  padding:22px;
+  max-width:460px;
+  width:100%;
+  box-shadow:0 16px 36px rgba(0,0,0,0.3);
+  text-align:center;
+}
+
+body.tv-mode .modal-card{
+  background:#1e293b;
+  color:#fff;
+  border:3px solid #475569;
+}
+
+.topic-manage-table{
+  width:100%;
+  border-collapse:collapse;
+  margin-top:8px;
+}
+
+.topic-manage-table th, .topic-manage-table td{
+  padding:6px 8px;
+  border-bottom:1px solid #e2e8f0;
+  text-align:left;
+  font-size:0.8rem;
+}
+
+.topic-manage-table th{background:#f1f5f9;font-weight:bold}
+
+#confettiCanvas{
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  z-index:9999999;
+}
+
+footer{
+  text-align:center;
+  color:#777;
+  padding:10px;
+  font-size:0.8rem;
+  font-weight:700;
+}
+
+@media(max-width:600px){
+  .topbar{padding:8px 10px;gap:6px}
+  .brand-info small{display:none}
+  .cloud-pill{padding:4px 6px;font-size:0.7rem}
+  #topCloudText{display:none}
+  .student-tag{padding:4px 8px;font-size:0.75rem}
+  .options-grid{grid-template-columns:1fr}
+}
+</style>
+</head>
+
+<body>
+
+<canvas id="confettiCanvas"></canvas>
+
+<!-- ☰ SIDEBAR BACKDROP & DRAWER -->
+<div id="sidebarBackdrop" class="sidebar-backdrop" onclick="closeSidebar()"></div>
+
+<aside id="sidebarDrawer" class="sidebar-drawer">
+  <div class="sidebar-header">
+    <div style="display:flex; align-items:center; gap:8px;">
+      <span style="font-size:1.6rem;">📚</span>
+      <div>
+        <h3 style="margin:0; line-height:1.2;">Academy Menu</h3>
+        <small style="opacity:0.9; font-weight:bold;">Universal Classroom Navigation</small>
+      </div>
+    </div>
+    <button class="sidebar-close-btn" onclick="closeSidebar()" aria-label="Close Menu">✕</button>
+  </div>
+
+  <div class="sidebar-student-card" onclick="openRegistrationModal(); closeSidebar();">
+    <div>
+      <div style="font-size:0.75rem; color:#6b7280; font-weight:bold;">ACTIVE LEARNER</div>
+      <b class="student-name-display" style="font-size:1.05rem; color:#4338ca;">Superstar</b>
+      <span id="sidebarStudentClass" class="badge class-badge" style="margin-left:4px;">Primary 1</span>
+    </div>
+    <span style="font-size:1.1rem; cursor:pointer;">✏️</span>
+  </div>
+
+  <nav class="sidebar-nav">
+    <button class="sidebar-link active" id="nav-home" onclick="showScreen('home'); closeSidebar();">
+      <span class="icon">🏠</span>
+      <span>Home Classroom</span>
+    </button>
+    <button class="sidebar-link" id="nav-topics" onclick="showScreen('topics'); closeSidebar();">
+      <span class="icon">📚</span>
+      <span>Topics &amp; Subjects</span>
+    </button>
+    <button class="sidebar-link" id="nav-ask" onclick="showScreen('ask'); closeSidebar();">
+      <span class="icon">❓</span>
+      <span>Ask The Teacher</span>
+    </button>
+    <button class="sidebar-link" id="nav-attendance" onclick="showScreen('attendance'); closeSidebar();">
+      <span class="icon">📅</span>
+      <span>Attendance Clock</span>
+    </button>
+    <button class="sidebar-link warn" id="nav-parent" onclick="openParentGateModal(); closeSidebar();">
+      <span class="icon">👨‍👩‍👧</span>
+      <span>Parent Monitor Hub</span>
+    </button>
+    <button class="sidebar-link" id="nav-import" onclick="showScreen('import'); closeSidebar();">
+      <span class="icon">📥</span>
+      <span>Import &amp; Cloud Sync</span>
+    </button>
+    <button class="sidebar-link" id="nav-progress" onclick="showScreen('progress'); closeSidebar();">
+      <span class="icon">🏆</span>
+      <span>Learning Progress</span>
+    </button>
+  </nav>
+
+  <div class="sidebar-footer">
+    <button class="btn tv-btn" onclick="toggleTVMode()" style="width:100%; padding:10px;">
+      <span id="sidebarTvLabel">📺 Toggle TV / Jumbo View</span>
+    </button>
+    <div style="text-align:center; font-size:0.75rem; color:#888; font-weight:bold;">
+      Connected to kids-school-accademy
+    </div>
+  </div>
+</aside>
+
+<!-- MAIN APP CONTAINER -->
+<div class="app">
+
+<!-- STREAMLINED TOPBAR -->
+<header class="topbar">
+  <div class="topbar-left">
+    <button class="menu-toggle-btn" onclick="toggleSidebar()" aria-label="Open Navigation Menu">
+      ☰
+    </button>
+    <div class="brand-info">
+      <h1>📚 Kids Learning Academy</h1>
+      <small>Universal Nursery, Primary &amp; Secondary Smart Classroom</small>
+    </div>
+  </div>
+
+  <div class="topbar-right">
+    <div id="studentProfilePill" class="student-tag" onclick="openRegistrationModal()">
+      <span>👤</span>
+      <span id="topStudentName">Guest Student</span>
+      <span id="topStudentClass" class="badge class-badge">Primary 1</span>
+    </div>
+    <div class="cloud-pill" id="topCloudStatus">
+      <span class="cloud-dot" id="topCloudDot"></span>
+      <span id="topCloudText">☁️ Firestore Live</span>
+    </div>
+  </div>
+</header>
+
+<!-- 1. HOME SCREEN -->
+<section id="home" class="screen active">
+  <div class="panel hero">
+    <div class="emoji">👩‍🏫🎓🎒🎬</div>
+    <h2>Welcome to Class, <span class="student-name-display">Superstar</span>!</h2>
+    <p>
+      Explore personalized lessons curated for <b id="homeClassDisplay">Primary 1</b>. Watch video demonstrations, animated characters, or dynamic math simulations!
+    </p>
+    <div style="display:flex; justify-content:center; gap:8px; flex-wrap:wrap; margin-top:12px;">
+      <button class="btn primary" onclick="showScreen('topics')">🚀 Open My Class Topics</button>
+      <button class="btn purple" onclick="showScreen('ask')">❓ Ask Teacher a Question</button>
+      <button class="btn warn" onclick="openRegistrationModal()">👤 Change Student / Class</button>
+      <button class="btn tv-btn" onclick="toggleTVMode()">📺 Toggle TV Mode</button>
+    </div>
+  </div>
+
+  <div class="panel">
+    <h2>📌 Quick Learning Stats</h2>
+    <div class="info-grid">
+      <div class="info-card">
+        <b id="homeTopics">0</b>
+        Topics Available
+      </div>
+      <div class="info-card">
+        <b id="homeLessons">0</b>
+        Interactive Examples
+      </div>
+      <div class="info-card">
+        <b id="homeScore">0%</b>
+        Quiz Average
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 2. TOPICS SCREEN -->
+<section id="topics" class="screen">
+  <div class="panel">
+    <div class="lesson-header">
+      <div>
+        <h2>📚 Classroom Topics &amp; Subjects</h2>
+        <div class="meta">Filter lessons by Class Level (Nursery, Primary, or Secondary):</div>
+      </div>
+      <div style="display:flex; gap:6px; align-items:center;">
+        <select id="topicsClassFilter" onchange="renderTopics()" style="width:auto; font-weight:bold;">
+          <option value="ALL">🌐 All Classes</option>
+          <optgroup label="🌱 Nursery">
+            <option value="Nursery 1">Nursery 1</option>
+            <option value="Nursery 2">Nursery 2</option>
+            <option value="Nursery 3">Nursery 3 (KG)</option>
+          </optgroup>
+          <optgroup label="🎒 Primary School">
+            <option value="Primary 1" selected>Primary 1</option>
+            <option value="Primary 2">Primary 2</option>
+            <option value="Primary 3">Primary 3</option>
+            <option value="Primary 4">Primary 4</option>
+            <option value="Primary 5">Primary 5</option>
+            <option value="Primary 6">Primary 6</option>
+          </optgroup>
+          <optgroup label="🎓 Junior Secondary">
+            <option value="JSS 1">JSS 1 (Basic 7)</option>
+            <option value="JSS 2">JSS 2 (Basic 8)</option>
+            <option value="JSS 3">JSS 3 (Basic 9)</option>
+          </optgroup>
+          <optgroup label="🏛️ Senior Secondary">
+            <option value="SSS 1">SSS 1</option>
+            <option value="SSS 2">SSS 2</option>
+            <option value="SSS 3">SSS 3</option>
+          </optgroup>
+        </select>
+        <button class="btn warn btn-sm" onclick="showScreen('import')">📥 Add Lesson</button>
+      </div>
+    </div>
+    <div id="topicGrid" class="grid" style="margin-top:10px"></div>
+  </div>
+</section>
+
+<!-- 3. FULL-SCREEN THEATER CLASSROOM SCREEN -->
+<section id="lessons" class="screen">
+  <div class="panel" style="padding:8px;">
+    <div class="lesson-header">
+      <div>
+        <button class="btn btn-sm" onclick="exitToTopics()">← Back to Topics</button>
+      </div>
+      <div style="text-align:right">
+        <span id="topicClassBadge" class="badge class-badge">Primary 1</span>
+        <span id="topicBadge" class="badge"></span>
+        <h2 id="lessonTitle" style="margin:2px 0; font-size:1.15rem;"></h2>
+      </div>
+    </div>
+
+    <div class="progress">
+      <div id="lessonProgress"></div>
+    </div>
+
+    <div id="fullscreenPlayerShell" class="fullscreen-player">
+      <div class="classroom-smartboard">
+        <div class="smartboard-header">
+          <span id="boardHeaderTag" class="board-tag">PRIMARY 1 • LESSON</span>
+          <div class="teacher-indicator">
+            <div id="speakerPulseDot" class="pulse-dot"></div>
+            <span id="speakerStatusText">👩‍🏫 Teacher Ready</span>
+            <span id="wakeLockBadge" class="wake-lock-badge hidden">☀️ Screen Awake</span>
+          </div>
+          <span id="lessonCounter" style="font-size:0.75rem; color:#a3c9a8; font-weight:bold;">Step 1 of 6</span>
+        </div>
+
+        <div class="board-content-split">
+          <div class="board-main-stage">
+            <div id="stageTitle" class="stage-title"></div>
+            <div id="boardChalkText" class="board-chalk-text hidden"></div>
+
+            <!-- DUAL 16:9 SCENE: VIDEO OR ANIMATED CHARACTERS -->
+            <div class="scene-container hidden" id="sceneContainer">
+              <div class="scene-ground" id="sceneGround"></div>
+              <div class="action-caption" id="actionCaption">Watch carefully! 👀</div>
+            </div>
+
+            <!-- VIDEO UPLOAD BAR -->
+            <div class="video-manager-bar hidden" id="videoManagerBar">
+              <span id="videoSourceStatus" style="font-size:0.78rem; color:#cbd5e1; font-weight:bold;">
+                🎨 Showing Animated Emojis
+              </span>
+              <div style="display:flex; gap:6px;">
+                <label class="btn btn-sm primary" style="cursor:pointer;">
+                  🎥 Upload 16:9 Video
+                  <input type="file" id="stepVideoInput" accept="video/mp4,video/webm,video/quicktime,video/*" hidden onchange="handleStepVideoUpload(event)">
+                </label>
+                <button class="btn btn-sm danger hidden" id="removeVideoBtn" onclick="removeStepVideo()">🗑️ Use Emojis</button>
+              </div>
+            </div>
+
+            <div id="stageContent" class="groups-container"></div>
+          </div>
+
+          <div class="board-transcript-container">
+            <div class="transcript-bar-header">
+              <span>🎙️ Live Teacher Subtitles</span>
+              <button class="btn btn-sm" onclick="clearTranscriptHistory()" style="padding:1px 5px; font-size:0.68rem; background:rgba(255,255,255,0.15); color:white;">Clear</button>
+            </div>
+            <div id="transcriptFeed" class="transcript-feed"></div>
+          </div>
+
+          <!-- ADAPTIVE CHECKPOINT OVERLAY -->
+          <div id="checkpointOverlay" class="checkpoint-overlay hidden">
+            <div style="font-size:2.6rem; margin-bottom:4px;">🙋‍♀️✨</div>
+            <h3 style="color:#ffeb3b; margin:0 0 6px 0;">Speaking Check!</h3>
+            <p id="checkpointQuestionText" style="font-size:1.18rem; color:#fff; margin-bottom:10px; font-weight:bold;">What is 5 - 2?</p>
+            
+            <div style="display:flex; flex-direction:column; align-items:center; gap:8px; max-width:360px; width:100%;">
+              <button id="checkpointVoiceBtn" class="checkpoint-mic-btn" onclick="toggleVoiceAnswering()">
+                <span id="checkpointMicIcon">🎙️</span>
+                <span id="checkpointMicLabel">Speak Your Answer</span>
+              </button>
+              
+              <div style="display:flex; gap:6px; width:100%;">
+                <input type="text" id="checkpointInput" placeholder="Say answer or type..." style="font-size:1.15rem; text-align:center; font-weight:bold;">
+                <button class="btn primary" onclick="submitCheckpointAnswer()">Submit</button>
+              </div>
+            </div>
+            <div id="checkpointVoiceStatus" style="font-size:0.85rem; color:#fde047; margin-top:6px; font-weight:bold;"></div>
+            <div id="checkpointFeedback" style="margin-top:8px; font-weight:bold; font-size:1.05rem; color:#00ff88; max-width:90%;"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="player-toolbar">
+        <div class="player-left-group">
+          <button class="btn btn-sm" id="prevStepBtn" onclick="previousStep()">⏮️ Back</button>
+          <button class="btn btn-sm primary" id="playPauseBtn" onclick="togglePlayPause()">▶️ Play</button>
+          <button class="btn btn-sm" onclick="replayCurrentStep()">🔄 Replay</button>
+          <button class="btn btn-sm primary" id="nextStepBtn" onclick="nextStep()">Next ⏭️</button>
+        </div>
+
+        <div class="player-center-group">
+          <div id="autoplayTogglePill" class="autoplay-pill active" onclick="toggleAutoplayMode()">
+            <div class="auto-dot"></div>
+            <span id="autoplayStatusLabel">🔁 Auto-Play: ON</span>
+          </div>
+          <button id="tvModeBtnToolbar" class="btn tv-btn btn-sm" onclick="toggleTVMode()">📺 TV View</button>
+        </div>
+
+        <div class="player-right-group">
+          <button class="btn danger btn-sm" onclick="stopLesson()">⏹️ Stop</button>
+          <button class="btn btn-sm" onclick="toggleSettingsDrawer()">⚙️ Voice</button>
+          <button class="btn btn-sm" id="fullscreenToggleBtn" onclick="toggleBrowserFullscreen()">⛶ Fullscreen</button>
+        </div>
+      </div>
+
+      <div id="settingsDrawer" class="settings-drawer hidden">
+        <div>
+          <label for="speed">Teacher Voice Speed</label>
+          <select id="speed" onchange="restartSpeechIfActive()">
+            <option value=".75">Slow</option>
+            <option value=".88" selected>Normal</option>
+            <option value="1">Fast</option>
+          </select>
+        </div>
+        <div>
+          <label for="voice">Teacher Voice</label>
+          <select id="voice" onchange="restartSpeechIfActive()"></select>
+        </div>
+        <div id="wakeLockSupportNotice" style="grid-column: 1 / -1; font-size: 0.75rem; color: #64748b;"></div>
+      </div>
+
+      <div id="speechStatus" class="status">Press Play or toggle Auto-Play to start continuous lessons!</div>
+    </div>
+
+    <!-- PRACTICE & MULTI-QUESTION QUIZ AREA -->
+    <div id="stepQuizArea" class="quiz-section hidden">
+      <div class="quiz-header-bar">
+        <span>✍️ Practice Quiz</span>
+        <span id="quizCounterText">Question 1 of 1</span>
+        <span id="quizScoreText" class="badge">Score: 0</span>
+      </div>
+      <div class="quiz-question" id="quizQuestionText"></div>
+      <div id="hintBtnContainer" style="margin-bottom:6px;"></div>
+      <div id="hintBox" class="hint-box hidden"></div>
+      <div class="options-grid" id="optionsContainer"></div>
+      <div id="quizFeedback" class="feedback hidden"></div>
+      <div class="quiz-nav-row">
+        <button class="btn btn-sm primary hidden" id="quizNextBtn" onclick="advanceQuizQuestion()">Next Question ➡️</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 4. ASK TEACHER Q&A -->
+<section id="ask" class="screen">
+  <div class="panel">
+    <div class="lesson-header">
+      <div>
+        <h2>❓ "Ask the Teacher" Classroom Room</h2>
+        <div class="meta">Have a question? Type it below and the virtual teacher will explain it out loud!</div>
+      </div>
+      <button class="btn" onclick="showScreen('home')">← Home</button>
+    </div>
+
+    <div class="classroom-smartboard" style="min-height:260px; max-height:320px; margin-top:10px;">
+      <div class="smartboard-header">
+        <span class="board-tag">👩‍🏫 VIRTUAL TEACHER ANSWER BOARD</span>
+        <div class="teacher-indicator">
+          <div id="askSpeakerDot" class="pulse-dot"></div>
+          <span id="askSpeakerStatus">Teacher Ready</span>
+        </div>
+      </div>
+      <div class="board-main-stage" style="justify-content:center;">
+        <div id="askBoardQuestion" style="font-size:1.1rem; color:#ffeb3b; margin-bottom:8px; font-weight:bold;">Ask any school question!</div>
+        <div id="askBoardAnswer" style="font-size:1.25rem; color:#fff; line-height:1.6; max-width:650px;">"Hello <span class="student-name-display">Superstar</span>! Type any question below or pick a quick question."</div>
+      </div>
+    </div>
+
+    <div style="display:flex; gap:6px; margin-top:10px;">
+      <input type="text" id="askQuestionInput" placeholder="e.g., What is addition? What is a fraction? What is kinetic energy?" style="font-size:1rem; font-weight:bold;">
+      <button class="btn primary" onclick="submitStudentQuestion()">🗣️ Ask Now</button>
+    </div>
+
+    <div style="margin-top:12px;">
+      <span class="meta" style="font-weight:bold;">💡 Quick Sample Questions to Try:</span>
+      <div style="display:flex; gap:6px; flex-wrap:wrap; margin-top:6px;">
+        <button class="btn btn-sm" onclick="askPresetQuestion('What is addition?')">➕ What is addition?</button>
+        <button class="btn btn-sm" onclick="askPresetQuestion('What is a fraction?')">🥧 What is a fraction?</button>
+        <button class="btn btn-sm" onclick="askPresetQuestion('What is subtraction?')">➖ What is subtraction?</button>
+        <button class="btn btn-sm" onclick="askPresetQuestion('What is division?')">➗ What is division?</button>
+        <button class="btn btn-sm" onclick="askPresetQuestion('What is multiplication?')">✖️ What is multiplication?</button>
+        <button class="btn btn-sm" onclick="askPresetQuestion('What is a verb?')">📖 What is a verb?</button>
+        <button class="btn btn-sm" onclick="askPresetQuestion('What is kinetic energy?')">⚡ Kinetic Energy?</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 5. ATTENDANCE SCREEN -->
+<section id="attendance" class="screen">
+  <div class="panel">
+    <div class="lesson-header">
+      <div>
+        <h2>📅 Student Attendance Register</h2>
+        <div class="meta">Daily learning attendance records for <b class="student-name-display">Student</b>.</div>
+      </div>
+      <button class="btn primary btn-sm" onclick="markManualAttendance()">✍️ Clock In Today</button>
+    </div>
+
+    <div style="overflow-x:auto; margin-top:10px;">
+      <table class="topic-manage-table">
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Student Name</th>
+            <th>Class Level</th>
+            <th>Time Clocked In</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody id="attendanceTableBody"></tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- 6. PARENT HUB -->
+<section id="parent" class="screen">
+  <div class="panel">
+    <div class="lesson-header">
+      <div>
+        <h2>👨‍👩‍👧 Live Parent Monitor &amp; Performance Hub</h2>
+        <div class="meta">Real-time supervision for <b class="student-name-display">Student</b>.</div>
+      </div>
+      <button class="btn btn-sm" onclick="showScreen('home')">← Exit Hub</button>
+    </div>
+
+    <div style="background:#fef2f2; border:2px solid #ef4444; border-radius:16px; padding:14px; margin:12px 0; text-align:center;">
+      <h3 style="color:#991b1b; margin-top:0;">📡 Live Presence &amp; Attention Radar</h3>
+      <div id="parentPresenceStatus" style="font-size:1.1rem; font-weight:bold; margin:6px 0; color:#059669;">
+        🟢 <span class="student-name-display">Superstar</span> is currently ACTIVE and learning on the screen.
+      </div>
+      <p style="font-size:0.8rem; color:#64748b; margin:0;">
+        If the student leaves the learning page or minimizes the browser, an instant notification and alarm will be recorded.
+      </p>
+    </div>
+
+    <div class="panel" style="background:#f8fafc; border:2px solid #e2e8f0; margin-bottom:14px;">
+      <h4 style="margin-top:0;">📜 Real-Time Attention &amp; Tab-Switching Log</h4>
+      <div id="parentEventLogs" style="max-height:160px; overflow-y:auto; font-size:0.85rem; font-weight:bold; color:#334155;">
+        <div style="padding:4px 0; color:#059669;">✅ System initialized. Monitoring active.</div>
+      </div>
+    </div>
+
+    <div class="panel" style="background:#f0fdf4; border:2px solid #bbf7d0;">
+      <h4 style="margin-top:0; color:#166534;">📊 Comprehensive Quiz Report</h4>
+      <div class="info-grid">
+        <div class="info-card"><b id="parentReportQuizzes">0</b> Quizzes Completed</div>
+        <div class="info-card"><b id="parentReportAvg">0%</b> Average Score</div>
+        <div class="info-card"><b id="parentReportStatus">Great</b> Overall Status</div>
+      </div>
+      <div id="parentQuizHistoryList" style="margin-top:12px;"></div>
+    </div>
+  </div>
+</section>
+
+<!-- 7. PROGRESS SCREEN -->
+<section id="progress" class="screen">
+  <div class="panel">
+    <h2>🏆 Learning Progress for <span class="student-name-display">Student</span></h2>
+    <div class="info-grid">
+      <div class="info-card">
+        <b id="statTopics">0</b>
+        Topics Studied
+      </div>
+      <div class="info-card">
+        <b id="statLessons">0</b>
+        Steps Completed
+      </div>
+      <div class="info-card">
+        <b id="statQuizzes">0</b>
+        Quizzes Taken
+      </div>
+      <div class="info-card">
+        <b id="statAverage">0%</b>
+        Accuracy
+      </div>
+    </div>
+    <div id="progressDetails" style="margin-top:10px"></div>
+  </div>
+</section>
+
+<!-- 8. IMPORT & CLOUD -->
+<section id="import" class="screen">
+  <div class="panel">
+    <h2>📥 Import &amp; Organize Lessons</h2>
+    <p style="font-size:0.85rem;">
+      Import JSON lessons and assign them to any specific class level (Nursery, Primary, or Secondary).
+    </p>
+
+    <div class="panel" style="background:#f0f9ff; border:2px solid #bae6fd; margin-bottom:12px;">
+      <h3 style="margin-top:0; color:#0369a1; font-size:1rem;">🔥 Firebase Cloud Status</h3>
+      <p id="firebaseStatusMessage" style="font-size:0.85rem; font-weight:bold; color:#0369a1;">
+        ✅ Connected to project: <b>kids-school-accademy</b> (Live Cloud Sync Active)
+      </p>
+
+      <div style="display:flex; flex-wrap:wrap; gap:6px;">
+        <button class="btn primary btn-sm" onclick="pushLocalTopicsToCloud()">⬆️ Push All Topics to Cloud</button>
+        <button class="btn btn-sm" onclick="pullTopicsFromCloud()">⬇️ Pull All Topics from Cloud</button>
+      </div>
+    </div>
+
+    <div class="panel" style="background:#f8fafc; border:2px solid #e2e8f0; margin-bottom:14px;">
+      <h3 style="margin-top:0; font-size:1rem;">📚 Currently Loaded Topics (<span id="loadedCount">0</span>)</h3>
+      <div id="topicManageList" style="overflow-x:auto;"></div>
+    </div>
+
+    <div class="panel" style="background:#fffbeb; border:2px solid #fde68a; margin-bottom:12px;">
+      <h3 style="margin-top:0; font-size:1rem; color:#92400e;">🎯 Target Class for this Lesson</h3>
+      <label for="importTargetClass">Select which class level this lesson belongs to:</label>
+      <select id="importTargetClass" style="font-weight:bold; max-width:320px;">
+        <optgroup label="🌱 Nursery">
+          <option value="Nursery 1">Nursery 1</option>
+          <option value="Nursery 2">Nursery 2</option>
+          <option value="Nursery 3">Nursery 3 (KG)</option>
+        </optgroup>
+        <optgroup label="🎒 Primary School">
+          <option value="Primary 1" selected>Primary 1</option>
+          <option value="Primary 2">Primary 2</option>
+          <option value="Primary 3">Primary 3</option>
+          <option value="Primary 4">Primary 4</option>
+          <option value="Primary 5">Primary 5</option>
+          <option value="Primary 6">Primary 6</option>
+        </optgroup>
+        <optgroup label="🎓 Junior Secondary">
+          <option value="JSS 1">JSS 1 (Basic 7)</option>
+          <option value="JSS 2">JSS 2 (Basic 8)</option>
+          <option value="JSS 3">JSS 3 (Basic 9)</option>
+        </optgroup>
+        <optgroup label="🏛️ Senior Secondary">
+          <option value="SSS 1">SSS 1</option>
+          <option value="SSS 2">SSS 2</option>
+          <option value="SSS 3">SSS 3</option>
+        </optgroup>
+      </select>
+    </div>
+
+    <div class="import-box">
+      <label>Select JSON file from your device</label>
+      <input type="file" id="jsonFile" accept=".json,application/json" onchange="readJSONFile(event)">
+      <div id="fileStatus" class="status"></div>
+    </div>
+
+    <div id="editNotice" style="display:none; background:#fffbeb; border-left:4px solid #f59e0b; padding:8px; border-radius:8px; margin-top:8px; align-items:center; justify-content:space-between;">
+      <b id="editNoticeText" style="color:#b45309; font-size:0.85rem;">📝 Currently Editing: [Topic Name]</b>
+      <button class="btn btn-sm" onclick="cancelEditing()">Cancel</button>
+    </div>
+
+    <p style="text-align:center;font-weight:bold; margin-top:10px; font-size:0.85rem;">Edit or Paste Lesson JSON Below</p>
+    <textarea id="jsonText" placeholder="Paste or edit your lesson JSON here..."></textarea>
+    <br><br>
+
+    <div style="display:flex; flex-wrap:wrap; gap:5px;">
+      <button class="btn primary btn-sm" onclick="importPastedJSON()">💾 Save Topic to Target Class</button>
+      <button class="btn btn-sm" onclick="exportCurrentEditorJSON()">💾 Download JSON File</button>
+      <button class="btn primary btn-sm" onclick="loadSampleAdditionLesson()">➕ Load Addition Basics</button>
+      <button class="btn purple btn-sm" onclick="loadSampleEnglishActionLesson()">🐱 Load Naming &amp; Action Words</button>
+      <button class="btn btn-sm" onclick="loadSampleSecondaryEnergyLesson()">⚡ Load Energy Forms (JSS 1)</button>
+      <button class="btn purple btn-sm" onclick="loadSampleFractionLesson()">🥧 Load Sample Fractions (1/2, 1/4)</button>
+      <button class="btn warn btn-sm" onclick="loadSampleSubtractionLesson()">➖ Load Sample Subtraction (5 - 2)</button>
+      <button class="btn btn-sm" onclick="loadSampleDivisionLesson()">➗ Load Sample Division (6 ÷ 2)</button>
+      <button class="btn btn-sm" onclick="loadSampleMultiplicationLesson()">✖️ Load Sample Multiplication</button>
+      <button class="btn danger btn-sm" onclick="clearImportedLessons()">🗑️ Delete All</button>
+    </div>
+  </div>
+</section>
+
+<!-- REGISTRATION MODAL -->
+<div id="registrationModal" class="modal-overlay hidden">
+  <div class="modal-card">
+    <div style="font-size:3rem;">🎓🎒</div>
+    <h2 style="margin:4px 0;">Student Registration</h2>
+    <p style="font-size:0.85rem; color:#666; margin-bottom:14px;">Register student name and class level:</p>
+    
+    <div style="text-align:left; margin-bottom:12px;">
+      <label for="regStudentName">Child / Student Name:</label>
+      <input type="text" id="regStudentName" placeholder="e.g. Flourish, Daniel, Mary" style="font-size:1rem; font-weight:bold;">
+    </div>
+
+    <div style="text-align:left; margin-bottom:16px;">
+      <label for="regStudentClass">Class Level:</label>
+      <select id="regStudentClass" style="font-size:0.95rem; font-weight:bold;">
+        <optgroup label="🌱 Nursery">
+          <option value="Nursery 1">Nursery 1 (Ages 3-4)</option>
+          <option value="Nursery 2">Nursery 2 (Ages 4-5)</option>
+          <option value="Nursery 3">Nursery 3 / KG (Ages 5-6)</option>
+        </optgroup>
+        <optgroup label="🎒 Primary School">
+          <option value="Primary 1" selected>Primary 1 (Ages 6-7)</option>
+          <option value="Primary 2">Primary 2 (Ages 7-8)</option>
+          <option value="Primary 3">Primary 3 (Ages 8-9)</option>
+          <option value="Primary 4">Primary 4 (Ages 9-10)</option>
+          <option value="Primary 5">Primary 5 (Ages 10-11)</option>
+          <option value="Primary 6">Primary 6 (Ages 11-12)</option>
+        </optgroup>
+        <optgroup label="🎓 Junior Secondary">
+          <option value="JSS 1">JSS 1 / Basic 7 (Ages 12-13)</option>
+          <option value="JSS 2">JSS 2 / Basic 8 (Ages 13-14)</option>
+          <option value="JSS 3">JSS 3 / Basic 9 (Ages 14-15)</option>
+        </optgroup>
+        <optgroup label="🏛️ Senior Secondary">
+          <option value="SSS 1">SSS 1 (Ages 15-16)</option>
+          <option value="SSS 2">SSS 2 (Ages 16-17)</option>
+          <option value="SSS 3">SSS 3 (Ages 17-18)</option>
+        </optgroup>
+      </select>
+    </div>
+
+    <div style="display:flex; gap:8px;">
+      <button class="btn primary" style="flex:1;" onclick="saveStudentRegistration()">✅ Save Profile</button>
+      <button class="btn" onclick="closeRegistrationModal()">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- PARENT VERIFICATION GATE MODAL -->
+<div id="parentGateModal" class="modal-overlay hidden">
+  <div class="modal-card">
+    <div style="font-size:2.8rem;">🔒👨‍👩‍👧</div>
+    <h2 style="margin:4px 0;">Parent Security Gate</h2>
+    <p style="font-size:0.85rem; color:#666; margin-bottom:12px;">Please solve to access Parent Hub &amp; Live Monitor:</p>
+    <div id="parentGateMathProblem" style="font-size:1.3rem; font-weight:bold; color:#d97706; margin-bottom:10px;">5 + 8 = ?</div>
+    <input type="number" id="parentGateAnswer" placeholder="Your answer..." style="font-size:1.1rem; text-align:center; font-weight:bold; margin-bottom:12px;">
+    <div style="display:flex; gap:8px;">
+      <button class="btn primary" style="flex:1;" onclick="verifyParentGateAnswer()">Unlock Hub</button>
+      <button class="btn" onclick="closeParentGateModal()">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<footer>
+  Kids Learning Academy • Universal Interactive Classroom • Nursery, Primary &amp; Secondary
+</footer>
+
+</div>
+
+<!-- APPLICATION SCRIPT WITH RESILIENT CLOUD SYNC -->
+<script>
+window.$ = id => document.getElementById(id);
+const $ = window.$;
+
+const STORAGE_KEY = "kids_learning_academy_lessons_v30";
+const PROGRESS_KEY = "kids_learning_academy_progress_v30";
+const STUDENT_KEY = "kids_learning_academy_student_v30";
+const ATTENDANCE_KEY = "kids_learning_academy_attendance_v30";
+const PARENT_LOGS_KEY = "kids_learning_academy_parent_logs_v30";
+const TV_MODE_KEY = "kids_learning_academy_tv_mode_v30";
+
+const formalFirebaseConfig = {
+  apiKey: "AIzaSyCRL0nXwiqQk4isamyt1UkGWyQ50t3DjYo",
+  authDomain: "kids-school-accademy.firebaseapp.com",
+  databaseURL: "https://kids-school-accademy-default-rtdb.firebaseio.com",
+  projectId: "kids-school-accademy",
+  storageBucket: "kids-school-accademy.firebasestorage.app",
+  messagingSenderId: "227052035126",
+  appId: "1:227052035126:web:432601b90f3d54a00e8c97",
+  measurementId: "G-B8DSN41S9K"
+};
+
+/* ======================================================== */
+/* 💾 INDEXEDDB PERMANENT VIDEO STORAGE                     */
+/* ======================================================== */
+const VIDEO_DB_NAME = "Primary1EnglishVideoDB";
+const VIDEO_STORE_NAME = "videos";
+
+function openVideoDB(){
+  return new Promise((resolve, reject) => {
+    const req = indexedDB.open(VIDEO_DB_NAME, 1);
+    req.onupgradeneeded = () => req.result.createObjectStore(VIDEO_STORE_NAME);
+    req.onsuccess = () => resolve(req.result);
+    req.onerror = () => reject(req.error);
+  });
+}
+
+async function saveVideoBlob(key, blob){
+  try{
+    const db = await openVideoDB();
+    return new Promise((resolve, reject) => {
+      const tx = db.transaction(VIDEO_STORE_NAME, "readwrite");
+      tx.objectStore(VIDEO_STORE_NAME).put(blob, key);
+      tx.oncomplete = () => resolve();
+      tx.onerror = () => reject(tx.error);
+    });
+  }catch(e){}
+}
+
+async function getVideoBlob(key){
+  try{
+    const db = await openVideoDB();
+    return new Promise((resolve, reject) => {
+      const tx = db.transaction(VIDEO_STORE_NAME, "readonly");
+      const req = tx.objectStore(VIDEO_STORE_NAME).get(key);
+      req.onsuccess = () => resolve(req.result);
+      req.onerror = () => reject(tx.error);
+    });
+  }catch(e){ return null; }
+}
+
+async function deleteVideoBlob(key){
+  try{
+    const db = await openVideoDB();
+    return new Promise((resolve, reject) => {
+      const tx = db.transaction(VIDEO_STORE_NAME, "readwrite");
+      tx.objectStore(VIDEO_STORE_NAME).delete(key);
+      tx.oncomplete = () => resolve();
+      tx.onerror = () => reject(tx.error);
+    });
+  }catch(e){}
+}
+
+/* ======================================================== */
+/* 🎨 EMOJIS & AUDIO SYNTHESIS                              */
+/* ======================================================== */
+const EMOJI_SPEECH_MAP = {
+  "🍎":"apple","🍏":"apple","🍌":"banana","🍊":"orange",
+  "🍓":"strawberry","🍇":"grape","🍉":"watermelon","🍒":"cherry",
+  "🍍":"pineapple","🥭":"mango","🍑":"peach","🍋":"lemon",
+  "⚽":"ball","🏀":"basketball","🏈":"football","⚾":"baseball",
+  "✏":"pencil","🖍":"crayon","⭐":"star","🌟":"star",
+  "🎈":"balloon","🎁":"gift","🐱":"cat","🐶":"dog",
+  "🐰":"bunny","🐻":"bear","🚗":"car","🚀":"rocket",
+  "🐟":"fish","🌸":"flower","🍪":"cookie","🍬":"candy","🧁":"cupcake"
+};
+
+const EXTENDED_NUMBER_WORDS = {
+  "zero":"0","oh":"0","naught":"0","nil":"0",
+  "one":"1","won":"1","wan":"1",
+  "two":"2","to":"2","too":"2","tu":"2","do":"2",
+  "three":"3","tree":"3","free":"3","tri":"3","thri":"3",
+  "four":"4","for":"4","fore":"4","ford":"4","fur":"4",
+  "five":"5","hive":"5","fiv":"5","faiv":"5",
+  "six":"6","sex":"6","sicks":"6","seex":"6",
+  "seven":"7","sevn":"7","seben":"7",
+  "eight":"8","ate":"8","ait":"8","eit":"8",
+  "nine":"9","nein":"9","nain":"9",
+  "ten":"10","tin":"10",
+  "eleven":"11","twelve":"12","twelv":"12",
+  "thirteen":"13","fourteen":"14","fifteen":"15",
+  "sixteen":"16","seventeen":"17","eighteen":"18",
+  "nineteen":"19","twenty":"20",
+  "half":"half","one half":"half",
+  "quarter":"quarter","one quarter":"quarter",
+  "third":"third","one third":"third"
+};
+
+function displayEmoji(emoji){
+  return String(emoji || "").replace(/🐱/g,"🐈").replace(/🐶/g,"🐕");
+}
+
+function graphemes(text){
+  try{
+    if(window.Intl && Intl.Segmenter){
+      return [...new Intl.Segmenter(undefined,{granularity:"grapheme"}).segment(text)].map(x => x.segment);
+    }
+  }catch(e){}
+  return Array.from(text);
+}
+
+let audioCtx = null;
+function getAudioContext(){
+  if(!audioCtx){
+    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  }
+  if(audioCtx.state === 'suspended'){
+    audioCtx.resume();
+  }
+  return audioCtx;
+}
+
+function playCatMeowSound(){
+  try{
+    const ctx = getAudioContext();
+    if(!ctx) return;
+    const now = ctx.currentTime;
+    const osc1 = ctx.createOscillator();
+    const osc2 = ctx.createOscillator();
+    const filter = ctx.createBiquadFilter();
+    const gain = ctx.createGain();
+
+    osc1.type = "sawtooth";
+    osc2.type = "triangle";
+
+    [osc1, osc2].forEach(osc => {
+      osc.frequency.setValueAtTime(420, now);
+      osc.frequency.linearRampToValueAtTime(820, now + 0.38);
+      osc.frequency.exponentialRampToValueAtTime(360, now + 1.2);
+    });
+    osc2.detune.setValueAtTime(10, now);
+
+    filter.type = "bandpass";
+    filter.Q.value = 2.8;
+    filter.frequency.setValueAtTime(1350, now);
+    filter.frequency.linearRampToValueAtTime(1750, now + 0.38);
+    filter.frequency.exponentialRampToValueAtTime(580, now + 1.2);
+
+    gain.gain.setValueAtTime(0.001, now);
+    gain.gain.linearRampToValueAtTime(0.35, now + 0.15);
+    gain.gain.setValueAtTime(0.35, now + 0.6);
+    gain.gain.exponentialRampToValueAtTime(0.001, now + 1.25);
+
+    osc1.connect(filter); osc2.connect(filter);
+    filter.connect(gain); gain.connect(ctx.destination);
+
+    osc1.start(now); osc2.start(now);
+    osc1.stop(now + 1.25); osc2.stop(now + 1.25);
+  }catch(e){}
+}
+
+function playDogBarkSound(){
+  try{
+    const ctx = getAudioContext();
+    if(!ctx) return;
+    const now = ctx.currentTime;
+    [0, 0.24].forEach(delay => {
+      const t = now + delay;
+      const osc = ctx.createOscillator();
+      const filter = ctx.createBiquadFilter();
+      const gain = ctx.createGain();
+
+      osc.type = "sawtooth";
+      filter.type = "lowpass";
+      filter.frequency.setValueAtTime(950, t);
+      filter.frequency.exponentialRampToValueAtTime(320, t + 0.16);
+
+      osc.frequency.setValueAtTime(280, t);
+      osc.frequency.exponentialRampToValueAtTime(120, t + 0.16);
+
+      gain.gain.setValueAtTime(0.001, t);
+      gain.gain.linearRampToValueAtTime(0.35, t + 0.03);
+      gain.gain.exponentialRampToValueAtTime(0.001, t + 0.18);
+
+      osc.connect(filter); filter.connect(gain);
+      gain.connect(ctx.destination);
+
+      osc.start(t); osc.stop(t + 0.18);
+    });
+  }catch(e){}
+}
+
+function playGoodTone(){
+  try{
+    const ctx = getAudioContext();
+    const now = ctx.currentTime;
+    [523.25, 659.25, 783.99].forEach((freq, idx) => {
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = "triangle";
+      osc.frequency.setValueAtTime(freq, now + idx * 0.08);
+      gain.gain.setValueAtTime(0.2, now + idx * 0.08);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.08 + 0.3);
+      osc.connect(gain); gain.connect(ctx.destination);
+      osc.start(now + idx * 0.08); osc.stop(now + idx * 0.08 + 0.3);
+    });
+  }catch(e){}
+}
+
+function playTryTone(){
+  try{
+    const ctx = getAudioContext();
+    const now = ctx.currentTime;
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.type = "sine";
+    osc.frequency.setValueAtTime(280, now);
+    osc.frequency.linearRampToValueAtTime(180, now + 0.25);
+    gain.gain.setValueAtTime(0.25, now);
+    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.25);
+    osc.connect(gain); gain.connect(ctx.destination);
+    osc.start(now); osc.stop(now + 0.25);
+  }catch(e){}
+}
+
+function playPopTone(pitchIndex = 1){
+  try{
+    const ctx = getAudioContext();
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    const baseFreq = 340;
+    const freq = baseFreq + (pitchIndex * 50);
+    osc.type = "sine";
+    osc.frequency.setValueAtTime(freq, ctx.currentTime);
+    osc.frequency.exponentialRampToValueAtTime(freq * 1.35, ctx.currentTime + 0.12);
+    gain.gain.setValueAtTime(0.25, ctx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.18);
+    osc.connect(gain); gain.connect(ctx.destination);
+    osc.start(); osc.stop(ctx.currentTime + 0.18);
+  }catch(e){}
+}
+
+/* ======================================================== */
+/* 🏃 WEB ANIMATION API MANAGER                             */
+/* ======================================================== */
+class AnimationManager{
+  constructor(){
+    this.animations = [];
+    this.token = 0;
+    this.isPaused = false;
+  }
+  reset(){
+    this.token++;
+    this.animations.forEach(a => {try{a.cancel()}catch(e){}});
+    this.animations = [];
+    this.isPaused = false;
+    document.querySelectorAll(".emoji-object").forEach(el => {
+      el.getAnimations().forEach(a => {try{a.cancel()}catch(e){}});
+      el.style.transform = "translate(-50%,-50%)";
+      el.style.opacity = "1";
+    });
+    const sc = $("sceneContainer");
+    if(sc) sc.querySelectorAll(".speech-bubble").forEach(x => x.remove());
+    if($("actionCaption")) $("actionCaption").textContent = "Watch carefully! 👀";
+  }
+  pause(){
+    this.isPaused = true;
+    this.animations.forEach(a => {try{a.pause()}catch(e){}});
+  }
+  resume(){
+    this.isPaused = false;
+    this.animations.forEach(a => {try{a.play()}catch(e){}});
+  }
+  add(anim){
+    this.animations.push(anim);
+    return anim;
+  }
+  bubble(text){
+    const sc = $("sceneContainer");
+    if(!sc) return;
+    const b = document.createElement("div");
+    b.className = "speech-bubble";
+    b.textContent = text;
+    sc.appendChild(b);
+  }
+  detect(ex){
+    const v = ex.visual || {};
+    if(v.animation && v.animation.type) return String(v.animation.type).toLowerCase();
+    const text = [v.word, v.sentence, v.title, ex.board, ex.speech].join(" ").toLowerCase();
+    const actions = [
+      ["meow",/\bmeow(s|ing)?\b/],["run",/\brun(s|ning)?\b/],["jump",/\bjump(s|ing)?\b/],
+      ["eat",/\beat(s|ing)?\b/],["drink",/\bdrink(s|ing)?\b/],["walk",/\bwalk(s|ing)?\b/],
+      ["fly",/\bfl(y|ies|ying)\b/],["energy",/\benergy|motion|kinetic|power\b/]
+    ];
+    for(const [name,re] of actions) if(re.test(text)) return name;
+    return null;
+  }
+  parts(){
+    return [...document.querySelectorAll(".emoji-object")];
+  }
+  animate(ex){
+    this.reset();
+    const action = this.detect(ex);
+    const parts = this.parts();
+    const subject = parts[0];
+    const object = parts[1];
+    if(!action || !subject) return Promise.resolve();
+    const caption = (ex.visual?.sentence || "").replace(/[.!?]+$/,"");
+    if($("actionCaption")) $("actionCaption").textContent = caption || action.toUpperCase();
+
+    const add = (el, keyframes, options) => this.add(el.animate(keyframes, {...options, fill:"forwards"}));
+    let duration = 2400, promises = [];
+
+    if(action === "meow"){
+      this.bubble("MEOW! 🗣️");
+      promises.push(add(subject,[
+        {transform:"translate(-50%,-50%) scale(1) rotate(0deg)"},
+        {transform:"translate(-50%,-50%) scale(1.15) rotate(-6deg)",offset:.25},
+        {transform:"translate(-50%,-50%) scale(1.15) rotate(6deg)",offset:.5},
+        {transform:"translate(-50%,-50%) scale(1) rotate(0deg)"}
+      ],{duration, iterations:2, easing:"ease-in-out"}));
+    }else if(action === "run"){
+      this.bubble("WOOF! 🐕");
+      promises.push(add(subject,[
+        {transform:"translate(-50%,-50%) translateX(-150px) rotate(-5deg)",offset:0},
+        {transform:"translate(-50%,-50%) translateX(-50px) translateY(-12px) rotate(5deg)",offset:.2},
+        {transform:"translate(-50%,-50%) translateX(55px) translateY(0) rotate(-5deg)",offset:.45},
+        {transform:"translate(-50%,-50%) translateX(155px) translateY(-12px) rotate(5deg)",offset:.7},
+        {transform:"translate(-50%,-50%) translateX(270px) translateY(0) rotate(0deg)"}
+      ],{duration:3000, easing:"ease-in-out"}));
+    }else if(action === "jump"){
+      promises.push(add(subject,[
+        {transform:"translate(-50%,-50%) scale(1)"},
+        {transform:"translate(-50%,-50%) translateY(-100px) scale(1.06)",offset:.35},
+        {transform:"translate(-50%,-50%) translateY(0) scale(0.95)",offset:.7},
+        {transform:"translate(-50%,-50%) translateY(-40px)",offset:.85},
+        {transform:"translate(-50%,-50%) scale(1)"}
+      ],{duration:2200, easing:"cubic-bezier(.25,.8,.25,1)"}));
+    }else if(action === "eat"){
+      if(object){
+        promises.push(add(object,[
+          {transform:"translate(-50%,-50%) translate(0,0) rotate(0deg) scale(1)",offset:0},
+          {transform:"translate(-50%,-50%) translate(-45px,-6px) rotate(-12deg) scale(1)",offset:.45},
+          {transform:"translate(-50%,-50%) translate(-120px,-10px) scale(.6) rotate(15deg)",offset:.72},
+          {transform:"translate(-50%,-50%) translate(-120px,-10px) scale(0)",offset:.86},
+          {transform:"translate(-50%,-50%) translate(0,0) scale(1)",offset:1}
+        ],{duration:2800, easing:"ease-in-out"}));
+      }
+      promises.push(add(subject,[
+        {transform:"translate(-50%,-50%)"},
+        {transform:"translate(-50%,-50%) translateX(8px) scale(1.08)",offset:.35},
+        {transform:"translate(-50%,-50%) translateX(-6px) scale(1.02)",offset:.55},
+        {transform:"translate(-50%,-50%)"}
+      ],{duration:2800, easing:"ease-in-out"}));
+      this.bubble("YUM! 😋");
+    }else{
+      promises.push(add(subject,[
+        {transform:"translate(-50%,-50%) scale(1)"},
+        {transform:"translate(-50%,-50%) scale(1.12) translateY(-10px)",offset:.5},
+        {transform:"translate(-50%,-50%) scale(1)"}
+      ],{duration:2000, easing:"ease-in-out"}));
+    }
+
+    return Promise.all(promises.map(p => p.finished)).catch(()=>{});
+  }
+}
+const animationManager = new AnimationManager();
+
+/* ======================================================== */
+/* 📚 SAMPLE CURRICULUM PACKAGES (ALL FULLY VALIDATED)      */
+/* ======================================================== */
+const sampleAdditionData = {
+  id: "addition-basics",
+  classLevel: "Primary 1",
+  subject: "Mathematics",
+  topic: "Addition Basics",
+  intro: {
+    title: "ADDITION FOUNDATION",
+    board: "TOPIC FOUNDATION:\n\nAddition means putting numbers or objects together to find the total sum. The plus sign (+) means add, and the equals sign (=) gives the answer.",
+    speech: "Hello, my dear friend! Welcome to Mathematics class. Today we are going to learn Addition. Addition means putting groups of things together to find out how many we have in total. We will count fun fruits and objects together. Are you ready? Let's begin!",
+    visual: {
+      title: "➕ Addition = Putting Things Together 🎉",
+      type: "addition",
+      emoji: "🍎",
+      groupCounts: [2, 2]
+    }
+  },
+  examples: [
+    {
+      board: "EXAMPLE 1/15\n\n3 + 4 = 7",
+      speech: "Let's learn together: 3 + 4 = 7. This is how we get 7! 3 + 4 means we have 3 🍎 in the first group, and 4 🍎 in the second group. Let's count the first group: 1🍎... 2🍎🍎... 3🍎🍎🍎. Great! Now let's count the second group: 1🍎... 2🍎🍎... 3🍎🍎🍎... 4🍎🍎🍎🍎. Wonderful! Now let's count all the 🍎 together: 1🍎... 2🍎🍎... 3🍎🍎🍎... 4🍎🍎🍎🍎... 5🍎🍎🍎🍎🍎... 6🍎🍎🍎🍎🍎🍎... 7🍎🍎🍎🍎🍎🍎🍎. We have 7 🍎 altogether. Therefore, 3 + 4 = 7. Excellent work!",
+      visual: { type: "addition", groupCounts: [3, 4], title: "3 🍎 + 4 🍎 = 7 🍎", emoji: "🍎" },
+      checkpoint: { q: "If you have 3 🍎 and get 4 more 🍎, what is 3 + 4?", expectedAnswer: "7" },
+      quiz: { q: "What is 3 + 4?", options: ["7", "6", "8", "5"], answer: 0, hint: "Count all the 🍎 across both groups together.", explanation: "3 🍎 plus 4 🍎 equals 7 🍎 altogether." }
+    },
+    {
+      board: "EXAMPLE 2/15\n\n2 + 2 = 4",
+      speech: "Great job! Now let's learn: 2 + 2 = 4. This is how we get 4! 2 + 2 means we have 2 🍌 in the first group, and 2 🍌 in the second group. Let's count the first group: 1🍌... 2🍌🍌. Great! Now let's count the second group: 1🍌... 2🍌🍌. Wonderful! Now let's count all the 🍌 together: 1🍌... 2🍌🍌... 3🍌🍌🍌... 4🍌🍌🍌🍌. We have 4 🍌 altogether. Therefore, 2 + 2 = 4. Fantastic!",
+      visual: { type: "addition", groupCounts: [2, 2], emoji: "🍌", title: "2 🍌 + 2 🍌 = 4 🍌" },
+      checkpoint: { q: "What is 2 + 2?", expectedAnswer: "4" },
+      quiz: { q: "What is 2 + 2?", options: ["4", "3", "5", "6"], answer: 0, hint: "Count all the 🍌 in both groups.", explanation: "2 🍌 plus 2 🍌 equals 4 🍌 altogether." }
+    }
+  ]
+};
+
+const sampleEnglishNamingActionData = {
+  id: "p1-english-naming-actions",
+  classLevel: "Primary 1",
+  subject: "English",
+  topic: "Naming and Action Words",
+  intro: {
+    title: "NAMING AND ACTION WORDS",
+    board: "CAT 🐱 MEOWS\n\nA naming word tells us a name. An action word tells what someone does.",
+    speech: "Today we will learn naming words and action words. A naming word tells us a name. An action word tells us what someone or something does.",
+    visual: { type: "english", word: "CAT", category: "NAMING + ACTION", sentence: "The cat meows.", emoji: "🐱", title: "🐱 CAT is a Name, MEOWS is an Action" }
+  },
+  examples: [
+    {
+      board: "EXAMPLE 1/5\n\nTHE CAT MEOWS. 🐱\n\n• Cat = Naming Word (Animal)\n• Meows = Action Word (Sound)",
+      speech: "Did you hear that? The cat meows! Cat is the name of the animal, so cat is a naming word. Meows tells us what the cat does, so meows is an action word.",
+      visual: { type: "english", word: "CAT MEOWS", category: "NAMING + ACTION", sentence: "The cat meows.", emoji: "🐱", title: "🐱 CAT is a Name, MEOWS is an Action" },
+      quizzes: [
+        { q: "In 'The cat meows', which word is the naming word?", options: ["Cat", "Meows", "The", "Fast"], answer: 0, hint: "It is the name of the animal.", explanation: "Cat is the name of the animal." },
+        { q: "Which word describes what the cat does?", options: ["Runs", "Meows", "Eats", "Barks"], answer: 1, hint: "Think of the cat's sound.", explanation: "Meows is the action word." }
+      ],
+      checkpoint: { q: "Say the naming word in: The cat meows.", expectedAnswer: "cat" }
+    }
+  ]
+};
+
+const sampleSecondaryEnergyData = {
+  id: "jss1-basic-science-energy",
+  classLevel: "JSS 1",
+  subject: "Basic Science",
+  topic: "Forms of Energy",
+  intro: {
+    title: "FORMS OF ENERGY",
+    board: "ENERGY FUNDAMENTALS\n\nEnergy is the capacity or ability to do work.",
+    speech: "Welcome to Basic Science. Energy is the capacity or ability to do work. Today we explore kinetic, potential, and solar forms of energy.",
+    visual: { type: "science", word: "ENERGY", category: "SCIENCE", sentence: "Energy can neither be created nor destroyed.", emoji: "⚡☀️", title: "⚡ Energy Fundamentals" }
+  },
+  examples: [
+    {
+      board: "CONCEPT 1/2\n\nKINETIC ENERGY 🏃‍♂️⚡\n\n• Energy possessed by a body in motion.\n• Formula: K.E = 1/2 * m * v²",
+      speech: "Kinetic energy is energy in motion. Whenever an object moves, such as a running athlete or moving car, it possesses kinetic energy.",
+      visual: { type: "science", word: "KINETIC ENERGY", category: "PHYSICS", sentence: "A moving body possesses kinetic energy.", emoji: "🏃‍♂️", title: "🏃‍♂️ Kinetic Energy in Action" },
+      quizzes: [
+        { q: "What kind of energy is possessed by a moving body?", options: ["Kinetic Energy", "Potential Energy", "Chemical Energy", "Nuclear Energy"], answer: 0, hint: "Think of motion.", explanation: "Kinetic energy is the energy of motion." }
+      ],
+      checkpoint: { q: "Say what energy is possessed by an object in motion.", expectedAnswer: "kinetic" }
+    }
+  ]
+};
+
+const sampleFractionData = {
+  id: "fractions-parts-of-a-whole",
+  classLevel: "Primary 1",
+  subject: "Mathematics",
+  topic: "Fractions: Parts of a Whole",
+  intro: {
+    title: "FRACTIONS: PARTS OF A WHOLE",
+    board: "1/2, 1/3, 1/4\n\nA fraction represents an equal part of a whole circle or object.",
+    speech: "Hello, my dear friend! Welcome to Mathematics class! Today we are exploring Fractions. A fraction is a part of a whole object that has been divided into equal pieces. Tap any fraction pie on the screen to pop out the slice!",
+    visual: { type: "fraction_circle", denominators: [1, 2, 3, 4], title: "Exploring Fractions: 1 Whole, 1/2, 1/3, 1/4" }
+  },
+  examples: [
+    {
+      board: "EXAMPLE 1/2\n\n1/2 = One Half",
+      speech: "Look at the second circle: it is divided into 2 equal parts. The green slice is 1 part out of 2. We call this 1/2, or one half! When you share something equally between two friends, each friend gets one half.",
+      visual: { type: "fraction_circle", denominators: [2], title: "1/2 = One Half" },
+      checkpoint: { q: "If a circle is cut into 2 equal parts, what do we call 1 part? Say half or two.", expectedAnswer: "half" },
+      quiz: { q: "How many halves make up one complete whole?", options: ["2 halves", "1 half", "3 halves", "4 halves"], answer: 0, hint: "Two equal halves fit together.", explanation: "Two halves (1/2 + 1/2) make 1 whole." }
+    }
+  ]
+};
+
+const sampleSubtractionData = {
+  id: "subtraction-taking-away",
+  classLevel: "Primary 1",
+  subject: "Mathematics",
+  topic: "Subtraction (Taking Away)",
+  intro: {
+    title: "SUBTRACTION FOUNDATION",
+    board: "5 - 2 = 3\n\nSubtraction means taking away items from a tray to find out how many are left.",
+    speech: "Hello, my dear friend! Welcome to Mathematics class! Today we are learning Subtraction. Subtraction means taking away items. When we subtract, we remove items from the tray and count how many are left. Let's watch how taking away works together!",
+    visual: { type: "subtraction", total: 5, subtract: 2, emoji: "🍎", title: "5 - 2 = ?" }
+  },
+  examples: [
+    {
+      board: "EXAMPLE 1/2\n\n5 - 2 = 3",
+      speech: "Let's solve: 5 - 2 = ?. We start with 5 🍎 inside our active tray. Let's count them: 1🍎... 2🍎🍎... 3🍎🍎🍎... 4🍎🍎🍎🍎... 5🍎🍎🍎🍎🍎. Now, let's take away 2 🍎! One, two. Look at the tray: 2 🍎 were removed to the side, and exactly 3 🍎 remain! Let's count what is left: 1🍎... 2🍎🍎... 3🍎🍎🍎! We have 3 🍎 left in the tray. Therefore, 5 - 2 = 3. Excellent work!",
+      visual: { type: "subtraction", total: 5, subtract: 2, emoji: "🍎", title: "5 - 2 = ?" },
+      checkpoint: { q: "If you have 5 apples in the tray and take away 2, what is 5 - 2?", expectedAnswer: "3" },
+      quiz: { q: "What is 5 - 2?", options: ["3", "2", "4", "5"], answer: 0, hint: "Start with 5 and remove 2.", explanation: "5 apples take away 2 leaves 3." }
+    }
+  ]
+};
+
+const sampleDivisionData = {
+  id: "division-equal-sharing",
+  classLevel: "Primary 1",
+  subject: "Mathematics",
+  topic: "Division: Equal Sharing",
+  intro: {
+    title: "DIVISION: EQUAL SHARING",
+    board: "6 ÷ 2 = ?\n\nDivision means fair sharing! We divide a total number of items equally into groups.",
+    speech: "Hello, my dear friend! Welcome to class! Today we are learning Division. Division means fair sharing. When we divide, we share items equally into groups so that everyone gets the exact same amount. Let's see how sharing works together!",
+    visual: { type: "division", total: 6, groups: 2, emoji: "🍎", title: "6 ÷ 2 = ?" }
+  },
+  examples: [
+    {
+      board: "EXAMPLE 1/2\n\n6 ÷ 2 = 3",
+      speech: "Let's solve: 6 ÷ 2 = ?. We have 6 🍎 displayed in our tray, and 2 empty groups below. Let's share them equally! First, we put 2 🍎 into Group 1, and 2 🍎 into Group 2. Look at the tray: we have 2 🍎 left! Now let's share the rest: 1 🍎 to Group 1, and 1 🍎 to Group 2. Look: 0 🍎 left! Group 1 has 3 🍎 and Group 2 has 3 🍎. Both groups have the exact same amount! Therefore, 6 ÷ 2 = 3. Excellent work!",
+      visual: { type: "division", total: 6, groups: 2, emoji: "🍎", title: "6 ÷ 2 = ?" },
+      checkpoint: { q: "If 6 apples are shared equally between 2 groups, what is 6 ÷ 2?", expectedAnswer: "3" },
+      quiz: { q: "When 6 apples are shared equally into 2 groups, how many apples does each group get?", options: ["3 apples", "2 apples", "4 apples", "6 apples"], answer: 0, hint: "Count apples in Group 1.", explanation: "6 apples shared into 2 groups gives 3 in each group." }
+    }
+  ]
+};
+
+const sampleMultiplicationData = {
+  id: "multiplication",
+  classLevel: "Primary 1",
+  subject: "Mathematics",
+  topic: "Multiplication (Equal Groups)",
+  intro: {
+    title: "MULTIPLICATION FOUNDATION",
+    board: "2 × 3 = 6\n\nMultiplication means making equal groups. It is a faster way of adding repeatedly.",
+    speech: "Hello, my dear friend! Welcome to Mathematics class. Today we are going to learn Multiplication. Multiplication means putting equal groups together. Instead of adding repeatedly, multiplication helps us calculate quickly!",
+    visual: { type: "multiplication", groups: 2, perGroup: 3, emoji: "⭐", title: "✖️ Multiplication = Equal Groups 🎉" }
+  },
+  examples: [
+    {
+      board: "EXAMPLE 1/2\n\n2 × 3 = 6",
+      speech: "Let's learn together: 2 × 3 = 6. 2 × 3 means 2 groups, and each group has 3 🍎. Let's count the first group: 1🍎... 2🍎🍎... 3🍎🍎🍎. Now let's count the second group: 1🍎... 2🍎🍎... 3🍎🍎🍎. Now let's count all the 🍎 together: 1🍎... 2🍎🍎... 3🍎🍎🍎... 4🍎🍎🍎🍎... 5🍎🍎🍎🍎🍎... 6🍎🍎🍎🍎🍎🍎. We have 6 🍎 altogether. Therefore, 2 × 3 = 6. Excellent!",
+      visual: { type: "multiplication", groups: 2, perGroup: 3, emoji: "🍎", title: "2 Groups of 3 🍎 = 6 🍎" },
+      checkpoint: { q: "If we have 2 groups of 3 🍎, how many 🍎 altogether?", expectedAnswer: "6" },
+      quiz: { q: "What is 2 × 3?", options: ["6", "5", "4", "3"], answer: 0, hint: "Count all the 🍎 in both groups.", explanation: "2 groups with 3 apples in each equals 6 apples." }
+    }
+  ]
+};
+
+/* ======================================================== */
+/* 💾 DATA STORAGE & PERSISTENCE                            */
+/* ======================================================== */
+function loadData(){
+  try{
+    const saved = localStorage.getItem(STORAGE_KEY);
+    if(saved){
+      const parsed = JSON.parse(saved);
+      if(parsed && Array.isArray(parsed.topics) && parsed.topics.length > 0){
+        return parsed;
+      }
+    }
+  }catch(e){}
+  return {
+    app: "Kids Learning Academy",
+    topics: [
+      JSON.parse(JSON.stringify(sampleAdditionData)),
+      JSON.parse(JSON.stringify(sampleEnglishNamingActionData)),
+      JSON.parse(JSON.stringify(sampleSecondaryEnergyData)),
+      JSON.parse(JSON.stringify(sampleFractionData)),
+      JSON.parse(JSON.stringify(sampleSubtractionData)),
+      JSON.parse(JSON.stringify(sampleDivisionData)),
+      JSON.parse(JSON.stringify(sampleMultiplicationData))
+    ]
+  };
+}
+
+function saveData(){
+  try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(data)); }catch(e){}
+}
+
+function loadProgress(){
+  try{
+    const saved = localStorage.getItem(PROGRESS_KEY);
+    if(saved) return JSON.parse(saved);
+  }catch(e){}
+  return { completedSteps: {}, quizzes: [], studiedTopics: {} };
+}
+
+function saveProgress(){
+  try{ localStorage.setItem(PROGRESS_KEY, JSON.stringify(progress)); }catch(e){}
+  renderProgress();
+  updateHomeStats();
+}
+
+function loadStudentProfile(){
+  try{
+    const saved = localStorage.getItem(STUDENT_KEY);
+    if(saved) return JSON.parse(saved);
+  }catch(e){}
+  return { name: "Flourish", classLevel: "Primary 1", registered: false };
+}
+
+function saveStudentProfile(){
+  localStorage.setItem(STUDENT_KEY, JSON.stringify(studentProfile));
+  updateStudentUI();
+}
+
+function loadAttendance(){
+  try{ return JSON.parse(localStorage.getItem(ATTENDANCE_KEY)) || []; }catch(e){ return []; }
+}
+
+function saveAttendance(){
+  localStorage.setItem(ATTENDANCE_KEY, JSON.stringify(attendanceLogs));
+  renderAttendanceTable();
+}
+
+function loadParentLogs(){
+  try{ return JSON.parse(localStorage.getItem(PARENT_LOGS_KEY)) || []; }catch(e){ return []; }
+}
+
+function saveParentLogs(){
+  localStorage.setItem(PARENT_LOGS_KEY, JSON.stringify(parentLogs));
+  renderParentLogs();
+}
+
+let studentProfile = loadStudentProfile();
+let data = loadData();
+let progress = loadProgress();
+let attendanceLogs = loadAttendance();
+let parentLogs = loadParentLogs();
+
+let currentTopic = null;
+let currentStepIndex = 0;
+let currentEditingTopicId = null;
+
+let isAutoPlayEnabled = true;
+let autoAdvanceTimeout = null;
+let animalActionTimeout = null;
+let activeCheckpoint = null;
+let gateExpectedAns = 0;
+
+let playbackSessionId = 0;
+let isPlaying = false;
+let isPaused = false;
+let activeTargetGroup = 0;
+let isCountAllMode = false;
+let activeStepVideoBlobUrl = null;
+window._activeUtterances = [];
+
+let firebaseApp = null;
+let firestoreDb = null;
+let fbModule = null;
+
+/* ======================================================== */
+/* ☰ SIDEBAR & NAVIGATION                                   */
+/* ======================================================== */
+window.toggleSidebar = function(){
+  const drawer = $("sidebarDrawer");
+  const backdrop = $("sidebarBackdrop");
+  if(drawer.classList.contains("open")){
+    window.closeSidebar();
+  } else {
+    drawer.classList.add("open");
+    backdrop.classList.add("open");
+    document.body.style.overflow = "hidden";
+  }
+};
+
+window.closeSidebar = function(){
+  const drawer = $("sidebarDrawer");
+  const backdrop = $("sidebarBackdrop");
+  if(drawer) drawer.classList.remove("open");
+  if(backdrop) backdrop.classList.remove("open");
+  document.body.style.overflow = "";
+};
+
+window.showScreen = function(screenId){
+  if(screenId !== 'lessons' && isPlaying){
+    window.stopLesson();
+  }
+  document.querySelectorAll(".screen").forEach(s => s.classList.remove("active"));
+  const target = $(screenId);
+  if(target) target.classList.add("active");
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+
+  document.querySelectorAll(".sidebar-link").forEach(link => link.classList.remove("active"));
+  const activeLink = $(`nav-${screenId}`);
+  if(activeLink) activeLink.classList.add("active");
+
+  if(screenId === 'topics') renderTopics();
+  if(screenId === 'progress') renderProgress();
+  if(screenId === 'attendance') renderAttendanceTable();
+  if(screenId === 'import') renderTopicManageList();
+  if(screenId === 'parent') renderParentDashboard();
+};
+
+/* ======================================================== */
+/* 📺 TV / JUMBO MODE ENGINE                                */
+/* ======================================================== */
+let isTVMode = (localStorage.getItem(TV_MODE_KEY) === "true");
+
+function applyTVMode(){
+  const toolbarBtn = $("tvModeBtnToolbar");
+  const sidebarLabel = $("sidebarTvLabel");
+  if(isTVMode){
+    document.body.classList.add("tv-mode");
+    if(toolbarBtn){ toolbarBtn.classList.add("active"); toolbarBtn.textContent = "📺 TV: ON"; }
+    if(sidebarLabel) sidebarLabel.textContent = "📺 TV Mode: ON (Tap to Disable)";
+  } else {
+    document.body.classList.remove("tv-mode");
+    if(toolbarBtn){ toolbarBtn.classList.remove("active"); toolbarBtn.textContent = "📺 TV View"; }
+    if(sidebarLabel) sidebarLabel.textContent = "📺 TV Mode: OFF (Tap to Enable)";
+  }
+  localStorage.setItem(TV_MODE_KEY, isTVMode ? "true" : "false");
+}
+
+window.toggleTVMode = function(){
+  isTVMode = !isTVMode;
+  applyTVMode();
+};
+
+/* ======================================================== */
+/* 🎙️ ROBUST SPEECH RECOGNITION (VOICE ANSWERING)           */
+/* ======================================================== */
+let recognition = null;
+let isListeningForAnswer = false;
+
+function initSpeechRecognition(){
+  const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if(!SpeechRecognition) return;
+  try{
+    recognition = new SpeechRecognition();
+    recognition.continuous = false;
+    recognition.interimResults = false;
+    recognition.maxAlternatives = 5;
+    recognition.lang = navigator.language || "en-US";
+
+    recognition.onstart = () => {
+      isListeningForAnswer = true;
+      updateMicStatusUI(true, "🎙️ Listening... Say your answer out loud!");
+    };
+
+    recognition.onresult = (event) => {
+      isListeningForAnswer = false;
+      let candidates = [];
+      for(let i = 0; i < event.results[0].length; i++){
+        candidates.push(event.results[0][i].transcript);
+      }
+      const interpreted = extractBestSpokenAnswer(candidates);
+      $("checkpointInput").value = interpreted;
+      updateMicStatusUI(false, `✅ Heard: "${candidates[0]}" (Interpreted: ${interpreted})`);
+      setTimeout(() => window.submitCheckpointAnswer(), 500);
+    };
+
+    recognition.onerror = () => {
+      isListeningForAnswer = false;
+      updateMicStatusUI(false, "Could not hear clearly. Tap mic or type below.");
+    };
+
+    recognition.onend = () => {
+      isListeningForAnswer = false;
+      updateMicStatusUI(false);
+    };
+  }catch(e){}
+}
+
+function extractBestSpokenAnswer(candidates){
+  if(!candidates || !candidates.length) return "";
+  const expected = (activeCheckpoint && activeCheckpoint.expectedAnswer) ? activeCheckpoint.expectedAnswer.toLowerCase().trim() : "";
+  for(const phrase of candidates){
+    const parsed = parsePhraseToAnswer(phrase);
+    if(expected && (parsed === expected || phrase.toLowerCase().includes(expected))){
+      return parsed;
+    }
+  }
+  for(const phrase of candidates){
+    const parsed = parsePhraseToAnswer(phrase);
+    if(parsed && (!isNaN(parsed) || parsed.length > 0)) return parsed;
+  }
+  return parsePhraseToAnswer(candidates[0]);
+}
+
+function parsePhraseToAnswer(phrase){
+  if(!phrase) return "";
+  const cleaned = phrase.toLowerCase().trim();
+  const digitMatch = cleaned.match(/\b\d+\b/);
+  if(digitMatch) return digitMatch[0];
+
+  const words = cleaned.replace(/[^a-z0-9\s]/g, '').split(/\s+/);
+  for(const w of words){
+    if(EXTENDED_NUMBER_WORDS[w] !== undefined){
+      return EXTENDED_NUMBER_WORDS[w];
+    }
+  }
+  for(const [wKey, numVal] of Object.entries(EXTENDED_NUMBER_WORDS)){
+    if(new RegExp(`\\b${wKey}\\b`, 'i').test(cleaned)) return numVal;
+  }
+  return cleaned.replace(/^(the|a|an|it|is|say|say the word)\s+/gi,"").trim();
+}
+
+function updateMicStatusUI(listening, statusText = ""){
+  const btn = $("checkpointVoiceBtn");
+  const label = $("checkpointMicLabel");
+  const statusEl = $("checkpointVoiceStatus");
+  if(!btn) return;
+  if(listening){
+    btn.classList.add("listening");
+    label.textContent = "Listening to you...";
+  } else {
+    btn.classList.remove("listening");
+    label.textContent = "Speak Your Answer";
+  }
+  if(statusEl && statusText) statusEl.textContent = statusText;
+}
+
+window.toggleVoiceAnswering = function(){
+  getAudioContext();
+  if(!recognition){
+    alert("Speech recognition is not supported in this browser. Please type your answer.");
+    return;
+  }
+  if(isListeningForAnswer){
+    try{ recognition.stop(); }catch(e){}
+  } else {
+    try{ recognition.start(); }catch(e){}
+  }
+};
+
+/* ======================================================== */
+/* 🥧 FRACTION CIRCLE RENDERER                              */
+/* ======================================================== */
+const FRACTION_COLOR_MAP = { 1:"#eab308", 2:"#16a34a", 3:"#2563eb", 4:"#dc2626", 5:"#9333ea" };
+
+function renderFractionCircleStage(visualData){
+  const contentEl = $("stageContent");
+  $("stageTitle").textContent = visualData?.title || "Understanding Fractions";
+  contentEl.innerHTML = "";
+
+  const container = document.createElement("div");
+  container.className = "fraction-stage-container";
+
+  const subtitle = document.createElement("div");
+  subtitle.className = "div-prompt-subtitle";
+  subtitle.id = "fractionSubtitle";
+  subtitle.textContent = "Tap on any fraction circle to pop out the slice!";
+  container.appendChild(subtitle);
+
+  const piesRow = document.createElement("div");
+  piesRow.className = "fraction-pies-row";
+
+  const denominators = visualData?.denominators || [visualData?.denominator || 2];
+  denominators.forEach(den => {
+    const card = document.createElement("div");
+    card.className = "fraction-pie-card active-pie";
+    const svg = createFractionPieSVG(1, den, FRACTION_COLOR_MAP[den] || "#16a34a");
+    card.appendChild(svg);
+
+    const label = document.createElement("div");
+    label.className = "sub-counter";
+    label.style.marginTop = "6px";
+    label.textContent = den === 1 ? "1 Whole" : `1/${den}`;
+    card.appendChild(label);
+
+    card.onclick = () => {
+      const slice = svg.querySelector(".pie-slice");
+      if(slice){
+        slice.classList.toggle("detached");
+        playPopTone(den);
+      }
+      subtitle.innerHTML = `You tapped <b>1/${den}</b>! This is 1 part out of ${den} equal parts.`;
+    };
+    piesRow.appendChild(card);
+  });
+
+  container.appendChild(piesRow);
+  contentEl.appendChild(container);
+}
+
+function createFractionPieSVG(num, den, color){
+  const svgNS = "http://www.w3.org/2000/svg";
+  const svg = document.createElementNS(svgNS, "svg");
+  svg.setAttribute("class", "fraction-svg-pie");
+  svg.setAttribute("viewBox", "0 0 160 160");
+  const cx = 80, cy = 80, r = 70;
+
+  if(den === 1){
+    const circle = document.createElementNS(svgNS, "circle");
+    circle.setAttribute("cx", cx); circle.setAttribute("cy", cy); circle.setAttribute("r", r);
+    circle.setAttribute("fill", color); circle.setAttribute("stroke", "#000"); circle.setAttribute("stroke-width", "3");
+    svg.appendChild(circle);
+    const text = document.createElementNS(svgNS, "text");
+    text.setAttribute("x", cx); text.setAttribute("y", cy + 10); text.setAttribute("text-anchor", "middle");
+    text.setAttribute("class", "fraction-label-text"); text.setAttribute("font-size", "34");
+    text.textContent = "1";
+    svg.appendChild(text);
+    return svg;
+  }
+
+  const bg = document.createElementNS(svgNS, "circle");
+  bg.setAttribute("cx", cx); bg.setAttribute("cy", cy); bg.setAttribute("r", r);
+  bg.setAttribute("fill", "#e2e8f0"); bg.setAttribute("stroke", "#000"); bg.setAttribute("stroke-width", "3");
+  svg.appendChild(bg);
+
+  const angleStep = (2 * Math.PI) / den;
+  for(let i = 0; i < den; i++){
+    const a = -Math.PI / 2 + i * angleStep;
+    const line = document.createElementNS(svgNS, "line");
+    line.setAttribute("x1", cx); line.setAttribute("y1", cy);
+    line.setAttribute("x2", cx + r * Math.cos(a)); line.setAttribute("y2", cy + r * Math.sin(a));
+    line.setAttribute("stroke", "#000"); line.setAttribute("stroke-width", "2.5");
+    svg.appendChild(line);
+  }
+
+  const startAngle = -Math.PI / 2;
+  const endAngle = startAngle + (2 * Math.PI * (num / den));
+  const x1 = cx + r * Math.cos(startAngle), y1 = cy + r * Math.sin(startAngle);
+  const x2 = cx + r * Math.cos(endAngle), y2 = cy + r * Math.sin(endAngle);
+  const largeArc = (num / den) > 0.5 ? 1 : 0;
+  const pathData = `M ${cx} ${cy} L ${x1} ${y1} A ${r} ${r} 0 ${largeArc} 1 ${x2} ${y2} Z`;
+
+  const slice = document.createElementNS(svgNS, "path");
+  slice.setAttribute("d", pathData); slice.setAttribute("fill", color); slice.setAttribute("stroke", "#000");
+  slice.setAttribute("stroke-width", "3"); slice.setAttribute("class", "pie-slice shaded");
+  svg.appendChild(slice);
+
+  const midAngle = (startAngle + endAngle) / 2;
+  const lx = cx + (r * 0.55) * Math.cos(midAngle);
+  const ly = cy + (r * 0.55) * Math.sin(midAngle) + 6;
+  const text = document.createElementNS(svgNS, "text");
+  text.setAttribute("x", lx); text.setAttribute("y", ly); text.setAttribute("text-anchor", "middle");
+  text.setAttribute("class", "fraction-label-text"); text.setAttribute("font-size", den <= 3 ? "24" : "20");
+  text.textContent = `${num}/${den}`;
+  svg.appendChild(text);
+
+  return svg;
+}
+
+/* ======================================================== */
+/* ➖ SUBTRACTION ENGINE                                    */
+/* ======================================================== */
+let currentSubtractionModel = { total: 5, subtract: 2, remaining: 5, takenAway: 0, emoji: "🍎", word: "apple" };
+
+function renderSubtractionStage(visualData, contextText = ""){
+  const contentEl = $("stageContent");
+  $("stageTitle").textContent = "";
+  contentEl.innerHTML = "";
+
+  let emoji = visualData?.emoji || "🍎";
+  let totalItems = visualData?.total || 5;
+  let subtractItems = visualData?.subtract !== undefined ? visualData.subtract : 2;
+
+  currentSubtractionModel = {
+    total: totalItems, subtract: subtractItems, remaining: totalItems, takenAway: 0,
+    emoji: emoji, word: EMOJI_SPEECH_MAP[emoji] || "apple"
+  };
+
+  const container = document.createElement("div");
+  container.className = "subtraction-container";
+
+  const title = document.createElement("div");
+  title.className = "div-equation-title"; title.id = "subEquationTitle";
+  title.textContent = `${totalItems} - ${subtractItems} = ?`;
+  container.appendChild(title);
+
+  const subtitle = document.createElement("div");
+  subtitle.className = "div-prompt-subtitle"; subtitle.id = "subPromptSubtitle";
+  subtitle.textContent = `${totalItems} ${currentSubtractionModel.word}s in the tray. Press "Play" to begin!`;
+  container.appendChild(subtitle);
+
+  const row = document.createElement("div");
+  row.className = "sub-stage-row";
+
+  const trayCard = document.createElement("div");
+  trayCard.className = "sub-tray-card";
+  trayCard.innerHTML = `
+    <div class="sub-card-header" style="color:#4ade80;">🛒 IN THE TRAY</div>
+    <div class="sub-items-area" id="subTrayItems"></div>
+    <div class="sub-counter" id="subTrayCounter">${totalItems} ${currentSubtractionModel.word}s</div>
+  `;
+  row.appendChild(trayCard);
+
+  const takenCard = document.createElement("div");
+  takenCard.className = "sub-taken-card";
+  takenCard.innerHTML = `
+    <div class="sub-card-header" style="color:#f87171;">💨 TAKEN AWAY (-${subtractItems})</div>
+    <div class="sub-items-area" id="subTakenItems"></div>
+    <div class="sub-counter" id="subTakenCounter">0 taken away</div>
+  `;
+  row.appendChild(takenCard);
+
+  container.appendChild(row);
+  contentEl.appendChild(container);
+  syncSubtractionVisualUI();
+}
+
+function syncSubtractionVisualUI(){
+  const { remaining, takenAway, emoji, word, total, subtract } = currentSubtractionModel;
+  const trayItems = $("subTrayItems");
+  const takenItems = $("subTakenItems");
+  if(!trayItems) return;
+
+  trayItems.innerHTML = "";
+  for(let i = 0; i < remaining; i++){
+    const item = document.createElement("span");
+    item.className = "interactive-item";
+    item.id = `sub-item-${i}`;
+    item.textContent = emoji;
+    item.onclick = () => triggerItemBounce(item, i + 1);
+    trayItems.appendChild(item);
+  }
+
+  if(takenItems){
+    takenItems.innerHTML = "";
+    if(takenAway === 0){
+      takenItems.innerHTML = `<span style="font-size:0.8rem; color:#888; font-style:italic;">None taken yet</span>`;
+    } else {
+      for(let i = 0; i < takenAway; i++){
+        const item = document.createElement("span");
+        item.className = "interactive-item";
+        item.style.opacity = "0.75";
+        item.textContent = emoji;
+        takenItems.appendChild(item);
+      }
+    }
+  }
+
+  if($("subTrayCounter")) $("subTrayCounter").textContent = `${remaining} ${word}${remaining !== 1 ? 's' : ''} left`;
+  if($("subTakenCounter")) $("subTakenCounter").textContent = `${takenAway} taken away`;
+
+  if(remaining === (total - subtract)){
+    if($("subPromptSubtitle")) $("subPromptSubtitle").innerHTML = `🎉 <b>Took away ${takenAway}!</b> Exactly <b>${remaining}</b> remain!`;
+    if($("subEquationTitle")) $("subEquationTitle").textContent = `${total} - ${subtract} = ${remaining}`;
+  }
+}
+
+function executeSubtractionRemove(amount = 1){
+  const actualTake = Math.min(amount, currentSubtractionModel.remaining);
+  if(actualTake <= 0) return;
+  currentSubtractionModel.remaining -= actualTake;
+  currentSubtractionModel.takenAway += actualTake;
+  playPopTone(currentSubtractionModel.remaining + 1);
+  syncSubtractionVisualUI();
+  if(currentSubtractionModel.remaining === (currentSubtractionModel.total - currentSubtractionModel.subtract)){
+    triggerConfetti();
+  }
+}
+
+/* ======================================================== */
+/* ➗ DIVISION ENGINE                                       */
+/* ======================================================== */
+let currentDivisionModel = { total: 6, groups: 2, emoji: "🍎", word: "apple", remainingPool: 6, groupAllocations: [0, 0] };
+
+function renderDivisionEqualGroups(visualData){
+  const contentEl = $("stageContent");
+  $("stageTitle").textContent = "";
+  contentEl.innerHTML = "";
+
+  let emoji = visualData?.emoji || "🍎";
+  let totalItems = visualData?.total || 6;
+  let numGroups = visualData?.groups || 2;
+
+  currentDivisionModel = {
+    total: totalItems, groups: numGroups, emoji: emoji, word: EMOJI_SPEECH_MAP[emoji] || "apple",
+    remainingPool: totalItems, groupAllocations: Array(numGroups).fill(0)
+  };
+
+  const container = document.createElement("div");
+  container.className = "division-container";
+
+  const title = document.createElement("div");
+  title.className = "div-equation-title"; title.id = "divEquationTitle";
+  title.textContent = `${totalItems} ÷ ${numGroups} = ?`;
+  container.appendChild(title);
+
+  const subtitle = document.createElement("div");
+  subtitle.className = "div-prompt-subtitle"; subtitle.id = "divPromptSubtitle";
+  subtitle.textContent = `Press "Play" to start sharing equally!`;
+  container.appendChild(subtitle);
+
+  const poolCard = document.createElement("div");
+  poolCard.className = "div-pool-card";
+  poolCard.innerHTML = `
+    <div class="div-pool-header">${currentDivisionModel.word.toUpperCase()}S LEFT</div>
+    <div class="div-pool-items" id="divPoolItems"></div>
+  `;
+  container.appendChild(poolCard);
+
+  const groupsRow = document.createElement("div");
+  groupsRow.className = "div-groups-row";
+  for(let g = 0; g < numGroups; g++){
+    const groupBox = document.createElement("div");
+    groupBox.className = "div-group-box"; groupBox.id = `divGroupBox-${g}`;
+    groupBox.innerHTML = `
+      <div class="div-group-header">GROUP ${g + 1}</div>
+      <div class="div-group-items" id="divGroupItems-${g}"></div>
+      <div class="div-group-counter" id="divGroupCounter-${g}">0 ${currentDivisionModel.word}s</div>
+    `;
+    groupsRow.appendChild(groupBox);
+  }
+  container.appendChild(groupsRow);
+  contentEl.appendChild(container);
+  syncDivisionVisualUI();
+}
+
+function syncDivisionVisualUI(){
+  const { remainingPool, groupAllocations, emoji, word, total, groups } = currentDivisionModel;
+  const pool = $("divPoolItems");
+  if(!pool) return;
+
+  pool.innerHTML = "";
+  for(let i = 0; i < remainingPool; i++){
+    const item = document.createElement("span");
+    item.className = "interactive-item"; item.textContent = emoji;
+    pool.appendChild(item);
+  }
+
+  groupAllocations.forEach((count, g) => {
+    const itemsEl = $(`divGroupItems-${g}`);
+    const counterEl = $(`divGroupCounter-${g}`);
+    if(itemsEl){
+      itemsEl.innerHTML = "";
+      for(let c = 0; c < count; c++){
+        const span = document.createElement("span");
+        span.className = "interactive-item"; span.textContent = emoji;
+        itemsEl.appendChild(span);
+      }
+    }
+    if(counterEl) counterEl.textContent = `${count} ${word}${count !== 1 ? 's' : ''}`;
+  });
+
+  if(remainingPool === 0){
+    const quotient = Math.floor(total / groups);
+    if($("divPromptSubtitle")) $("divPromptSubtitle").innerHTML = `🎉 <b>0 left!</b> Each group gets exactly <b>${quotient} ${word}s</b>!`;
+    if($("divEquationTitle")) $("divEquationTitle").textContent = `${total} ÷ ${groups} = ${quotient}`;
+  }
+}
+
+function executeDivisionShare(targetGroup, shareAmount = 1){
+  if(currentDivisionModel.remainingPool <= 0) return;
+  const safeTarget = Math.max(0, Math.min(targetGroup ?? 0, currentDivisionModel.groups - 1));
+  const actualShare = Math.min(shareAmount, currentDivisionModel.remainingPool);
+  currentDivisionModel.remainingPool -= actualShare;
+  currentDivisionModel.groupAllocations[safeTarget] += actualShare;
+
+  const box = $(`divGroupBox-${safeTarget}`);
+  if(box){
+    box.classList.add("receiving");
+    setTimeout(() => box.classList.remove("receiving"), 350);
+  }
+  playPopTone(currentDivisionModel.groupAllocations[safeTarget]);
+  syncDivisionVisualUI();
+  if(currentDivisionModel.remainingPool === 0) triggerConfetti();
+}
+
+/* ======================================================== */
+/* 🎬 DUAL SCENE STAGE (VIDEO OR ANIMATED CHARACTERS)       */
+/* ======================================================== */
+async function renderDualSceneStage(visualData, stepIdx){
+  const scene = $("sceneContainer");
+  const videoBar = $("videoManagerBar");
+  scene.classList.remove("hidden");
+  videoBar.classList.remove("hidden");
+  $("stageContent").innerHTML = "";
+
+  if(activeStepVideoBlobUrl){
+    URL.revokeObjectURL(activeStepVideoBlobUrl);
+    activeStepVideoBlobUrl = null;
+  }
+
+  const storageKey = `${currentTopic.id || "topic"}_step_${stepIdx}`;
+  let videoBlob = await getVideoBlob(storageKey);
+
+  if(videoBlob || (visualData && visualData.videoUrl)){
+    scene.innerHTML = "";
+    const videoSrc = videoBlob ? URL.createObjectURL(videoBlob) : visualData.videoUrl;
+    if(videoBlob) activeStepVideoBlobUrl = videoSrc;
+
+    const video = document.createElement("video");
+    video.className = "stage-video";
+    video.id = "activeStageVideo";
+    video.src = videoSrc;
+    video.setAttribute("playsinline", "");
+    video.setAttribute("webkit-playsinline", "");
+    video.playsInline = true;
+    video.autoplay = false;
+    video.controls = true;
+    scene.appendChild(video);
+
+    $("videoSourceStatus").innerHTML = "🎥 <b>16:9 Video Active</b>";
+    $("removeVideoBtn").classList.remove("hidden");
+    return;
+  }
+
+  $("videoSourceStatus").textContent = "🎨 Showing Animated Emojis";
+  $("removeVideoBtn").classList.add("hidden");
+  scene.innerHTML = `<div class="scene-ground"></div><div class="action-caption" id="actionCaption">Watch carefully! 👀</div>`;
+
+  const rawEmoji = displayEmoji(visualData.emoji || "📖");
+  const emojis = graphemes(rawEmoji).filter(x => /\p{Extended_Pictographic}/u.test(x));
+  const parts = emojis.length ? emojis : [rawEmoji];
+
+  parts.forEach((emo, i) => {
+    const span = document.createElement("span");
+    span.className = "emoji-object " + (parts.length === 1 ? "single" : (i === 0 ? "subject" : "object"));
+    span.textContent = emo;
+    scene.appendChild(span);
+  });
+}
+
+window.handleStepVideoUpload = async function(event){
+  const file = event.target.files?.[0];
+  if(!file) return;
+  const storageKey = `${currentTopic.id || "topic"}_step_${currentStepIndex}`;
+  await saveVideoBlob(storageKey, file);
+  await renderDualSceneStage(currentStepData().visual || {}, currentStepIndex);
+  $("speechStatus").textContent = "✅ Video uploaded! Tap ▶️ Play to watch.";
+};
+
+window.removeStepVideo = async function(){
+  const storageKey = `${currentTopic.id || "topic"}_step_${currentStepIndex}`;
+  await deleteVideoBlob(storageKey);
+  await renderDualSceneStage(currentStepData().visual || {}, currentStepIndex);
+  $("speechStatus").textContent = "Switched back to animated emojis.";
+};
+
+/* ======================================================== */
+/* 🧩 GENERAL STAGE OBJECTS RENDERER                        */
+/* ======================================================== */
+function renderStageObjects(visualData, contextText = ""){
+  const vType = visualData?.type || "";
+  const scene = $("sceneContainer");
+  const videoBar = $("videoManagerBar");
+
+  if (vType !== "english" && vType !== "science" && !(visualData && visualData.sentence)) {
+    scene.innerHTML = "";
+    if (activeStepVideoBlobUrl) {
+      URL.revokeObjectURL(activeStepVideoBlobUrl);
+      activeStepVideoBlobUrl = null;
+    }
+  }
+
+  if(vType === "english" && visualData.sentence && !visualData.word?.includes(" ")){
+    scene.classList.add("hidden");
+    videoBar.classList.add("hidden");
+    $("stageTitle").textContent = visualData.title || "English Vocabulary";
+    $("stageContent").innerHTML = `
+      <div class="english-card">
+        <div class="english-badge">${escapeHTML(visualData.category || "GRAMMAR")}</div>
+        <div class="english-word">${visualData.emoji || "📖"} ${escapeHTML(visualData.word || "")}</div>
+        <div class="english-sentence">"${escapeHTML(visualData.sentence || "")}"</div>
+      </div>
+    `;
+    return;
+  }
+
+  if(vType === "english" || vType === "science" || (visualData && visualData.sentence)){
+    renderDualSceneStage(visualData, currentStepIndex);
+    return;
+  }
+
+  scene.classList.add("hidden");
+  videoBar.classList.add("hidden");
+
+  if(vType === "fraction_circle" || contextText.includes("fraction") || contextText.includes("1/2") || contextText.includes("1/4")){
+    renderFractionCircleStage(visualData);
+    return;
+  }
+
+  if(vType === "subtraction" || (contextText.includes("-") && !contextText.includes("+")) || contextText.includes("take away") || contextText.includes("minus")){
+    renderSubtractionStage(visualData, contextText);
+    return;
+  }
+
+  if(vType === "division" || contextText.includes("÷") || contextText.includes("divided by")){
+    renderDivisionEqualGroups(visualData);
+    return;
+  }
+
+  const contentEl = $("stageContent");
+  contentEl.innerHTML = "";
+  let groupCounts = [];
+  let emoji = visualData?.emoji || "🍎";
+
+  const addMatch = contextText.match(/(\d+)\s*\+\s*(\d+)/);
+  const multMatch = contextText.match(/(\d+)\s*[×*x]\s*(\d+)/);
+
+  if (visualData && Array.isArray(visualData.groupCounts) && visualData.groupCounts.length > 0) {
+    groupCounts = visualData.groupCounts;
+  } else if (addMatch) {
+    groupCounts = [parseInt(addMatch[1], 10), parseInt(addMatch[2], 10)];
+  } else if (multMatch) {
+    groupCounts = Array(parseInt(multMatch[1], 10)).fill(parseInt(multMatch[2], 10));
+  } else if (visualData?.groups && visualData?.perGroup) {
+    groupCounts = Array(visualData.groups).fill(visualData.perGroup);
+  } else {
+    groupCounts = [2, 3];
+  }
+
+  $("stageTitle").textContent = visualData?.title || `${groupCounts.join(" + ")} = ${groupCounts.reduce((a,b)=>a+b, 0)} ${emoji}`;
+
+  let globalIdx = 0;
+  for(let g = 0; g < groupCounts.length; g++){
+    const grpDiv = document.createElement("div");
+    grpDiv.className = "object-group"; 
+    grpDiv.id = `group-${g}`;
+    grpDiv.innerHTML = `<div class="group-tag">Group ${g + 1} (${groupCounts[g]} ${emoji})</div>`;
+
+    const row = document.createElement("div");
+    row.className = "items-row";
+    for(let i = 0; i < groupCounts[g]; i++){
+      const span = document.createElement("div");
+      span.className = "interactive-item";
+      span.id = `item-g${g}-i${i}`;
+      span.setAttribute("data-group", g);
+      span.setAttribute("data-local-idx", i);
+      span.setAttribute("data-global-idx", globalIdx++);
+      span.textContent = emoji;
+      span.onclick = () => triggerItemBounce(span, i + 1);
+      row.appendChild(span);
+    }
+    grpDiv.appendChild(row);
+    contentEl.appendChild(grpDiv);
+  }
+}
+
+function triggerItemBounce(itemEl, num = 1){
+  if(!itemEl) return;
+  itemEl.classList.remove("bounce");
+  void itemEl.offsetWidth;
+  itemEl.classList.add("bounce");
+
+  let badge = itemEl.querySelector(".count-indicator");
+  if(!badge){
+    badge = document.createElement("div");
+    badge.className = "count-indicator";
+    itemEl.appendChild(badge);
+  }
+  badge.textContent = num;
+  playPopTone(num);
+  setTimeout(() => {
+    if(badge && badge.parentNode === itemEl) itemEl.removeChild(badge);
+  }, 1000);
+}
+
+/* ======================================================== */
+/* 🎙️ TEACHER TRANSCRIPT & SYNCHRONIZED CHUNKS             */
+/* ======================================================== */
+let speechChunks = [];
+let currentChunkIndex = 0;
+
+function parseScriptIntoSynchronizedChunks(text, fallbackEmoji = "🍎"){
+  if(!text) return [];
+  let clean = text.replace(/my dear friend|my friend|student|superstar/gi, studentProfile.name || "Superstar");
+  clean = clean.replace(/[\uFE00-\uFE0F\u200D\u200B-\u200D\uFEFF]/g, '');
+
+  const defaultWord = EMOJI_SPEECH_MAP[fallbackEmoji] || "apple";
+  const rawSegments = clean.match(/(\d+[\u{1F300}-\u{1F9FF}\u{2600}-\u{27BF}]+[\.…]*|[^\.!\?…,\n;:]+[\.!\?…,\n;:]*)/gu) || [clean];
+  const chunks = [];
+
+  rawSegments.forEach(raw => {
+    const cleanRaw = raw.trim();
+    if(!cleanRaw) return;
+
+    let spoken = cleanRaw;
+    let isCountBeat = false, countNum = null, groupTrigger = null, countAllTrigger = false;
+    let divisionActions = [], subtractionActions = [];
+    const lower = cleanRaw.toLowerCase();
+
+    if (/all.*together|count.*all|altogether|all together|in total/i.test(lower)) {
+      countAllTrigger = true;
+    } else if (lower.includes("first group") || lower.includes("group 1")) {
+      groupTrigger = 0;
+    } else if (lower.includes("second group") || lower.includes("group 2")) {
+      groupTrigger = 1;
+    } else if (lower.includes("third group") || lower.includes("group 3")) {
+      groupTrigger = 2;
+    }
+
+    const shareRegex = /(\d+)\s*([\u{1F300}-\u{1F9FF}\u{2600}-\u{27BF}]+|[a-z]+)?\s*(into|to|in|inside)\s*(group\s*(\d+)|the other group)/giu;
+    let sm;
+    while((sm = shareRegex.exec(cleanRaw)) !== null){
+      const amt = parseInt(sm[1], 10) || 1;
+      let targetG = sm[4].toLowerCase().includes("other") ? 1 : (parseInt(sm[5], 10) - 1 || 0);
+      divisionActions.push({ targetGroup: targetG, amount: amt });
+    }
+
+    const subRegex = /(?:take\s*away|subtract|remove|eats?|flew\s*away)\s*(\d+|one|two|three|four|five)/gi;
+    let subm;
+    while((subm = subRegex.exec(cleanRaw)) !== null){
+      let amt = parseInt(subm[1], 10);
+      if(isNaN(amt) && EXTENDED_NUMBER_WORDS[subm[1].toLowerCase()]){
+        amt = parseInt(EXTENDED_NUMBER_WORDS[subm[1].toLowerCase()], 10);
+      }
+      subtractionActions.push({ amount: amt || 1 });
+    }
+
+    const countBeatMatch = cleanRaw.match(/^(\d{1,2})\s*([\u{1F300}-\u{1F9FF}\u{2600}-\u{27BF}]+)[\.…]*$/u);
+    if(countBeatMatch){
+      isCountBeat = true;
+      countNum = parseInt(countBeatMatch[1], 10);
+      spoken = `${countNum} ${defaultWord}${countNum > 1 ? 's' : ''}`;
+    } else {
+      spoken = spoken
+        .replace(/\b1\/2\b/g, "one half").replace(/\b1\/3\b/g, "one third").replace(/\b1\/4\b/g, "one quarter")
+        .replace(/[×*]/g, " times ").replace(/÷/g, " divided by ").replace(/[-−]/g, " minus ").replace(/=/g, " equals ")
+        .replace(/\s+/g, " ").trim();
+    }
+
+    chunks.push({
+      displayText: cleanRaw, spokenText: spoken, isCountBeat, countNum,
+      groupTrigger, countAllTrigger, divisionActions, subtractionActions
+    });
+  });
+
+  return chunks;
+}
+
+function setupTranscriptUI(stepTitle, chunks){
+  const feed = $("transcriptFeed");
+  feed.innerHTML = `<div class="transcript-step-badge">📍 ${escapeHTML(stepTitle)}</div>`;
+  const block = document.createElement("div");
+  chunks.forEach((c, i) => {
+    const span = document.createElement("span");
+    span.className = "chunk"; span.id = `chunk-${i}`;
+    span.textContent = c.displayText + " ";
+    block.appendChild(span);
+  });
+  feed.appendChild(block);
+  feed.scrollTop = feed.scrollHeight;
+}
+
+function highlightTranscriptChunk(idx){
+  document.querySelectorAll(".chunk.active").forEach(c => c.classList.remove("active"));
+  if(idx >= 0){
+    const target = $(`chunk-${idx}`);
+    if(target){
+      target.classList.add("active");
+      target.scrollIntoView({ block: "nearest", behavior: "smooth" });
+    }
+  }
+}
+
+window.clearTranscriptHistory = function(){
+  $("transcriptFeed").innerHTML = `<div style="font-size:0.8rem; color:#88a88e; font-style:italic;">Subtitles cleared.</div>`;
+};
+
+/* ======================================================== */
+/* 📝 MULTI-QUESTION & SINGLE QUIZ ENGINE                   */
+/* ======================================================== */
+let currentQuizList = [];
+let currentQuizIndex = 0;
+let currentQuizScore = 0;
+
+function setupStepQuizzes(stepObj){
+  if(stepObj.quizzes && Array.isArray(stepObj.quizzes) && stepObj.quizzes.length > 0){
+    currentQuizList = stepObj.quizzes;
+  } else if(stepObj.quiz){
+    currentQuizList = [stepObj.quiz];
+  } else {
+    currentQuizList = [];
+  }
+  currentQuizIndex = 0;
+  currentQuizScore = 0;
+  renderCurrentQuiz();
+}
+
+function renderCurrentQuiz(){
+  const sec = $("stepQuizArea");
+  if(!currentQuizList.length){
+    sec.classList.add("hidden");
+    return;
+  }
+  sec.classList.remove("hidden");
+
+  const qData = currentQuizList[currentQuizIndex];
+  $("quizCounterText").textContent = `Question ${currentQuizIndex + 1} of ${currentQuizList.length}`;
+  $("quizScoreText").textContent = `Score: ${currentQuizScore}/${currentQuizList.length}`;
+  $("quizQuestionText").textContent = qData.q;
+
+  const hintBtnBox = $("hintBtnContainer");
+  const hintBox = $("hintBox");
+  hintBox.className = "hint-box hidden";
+  if(qData.hint){
+    hintBtnBox.innerHTML = `<button class="btn warn btn-sm" onclick="$('hintBox').classList.toggle('hidden')">💡 Need a Hint?</button>`;
+    hintBox.textContent = qData.hint;
+  } else {
+    hintBtnBox.innerHTML = "";
+  }
+
+  const optionsContainer = $("optionsContainer");
+  optionsContainer.innerHTML = "";
+  const fb = $("quizFeedback");
+  fb.className = "feedback hidden";
+  fb.textContent = "";
+  $("quizNextBtn").classList.add("hidden");
+
+  (qData.options || []).forEach((opt, i) => {
+    const btn = document.createElement("button");
+    btn.className = "option";
+    btn.textContent = `${String.fromCharCode(65 + i)}. ${opt}`;
+    btn.onclick = () => submitQuizOptionAnswer(i, qData);
+    optionsContainer.appendChild(btn);
+  });
+}
+
+async function submitQuizOptionAnswer(selectedIdx, qData){
+  const buttons = document.querySelectorAll(".option");
+  buttons.forEach(b => b.disabled = true);
+  const fb = $("quizFeedback");
+  const isCorrect = (selectedIdx === qData.answer);
+
+  if(isCorrect){
+    currentQuizScore++;
+    buttons[selectedIdx].classList.add("correct");
+    fb.className = "feedback correct-text";
+    fb.innerHTML = `🎉 Correct! ${escapeHTML(qData.explanation || "Outstanding job!")}`;
+    playGoodTone();
+    triggerConfetti();
+  } else {
+    buttons[selectedIdx].classList.add("wrong");
+    if(buttons[qData.answer]) buttons[qData.answer].classList.add("correct");
+    fb.className = "feedback wrong-text";
+    fb.innerHTML = `❌ Not quite! ${escapeHTML(qData.explanation || qData.hint || "Let's review this step!")}`;
+    playTryTone();
+  }
+
+  $("quizScoreText").textContent = `Score: ${currentQuizScore}/${currentQuizList.length}`;
+  
+  const quizEntry = {
+    topicId: currentTopic.id || "topic",
+    lessonId: `step_${currentStepIndex}_q_${currentQuizIndex}`,
+    score: isCorrect ? 1 : 0,
+    total: 1,
+    percent: isCorrect ? 100 : 0,
+    date: new Date().toISOString()
+  };
+  progress.quizzes.push(quizEntry);
+  saveProgress();
+  await syncProgressToCloud(quizEntry);
+
+  if(currentQuizIndex < currentQuizList.length - 1){
+    $("quizNextBtn").textContent = "Next Question ➡️";
+    $("quizNextBtn").classList.remove("hidden");
+  } else {
+    $("quizNextBtn").textContent = "🔄 Replay Quiz";
+    $("quizNextBtn").classList.remove("hidden");
+  }
+}
+
+window.advanceQuizQuestion = function(){
+  if(currentQuizIndex < currentQuizList.length - 1){
+    currentQuizIndex++;
+    renderCurrentQuiz();
+  } else {
+    currentQuizIndex = 0;
+    currentQuizScore = 0;
+    renderCurrentQuiz();
+  }
+};
+
+/* ======================================================== */
+/* 🏃 LESSON STEP NAVIGATION & PLAYBACK ENGINE              */
+/* ======================================================== */
+function currentStepData(){
+  if(!currentTopic) return {};
+  if(currentStepIndex === 0) return currentTopic.intro || {};
+  return currentTopic.examples[currentStepIndex - 1] || {};
+}
+
+function renderCurrentStep(){
+  if(!currentTopic) return;
+  stopLesson();
+  clearTimeout(autoAdvanceTimeout);
+  clearTimeout(animalActionTimeout);
+  $("checkpointOverlay").classList.add("hidden");
+
+  const totalSteps = 1 + (currentTopic.examples ? currentTopic.examples.length : 0);
+  const stepObj = currentStepData();
+  const topicClass = currentTopic.classLevel || studentProfile.classLevel || "Primary 1";
+
+  $("topicBadge").textContent = `${currentTopic.subject || "General"} • ${currentTopic.topic}`;
+  $("topicClassBadge").textContent = topicClass;
+  $("boardHeaderTag").textContent = `${topicClass.toUpperCase()} • ${(currentTopic.subject || "LESSON").toUpperCase()}`;
+  $("lessonProgress").style.width = `${((currentStepIndex + 1) / totalSteps) * 100}%`;
+
+  const stepTitle = currentStepIndex === 0 
+    ? (currentTopic.intro?.title || "Foundation Intro")
+    : (stepObj.board ? stepObj.board.split('\n')[0] : `Example ${currentStepIndex}`);
+
+  $("lessonTitle").textContent = stepTitle;
+  $("lessonCounter").textContent = `Step ${currentStepIndex + 1} of ${totalSteps}`;
+
+  const chalk = $("boardChalkText");
+  if(stepObj.board){
+    chalk.classList.remove("hidden");
+    chalk.textContent = displayEmoji(stepObj.board);
+  } else {
+    chalk.classList.add("hidden");
+  }
+
+  const combinedContext = `${stepTitle} ${stepObj.speech || ""} ${stepObj.board || ""}`;
+  renderStageObjects(stepObj.visual || {}, combinedContext);
+  setupStepQuizzes(stepObj);
+
+  const fallbackEmoji = stepObj.visual?.emoji || "🍎";
+  speechChunks = parseScriptIntoSynchronizedChunks(stepObj.speech || stepObj.board || "", fallbackEmoji);
+  setupTranscriptUI(stepTitle, speechChunks);
+
+  $("playPauseBtn").textContent = "▶️ Play";
+  $("prevStepBtn").disabled = (currentStepIndex === 0);
+  $("nextStepBtn").disabled = (currentStepIndex >= totalSteps - 1);
+  $("speechStatus").textContent = "Ready. Tap ▶️ Play to watch & listen!";
+}
+
+window.togglePlayPause = function(){
+  getAudioContext();
+  if(isPlaying && !isPaused){
+    pauseLesson();
+  } else if(isPlaying && isPaused){
+    resumeLesson();
+  } else {
+    playLesson();
+  }
+};
+
+function playLesson(){
+  if(!currentTopic || !speechChunks.length) return;
+  getAudioContext();
+  requestWakeLock().catch(()=>{});
+
+  stopLesson();
+  clearTimeout(autoAdvanceTimeout);
+  clearTimeout(animalActionTimeout);
+  playbackSessionId++;
+  const session = playbackSessionId;
+  isPlaying = true;
+  isPaused = false;
+  currentChunkIndex = 0;
+  activeTargetGroup = 0;
+  isCountAllMode = false;
+
+  $("playPauseBtn").textContent = "⏸️ Pause";
+
+  const video = $("activeStageVideo");
+  const stepObj = currentStepData();
+  const isSceneActive = !$("sceneContainer").classList.contains("hidden");
+
+  if(video && isSceneActive){
+    $("speakerPulseDot").className = "pulse-dot";
+    $("speakerPulseDot").style.background = "#38bdf8";
+    $("speakerStatusText").textContent = "🎬 Playing Video...";
+    $("speechStatus").textContent = "👀 Watch the demonstration video clip!";
+    video.currentTime = 0;
+    video.play().catch(()=>{});
+    video.onended = () => {
+      if(!isPlaying || isPaused || session !== playbackSessionId) return;
+      $("speakerPulseDot").className = "pulse-dot speaking";
+      $("speakerPulseDot").style.background = "";
+      $("speakerStatusText").textContent = "👩‍🏫 Teacher Explaining...";
+      playNextChunk(session);
+    };
+    return;
+  }
+
+  const action = isSceneActive ? animationManager.detect(stepObj) : null;
+  if(action === "meow"){
+    $("speakerPulseDot").className = "pulse-dot";
+    $("speakerPulseDot").style.background = "#38bdf8";
+    $("speakerStatusText").textContent = "🐈 Listen to Cat...";
+    playCatMeowSound();
+    animationManager.animate(stepObj);
+    animalActionTimeout = setTimeout(() => {
+      if(!isPlaying || isPaused || session !== playbackSessionId) return;
+      $("speakerPulseDot").className = "pulse-dot speaking";
+      $("speakerPulseDot").style.background = "";
+      $("speakerStatusText").textContent = "👩‍🏫 Teacher Explaining...";
+      playNextChunk(session);
+    }, 1500);
+    return;
+  } else if(action === "run"){
+    $("speakerPulseDot").className = "pulse-dot";
+    $("speakerPulseDot").style.background = "#fbbf24";
+    $("speakerStatusText").textContent = "🐕 Watch Dog...";
+    playDogBarkSound();
+    animationManager.animate(stepObj);
+    animalActionTimeout = setTimeout(() => {
+      if(!isPlaying || isPaused || session !== playbackSessionId) return;
+      $("speakerPulseDot").className = "pulse-dot speaking";
+      $("speakerPulseDot").style.background = "";
+      $("speakerStatusText").textContent = "👩‍🏫 Teacher Explaining...";
+      playNextChunk(session);
+    }, 1500);
+    return;
+  }
+
+  $("speakerPulseDot").className = "pulse-dot speaking";
+  $("speakerPulseDot").style.background = "";
+  $("speakerStatusText").textContent = "👩‍🏫 Teacher Speaking...";
+  $("speechStatus").textContent = "🔊 Teacher is explaining...";
+  animationManager.animate(stepObj);
+  playNextChunk(session);
+}
+
+function playNextChunk(sessionId){
+  if(!isPlaying || isPaused || sessionId !== playbackSessionId) return;
+
+  if(currentChunkIndex >= speechChunks.length){
+    isPlaying = false;
+    highlightTranscriptChunk(-1);
+    $("playPauseBtn").textContent = "▶️ Play";
+    $("speakerPulseDot").classList.remove("speaking");
+    $("speakerStatusText").textContent = "👩‍🏫 Teacher Finished";
+    stepCompletedNotify();
+
+    const stepObj = currentStepData();
+    if(checkAndTriggerCheckpoint(stepObj)) return;
+
+    if(isAutoPlayEnabled){
+      const totalSteps = 1 + (currentTopic.examples ? currentTopic.examples.length : 0);
+      if(currentStepIndex < totalSteps - 1){
+        $("speechStatus").textContent = "⏳ Continuing to next example in 1.8 seconds...";
+        clearTimeout(autoAdvanceTimeout);
+        autoAdvanceTimeout = setTimeout(() => {
+          if(isAutoPlayEnabled && sessionId === playbackSessionId){
+            currentStepIndex++;
+            renderCurrentStep();
+            playLesson();
+          }
+        }, 1800);
+      } else {
+        $("speechStatus").textContent = `🎓 Great job ${studentProfile.name}! You completed this lesson!`;
+        releaseWakeLock();
+      }
+    } else {
+      releaseWakeLock();
+    }
+    return;
+  }
+
+  const chunk = speechChunks[currentChunkIndex];
+  highlightTranscriptChunk(currentChunkIndex);
+
+  if(chunk.divisionActions?.length){
+    chunk.divisionActions.forEach((act, i) => setTimeout(() => executeDivisionShare(act.targetGroup, act.amount), i * 350));
+  }
+  if(chunk.subtractionActions?.length){
+    chunk.subtractionActions.forEach(act => executeSubtractionRemove(act.amount));
+  }
+
+  if (chunk.countAllTrigger) {
+    isCountAllMode = true;
+    activeTargetGroup = null;
+    document.querySelectorAll(".object-group").forEach(grp => grp.classList.add("active-group"));
+  } else if (chunk.groupTrigger !== null) {
+    activeTargetGroup = chunk.groupTrigger;
+    isCountAllMode = false;
+    document.querySelectorAll(".object-group").forEach((grp, idx) => {
+      if (idx === activeTargetGroup) grp.classList.add("active-group");
+      else grp.classList.remove("active-group");
+    });
+  }
+
+  if(!('speechSynthesis' in window)){
+    currentChunkIndex++;
+    setTimeout(() => playNextChunk(sessionId), 1200);
+    return;
+  }
+
+  const utterance = new SpeechSynthesisUtterance(chunk.spokenText);
+  window._activeUtterances.push(utterance);
+
+  const vc = selectedVoice();
+  if(vc){
+    utterance.voice = vc;
+    utterance.lang = vc.lang;
+  }
+  utterance.rate = parseFloat($("speed").value) || 0.88;
+  utterance.pitch = 1.05;
+
+  utterance.onstart = () => {
+    if(sessionId !== playbackSessionId) return;
+    if(chunk.isCountBeat && chunk.countNum !== null){
+      const subItem = document.getElementById(`sub-item-${chunk.countNum - 1}`);
+      if(subItem){ 
+        triggerItemBounce(subItem, chunk.countNum); 
+        return; 
+      }
+
+      if (isCountAllMode) {
+        const globalIdx = chunk.countNum - 1;
+        const targetItem = document.querySelector(`[data-global-idx="${globalIdx}"]`);
+        if (targetItem) triggerItemBounce(targetItem, chunk.countNum);
+      } else {
+        const localIdx = chunk.countNum - 1;
+        const targetItem = document.getElementById(`item-g${activeTargetGroup}-i${localIdx}`);
+        if (targetItem) triggerItemBounce(targetItem, chunk.countNum);
+      }
+    }
+  };
+
+  let ended = false;
+  const onDone = () => {
+    if(ended) return;
+    ended = true;
+    window._activeUtterances = window._activeUtterances.filter(u => u !== utterance);
+    if(sessionId !== playbackSessionId || !isPlaying || isPaused) return;
+    currentChunkIndex++;
+    setTimeout(() => playNextChunk(sessionId), chunk.isCountBeat ? 380 : 180);
+  };
+
+  utterance.onend = onDone;
+  utterance.onerror = (e) => {
+    if(e.error !== "canceled") onDone();
+  };
+
+  speechSynthesis.speak(utterance);
+}
+
+function pauseLesson(){
+  if(isPlaying && !isPaused){
+    isPaused = true;
+    const video = $("activeStageVideo");
+    if(video) video.pause();
+    speechSynthesis.pause();
+    animationManager.pause();
+    clearTimeout(autoAdvanceTimeout);
+    clearTimeout(animalActionTimeout);
+    releaseWakeLock();
+
+    $("playPauseBtn").textContent = "▶️ Continue";
+    $("speakerPulseDot").classList.remove("speaking");
+    $("speakerStatusText").textContent = "👩‍🏫 Lesson Paused";
+    $("speechStatus").textContent = "⏸️ Lesson paused.";
+  }
+}
+
+function resumeLesson(){
+  if(isPlaying && isPaused){
+    isPaused = false;
+    requestWakeLock().catch(()=>{});
+    const video = $("activeStageVideo");
+    if(video && !video.ended) video.play().catch(()=>{});
+    speechSynthesis.resume();
+    animationManager.resume();
+
+    $("playPauseBtn").textContent = "⏸️ Pause";
+    $("speakerPulseDot").classList.add("speaking");
+    $("speakerStatusText").textContent = "👩‍🏫 Teacher Speaking...";
+    $("speechStatus").textContent = "🔊 Continuing lesson...";
+  }
+}
+
+window.stopLesson = function(){
+  playbackSessionId++;
+  isPlaying = false;
+  isPaused = false;
+  clearTimeout(autoAdvanceTimeout);
+  clearTimeout(animalActionTimeout);
+
+  const video = $("activeStageVideo");
+  if(video){ video.onended = null; video.pause(); video.currentTime = 0; }
+  speechSynthesis.cancel();
+  window._activeUtterances = [];
+  animationManager.reset();
+  releaseWakeLock();
+
+  highlightTranscriptChunk(-1);
+  $("playPauseBtn").textContent = "▶️ Play";
+  $("speakerPulseDot").classList.remove("speaking");
+  $("speakerPulseDot").style.background = "";
+  $("speakerStatusText").textContent = "👩‍🏫 Teacher Ready";
+  $("speechStatus").textContent = "Lesson stopped.";
+};
+
+window.replayCurrentStep = function(){
+  window.stopLesson();
+  renderCurrentStep();
+  setTimeout(() => playLesson(), 150);
+};
+
+window.restartSpeechIfActive = function(){
+  if(isPlaying) window.replayCurrentStep();
+};
+
+window.previousStep = function(){
+  if(currentStepIndex > 0){
+    window.stopLesson();
+    currentStepIndex--;
+    renderCurrentStep();
+    if(isAutoPlayEnabled) setTimeout(() => playLesson(), 300);
+  }
+};
+
+window.nextStep = function(){
+  const totalSteps = 1 + (currentTopic.examples ? currentTopic.examples.length : 0);
+  if(currentStepIndex < totalSteps - 1){
+    window.stopLesson();
+    currentStepIndex++;
+    renderCurrentStep();
+    if(isAutoPlayEnabled) setTimeout(() => playLesson(), 300);
+  }
+};
+
+window.toggleAutoplayMode = function(){
+  isAutoPlayEnabled = !isAutoPlayEnabled;
+  const pill = $("autoplayTogglePill");
+  const label = $("autoplayStatusLabel");
+  if(isAutoPlayEnabled){
+    pill.classList.add("active"); label.textContent = "🔁 Auto-Play: ON";
+  } else {
+    pill.classList.remove("active"); label.textContent = "⏸️ Auto-Play: OFF";
+    clearTimeout(autoAdvanceTimeout);
+  }
+};
+
+function stepCompletedNotify(){
+  const savedTopicId = currentTopic.id || slugify(currentTopic.topic);
+  progress.completedSteps[`${savedTopicId}_step_${currentStepIndex}`] = true;
+  saveProgress();
+}
+
+/* ======================================================== */
+/* 🎯 SPEAKING CHECKPOINTS & VOICE ANSWERING                */
+/* ======================================================== */
+function checkAndTriggerCheckpoint(stepObj){
+  if(!stepObj || !stepObj.checkpoint) return false;
+  activeCheckpoint = stepObj.checkpoint;
+  $("checkpointQuestionText").textContent = activeCheckpoint.q;
+  $("checkpointInput").value = "";
+  $("checkpointFeedback").textContent = "";
+  $("checkpointVoiceStatus").textContent = "🎙️ Click 'Speak Your Answer' or say your answer!";
+  $("checkpointOverlay").classList.remove("hidden");
+
+  pauseLesson();
+  playGoodTone();
+  speakTextCustom(activeCheckpoint.q);
+  return true;
+}
+
+window.submitCheckpointAnswer = function(){
+  if(!activeCheckpoint) return;
+  const raw = $("checkpointInput").value.trim().toLowerCase();
+  if(!raw) return;
+
+  const normalizedInput = parsePhraseToAnswer(raw);
+  const expected = (activeCheckpoint.expectedAnswer || "").toLowerCase().trim();
+  const normalizedExpected = parsePhraseToAnswer(expected);
+  const isCorrect = (normalizedInput === normalizedExpected) || raw.includes(expected);
+  const fb = $("checkpointFeedback");
+
+  if(isCorrect){
+    triggerConfetti();
+    playGoodTone();
+    fb.style.color = "#00ff88";
+    fb.textContent = `🎉 Correct! Awesome job, ${studentProfile.name}!`;
+
+    speakTextCustom(`Awesome job ${studentProfile.name}! That is correct!`, () => {
+      setTimeout(() => {
+        $("checkpointOverlay").classList.add("hidden");
+        activeCheckpoint = null;
+        const totalSteps = 1 + (currentTopic.examples ? currentTopic.examples.length : 0);
+        if(currentStepIndex < totalSteps - 1){
+          window.nextStep();
+          playLesson();
+        } else {
+          $("speechStatus").textContent = `🎓 Congratulations ${studentProfile.name}!`;
+        }
+      }, 1200);
+    });
+  } else {
+    playTryTone();
+    fb.style.color = "#ff4757";
+    fb.textContent = "❌ Not quite! Let's listen to this step again!";
+
+    speakTextCustom("Let's return to this step so you can learn it more.", () => {
+      setTimeout(() => {
+        $("checkpointOverlay").classList.add("hidden");
+        activeCheckpoint = null;
+        window.replayCurrentStep();
+      }, 1500);
+    });
+  }
+};
+
+/* ======================================================== */
+/* 👩‍🏫 ASK TEACHER Q&A ROOM                                 */
+/* ======================================================== */
+const PRESET_ANSWERS = {
+  "what is addition": "Addition means putting numbers or objects together to find the total sum! The plus sign (+) means add.",
+  "what is a fraction": "A fraction represents equal parts of a whole! For example, if you slice a pizza into 4 pieces and eat 1, you ate 1/4 of the pizza.",
+  "what is subtraction": "Subtraction means taking away items from a group or tray to find out how many are left!",
+  "what is division": "Division is fair sharing! It means taking a total number of items and sharing them equally into groups.",
+  "what is multiplication": "Multiplication is putting equal groups together. Instead of adding repeatedly, it gives the total quickly!",
+  "what is a verb": "A verb is an action word! It tells us what a person, animal, or object is doing, like run, jump, read, or meow.",
+  "what is kinetic energy": "Kinetic energy is energy in motion! Any moving object possesses kinetic energy."
+};
+
+window.submitStudentQuestion = function(){
+  const q = $("askQuestionInput").value.trim();
+  if(!q) return alert("Please type a question!");
+  processAskQuestion(q);
+};
+
+window.askPresetQuestion = function(preset){
+  $("askQuestionInput").value = preset;
+  processAskQuestion(preset);
+};
+
+function processAskQuestion(questionText){
+  $("askBoardQuestion").textContent = `🙋‍♂️ Question: "${questionText}"`;
+  const lower = questionText.toLowerCase();
+  let answer = "";
+  for(const [k, ans] of Object.entries(PRESET_ANSWERS)){
+    if(lower.includes(k)){ answer = ans; break; }
+  }
+  if(!answer){
+    answer = `That is a wonderful question, ${studentProfile.name}! In our classroom, practicing each step is the key to understanding!`;
+  }
+  $("askBoardAnswer").textContent = answer;
+  $("askSpeakerDot").classList.add("speaking");
+  $("askSpeakerStatus").textContent = "Teacher Speaking...";
+
+  speakTextCustom(`Hello ${studentProfile.name}! ${answer}`, () => {
+    $("askSpeakerDot").classList.remove("speaking");
+    $("askSpeakerStatus").textContent = "Teacher Ready";
+  });
+}
+
+function speakTextCustom(text, onEnd){
+  if(!('speechSynthesis' in window)){ if(onEnd) onEnd(); return; }
+  speechSynthesis.cancel();
+  const utterance = new SpeechSynthesisUtterance(text);
+  window._activeUtterances.push(utterance);
+
+  const vc = selectedVoice();
+  if(vc){ utterance.voice = vc; utterance.lang = vc.lang; }
+  utterance.rate = 0.88;
+
+  const cleanup = () => {
+    window._activeUtterances = window._activeUtterances.filter(u => u !== utterance);
+    if(onEnd) onEnd();
+  };
+
+  utterance.onend = cleanup;
+  utterance.onerror = cleanup;
+  speechSynthesis.speak(utterance);
+}
+
+/* ======================================================== */
+/* 👨‍👩‍👧 PARENT HUB & ATTENDANCE RADAR                       */
+/* ======================================================== */
+let tabAwayStartTime = null;
+
+document.addEventListener('visibilitychange', () => {
+  const child = studentProfile.name || "Student";
+  const presence = $("parentPresenceStatus");
+  if(document.hidden){
+    tabAwayStartTime = Date.now();
+    const timeStr = new Date().toLocaleTimeString();
+    const msg = `🚨 ALERT: ${child} left the learning screen at ${timeStr}!`;
+    parentLogs.unshift({ type: "LEAVE", text: msg, time: timeStr });
+    saveParentLogs();
+    if(presence) presence.innerHTML = `🚨 <b style="color:#dc2626;">ALERT: ${child} has LEFT the app!</b> (${timeStr})`;
+    playParentAlarmSound();
+  } else {
+    if(tabAwayStartTime){
+      const sec = Math.round((Date.now() - tabAwayStartTime) / 1000);
+      const timeStr = new Date().toLocaleTimeString();
+      const returnMsg = `✅ ${child} returned after ${sec}s away (${timeStr}).`;
+      parentLogs.unshift({ type: "RETURN", text: returnMsg, time: timeStr });
+      saveParentLogs();
+      if(presence) presence.innerHTML = `🟢 <b style="color:#059669;">${child} is ACTIVE and learning now.</b>`;
+      tabAwayStartTime = null;
+    }
+  }
+});
+
+function playParentAlarmSound(){
+  try{
+    const ctx = getAudioContext();
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.connect(gain); gain.connect(ctx.destination);
+    osc.type = 'sawtooth';
+    osc.frequency.setValueAtTime(880, ctx.currentTime);
+    osc.frequency.exponentialRampToValueAtTime(440, ctx.currentTime + 0.35);
+    gain.gain.setValueAtTime(0.4, ctx.currentTime);
+    gain.gain.linearRampToValueAtTime(0.01, ctx.currentTime + 0.35);
+    osc.start(ctx.currentTime); osc.stop(ctx.currentTime + 0.35);
+  }catch(e){}
+}
+
+window.openParentGateModal = function(){
+  const a = Math.floor(Math.random() * 8) + 3;
+  const b = Math.floor(Math.random() * 8) + 3;
+  gateExpectedAns = a + b;
+  $("parentGateMathProblem").textContent = `${a} + ${b} = ?`;
+  $("parentGateAnswer").value = "";
+  $("parentGateModal").classList.remove("hidden");
+};
+
+window.closeParentGateModal = function(){
+  $("parentGateModal").classList.add("hidden");
+};
+
+window.verifyParentGateAnswer = function(){
+  if(parseInt($("parentGateAnswer").value, 10) === gateExpectedAns){
+    window.closeParentGateModal();
+    window.showScreen('parent');
+  } else {
+    alert("Incorrect answer! Parent gate locked.");
+  }
+};
+
+function renderParentDashboard(){
+  renderParentLogs();
+  const history = progress.quizzes || [];
+  const count = history.length;
+  const avg = count ? Math.round(history.reduce((a, b) => a + b.percent, 0) / count) : 0;
+  $("parentReportQuizzes").textContent = count;
+  $("parentReportAvg").textContent = avg + "%";
+  $("parentReportStatus").textContent = avg >= 80 ? "🌟 Excellent" : avg >= 60 ? "👍 Good" : "✍️ Needs Practice";
+
+  const list = $("parentQuizHistoryList");
+  if(list){
+    list.innerHTML = history.slice(-8).reverse().map(q => `
+      <div style="padding:6px 10px; background:#fff; border-radius:10px; margin-bottom:4px; border:1px solid #e2e8f0; display:flex; justify-content:space-between;">
+        <span><b>${escapeHTML(q.topicId.toUpperCase())}</b> (${q.date.slice(0,10)})</span>
+        <span class="badge ${q.percent >= 70 ? 'class-badge' : ''}">${q.percent}%</span>
+      </div>
+    `).join("") || `<div class="empty">No quiz results logged yet.</div>`;
+  }
+}
+
+function renderParentLogs(){
+  const logBox = $("parentEventLogs");
+  if(!logBox) return;
+  if(!parentLogs.length){
+    logBox.innerHTML = `<div style="padding:4px 0; color:#059669;">✅ System initialized. Monitoring active.</div>`;
+    return;
+  }
+  logBox.innerHTML = parentLogs.slice(0, 20).map(l => `
+    <div style="padding:4px 0; border-bottom:1px dashed #e2e8f0; color:${l.type === 'LEAVE' ? '#dc2626' : '#059669'};">
+      ${escapeHTML(l.text)}
+    </div>
+  `).join("");
+}
+
+window.markManualAttendance = function(){
+  const today = new Date().toLocaleDateString();
+  attendanceLogs.unshift({
+    date: today, name: studentProfile.name || "Student", classLevel: studentProfile.classLevel || "Primary 1",
+    time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }), status: "Present 🟢 (Manual)"
+  });
+  saveAttendance();
+  alert(`Attendance clocked in for ${studentProfile.name}!`);
+};
+
+function autoRecordAttendance(){
+  const today = new Date().toLocaleDateString();
+  if(!attendanceLogs.some(a => a.date === today && a.name === studentProfile.name) && studentProfile.name){
+    attendanceLogs.unshift({
+      date: today, name: studentProfile.name, classLevel: studentProfile.classLevel,
+      time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }), status: "Present 🟢"
+    });
+    saveAttendance();
+  }
+}
+
+function renderAttendanceTable(){
+  const tbody = $("attendanceTableBody");
+  if(!tbody) return;
+  if(!attendanceLogs.length){
+    tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; padding:12px; color:#666;">No attendance records yet.</td></tr>`;
+    return;
+  }
+  tbody.innerHTML = attendanceLogs.slice(0, 15).map(a => `
+    <tr>
+      <td><b>${escapeHTML(a.date)}</b></td>
+      <td>${escapeHTML(a.name)}</td>
+      <td><span class="badge class-badge">${escapeHTML(a.classLevel)}</span></td>
+      <td>${escapeHTML(a.time)}</td>
+      <td style="color:#059669; font-weight:bold;">${escapeHTML(a.status)}</td>
+    </tr>
+  `).join("");
+}
+
+/* ======================================================== */
+/* 📚 TOPIC MANAGEMENT & CATALOG                            */
+/* ======================================================== */
+window.renderTopics = function(){
+  const grid = $("topicGrid");
+  if(!grid) return;
+  const filter = $("topicsClassFilter") ? $("topicsClassFilter").value : "ALL";
+  const list = filter === "ALL" ? data.topics : data.topics.filter(t => (t.classLevel || "Primary 1") === filter);
+
+  if(!list.length){
+    grid.innerHTML = `<div class="empty" style="grid-column: 1 / -1;"><p>No lessons found for <b>${escapeHTML(filter)}</b>.</p></div>`;
+    return;
+  }
+
+  grid.innerHTML = list.map(t => {
+    const topicId = t.id || slugify(t.topic);
+    const totalSteps = 1 + (t.examples ? t.examples.length : 0);
+    let completed = 0;
+    for(let s = 0; s < totalSteps; s++){
+      if(progress.completedSteps[`${topicId}_step_${s}`]) completed++;
+    }
+    const pct = Math.round((completed / totalSteps) * 100);
+    const icon = t.intro?.visual?.emoji || "📚";
+
+    return `
+      <div class="topic-card" onclick="startTopic('${escapeHTML(topicId)}')">
+        <div>
+          <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+            <span class="icon">${icon}</span>
+            <span class="badge class-badge">${escapeHTML(t.classLevel || "Primary 1")}</span>
+          </div>
+          <h3>${escapeHTML(t.topic || "Untitled Topic")}</h3>
+          <p>${escapeHTML(t.subject || "General")} • ${totalSteps} Step${totalSteps > 1 ? 's' : ''}</p>
+          <div class="progress"><div style="width:${pct}%"></div></div>
+          <div style="display:flex; justify-content:space-between; font-size:0.75rem; color:#666;">
+            <span>Progress</span><span><b>${pct}%</b></span>
+          </div>
+        </div>
+        <div class="topic-actions" onclick="event.stopPropagation();">
+          <button class="btn primary btn-sm" style="flex:1;" onclick="startTopic('${escapeHTML(topicId)}')">▶️ Start</button>
+          <button class="btn btn-sm" onclick="editTopic('${escapeHTML(topicId)}')">✏️</button>
+          <button class="btn danger btn-sm" onclick="deleteTopic('${escapeHTML(topicId)}')">🗑️</button>
+        </div>
+      </div>
+    `;
+  }).join("");
+};
+
+window.startTopic = function(topicId){
+  const topic = data.topics.find(t => (t.id === topicId || slugify(t.topic) === topicId));
+  if(!topic) return alert("Topic not found!");
+  currentTopic = topic;
+  currentStepIndex = 0;
+  if(!progress.studiedTopics) progress.studiedTopics = {};
+  progress.studiedTopics[topicId] = true;
+  saveProgress();
+
+  window.showScreen('lessons');
+  renderCurrentStep();
+  if(isAutoPlayEnabled) setTimeout(() => playLesson(), 450);
+};
+
+window.exitToTopics = function(){
+  window.stopLesson();
+  const scene = $("sceneContainer");
+  if(scene) scene.innerHTML = "";
+  if(activeStepVideoBlobUrl){
+    URL.revokeObjectURL(activeStepVideoBlobUrl);
+    activeStepVideoBlobUrl = null;
+  }
+  window.showScreen('topics');
+};
+
+window.renderTopicManageList = function(){
+  const container = $("topicManageList");
+  if(!container) return;
+  $("loadedCount").textContent = data.topics.length;
+  if(!data.topics.length){ container.innerHTML = `<div class="empty">No topics loaded.</div>`; return; }
+
+  container.innerHTML = `
+    <table class="topic-manage-table">
+      <thead>
+        <tr><th>Topic</th><th>Subject</th><th>Class</th><th>Steps</th><th>Actions</th></tr>
+      </thead>
+      <tbody>
+        ${data.topics.map(t => {
+          const tid = t.id || slugify(t.topic);
+          const count = 1 + (t.examples ? t.examples.length : 0);
+          return `
+            <tr>
+              <td><b>${escapeHTML(t.topic)}</b></td>
+              <td>${escapeHTML(t.subject || "General")}</td>
+              <td><span class="badge class-badge">${escapeHTML(t.classLevel || "Primary 1")}</span></td>
+              <td>${count}</td>
+              <td>
+                <button class="btn btn-sm" onclick="editTopic('${escapeHTML(tid)}')">✏️</button>
+                <button class="btn danger btn-sm" onclick="deleteTopic('${escapeHTML(tid)}')">🗑️</button>
+              </td>
+            </tr>
+          `;
+        }).join("")}
+      </tbody>
+    </table>
+  `;
+};
+
+window.editTopic = function(topicId){
+  const t = data.topics.find(x => (x.id === topicId || slugify(x.topic) === topicId));
+  if(!t) return;
+  currentEditingTopicId = topicId;
+  $("jsonText").value = JSON.stringify(t, null, 2);
+  if($("importTargetClass")) $("importTargetClass").value = t.classLevel || "Primary 1";
+  $("editNoticeText").textContent = `📝 Currently Editing: ${t.topic}`;
+  $("editNotice").style.display = "flex";
+  window.showScreen('import');
+  $("jsonText").scrollIntoView({ behavior: 'smooth' });
+};
+
+window.cancelEditing = function(){
+  currentEditingTopicId = null;
+  $("editNotice").style.display = "none";
+  $("jsonText").value = "";
+};
+
+window.deleteTopic = async function(topicId){
+  if(!confirm("Are you sure you want to delete this topic?")) return;
+  data.topics = data.topics.filter(t => (t.id !== topicId && slugify(t.topic) !== topicId));
+  saveData();
+  await deleteTopicFromCloud(topicId);
+  renderTopics();
+  renderTopicManageList();
+  updateHomeStats();
+};
+
+window.readJSONFile = function(event){
+  const file = event.target.files[0];
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    $("jsonText").value = e.target.result;
+    $("fileStatus").textContent = "File loaded. Tap 'Save Topic to Target Class'.";
+  };
+  reader.readAsText(file);
+};
+
+window.importPastedJSON = async function(){
+  const raw = $("jsonText").value.trim();
+  const targetClass = $("importTargetClass")?.value || (studentProfile.classLevel || "Primary 1");
+  if(!raw) return alert("Please paste JSON first.");
+  try{
+    const parsed = JSON.parse(raw);
+    let incoming = Array.isArray(parsed) ? parsed : (parsed.topics || [parsed]);
+    for(const t of incoming){
+      if(!t.topic) throw new Error("Missing 'topic' title.");
+      const tid = currentEditingTopicId || t.id || slugify(t.topic);
+      t.id = tid; 
+      t.classLevel = targetClass;
+      if(!t.intro) t.intro = {};
+      if(!t.examples) t.examples = [];
+      const idx = data.topics.findIndex(x => x.id === tid);
+      if(idx >= 0) data.topics[idx] = t; 
+      else data.topics.push(t);
+      await syncTopicToCloud(t);
+    }
+    saveData();
+    window.cancelEditing();
+    updateHomeStats();
+    renderTopics();
+    renderTopicManageList();
+    alert(`Lessons saved successfully for ${targetClass}!`);
+  }catch(e){ 
+    alert("Save failed: " + e.message); 
+  }
+};
+
+window.exportCurrentEditorJSON = function(){
+  let content = $("jsonText").value.trim() || JSON.stringify(data.topics, null, 2);
+  const blob = new Blob([content], { type: "application/json" });
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = "lessons.json";
+  document.body.appendChild(a); 
+  a.click(); 
+  document.body.removeChild(a);
+};
+
+window.loadSampleAdditionLesson = async function(){
+  const cloned = JSON.parse(JSON.stringify(sampleAdditionData));
+  saveAndSyncSample(cloned, "Addition Basics");
+};
+
+window.loadSampleEnglishActionLesson = async function(){
+  const cloned = JSON.parse(JSON.stringify(sampleEnglishNamingActionData));
+  saveAndSyncSample(cloned, "Naming & Action Words");
+};
+
+window.loadSampleSecondaryEnergyLesson = async function(){
+  const cloned = JSON.parse(JSON.stringify(sampleSecondaryEnergyData));
+  saveAndSyncSample(cloned, "Energy Forms (JSS 1)");
+};
+
+window.loadSampleFractionLesson = async function(){
+  const cloned = JSON.parse(JSON.stringify(sampleFractionData));
+  saveAndSyncSample(cloned, "Fractions (1/2, 1/4)");
+};
+
+window.loadSampleSubtractionLesson = async function(){
+  const cloned = JSON.parse(JSON.stringify(sampleSubtractionData));
+  saveAndSyncSample(cloned, "Subtraction (5 - 2)");
+};
+
+window.loadSampleDivisionLesson = async function(){
+  const cloned = JSON.parse(JSON.stringify(sampleDivisionData));
+  saveAndSyncSample(cloned, "Division (6 ÷ 2)");
+};
+
+window.loadSampleMultiplicationLesson = async function(){
+  const cloned = JSON.parse(JSON.stringify(sampleMultiplicationData));
+  saveAndSyncSample(cloned, "Multiplication");
+};
+
+async function saveAndSyncSample(obj, name){
+  const idx = data.topics.findIndex(t => t.id === obj.id);
+  if(idx >= 0) data.topics[idx] = obj; 
+  else data.topics.unshift(obj);
+  saveData();
+  await syncTopicToCloud(obj);
+  updateHomeStats();
+  renderTopics();
+  renderTopicManageList();
+  alert(`${name} lesson loaded successfully!`);
+}
+
+window.clearImportedLessons = function(){
+  if(!confirm("Reset and clear all topics and local progress?")) return;
+  localStorage.clear();
+  data = { app: "Kids Learning Academy", topics: [] };
+  progress = { completedSteps: {}, quizzes: [], studiedTopics: {} };
+  attendanceLogs = []; 
+  parentLogs = [];
+  updateHomeStats(); 
+  renderTopics(); 
+  renderTopicManageList(); 
+  renderProgress(); 
+  renderAttendanceTable();
+};
+
+/* ======================================================== */
+/* 👤 STUDENT REGISTRATION                                  */
+/* ======================================================== */
+function updateStudentUI(){
+  const name = studentProfile.name || "Superstar";
+  const cl = studentProfile.classLevel || "Primary 1";
+  $("topStudentName").textContent = name;
+  $("topStudentClass").textContent = cl;
+  if($("sidebarStudentClass")) $("sidebarStudentClass").textContent = cl;
+  $("homeClassDisplay").textContent = cl;
+  document.querySelectorAll(".student-name-display").forEach(el => el.textContent = name);
+
+  if ($("topicsClassFilter") && $("topicsClassFilter").value !== "ALL") {
+    $("topicsClassFilter").value = cl;
+  }
+  if ($("importTargetClass")) {
+    $("importTargetClass").value = cl;
+  }
+}
+
+window.openRegistrationModal = function(){
+  $("regStudentName").value = studentProfile.name || "";
+  $("regStudentClass").value = studentProfile.classLevel || "Primary 1";
+  $("registrationModal").classList.remove("hidden");
+};
+
+window.closeRegistrationModal = function(){
+  $("registrationModal").classList.add("hidden");
+};
+
+window.saveStudentRegistration = function(){
+  const name = $("regStudentName").value.trim() || "Superstar";
+  const classLevel = $("regStudentClass").value || "Primary 1";
+
+  studentProfile.name = name;
+  studentProfile.classLevel = classLevel;
+  studentProfile.registered = true;
+
+  saveStudentProfile();
+  autoRecordAttendance();
+  window.closeRegistrationModal();
+  renderTopics();
+  updateHomeStats();
+  alert(`Welcome, ${name}! Your profile is set for ${classLevel}.`);
+};
+
+/* ======================================================== */
+/* ☁️ RESILIENT FIREBASE CLOUD SYNC                         */
+/* ======================================================== */
+async function initEmbeddedFirebase(){
+  try{
+    const appModule = await import("https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js");
+    fbModule = await import("https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js");
+    
+    if(!appModule.getApps().length){
+      firebaseApp = appModule.initializeApp(formalFirebaseConfig);
+    } else {
+      firebaseApp = appModule.getApps()[0];
+    }
+    firestoreDb = fbModule.getFirestore(firebaseApp);
+    updateCloudStatusUI(true);
+    listenToCloudTopics();
+  }catch(err){
+    console.warn("Cloud offline or running locally. Using LocalStorage mode:", err);
+    updateCloudStatusUI(false);
+  }
+}
+
+function updateCloudStatusUI(connected){
+  const dot = $("topCloudDot");
+  const text = $("topCloudText");
+  if(connected){
+    dot.className = "cloud-dot connected";
+    text.textContent = "☁️ Firestore Live";
+  } else {
+    dot.className = "cloud-dot";
+    text.textContent = "💾 Local Storage";
+  }
+}
+
+async function syncTopicToCloud(topicObj){
+  if(!firestoreDb || !fbModule) return;
+  try{
+    const tid = topicObj.id || slugify(topicObj.topic);
+    const docRef = fbModule.doc(firestoreDb, "topics", tid);
+    await fbModule.setDoc(docRef, topicObj);
+  }catch(err){}
+}
+
+async function deleteTopicFromCloud(topicId){
+  if(!firestoreDb || !fbModule) return;
+  try{
+    const docRef = fbModule.doc(firestoreDb, "topics", topicId);
+    await fbModule.deleteDoc(docRef);
+  }catch(err){}
+}
+
+window.pushLocalTopicsToCloud = async function(){
+  if(!firestoreDb){
+    alert("Connecting to Firebase Cloud...");
+    await initEmbeddedFirebase();
+  }
+  if(!firestoreDb){
+    alert("Could not connect to Firebase Cloud. Please check your internet connection.");
+    return;
+  }
+  try{
+    for(const t of data.topics){
+      await syncTopicToCloud(t);
+    }
+    alert(`Successfully pushed ${data.topics.length} topic(s) to Firebase Cloud Firestore!`);
+  }catch(err){
+    alert("Cloud push error: " + err.message);
+  }
+};
+
+window.pullTopicsFromCloud = async function(){
+  if(!firestoreDb){
+    alert("Connecting to Firebase Cloud...");
+    await initEmbeddedFirebase();
+  }
+  if(!firestoreDb){
+    alert("Could not connect to Firebase Cloud. Please check your internet connection.");
+    return;
+  }
+  try{
+    const querySnapshot = await fbModule.getDocs(fbModule.collection(firestoreDb, "topics"));
+    if(querySnapshot.empty){
+      alert("No topics found in Firestore. Pushing current local topics...");
+      await window.pushLocalTopicsToCloud();
+      return;
+    }
+    let cloudTopics = [];
+    querySnapshot.forEach(docSnap => {
+      const d = docSnap.data();
+      d.id = docSnap.id;
+      cloudTopics.push(d);
+    });
+    data.topics = cloudTopics;
+    saveData();
+    renderTopics();
+    renderTopicManageList();
+    updateHomeStats();
+    alert(`Pulled ${cloudTopics.length} topic(s) from Firebase Firestore!`);
+  }catch(err){
+    alert("Cloud pull error: " + err.message);
+  }
+};
+
+function listenToCloudTopics(){
+  if(!firestoreDb || !fbModule) return;
+  try{
+    fbModule.onSnapshot(fbModule.collection(firestoreDb, "topics"), snapshot => {
+      if(snapshot.empty) return;
+      let updatedTopics = [];
+      snapshot.forEach(docSnap => {
+        const d = docSnap.data();
+        d.id = docSnap.id;
+        updatedTopics.push(d);
+      });
+      data.topics = updatedTopics;
+      saveData();
+      renderTopics();
+      renderTopicManageList();
+      updateHomeStats();
+    }, err => {});
+  }catch(e){}
+}
+
+async function syncProgressToCloud(quizEntry){
+  if(!firestoreDb || !fbModule) return;
+  try{
+    await fbModule.addDoc(fbModule.collection(firestoreDb, "student_quizzes"), {
+      ...quizEntry,
+      studentName: studentProfile.name,
+      classLevel: studentProfile.classLevel,
+      timestamp: fbModule.serverTimestamp()
+    });
+  }catch(e){}
+}
+
+/* ======================================================== */
+/* ☀️ KEEP-AWAKE ENGINE & FULLSCREEN CONTROLS               */
+/* ======================================================== */
+const DUMMY_SILENT_VIDEO_BASE64 = "data:video/mp4;base64,AAAAIGZ0eXBpc29tAAACAGlzb21pc28yYXZjMW1wNDEAAAAIZnJlZQAAAu1tZGF0AAACrQYF//+//8m+P5OXfBeLGOfKE3xkODvFZuBflHv/+VwJIta6cbpIo4ABLoKBaYTkTAAAC7m1vb3YAAABsbXZoZAAAAAAAAAAAAAAAAAAAA+//wAAADFhdmNDAWQACv/hABhnZAAKrNlCjfkhAAADAAEAAAMAAg8SJZYBAAZo6+JLIsAAAAAYc3R0cwAAAAAAAAABAAAAAQAAQAAAAAAcc3RzYwAAAAAAAAABAAAAAQAAAAEAAAABAAAAFHN0c3oAAAAAAAAC5QAAAAEAAAAUc3RjbwAAAAAAAAABAAAAMAAAAGJ1ZHRhAAAAWm1ldGEAAAAAAAAAIWhkbHIAAAAAAAAAAG1kaXJhcHBsAAAAAAAAAAAAAAAALWlsc3QAAAAlqXRvbwAAAB1kYXRhAAAAAQAAAABMYXZmNTguMTIuMTAw";
+let wakeLock = null;
+let keepAliveVideo = null;
+
+function initKeepAliveVideo(){
+  if(!keepAliveVideo){
+    keepAliveVideo = document.createElement("video");
+    keepAliveVideo.setAttribute("playsinline", "");
+    keepAliveVideo.setAttribute("webkit-playsinline", "");
+    keepAliveVideo.setAttribute("loop", "");
+    keepAliveVideo.muted = true;
+    keepAliveVideo.style.position = "fixed";
+    keepAliveVideo.style.left = "-9999px";
+    keepAliveVideo.style.top = "-9999px";
+    keepAliveVideo.style.width = "1px";
+    keepAliveVideo.style.height = "1px";
+    keepAliveVideo.style.opacity = "0.01";
+    keepAliveVideo.style.pointerEvents = "none";
+    keepAliveVideo.src = DUMMY_SILENT_VIDEO_BASE64;
+    document.body.appendChild(keepAliveVideo);
+  }
+}
+
+async function requestWakeLock(){
+  if('wakeLock' in navigator){
+    if(wakeLock === null || wakeLock.released){
+      try{
+        wakeLock = await navigator.wakeLock.request('screen');
+        wakeLock.addEventListener('release', () => {
+          wakeLock = null;
+          updateWakeLockUI(true, false);
+        });
+      }catch(err){
+        wakeLock = null;
+      }
+    }
+  }
+
+  try{
+    initKeepAliveVideo();
+    if(keepAliveVideo){
+      const p = keepAliveVideo.play();
+      if(p !== undefined) p.catch(()=>{});
+    }
+  }catch(e){}
+
+  updateWakeLockUI(true, true);
+}
+
+function releaseWakeLock(){
+  if(wakeLock){
+    try{ wakeLock.release(); }catch(e){}
+    wakeLock = null;
+  }
+  if(keepAliveVideo){
+    try{ keepAliveVideo.pause(); }catch(e){}
+  }
+  updateWakeLockUI(true, false);
+}
+
+function updateWakeLockUI(isSupported = true, isActive = false){
+  const badge = $("wakeLockBadge");
+  const notice = $("wakeLockSupportNotice");
+  if(badge){
+    if(isActive) badge.classList.remove("hidden");
+    else badge.classList.add("hidden");
+  }
+  if(notice){
+    notice.innerHTML = "✨ <b>Screen Awake:</b> Screen stays on automatically while lesson explains.";
+  }
+}
+
+window.addEventListener('pagehide', releaseWakeLock);
+
+window.toggleBrowserFullscreen = function(){
+  const shell = $("fullscreenPlayerShell");
+  const btn = $("fullscreenToggleBtn");
+
+  if(!document.fullscreenElement){
+    shell.requestFullscreen().then(() => {
+      shell.classList.add("is-fullscreen");
+      btn.textContent = "✖ Exit Fullscreen";
+    }).catch(() => {
+      shell.classList.toggle("is-fullscreen");
+      btn.textContent = shell.classList.contains("is-fullscreen") ? "✖ Exit Fullscreen" : "⛶ Fullscreen";
+    });
+  } else {
+    document.exitFullscreen().then(() => {
+      shell.classList.remove("is-fullscreen");
+      btn.textContent = "⛶ Fullscreen";
+    }).catch(()=>{});
+  }
+};
+
+document.addEventListener("fullscreenchange", () => {
+  const shell = $("fullscreenPlayerShell");
+  const btn = $("fullscreenToggleBtn");
+  if(!document.fullscreenElement){
+    shell.classList.remove("is-fullscreen");
+    btn.textContent = "⛶ Fullscreen";
+  }
+});
+
+window.toggleSettingsDrawer = function(){
+  $("settingsDrawer").classList.toggle("hidden");
+};
+
+/* ======================================================== */
+/* 🎊 CONFETTI GENERATOR                                    */
+/* ======================================================== */
+function triggerConfetti(){
+  const canvas = $("confettiCanvas");
+  if(!canvas) return;
+  const ctx = canvas.getContext("2d");
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+
+  const confetti = [];
+  const colors = ["#ff4757", "#2ed573", "#1e90ff", "#ffa502", "#9b59b6"];
+
+  for(let i = 0; i < 45; i++){
+    confetti.push({
+      x: Math.random() * canvas.width,
+      y: Math.random() * canvas.height * 0.4,
+      r: Math.random() * 5 + 3,
+      d: Math.random() * 40,
+      color: colors[Math.floor(Math.random() * colors.length)],
+      tilt: Math.random() * 10 - 10,
+      tiltAngleIncremental: Math.random() * 0.07 + 0.05,
+      tiltAngle: 0
+    });
+  }
+
+  let step = 0;
+  function draw(){
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    step++;
+    confetti.forEach(p => {
+      p.tiltAngle += p.tiltAngleIncremental;
+      p.y += (Math.cos(p.d) + 3 + p.r / 2) / 2;
+      p.tilt = Math.sin(p.tiltAngle) * 15;
+      ctx.beginPath();
+      ctx.lineWidth = p.r;
+      ctx.strokeStyle = p.color;
+      ctx.moveTo(p.x + p.tilt + p.r / 2, p.y);
+      ctx.lineTo(p.x + p.tilt, p.y + p.tilt + p.r / 2);
+      ctx.stroke();
+    });
+    if(step < 75){
+      requestAnimationFrame(draw);
+    } else {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+    }
+  }
+  draw();
+}
+
+/* ======================================================== */
+/* 🗣️ VOICE SYNTHESIS SELECTOR                              */
+/* ======================================================== */
+function getVoices(){
+  if(!('speechSynthesis' in window)) return [];
+  return speechSynthesis.getVoices().filter(v => /^en/i.test(v.lang));
+}
+
+function populateVoices(){
+  const select = $("voice");
+  if(!select) return;
+
+  const voices = getVoices();
+  const oldVal = select.value;
+  select.innerHTML = "";
+
+  const sorted = voices.slice().sort((a,b) => {
+    const aNG = /^en-NG/i.test(a.lang);
+    const bNG = /^en-NG/i.test(b.lang);
+    if(aNG && !bNG) return -1;
+    if(!aNG && bNG) return 1;
+    return a.name.localeCompare(b.name);
+  });
+
+  sorted.forEach((v, i) => {
+    const option = document.createElement("option");
+    option.value = String(i);
+    const tag = /^en-NG/i.test(v.lang) ? "🇳🇬 " : "";
+    option.textContent = `${tag}${v.name} (${v.lang})`;
+    select.appendChild(option);
+  });
+
+  const ngIndex = sorted.findIndex(v => /^en-NG/i.test(v.lang));
+  if(ngIndex >= 0){
+    select.value = String(ngIndex);
+  } else if(oldVal && [...select.options].some(o => o.value === oldVal)){
+    select.value = oldVal;
+  }
+}
+
+if('speechSynthesis' in window){
+  speechSynthesis.onvoiceschanged = populateVoices;
+  setTimeout(populateVoices, 400);
+}
+
+function selectedVoice(){
+  const voices = getVoices();
+  const selectedIdx = Number($("voice") ? $("voice").value : 0);
+
+  const sorted = voices.slice().sort((a,b) => {
+    const aNG = /^en-NG/i.test(a.lang);
+    const bNG = /^en-NG/i.test(b.lang);
+    if(aNG && !bNG) return -1;
+    if(!aNG && bNG) return 1;
+    return a.name.localeCompare(b.name);
+  });
+
+  return sorted[selectedIdx] || sorted[0] || null;
+}
+
+/* ======================================================== */
+/* 📊 PROGRESS & STATS CALCULATION                          */
+/* ======================================================== */
+function renderProgress(){
+  const topicCount = Object.keys(progress.studiedTopics || {}).length;
+  const stepCount = Object.keys(progress.completedSteps || {}).length;
+  const history = progress.quizzes || [];
+
+  const average = history.length
+    ? Math.round(history.reduce((acc, q) => acc + q.percent, 0) / history.length)
+    : 0;
+
+  $("statTopics").textContent = topicCount;
+  $("statLessons").textContent = stepCount;
+  $("statQuizzes").textContent = history.length;
+  $("statAverage").textContent = average + "%";
+
+  const details = $("progressDetails");
+  if(history.length){
+    details.innerHTML = `<h3>Recent Quizzes for ${escapeHTML(studentProfile.name)}</h3>` + history.slice(-10).reverse().map(q => `
+      <div class="panel" style="margin-bottom:6px; padding:8px; display:flex; justify-content:space-between; align-items:center;">
+        <b>${escapeHTML(q.topicId.toUpperCase().replace(/-/g, ' '))}</b> 
+        <span class="badge ${q.percent >= 70 ? 'class-badge' : ''}">${q.percent}% Correct</span>
+      </div>
+    `).join("");
+  } else {
+    details.innerHTML = `<div class="empty">No quiz results yet on this device.</div>`;
+  }
+}
+
+function updateHomeStats(){
+  $("homeTopics").textContent = data.topics.length;
+  $("homeLessons").textContent = data.topics.reduce((acc, t) => acc + (t.examples ? t.examples.length : 0), 0);
+  const history = progress.quizzes || [];
+  const average = history.length
+    ? Math.round(history.reduce((acc, q) => acc + q.percent, 0) / history.length)
+    : 0;
+  $("homeScore").textContent = average + "%";
+}
+
+/* ======================================================== */
+/* 🛠️ UTILITIES                                             */
+/* ======================================================== */
+function slugify(s){
+  return String(s ?? "").toLowerCase().trim().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "") || ("id-" + Date.now());
+}
+
+function escapeHTML(s){
+  return String(s ?? "").replace(/[&<>"']/g, m => ({
+    "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#039;"
+  }[m]));
+}
+
+/* ======================================================== */
+/* 🚀 APPLICATION LAUNCH                                    */
+/* ======================================================== */
+applyTVMode();
+initSpeechRecognition();
+updateStudentUI();
+updateHomeStats();
+renderTopics();
+renderTopicManageList();
+renderProgress();
+renderAttendanceTable();
+renderParentLogs();
+updateWakeLockUI(true, false);
+initEmbeddedFirebase();
+
+if(!studentProfile.registered){
+  setTimeout(() => {
+    window.openRegistrationModal();
+  }, 600);
+}
+
+setTimeout(populateVoices, 500);
+setTimeout(populateVoices, 1500);
+</script>
+
+</body>
+</html>
