@@ -1,2170 +1,905 @@
-/**
- * Basic 4 Curriculum Data & Question Bank (Complete Weeks 1 - 6 & End Term Test)
- * Universal Basic Education (UBE) Curriculum
- */
+// =========================================================================
+// BASIC 4 CURRICULUM & QUESTION BANK (WEEKS 1 — 11)
+// =========================================================================
 
-// Initialize global objects safely
-window.LIVE_CHALK_CURRICULUM = window.LIVE_CHALK_CURRICULUM || {};
-window.WEEKLY_CURRICULUM = window.WEEKLY_CURRICULUM || {};
+function qItem(id, text, dashes, options, correct, rule, type = "option", placeholders = null) {
+  return { id, text, dashes, options, correct, rule, type, placeholders };
+}
 
-// ============================================================================
-// 1. LIVE CHALKBOARD LESSONS
-// ============================================================================
-window.LIVE_CHALK_CURRICULUM = {
-  english_week1: [
-    {
-      q: "Plural of 'Box': To make 'box' plural, add 'es' to get ______.",
-      a: "Boxes",
-      tray: ["Nouns ending in x, s, ch, sh add -es", "box ➔ boxes", "fox ➔ foxes"]
-    },
-    {
-      q: "Plural of 'Baby': Consonant + 'y' changes 'y' into ______ and adds 'es'.",
-      a: "babies",
-      tray: ["b-a-b-y ➔ b-a-b + i + es = babies", "city ➔ cities", "story ➔ stories"]
-    },
-    {
-      q: "Plural of 'Leaf': Change 'f' to 'v' and add 'es' to form ______.",
-      a: "Leaves",
-      tray: ["f or fe ➔ ves", "leaf ➔ leaves", "knife ➔ knives"]
-    }
-  ],
-
-  math_fractions: [
-    {
-      q: "Find 3 equivalent fractions for 1/2",
-      num: 1,
-      den: 2,
-      multipliers: [2, 3, 4],
-      tray: ["Rule: Multiply numerator and denominator by the same number", "1/2 = 2/4 = 3/6 = 4/8"]
-    },
-    {
-      q: "Find 3 equivalent fractions for 2/3",
-      num: 2,
-      den: 3,
-      multipliers: [2, 3, 4],
-      tray: ["2/3 × 2/2 = 4/6", "2/3 × 3/3 = 6/9", "2/3 × 4/4 = 8/12"]
-    },
-    {
-      q: "Find 3 equivalent fractions for 3/5",
-      num: 3,
-      den: 5,
-      multipliers: [2, 3, 4],
-      tray: ["3/5 × 2/2 = 6/10", "3/5 × 3/3 = 9/15", "3/5 × 4/4 = 12/20"]
-    }
-  ],
-
-  igbo_week1: [
-    {
-      q: "Kedu ihe bụ mkpụrụ edemede Igbo ole dị na Abidii?",
-      a: "Mkpụrụ edemede iri atọ na isii (36)",
-      tray: ["Abidii Igbo nwere mkpụrụedemede 36", "Ụdaume (8)", "Mgbochiume (28)"]
-    },
-    {
-      q: "Mkpụrụ edemede ụdaume dị ole n'Asụsụ Igbo?",
-      a: "Asatọ (8): a, e, i, ị, o, ọ, u, ụ",
-      tray: ["Ụdaume mfe: a, e, o, u", "Ụdaume arọ: ị, ọ, ụ, i"]
-    }
-  ],
-
-  math_week2: [
-    {
-      q: "Count in thousands: 3,000, 4,000, 5,000, ______.",
-      a: "6,000",
-      tray: ["Place Value: Thousands (Th)", "Add 1,000 to 5,000 = 6,000"]
-    },
-    {
-      q: "Write in figures: Seven thousand, four hundred and twenty-three",
-      a: "7,423",
-      tray: ["Th: 7, H: 4, T: 2, U: 3", "= 7,423"]
-    }
-  ],
-
-  comp_week2: [
-    {
-      q: "What does CPU stand for?",
-      a: "Central Processing Unit",
-      tray: ["Brain of the Computer", "Processes all instructions and calculations"]
-    },
-    {
-      q: "Raw facts and figures given to a computer are called ______.",
-      a: "Data",
-      tray: ["Data ➔ CPU Processing ➔ Information"]
-    }
-  ],
-
-  math_week7: [
-    {
-      q: "Find the Lowest Common Multiple (L.C.M) of 4 and 6.",
-      a: "12",
-      tray: ["Multiples of 4: 4, 8, 12, 16", "Multiples of 6: 6, 12, 18", "Lowest common = 12"]
-    }
-  ],
-
-  english_week7: [
-    {
-      q: "The person who writes a book or story is called the ______.",
-      a: "Author",
-      tray: ["Author = Writer", "Illustrator = Draws pictures", "Publisher = Prints book"]
-    }
-  ],
-
-  math_week8: [
-    {
-      q: "Find the Highest Common Factor (H.C.F) of 8 and 12.",
-      a: "4",
-      tray: ["Factors of 8: 1, 2, 4, 8", "Factors of 12: 1, 2, 3, 4, 6, 12", "Highest common = 4"]
-    }
-  ],
-
-  english_week8: [
-    {
-      q: "Every complete simple sentence must have a Subject and a ______.",
-      a: "Predicate (or Verb)",
-      tray: ["Subject: Who or what does the action", "Predicate: The action or state"]
-    }
-  ]
-};
-
-// ============================================================================
-// 2. WEEKLY CURRICULUM QUESTIONS (Weeks 1 — 6, 7 — 10 fallbacks, Week 11 Exams)
-// ============================================================================
 window.WEEKLY_CURRICULUM = {
-  // --------------------------------------------------------------------------
-  // WEEK 1
-  // --------------------------------------------------------------------------
   1: [
     {
-      subjectId: "comp_w1",
-      subjectTitle: "Computer Studies",
-      topic: "Kick off Test: Introduction to Computer Hardware",
+      subjectId: "english_week1",
+      subjectTitle: "WEEK 1: ENGLISH STUDIES",
+      topic: "Kick off Test: Plural of Nouns (Example: Woman — women)",
       questions: [
-        {
-          id: "comp_1_1",
-          text: "A computer mouse is an {dash1} device used to point, click, and interact with items on the screen.",
-          dashes: 1,
-          type: "bubble",
-          options: ["input", "output", "storage", "internal"],
-          correct: ["input"],
-          rule: "A computer mouse sends pointer instructions into the computer, so it is an input device."
-        }
+        qItem("eng1_1", "1. House {dash1}", 1, ["Houses", "Housen", "Housies"], ["Houses"], "Add -s to form 'Houses'."),
+        qItem("eng1_2", "2. Ox {dash1}", 1, ["Oxen", "Oxes", "Oxies"], ["Oxen"], "Ox takes suffix '-en' to become 'Oxen'."),
+        qItem("eng1_3", "3. Sheep {dash1}", 1, ["Sheep", "Sheeps", "Sheepes"], ["Sheep"], "Zero plural: remains 'Sheep'."),
+        qItem("eng1_4", "4. Box {dash1}", 1, ["Boxes", "Boxs", "Boxen"], ["Boxes"], "Nouns ending in -x add '-es'."),
+        qItem("eng1_5", "5. Chief {dash1}", 1, ["Chiefs", "Chieves", "Chiefes"], ["Chiefs"], "Double vowels before -f add -s."),
+        qItem("eng1_6", "6. Cloth {dash1}", 1, ["Cloths", "Clothes", "Clothies"], ["Cloths", "Clothes"], "Both Cloths and Clothes are accepted."),
+        qItem("eng1_7", "7. Book {dash1}", 1, ["Books", "Bookes", "Bookies"], ["Books"], "Regular noun: add -s to form 'Books'."),
+        qItem("eng1_8", "8. Knife {dash1}", 1, ["Knives", "Knifes", "Knifeses"], ["Knives"], "Nouns ending in -fe drop -fe and add -ves.")
       ]
     },
     {
-      subjectId: "bst_w1",
-      subjectTitle: "Basic Science and Technology",
-      topic: "Kick off Test: Technology",
+      subjectId: "math_week1",
+      subjectTitle: "WEEK 1: MATHEMATICS",
+      topic: "Kick off Test: 3 Equivalent Fractions (Example: 2/3 = 4/6, 6/9, 8/12)",
       questions: [
-        {
-          id: "bst_1_1",
-          text: "The application of scientific knowledge to solve practical problems is {dash1}.",
-          dashes: 1,
-          type: "bubble",
-          options: ["technology", "energy", "power"],
-          correct: ["technology"],
-          rule: "Technology applies scientific methods to design practical tools."
-        },
-        {
-          id: "bst_1_2",
-          text: "{dash1}, {dash2} and {dash3} are products of technology.",
-          dashes: 3,
-          type: "bubble",
-          options: ["radio", "phones", "cars", "wood", "sand"],
-          correct: ["radio", "phones", "cars"],
-          rule: "Radios, phones, and cars are manufactured technological appliances."
-        },
-        {
-          id: "bst_1_3",
-          text: "Two forms of technology are {dash1} and {dash2}.",
-          dashes: 2,
-          type: "bubble",
-          options: ["developed", "undeveloped", "controlled"],
-          correct: ["developed", "undeveloped"],
-          rule: "Technology is broadly classified as either developed or undeveloped."
-        },
-        {
-          id: "bst_1_4",
-          text: "Phones are developed technology in the area of {dash1}.",
-          dashes: 1,
-          type: "bubble",
-          options: ["communication", "transportation", "building"],
-          correct: ["communication"],
-          rule: "Telephones transmit speech and text for long-distance communication."
-        }
+        qItem("m1_1", "1. 1/2 = {dash1}, {dash2}, {dash3}", 3, ["2/4", "3/6", "4/8", "2/5", "3/8"], ["2/4", "3/6", "4/8"], "Multiply numerator and denominator by 2, 3, 4."),
+        qItem("m1_2", "2. 1/7 = {dash1}, {dash2}, {dash3}", 3, ["2/14", "3/21", "4/28", "2/10", "3/14"], ["2/14", "3/21", "4/28"], "Multiply numerator and denominator by 2, 3, 4."),
+        qItem("m1_3", "3. 2/5 = {dash1}, {dash2}, {dash3}", 3, ["4/10", "6/15", "8/20", "4/15", "5/10"], ["4/10", "6/15", "8/20"], "Multiply numerator and denominator by 2, 3, 4."),
+        qItem("m1_4", "4. 1/4 = {dash1}, {dash2}, {dash3}", 3, ["2/8", "3/12", "4/16", "2/6", "3/10"], ["2/8", "3/12", "4/16"], "Multiply numerator and denominator by 2, 3, 4."),
+        qItem("m1_5", "5. 1/3 = {dash1}, {dash2}, {dash3}", 3, ["2/6", "3/9", "4/12", "2/5", "3/8"], ["2/6", "3/9", "4/12"], "Multiply numerator and denominator by 2, 3, 4."),
+        qItem("m1_6", "6. 3/4 = {dash1}, {dash2}, {dash3}", 3, ["6/8", "9/12", "12/16", "6/10", "5/8"], ["6/8", "9/12", "12/16"], "Multiply numerator and denominator by 2, 3, 4.")
       ]
     },
     {
-      subjectId: "phe_w1",
-      subjectTitle: "Physical and Health Education",
-      topic: "Kick off Test: First Aid and Safety",
+      subjectId: "igbo_week1",
+      subjectTitle: "IZU UKA NKE MBU: ASUSU IGBO",
+      topic: "Mnwale Ule",
       questions: [
-        {
-          id: "phe_1_1",
-          text: "Four medical items found in a first aid box are {dash1}, {dash2}, {dash3} and {dash4}.",
-          dashes: 4,
-          type: "bubble",
-          options: ["cotton wool", "razor", "paracetamol", "GIV", "cigarette", "pepper"],
-          correct: ["cotton wool", "razor", "paracetamol", "GIV"],
-          rule: "First aid kits contain sterile cotton wool, antiseptic, blades, and pain medication."
-        },
-        {
-          id: "phe_1_2",
-          text: "The universal symbol on a first aid box is a {dash1}.",
-          dashes: 1,
-          type: "bubble",
-          options: ["cross", "square", "circle"],
-          correct: ["cross"],
-          rule: "A red or white cross designates medical and emergency first aid supplies."
-        },
-        {
-          id: "phe_1_3",
-          text: "First aid is given to an injured person after seeing the doctor: {dash1}.",
-          dashes: 1,
-          type: "bubble",
-          options: ["False", "True"],
-          correct: ["False"],
-          rule: "First aid is given immediately before a doctor provides advanced medical treatment."
-        },
-        {
-          id: "phe_1_4",
-          text: "Anybody who is trained can give first aid: {dash1}.",
-          dashes: 1,
-          type: "bubble",
-          options: ["True", "False"],
-          correct: ["True"],
-          rule: "Anyone trained in basic emergency safety procedures can render first aid."
-        },
-        {
-          id: "phe_1_5",
-          text: "First aid tends to relieve the injured person before medical attention is received: {dash1}.",
-          dashes: 1,
-          type: "bubble",
-          options: ["True", "False"],
-          correct: ["True"],
-          rule: "First aid reduces pain, prevents complications, and preserves life."
-        }
+        qItem("ig1_1", "1. Ụdaume Igbo dị ole? {dash1}", 1, ["Ise", "iri abụọ", "asatọ"], ["asatọ"], "Ụdaume Igbo dị asatọ (8)."),
+        qItem("ig1_2", "2. Mkpụrụedemede Igbo dị {dash1}", 1, ["Iri ise", "iri abụọ na otu", "iri atọ na isii"], ["iri atọ na isii"], "Abịịdịi Igbo dị iri atọ na isii (36)."),
+        qItem("ig1_3", "3. Ụzọ abụọ e kere mkpụrụ edemede Igbo bụ {dash1} na {dash2}", 2, ["ike ume", "ụdaume", "ụmụedemede", "mgbochiume"], ["ụdaume", "mgbochiume"], "Ụdaume na mgbochiume."),
+        qItem("ig1_4", "4. Myiri ụdaume bụ {dash1} na {dash2}", 2, ["m", "n", "b", "d"], ["m", "n"], "'m' na 'n' bụ myiri ụdaume.")
       ]
     },
     {
-      subjectId: "crs_w1",
-      subjectTitle: "Christian Religious Studies",
-      topic: "Kick off Test: The Good Samaritan",
+      subjectId: "french_week1",
+      subjectTitle: "SEMAINE UN: FRENCH",
+      topic: "Écrivez en français",
       questions: [
-        {
-          id: "crs_1_1",
-          text: "The story of the Good Samaritan teaches us {dash1}.",
-          dashes: 1,
-          type: "bubble",
-          options: ["love", "prayer", "prophecy"],
-          correct: ["love"],
-          rule: "Jesus taught that loving our neighbour means showing mercy to anyone in need."
-        },
-        {
-          id: "crs_1_2",
-          text: "The traveller was travelling from Jerusalem down to {dash1}.",
-          dashes: 1,
-          type: "bubble",
-          options: ["Jericho", "Israel", "Nigeria"],
-          correct: ["Jericho"],
-          rule: "Luke 10:30 specifies the man was going down from Jerusalem to Jericho."
-        },
-        {
-          id: "crs_1_3",
-          text: "The traveller was violently attacked along the road by {dash1}.",
-          dashes: 1,
-          type: "bubble",
-          options: ["robbers", "king", "Pharisees"],
-          correct: ["robbers"],
-          rule: "Robbers stripped him of his clothing, wounded him, and fled."
-        },
-        {
-          id: "crs_1_4",
-          text: "The kind person who stopped and took care of the traveller was a {dash1}.",
-          dashes: 1,
-          type: "bubble",
-          options: ["Samaritan", "pastor", "governor"],
-          correct: ["Samaritan"],
-          rule: "A compassionate Samaritan bandaged the wounded man and took him to an inn."
-        }
+        qItem("fr1_1", "1. One = {dash1}", 1, ["trois", "un"], ["un"], "One is 'un'."),
+        qItem("fr1_2", "2. Eight = {dash1}", 1, ["huit", "six"], ["huit"], "Eight is 'huit'."),
+        qItem("fr1_3", "3. Four = {dash1}", 1, ["cinq", "quatre"], ["quatre"], "Four is 'quatre'."),
+        qItem("fr1_4", "4. Two = {dash1}", 1, ["deux", "sept"], ["deux"], "Two is 'deux'."),
+        qItem("fr1_5", "5. Nine = {dash1}", 1, ["neuf", "six"], ["neuf"], "Nine is 'neuf'."),
+        qItem("fr1_6", "6. Five = {dash1}", 1, ["cinq", "un"], ["cinq"], "Five is 'cinq'.")
       ]
     },
     {
-      subjectId: "sos_w1",
-      subjectTitle: "Social Studies",
-      topic: "Kick off Test: Culture and Living in Nigeria",
+      subjectId: "bst_week1",
+      subjectTitle: "WEEK 1: BASIC SCIENCE AND TECHNOLOGY",
+      topic: "Kick off Test",
       questions: [
-        {
-          id: "sos_1_1",
-          text: "{dash1} is the total way of life of a group of people.",
-          dashes: 1,
-          type: "bubble",
-          options: ["culture", "tradition", "prayer"],
-          correct: ["culture"],
-          rule: "Culture includes food, language, dress, customs, and religion."
-        },
-        {
-          id: "sos_1_2",
-          text: "Material culture consists of items that can be seen and {dash1}.",
-          dashes: 1,
-          type: "bubble",
-          options: ["touched", "celebrated"],
-          correct: ["touched"],
-          rule: "Material culture includes physical objects such as pots, clothes, and tools."
-        },
-        {
-          id: "sos_1_3",
-          text: "Three major religions in Nigeria are {dash1}, {dash2} and {dash3}.",
-          dashes: 3,
-          type: "bubble",
-          options: ["Christianity", "Islam", "Traditional Religion", "Buddhism", "Judaism"],
-          correct: ["Christianity", "Islam", "Traditional Religion"],
-          rule: "Christianity, Islam, and African Traditional Religion are the three main faiths in Nigeria."
-        },
-        {
-          id: "sos_1_4",
-          text: "Six geopolitical zones in Nigeria are {dash1}, {dash2}, {dash3}, {dash4}, {dash5} and {dash6}.",
-          dashes: 6,
-          type: "bubble",
-          options: ["North West", "North East", "North Central", "South South", "South West", "South East", "South North", "South Mid"],
-          correct: ["North West", "North East", "North Central", "South South", "South West", "South East"],
-          rule: "Nigeria is officially organized into six geopolitical zones."
-        },
-        {
-          id: "sos_1_5",
-          text: "The three largest ethnic groups in Nigeria are {dash1}, {dash2} and {dash3}.",
-          dashes: 3,
-          type: "bubble",
-          options: ["Hausa", "Yoruba", "Igbo", "Ogoja", "Efik"],
-          correct: ["Hausa", "Yoruba", "Igbo"],
-          rule: "Hausa, Yoruba, and Igbo form the three majority ethnic groups."
-        }
+        qItem("bst1_1", "1. The application of scientific knowledge to solve practical problems is {dash1}", 1, ["energy", "technology", "power"], ["technology"], "Technology applies science."),
+        qItem("bst1_2", "2. {dash1}, {dash2} and {dash3} are products of technology.", 3, ["radio", "phones", "cars", "wood", "sand"], ["radio", "phones", "cars"], "Inventions of technology."),
+        qItem("bst1_3", "3. Two forms of technology are {dash1} and {dash2}", 2, ["developed", "undeveloped", "controlled"], ["developed", "undeveloped"], "Developed and undeveloped."),
+        qItem("bst1_4", "4. Phones are developed technology in the areas of {dash1}", 1, ["transportation", "communication", "building"], ["communication"], "Communication.")
       ]
     },
     {
-      subjectId: "civic_w1",
-      subjectTitle: "Civic Education",
-      topic: "Kick off Test: National Symbols",
+      subjectId: "phe_week1",
+      subjectTitle: "WEEK 1: PHYSICAL AND HEALTH EDUCATION",
+      topic: "Kick off Test: First Aid",
       questions: [
-        {
-          id: "civic_1_1",
-          text: "{dash1}, {dash2} and {dash3} are national symbols of Nigeria.",
-          dashes: 3,
-          type: "bubble",
-          options: ["flag", "coat of arm", "national anthem", "car", "house"],
-          correct: ["flag", "coat of arm", "national anthem"],
-          rule: "The flag, coat of arms, and anthem represent the sovereignty of Nigeria."
-        },
-        {
-          id: "civic_1_2",
-          text: "The colors of the Nigerian national flag are {dash1}, {dash2} and {dash3}.",
-          dashes: 3,
-          type: "bubble",
-          options: ["Green", "White", "Green", "Red", "Blue"],
-          correct: ["Green", "White", "Green"],
-          rule: "The flag has three vertical stripes: Green, White, and Green."
-        },
-        {
-          id: "civic_1_3",
-          text: "The opening words of Nigeria's national anthem are {dash1}.",
-          dashes: 1,
-          type: "bubble",
-          options: ["Arise O Compatriots", "beggars are everywhere"],
-          correct: ["Arise O Compatriots"],
-          rule: "The national anthem begins: 'Arise, O Compatriots, Nigeria's call obey...'"
-        },
-        {
-          id: "civic_1_4",
-          text: "An {dash1} and two {dash2} are prominent figures on Nigeria's Coat of Arms.",
-          dashes: 2,
-          type: "bubble",
-          options: ["eagle", "horses", "book", "goats"],
-          correct: ["eagle", "horses"],
-          rule: "The red eagle signifies strength, and the two horses represent dignity."
-        },
-        {
-          id: "civic_1_5",
-          text: "The colour of the two horses supporting the coat of arms is {dash1}.",
-          dashes: 1,
-          type: "bubble",
-          options: ["white", "black", "brown"],
-          correct: ["white"],
-          rule: "The horses supporting the shield on Nigeria's Coat of Arms are white."
-        }
+        qItem("phe1_1", "1. Four things in a first aid box: {dash1}, {dash2}, {dash3} and {dash4}", 4, ["cotton wool", "razor", "paracetamol", "GIV", "cigarette", "pepper"], ["cotton wool", "razor", "paracetamol", "GIV"], "First aid supplies."),
+        qItem("phe1_2", "2. The symbol on a first aid box is a {dash1}", 1, ["square", "cross", "circle"], ["cross"], "Red/white cross."),
+        qItem("phe1_3", "3. First aid is given to an injured person after seeing the doctor: {dash1}", 1, ["True", "False"], ["False"], "Given before the doctor arrives."),
+        qItem("phe1_4", "4. Anybody can give first aid: {dash1}", 1, ["True", "False"], ["True"], "Any bystander can assist."),
+        qItem("phe1_5", "5. First aid tends to relieve the injured before medical attention: {dash1}", 1, ["True", "False"], ["True"], "Relieves pain.")
       ]
     },
     {
-      subjectId: "agric_w1",
-      subjectTitle: "Agricultural Science",
-      topic: "Kick off Test: Crops, Tools and Farm Animals",
+      subjectId: "agric_week1",
+      subjectTitle: "WEEK 1: AGRICULTURAL SCIENCE",
+      topic: "Kick off Test",
       questions: [
-        {
-          id: "agric_1_1",
-          text: "Four staple crops produced by Nigerian farmers are {dash1}, {dash2}, {dash3} and {dash4}.",
-          dashes: 4,
-          type: "bubble",
-          options: ["yam", "rice", "maize", "cassava", "iron", "rubber"],
-          correct: ["yam", "rice", "maize", "cassava"],
-          rule: "Yam, rice, maize, and cassava are widely cultivated food crops in Nigeria."
-        },
-        {
-          id: "agric_1_2",
-          text: "Three sweet fruits produced by flowering plants are {dash1}, {dash2} and {dash3}.",
-          dashes: 3,
-          type: "bubble",
-          options: ["orange", "mango", "apple", "gravel"],
-          correct: ["orange", "mango", "apple"],
-          rule: "Oranges, mangoes, and apples are healthy edible fruits."
-        },
-        {
-          id: "agric_1_3",
-          text: "Two common hand tools used on farms are the {dash1} and {dash2}.",
-          dashes: 2,
-          type: "bubble",
-          options: ["hoe", "wheelbarrow", "coffee", "smoker"],
-          correct: ["hoe", "wheelbarrow"],
-          rule: "Hoes and wheelbarrows are essential farm equipment for tilling and hauling."
-        },
-        {
-          id: "agric_1_4",
-          text: "Two common domestic livestock animals are the {dash1} and {dash2}.",
-          dashes: 2,
-          type: "bubble",
-          options: ["goat", "cow", "lion", "snake"],
-          correct: ["goat", "cow"],
-          rule: "Goats and cows are kept on farms for meat, dairy, and hides."
-        }
+        qItem("ag1_1", "1. Four crops produced by farmers: {dash1}, {dash2}, {dash3} and {dash4}", 4, ["yam", "cassava", "maize", "rice"], ["yam", "cassava", "maize", "rice"], "Common staple crops."),
+        qItem("ag1_2", "2. Three fruits I know: {dash1}, {dash2} and {dash3}", 3, ["orange", "mango", "apple"], ["orange", "mango", "apple"], "Edible fruits."),
+        qItem("ag1_3", "3. Farm tools: {dash1}, {dash2}, {dash3} and {dash4}", 4, ["hoe", "cutlass", "rake", "wheelbarrow"], ["hoe", "cutlass", "rake", "wheelbarrow"], "Essential farm tools."),
+        qItem("ag1_4", "4. Goat and cow are examples of {dash1} animal.", 1, ["domestic", "wild", "aquatic"], ["domestic"], "Farm / domestic animals.")
       ]
     },
     {
-      subjectId: "hec_w1",
-      subjectTitle: "Home Economics",
-      topic: "Kick off Test: Personal Hygiene and Maintenance",
+      subjectId: "home_econ_week1",
+      subjectTitle: "WEEK 1: HOME ECONOMICS",
+      topic: "Kick off Test",
       questions: [
-        {
-          id: "hec_1_1",
-          text: "We keep our mouths clean through regular {dash1} and {dash2}.",
-          dashes: 2,
-          type: "bubble",
-          options: ["brushing", "washing", "eating"],
-          correct: ["brushing", "washing"],
-          rule: "Regular brushing and rinsing keep teeth and gums clean and fresh."
-        },
-        {
-          id: "hec_1_2",
-          text: "We use a {dash1} and {dash2} to clean our mouth and teeth.",
-          dashes: 2,
-          type: "bubble",
-          options: ["toothbrush", "toothpaste", "sand", "soap"],
-          correct: ["toothbrush", "toothpaste"],
-          rule: "Using a proper toothbrush and fluoride toothpaste protects dental health."
-        },
-        {
-          id: "hec_1_3",
-          text: "{dash1} and {dash2} are toiletries used for body hygiene.",
-          dashes: 2,
-          type: "bubble",
-          options: ["soap", "body cream", "zinc", "cement"],
-          correct: ["soap", "body cream"],
-          rule: "Bathing soap washes the body clean, while body cream moisturizes the skin."
-        },
-        {
-          id: "hec_1_4",
-          text: "Shoes are worn to protect our {dash1}.",
-          dashes: 1,
-          type: "bubble",
-          options: ["foot", "head", "eyes"],
-          correct: ["foot"],
-          rule: "Footwear protects feet from cuts, sharps, and ground infections."
-        }
+        qItem("he1_1", "1. We make our mouth clean by {dash1} and {dash2}", 2, ["brushing", "washing", "eating"], ["brushing", "washing"], "Brushing and washing."),
+        qItem("he1_2", "2. We use {dash1} and {dash2} to clean our mouth.", 2, ["toothpaste", "brush", "sand", "soap"], ["toothpaste", "brush"], "Toothpaste and brush."),
+        qItem("he1_3", "3. {dash1} and {dash2} are used for body maintenance.", 2, ["soap", "body cream", "zinc", "cement"], ["soap", "body cream"], "Soap and cream."),
+        qItem("he1_4", "4. Shoes are used to protect the {dash1}", 1, ["head", "eyes", "foot"], ["foot"], "Protects feet.")
       ]
     },
     {
-      subjectId: "vr_w1",
-      subjectTitle: "Verbal Reasoning",
-      topic: "Kick off Test: Letter Patterns",
+      subjectId: "crs_week1",
+      subjectTitle: "WEEK 1: CHRISTIAN RELIGIOUS STUDIES",
+      topic: "Kick off Test: Good Samaritan",
       questions: [
-        {
-          id: "vr_1_1",
-          text: "Complete the sequence: GJ, HK, IL, {dash1}, {dash2}.",
-          dashes: 2,
-          type: "bubble",
-          options: ["JM", "KN", "LO", "MP"],
-          correct: ["JM", "KN"],
-          rule: "First letters step forward by 1 (G, H, I, J, K), second letters also step forward by 1 (J, K, L, M, N)."
-        },
-        {
-          id: "vr_1_2",
-          text: "Continue the pattern: AM, BN, CO, {dash1}, {dash2}.",
-          dashes: 2,
-          type: "bubble",
-          options: ["DP", "EQ", "FR", "GS"],
-          correct: ["DP", "EQ"],
-          rule: "Letter sequences: A-B-C-D-E alongside M-N-O-P-Q."
-        },
-        {
-          id: "vr_1_3",
-          text: "Fill in the missing pairs: EH, FI, {dash1}, {dash2}, IL.",
-          dashes: 2,
-          type: "bubble",
-          options: ["GJ", "HK", "JM", "KN"],
-          correct: ["GJ", "HK"],
-          rule: "E, F, G, H, I matched with H, I, J, K, L."
-        },
-        {
-          id: "vr_1_4",
-          text: "Next in series: PS, QT, RU, {dash1}, {dash2}.",
-          dashes: 2,
-          type: "bubble",
-          options: ["SV", "TW", "UX", "VY"],
-          correct: ["SV", "TW"],
-          rule: "P, Q, R, S, T paired with S, T, U, V, W."
-        }
+        qItem("crs1_1", "1. The story of the good Samaritan teaches us {dash1}", 1, ["prophecy", "prayer", "love"], ["love"], "Compassionate love."),
+        qItem("crs1_2", "2. The traveller was going from Jerusalem to {dash1}", 1, ["Nigeria", "Israel", "Jericho"], ["Jericho"], "Jericho."),
+        qItem("crs1_3", "3. Who helped the traveller? {dash1}", 1, ["pastor", "governor", "Samaritan"], ["Samaritan"], "The Good Samaritan."),
+        qItem("crs1_4", "4. The man was attacked by the {dash1}", 1, ["king", "robbers", "Pharisees"], ["robbers"], "Robbers."),
+        qItem("crs1_5", "5. Jesus teaches us to love our {dash1}", 1, ["friends", "brothers only", "enemies only"], ["friends"], "Love our neighbours and friends.")
+      ]
+    },
+    {
+      subjectId: "social_studies_week1",
+      subjectTitle: "WEEK 1: SOCIAL STUDIES",
+      topic: "Kick off Test: Culture",
+      questions: [
+        qItem("soc1_1", "1. {dash1} is the people's way of life.", 1, ["tradition", "culture", "prayer"], ["culture"], "Culture."),
+        qItem("soc1_2", "2. Material culture can be {dash1}", 1, ["celebrated", "touched"], ["touched"], "Tangible."),
+        qItem("soc1_3", "3. Four local foods: {dash1}, {dash2}, {dash3} and {dash4}", 4, ["amala", "pounded yam", "tuwo", "garri"], ["amala", "pounded yam", "tuwo", "garri"], "Local foods."),
+        qItem("soc1_4", "4. Three major religions in Nigeria: {dash1}, {dash2} and {dash3}", 3, ["Christianity", "Islam", "Traditional", "Buddhism"], ["Christianity", "Islam", "Traditional"], "Recognized religions.")
+      ]
+    },
+    {
+      subjectId: "civic_week1",
+      subjectTitle: "WEEK 1: CIVIC EDUCATION",
+      topic: "National Symbols",
+      questions: [
+        qItem("civ1_1", "1. {dash1}, {dash2} and {dash3} are national symbols.", 3, ["flag", "coat of arm", "national anthem", "car", "house"], ["flag", "coat of arm", "national anthem"], "National symbols."),
+        qItem("civ1_2", "2. Colours of national flag are {dash1} and {dash2}", 2, ["Green", "White", "Blue", "Red"], ["Green", "White"], "Green and white."),
+        qItem("civ1_3", "3. The beginning of the national anthem is {dash1}", 1, ["beggars are everywhere", "Arise O Compatriot"], ["Arise O Compatriot"], "Arise O Compatriot."),
+        qItem("civ1_4", "4. {dash1} and {dash2} are on the coat of arm.", 2, ["eagle", "horses", "book", "goats"], ["eagle", "horses"], "Eagle and horses."),
+        qItem("civ1_5", "5. The colour of the two horses on the coat of arm is {dash1}", 1, ["White", "Brown", "Black"], ["White"], "White horses.")
+      ]
+    },
+    {
+      subjectId: "history_week1",
+      subjectTitle: "WEEK 1: HISTORY",
+      topic: "Kick off Test: Nigerian Regions",
+      questions: [
+        qItem("hist1_1", "1. Four eastern states: {dash1}, {dash2}, {dash3} and {dash4}", 4, ["Enugu", "Anambra", "Imo", "Abia", "Kano", "Lagos"], ["Enugu", "Anambra", "Imo", "Abia"], "South-East states."),
+        qItem("hist1_2", "2. Geopolitical regions: {dash1}, {dash2}, {dash3}, {dash4}, {dash5} and {dash6}", 6, ["North west", "North east", "North central", "South south", "south west", "south east", "South north"], ["North west", "North east", "North central", "South south", "south west", "south east"], "6 zones."),
+        qItem("hist1_3", "3. Three major tribes: {dash1}, {dash2} and {dash3}", 3, ["Hausa", "Igbo", "Yoruba", "Ogoja", "Efik"], ["Hausa", "Igbo", "Yoruba"], "Major ethnic groups.")
+      ]
+    },
+    {
+      subjectId: "verbal_week1",
+      subjectTitle: "WEEK 1: VERBAL REASONING",
+      topic: "Letter Patterns",
+      questions: [
+        qItem("verb1_1", "1. GJ, HK, IL, {dash1}, {dash2}", 2, ["JM", "KN", "LO", "MP"], ["JM", "KN"], "Steps +1."),
+        qItem("verb1_2", "2. AM, BN, CO, {dash1}, {dash2}", 2, ["DP", "EQ", "FR", "GS"], ["DP", "EQ"], "Alphabetical stepping."),
+        qItem("verb1_3", "3. EH, FI, {dash1}, {dash2}, IL", 2, ["GJ", "HK", "GL", "IM"], ["GJ", "HK"], "Sequential pairs."),
+        qItem("verb1_4", "4. PS, QT, RU, {dash1}, {dash2}", 2, ["SV", "TW", "UX", "VY"], ["SV", "TW"], "Consecutive pairs."),
+        qItem("verb1_5", "5. DB, {dash1}, FD, GE, {dash2}", 2, ["EC", "HF", "IG", "CA"], ["EC", "HF"], "Letter pairs.")
       ]
     }
   ],
 
-  // --------------------------------------------------------------------------
-  // WEEK 2
-  // --------------------------------------------------------------------------
   2: [
     {
-      subjectId: "eng_w2",
-      subjectTitle: "English Studies",
-      topic: "Aural Discrimination: Short /æ/ vs Long /ɑː/ Vowel Sounds",
+      subjectId: "math_week2",
+      subjectTitle: "WEEK 2: MATHEMATICS",
+      topic: "Whole Numbers Sequence",
       questions: [
-        {
-          id: "eng_2_1",
-          text: "Words that contain the short /æ/ vowel sound as in 'pat' are {dash1} and {dash2}.",
-          dashes: 2,
-          type: "bubble",
-          options: ["mat", "cat", "part", "cart"],
-          correct: ["mat", "cat"],
-          rule: "The short /æ/ sound is found in: pat, mat, cat, hat, back."
-        },
-        {
-          id: "eng_2_2",
-          text: "Words with the lengthened /ɑː/ vowel sound as in 'part' are {dash1} and {dash2}.",
-          dashes: 2,
-          type: "bubble",
-          options: ["cart", "bark", "hat", "cat"],
-          correct: ["cart", "bark"],
-          rule: "The long /ɑː/ vowel sound is heard in: part, cart, heart, barn, bark."
-        }
+        qItem("m2_1", "1. 80, 90, {dash1}, {dash2}, 120, 130", 2, ["100", "110", "115"], ["100", "110"], "Add 10 each time."),
+        qItem("m2_2", "2. 78, 128, 178, {dash1}, {dash2}", 2, ["228", "278", "258"], ["228", "278"], "Add 50 each time."),
+        qItem("m2_3", "3. 800, 900, {dash1}, 1,100, 1,200", 1, ["1,000", "1,050", "950"], ["1,000"], "Add 100 each time."),
+        qItem("m2_4", "4. 760, 860, {dash1}, 1,060, 1,160, {dash2}", 2, ["960", "1,260", "980"], ["960", "1,260"], "Add 100 each time."),
+        qItem("m2_5", "5. 200,000, 300,000, 400,000, {dash1}, {dash2}, 700,000", 2, ["500,000", "600,000", "550,000"], ["500,000", "600,000"], "Count in 100,000s."),
+        qItem("m2_6", "6. 15,000, 18,000, 21,000, {dash1}, 27,000, {dash2}", 2, ["24,000", "30,000", "25,000"], ["24,000", "30,000"], "Add 3,000 each time."),
+        qItem("m2_7", "7. 970, 1,000, 1,030, {dash1}, {dash2}, 1,120, 1,150", 2, ["1,060", "1,090", "1,080"], ["1,060", "1,090"], "Add 30 each time.")
       ]
     },
     {
-      subjectId: "math_w2",
-      subjectTitle: "Mathematics",
-      topic: "Whole Numbers: Sequences and Patterns",
+      subjectId: "igbo_week2",
+      subjectTitle: "IZU UKA NKE ABUO: ASUSU IGBO",
+      topic: "Ọnụọgụgụ 1 — 200",
       questions: [
-        {
-          id: "math_2_1",
-          text: "Counting in tens: 80, 90, {dash1}, {dash2}, 120, 130.",
-          dashes: 2,
-          type: "bubble",
-          options: ["100", "110", "105", "115"],
-          correct: ["100", "110"],
-          rule: "Rule: Add 10 to each number (90 + 10 = 100, 100 + 10 = 110)."
-        },
-        {
-          id: "math_2_2",
-          text: "Counting by fifties: 78, 128, 178, {dash1}, {dash2}.",
-          dashes: 2,
-          type: "bubble",
-          options: ["228", "278", "250", "298"],
-          correct: ["228", "278"],
-          rule: "Rule: Add 50 each step (178 + 50 = 228; 228 + 50 = 278)."
-        },
-        {
-          id: "math_2_3",
-          text: "Counting in hundreds: 800, 900, {dash1}, 1,100, 1,200.",
-          dashes: 1,
-          type: "bubble",
-          options: ["1,000", "950", "1,050"],
-          correct: ["1,000"],
-          rule: "900 + 100 = 1,000."
-        },
-        {
-          id: "math_2_4",
-          text: "Add 100 step: 760, 860, {dash1}, 1,060, 1,160, {dash2}.",
-          dashes: 2,
-          type: "bubble",
-          options: ["960", "1,260", "980", "1,200"],
-          correct: ["960", "1,260"],
-          rule: "860 + 100 = 960; 1,160 + 100 = 1,260."
-        },
-        {
-          id: "math_2_5",
-          text: "Hundred thousands pattern: 200,000; 300,000; 400,000; {dash1}; {dash2}; 700,000.",
-          dashes: 2,
-          type: "bubble",
-          options: ["500,000", "600,000", "450,000", "550,000"],
-          correct: ["500,000", "600,000"],
-          rule: "Add 100,000 each time."
-        },
-        {
-          id: "math_2_6",
-          text: "Add 3,000 pattern: 15,000; 18,000; 21,000; {dash1}; 27,000; {dash2}.",
-          dashes: 2,
-          type: "bubble",
-          options: ["24,000", "30,000", "25,000", "28,000"],
-          correct: ["24,000", "30,000"],
-          rule: "21,000 + 3,000 = 24,000; 27,000 + 3,000 = 30,000."
-        },
-        {
-          id: "math_2_7",
-          text: "Add 30 pattern: 970, 1,000, 1,030, {dash1}, {dash2}, 1,120, 1,150.",
-          dashes: 2,
-          type: "bubble",
-          options: ["1,060", "1,090", "1,080", "1,100"],
-          correct: ["1,060", "1,090"],
-          rule: "1,030 + 30 = 1,060; 1,060 + 30 = 1,090."
-        }
+        qItem("ig2_1", "1. Otu narị na iri abụọ = {dash1}", 1, ["120", "102", "200"], ["120"], "100 + 20 = 120."),
+        qItem("ig2_2", "2. Iri isii na otu = {dash1}", 1, ["61", "16", "71"], ["61"], "60 + 1 = 61."),
+        qItem("ig2_3", "3. Iri asaa = {dash1}", 1, ["70", "80", "60"], ["70"], "70."),
+        qItem("ig2_4", "4. Iri na atọ = {dash1}", 1, ["13", "30", "31"], ["13"], "10 + 3 = 13."),
+        qItem("ig2_5", "5. Otu narị na iri asatọ na atọ = {dash1}", 1, ["183", "138", "83"], ["183"], "100 + 80 + 3 = 183."),
+        qItem("ig2_6", "6. Iri ise na asatọ = {dash1}", 1, ["58", "85", "68"], ["58"], "50 + 8 = 58.")
       ]
     },
     {
-      subjectId: "igbo_w2",
-      subjectTitle: "Asụsụ Igbo",
-      topic: "Ọnụọgụgụ 1 ruo 200 (Igbo Numbers)",
+      subjectId: "comp_week2",
+      subjectTitle: "WEEK 2: COMPUTER STUDIES",
+      topic: "Data and System Unit",
       questions: [
-        {
-          id: "igbo_2_1",
-          text: "Otu narị na iri abụọ na Bekee pụtara {dash1}.",
-          dashes: 1,
-          type: "bubble",
-          options: ["120", "102", "112"],
-          correct: ["120"],
-          rule: "Otu narị (100) + iri abụọ (20) = 120."
-        },
-        {
-          id: "igbo_2_2",
-          text: "Iri isii na otu = {dash1}; Iri asaa = {dash2}.",
-          dashes: 2,
-          type: "bubble",
-          options: ["61", "70", "16", "77"],
-          correct: ["61", "70"],
-          rule: "Iri isii na otu bụ 61. Iri asaa bụ 70."
-        },
-        {
-          id: "igbo_2_3",
-          text: "Iri na atọ = {dash1}; Iri ise na asatọ = {dash2}.",
-          dashes: 2,
-          type: "bubble",
-          options: ["13", "58", "31", "85"],
-          correct: ["13", "58"],
-          rule: "Iri na atọ = 13. Iri ise na asatọ = 58."
-        },
-        {
-          id: "igbo_2_4",
-          text: "Otu narị na iri asatọ na atọ = {dash1}.",
-          dashes: 1,
-          type: "bubble",
-          options: ["183", "138", "180"],
-          correct: ["183"],
-          rule: "100 (Otu nari) + 80 (iri asato) + 3 (ato) = 183."
-        }
+        qItem("cp2_1", "1. Information not yet processed is {dash1}", 1, ["news", "data", "fake"], ["data"], "Data is raw facts."),
+        qItem("cp2_2", "2. Data is stored in the {dash1}", 1, ["computer", "radio", "sun"], ["computer"], "Stored in computers."),
+        qItem("cp2_3", "3. {dash1} processes data in computer.", 1, ["CPU", "mouse", "cable"], ["CPU"], "Central Processing Unit."),
+        qItem("cp2_4", "4. Another name for CPU is {dash1}", 1, ["System unit", "Area unit", "Control board"], ["System unit"], "System unit.")
       ]
     },
     {
-      subjectId: "comp_w2",
-      subjectTitle: "Computer Studies",
-      topic: "Data and the System Unit",
-      passage: {
-        title: "Lesson Note: Data & CPU",
-        text: "Data are raw facts or unprocessed information keyed into a computer. Data are processed by the CPU, also referred to as the System Unit."
-      },
+      subjectId: "bst_week2",
+      subjectTitle: "WEEK 2: BASIC SCIENCE AND TECHNOLOGY",
+      topic: "Change in Nature",
       questions: [
-        {
-          id: "comp_2_1",
-          text: "Information that has not yet been processed is called {dash1}.",
-          dashes: 1,
-          type: "bubble",
-          options: ["data", "news", "fake"],
-          correct: ["data"],
-          rule: "Data refers to raw facts and figures that require processing."
-        },
-        {
-          id: "comp_2_2",
-          text: "Data is stored inside the {dash1}.",
-          dashes: 1,
-          type: "bubble",
-          options: ["computer", "radio", "sun"],
-          correct: ["computer"],
-          rule: "Computers use storage devices like hard drives to save data."
-        },
-        {
-          id: "comp_2_3",
-          text: "The {dash1} processes data in the computer.",
-          dashes: 1,
-          type: "bubble",
-          options: ["CPU", "mouse", "cable"],
-          correct: ["CPU"],
-          rule: "The Central Processing Unit carries out computations."
-        },
-        {
-          id: "comp_2_4",
-          text: "Another name for CPU is the {dash1}.",
-          dashes: 1,
-          type: "bubble",
-          options: ["System unit", "Area unit", "Control board"],
-          correct: ["System unit"],
-          rule: "The main computer cabinet is often termed the System Unit."
-        }
+        qItem("bst2_1", "1. Two types of change are {dash1} and {dash2}", 2, ["temporal", "permanent", "transfer"], ["temporal", "permanent"], "Temporal and permanent."),
+        qItem("bst2_2", "2. {dash1} change can be reversed to the original form.", 1, ["temporal", "permanent"], ["temporal"], "Temporal."),
+        qItem("bst2_3", "3. A child grows to be a man is a {dash1} change.", 1, ["permanent", "transfer"], ["permanent"], "Cannot be reversed."),
+        qItem("bst2_4", "4. A kitten grows to be a {dash1}", 1, ["cat", "dog", "goat"], ["cat"], "Cats.")
       ]
     },
     {
-      subjectId: "bst_w2",
-      subjectTitle: "Basic Science and Technology",
-      topic: "Change in Nature: Temporary and Permanent Changes",
-      questions: [
-        {
-          id: "bst_2_1",
-          text: "Two types of change in nature are {dash1} and {dash2}.",
-          dashes: 2,
-          type: "bubble",
-          options: ["temporal", "permanent", "transfer"],
-          correct: ["temporal", "permanent"],
-          rule: "Changes are categorized as either temporal (reversible) or permanent (irreversible)."
-        },
-        {
-          id: "bst_2_2",
-          text: "A {dash1} change can be reversed back into its original form.",
-          dashes: 1,
-          type: "bubble",
-          options: ["temporal", "permanent"],
-          correct: ["temporal"],
-          rule: "Temporal changes (e.g. melting ice) can be reversed."
-        },
-        {
-          id: "bst_2_3",
-          text: "A child growing into an adult is an example of a {dash1} change.",
-          dashes: 1,
-          type: "bubble",
-          options: ["permanent", "temporal", "transfer"],
-          correct: ["permanent"],
-          rule: "Biological growth cannot be reversed; it is permanent."
-        },
-        {
-          id: "bst_2_4",
-          text: "A young kitten grows to become an adult {dash1}.",
-          dashes: 1,
-          type: "bubble",
-          options: ["cat", "dog", "goat"],
-          correct: ["cat"],
-          rule: "A kitten is the offspring of a cat."
-        }
-      ]
-    },
-    {
-      subjectId: "phe_w2",
-      subjectTitle: "Physical and Health Education",
+      subjectId: "phe_week2",
+      subjectTitle: "WEEK 2: PHYSICAL AND HEALTH EDUCATION",
       topic: "Athletics: Table Tennis",
       questions: [
-        {
-          id: "phe_2_1",
-          text: "Singles table tennis is contested by {dash1} players.",
-          dashes: 1,
-          type: "bubble",
-          options: ["2", "4", "7"],
-          correct: ["2"],
-          rule: "In singles, two opposing individuals play against each other."
-        },
-        {
-          id: "phe_2_2",
-          text: "The table tennis board is {dash1} in shape.",
-          dashes: 1,
-          type: "bubble",
-          options: ["rectangular", "circle", "square"],
-          correct: ["rectangular"],
-          rule: "Official table tennis boards are rectangular."
-        },
-        {
-          id: "phe_2_3",
-          text: "A {dash1} and a {dash2} are the tools used to play table tennis.",
-          dashes: 2,
-          type: "bubble",
-          options: ["bat", "ball", "tyre"],
-          correct: ["bat", "ball"],
-          rule: "Table tennis uses a paddle (bat) and a lightweight celluloid ball."
-        },
-        {
-          id: "phe_2_4",
-          text: "To start or continue the game, the player delivers a legal {dash1}.",
-          dashes: 1,
-          type: "bubble",
-          options: ["service", "play out", "punch"],
-          correct: ["service"],
-          rule: "Each rally begins with a service."
-        }
+        qItem("phe2_1", "1. How many people play singles table tennis? {dash1}", 1, ["2", "7", "4"], ["2"], "2 persons."),
+        qItem("phe2_2", "2. The table is always in {dash1} shape.", 1, ["rectangular", "circle", "square"], ["rectangular"], "Rectangular."),
+        qItem("phe2_3", "3. {dash1} and {dash2} are used to play the game.", 2, ["bat", "ball", "tyre"], ["bat", "ball"], "Bat and ball."),
+        qItem("phe2_4", "4. To start the game, the player makes a {dash1}", 1, ["service", "play out", "punch"], ["service"], "Service.")
       ]
     },
     {
-      subjectId: "cca_w2",
-      subjectTitle: "Cultural and Creative Arts",
+      subjectId: "cca_week2",
+      subjectTitle: "WEEK 2: CULTURAL AND CREATIVE ARTS",
       topic: "Art and Music",
       questions: [
-        {
-          id: "cca_2_1",
-          text: "Art is the expression of skill in {dash1}, {dash2}, {dash3} and {dash4}.",
-          dashes: 4,
-          type: "bubble",
-          options: ["image making", "painting", "craft", "music", "fighting"],
-          correct: ["image making", "painting", "craft", "music"],
-          rule: "Art covers drawing, painting, craft, drama, and music."
-        },
-        {
-          id: "cca_2_2",
-          text: "Artworks provide useful cultural and aesthetic benefits to mankind: {dash1}.",
-          dashes: 1,
-          type: "bubble",
-          options: ["True", "False"],
-          correct: ["True"],
-          rule: "Art creates functional products and beautifies human environments."
-        },
-        {
-          id: "cca_2_3",
-          text: "Music is classified as a branch of {dash1}.",
-          dashes: 1,
-          type: "bubble",
-          options: ["art", "building", "wrestling"],
-          correct: ["art"],
-          rule: "Music is a performing art."
-        },
-        {
-          id: "cca_2_4",
-          text: "Music is defined as an organized, pleasing {dash1}.",
-          dashes: 1,
-          type: "bubble",
-          options: ["sound", "noise", "fight"],
-          correct: ["sound"],
-          rule: "Music is arranged, harmonious sound, contrasting with noise."
-        }
+        qItem("cca2_1", "1. Art is expressing skill in {dash1}, {dash2}, {dash3} and {dash4}", 4, ["painting", "craft", "music", "theatre", "fighting"], ["painting", "craft", "music", "theatre"], "Art skills."),
+        qItem("cca2_2", "2. Art work are beneficial to man: {dash1}", 1, ["True", "False"], ["True"], "Beneficial."),
+        qItem("cca2_3", "3. Music is a part of {dash1}", 1, ["art", "building", "wrestling"], ["art"], "Auditory art."),
+        qItem("cca2_4", "4. Music is an organized {dash1}", 1, ["sound", "noise", "fight"], ["sound"], "Pleasant sound.")
       ]
     },
     {
-      subjectId: "agric_w2",
-      subjectTitle: "Agricultural Science",
+      subjectId: "agric_week2",
+      subjectTitle: "WEEK 2: AGRICULTURAL SCIENCE",
       topic: "Branches of Agriculture",
       questions: [
-        {
-          id: "agric_2_1",
-          text: "Agriculture deals with {dash1} farming and {dash2} farming.",
-          dashes: 2,
-          type: "bubble",
-          options: ["crops", "animals", "books", "iron"],
-          correct: ["crops", "animals"],
-          rule: "The two primary divisions are crop production and animal husbandry."
-        },
-        {
-          id: "agric_2_2",
-          text: "A person who plants crops and raises livestock is a {dash1}.",
-          dashes: 1,
-          type: "bubble",
-          options: ["farmer", "trader", "pastor"],
-          correct: ["farmer"],
-          rule: "A farmer manages agricultural operations."
-        },
-        {
-          id: "agric_2_3",
-          text: "{dash1}, {dash2}, {dash3} and {dash4} are examples of farm crops.",
-          dashes: 4,
-          type: "bubble",
-          options: ["yam", "maize", "rice", "cassava", "cement", "diesel"],
-          correct: ["yam", "maize", "rice", "cassava"],
-          rule: "Yam, maize, rice, and cassava are agricultural food crops."
-        },
-        {
-          id: "agric_2_4",
-          text: "Agriculture has {dash1} primary branches.",
-          dashes: 1,
-          type: "bubble",
-          options: ["2", "6", "8"],
-          correct: ["2"],
-          rule: "Crops and animals form the two main branches."
-        }
+        qItem("ag2_1", "1. Agriculture deals with {dash1} and {dash2} production.", 2, ["crop", "animal", "shoe"], ["crop", "animal"], "Crops and livestock."),
+        qItem("ag2_2", "2. The person who plants crops is called a {dash1}", 1, ["farmer", "trader", "pastor"], ["farmer"], "Farmer."),
+        qItem("ag2_3", "3. {dash1}, {dash2}, {dash3} and {dash4} are crops produce.", 4, ["yam", "maize", "rice", "cassava", "cement"], ["yam", "maize", "rice", "cassava"], "Crops produce."),
+        qItem("ag2_4", "4. Agriculture has {dash1} main branches.", 1, ["2", "6", "8"], ["2"], "Two branches.")
       ]
     },
     {
-      subjectId: "hec_w2",
-      subjectTitle: "Home Economics",
-      topic: "Methods of Cooking Food",
+      subjectId: "he_week2",
+      subjectTitle: "WEEK 2: HOME ECONOMICS",
+      topic: "Cooking Methods",
       questions: [
-        {
-          id: "hec_2_1",
-          text: "Food items are either eaten raw or {dash1}.",
-          dashes: 1,
-          type: "bubble",
-          options: ["cooked", "planted", "thrown"],
-          correct: ["cooked"],
-          rule: "Foods can be consumed raw or cooked for easier digestion."
-        },
-        {
-          id: "hec_2_2",
-          text: "{dash1}, {dash2} and {dash3} are common methods of cooking food.",
-          dashes: 3,
-          type: "bubble",
-          options: ["boiling", "frying", "roasting", "washing", "cooling"],
-          correct: ["boiling", "frying", "roasting"],
-          rule: "Boiling, frying, and roasting apply heat to prepare food."
-        },
-        {
-          id: "hec_2_3",
-          text: "Cooking food in boiling water over a stove is known as {dash1}.",
-          dashes: 1,
-          type: "bubble",
-          options: ["boiling", "smoking", "frying"],
-          correct: ["boiling"],
-          rule: "Boiling cooks food using heated water at 100°C."
-        },
-        {
-          id: "hec_2_4",
-          text: "We use cooking oil and heated {dash1} or a stove for frying.",
-          dashes: 1,
-          type: "bubble",
-          options: ["gas", "water", "petrol"],
-          correct: ["gas"],
-          rule: "Frying uses oil heated over gas burners or clean stoves."
-        },
-        {
-          id: "hec_2_5",
-          text: "Placing food directly over open fire or glowing coals is called {dash1}.",
-          dashes: 1,
-          type: "bubble",
-          options: ["roasting", "frying", "boiling"],
-          correct: ["roasting"],
-          rule: "Roasting exposes food directly to radiant heat or open flame."
-        }
+        qItem("he2_1", "1. Foods are either eaten raw or {dash1}", 1, ["cooked", "planted", "thrown"], ["cooked"], "Cooked."),
+        qItem("he2_2", "2. {dash1}, {dash2} and {dash3} are ways of cooking food.", 3, ["boiling", "frying", "roasting", "washing"], ["boiling", "frying", "roasting"], "Cooking ways."),
+        qItem("he2_3", "3. {dash1} is cooking with water on fire.", 1, ["boiling", "smoking", "frying"], ["boiling"], "Boiling."),
+        qItem("he2_4", "4. We use {dash1} for frying.", 1, ["gas", "petrol", "water"], ["gas"], "Gas or clean stove."),
+        qItem("he2_5", "5. {dash1} is placing food directly on heat/fire.", 1, ["roasting", "frying", "boiling"], ["roasting"], "Roasting.")
       ]
     },
     {
-      subjectId: "crs_w2",
-      subjectTitle: "Christian Religious Studies",
-      topic: "We Are Children of One Father",
+      subjectId: "crs_week2",
+      subjectTitle: "WEEK 2: CHRISTIAN RELIGIOUS STUDIES",
+      topic: "Children of One Father",
       questions: [
-        {
-          id: "crs_2_1",
-          text: "{dash1} and {dash2} were the first human parents created by God.",
-          dashes: 2,
-          type: "bubble",
-          options: ["Adam", "Eve", "Cain", "Abel"],
-          correct: ["Adam", "Eve"],
-          rule: "Genesis records that Adam and Eve were the first humans."
-        },
-        {
-          id: "crs_2_2",
-          text: "The first {dash1} God created was Adam.",
-          dashes: 1,
-          type: "bubble",
-          options: ["man", "woman", "God"],
-          correct: ["man"],
-          rule: "God formed the first man, Adam, from the dust of the ground."
-        },
-        {
-          id: "crs_2_3",
-          text: "Those who believe in {dash1} are children of God.",
-          dashes: 1,
-          type: "bubble",
-          options: ["Jesus", "Noah", "Abel"],
-          correct: ["Jesus"],
-          rule: "John 1:12 states that whoever believes in Jesus becomes a child of God."
-        },
-        {
-          id: "crs_2_4",
-          text: "We become children of God through {dash1} in Christ.",
-          dashes: 1,
-          type: "bubble",
-          options: ["believing", "fighting", "killing"],
-          correct: ["believing"],
-          rule: "Faith and believing in Christ unites believers into God's family."
-        }
+        qItem("crs2_1", "1. {dash1} and {dash2} were the first parents of the world.", 2, ["Adam", "Eve", "Noah"], ["Adam", "Eve"], "Adam and Eve."),
+        qItem("crs2_2", "2. The first {dash1} God created was Adam.", 1, ["man", "woman", "God"], ["man"], "First man."),
+        qItem("crs2_3", "3. Those who are in {dash1} are God's children.", 1, ["Jesus", "Noah", "Abel"], ["Jesus"], "In Jesus Christ."),
+        qItem("crs2_4", "4. We are God's children by {dash1}", 1, ["believing", "killing", "praying only"], ["believing"], "Faith and belief.")
       ]
     },
     {
-      subjectId: "hist_w2",
-      subjectTitle: "History",
-      topic: "Early Regions of Nigeria and Amalgamation",
+      subjectId: "hist_week2",
+      subjectTitle: "WEEK 2: HISTORY",
+      topic: "Early Regions of Nigeria",
       questions: [
-        {
-          id: "hist_2_1",
-          text: "The four early regions of Nigeria were {dash1}, {dash2}, {dash3} and {dash4}.",
-          dashes: 4,
-          type: "bubble",
-          options: ["Northern", "Eastern", "Western", "Mid-Western", "Central", "Lagos"],
-          correct: ["Northern", "Eastern", "Western", "Mid-Western"],
-          rule: "Nigeria formerly operated with four regions before state creation."
-        },
-        {
-          id: "hist_2_2",
-          text: "The early regions were created by the British {dash1}.",
-          dashes: 1,
-          type: "bubble",
-          options: ["colonialists", "Nigerians", "pastors"],
-          correct: ["colonialists"],
-          rule: "The British colonial government instituted regional administrations."
-        },
-        {
-          id: "hist_2_3",
-          text: "Lord Lugard amalgamated the {dash1} and {dash2} protectorates.",
-          dashes: 2,
-          type: "bubble",
-          options: ["North", "South", "River"],
-          correct: ["North", "South"],
-          rule: "The Northern and Southern Protectorates were united in 1914."
-        },
-        {
-          id: "hist_2_4",
-          text: "The amalgamation of Nigeria took place in the year {dash1}.",
-          dashes: 1,
-          type: "bubble",
-          options: ["1914", "1940", "2020"],
-          correct: ["1914"],
-          rule: "Nigeria was unified into a single protectorate on January 1, 1914."
-        }
+        qItem("h2_1", "1. Four regions in early Nigeria: {dash1}, {dash2}, {dash3} and {dash4}", 4, ["Eastern", "Western", "Northern", "Mid-Western", "Lagos"], ["Eastern", "Western", "Northern", "Mid-Western"], "Four regions."),
+        qItem("h2_2", "2. The regions were created by the {dash1}", 1, ["colonialists", "pastors", "Nigerians"], ["colonialists"], "British colonialists."),
+        qItem("h2_3", "3. {dash1} and {dash2} protectorates were amalgamated.", 2, ["North", "South", "River"], ["North", "South"], "North and South."),
+        qItem("h2_4", "4. The amalgamation took place in {dash1}", 1, ["1914", "1940", "2020"], ["1914"], "1914.")
       ]
     },
     {
-      subjectId: "civic_w2",
-      subjectTitle: "Civic Education",
-      topic: "Culture and Diversity",
+      subjectId: "civic_week2",
+      subjectTitle: "WEEK 2: CIVIC EDUCATION",
+      topic: "Culture and Languages",
       questions: [
-        {
-          id: "civic_2_1",
-          text: "A people's shared way of life is their {dash1}.",
-          dashes: 1,
-          type: "bubble",
-          options: ["culture", "industry", "religion"],
-          correct: ["culture"],
-          rule: "Culture is the total lifestyle and belief system of a society."
-        },
-        {
-          id: "civic_2_2",
-          text: "Elements of culture include {dash1}, {dash2} and {dash3}.",
-          dashes: 3,
-          type: "bubble",
-          options: ["language", "food", "clothing", "petrol", "iron"],
-          correct: ["language", "food", "clothing"],
-          rule: "Language, food, and clothing are fundamental expressions of culture."
-        },
-        {
-          id: "civic_2_3",
-          text: "Three major languages spoken in Nigeria are {dash1}, {dash2} and {dash3}.",
-          dashes: 3,
-          type: "bubble",
-          options: ["Hausa", "Yoruba", "Igbo", "French", "German"],
-          correct: ["Hausa", "Yoruba", "Igbo"],
-          rule: "Hausa, Yoruba, and Igbo are the three majority native languages."
-        },
-        {
-          id: "civic_2_4",
-          text: "The Igbo people are predominantly found in the {dash1} part of Nigeria.",
-          dashes: 1,
-          type: "bubble",
-          options: ["Eastern", "Northern", "Western"],
-          correct: ["Eastern"],
-          rule: "The South East of Nigeria is the homeland of the Igbo people."
-        }
+        qItem("civ2_1", "1. The people's way of life is {dash1}", 1, ["culture", "industry", "religion"], ["culture"], "Culture."),
+        qItem("civ2_2", "2. Elements of culture include {dash1}, {dash2} and {dash3}", 3, ["language", "food", "clothing", "car"], ["language", "food", "clothing"], "Elements."),
+        qItem("civ2_3", "3. Three major languages in Nigeria: {dash1}, {dash2} and {dash3}", 3, ["Hausa", "Igbo", "Yoruba", "English"], ["Hausa", "Igbo", "Yoruba"], "Major languages."),
+        qItem("civ2_4", "4. Igbo tribe are found in the {dash1} part of Nigeria.", 1, ["Eastern", "Northern", "Western"], ["Eastern"], "Eastern.")
       ]
     },
     {
-      subjectId: "sos_w2",
-      subjectTitle: "Social Studies",
-      topic: "Meaning of Social Studies & Types of Environment",
+      subjectId: "soc_week2",
+      subjectTitle: "WEEK 2: SOCIAL STUDIES",
+      topic: "Man and Environment",
       questions: [
-        {
-          id: "sos_2_1",
-          text: "Two types of environment are {dash1} and {dash2} environment.",
-          dashes: 2,
-          type: "bubble",
-          options: ["physical", "social", "heavenly"],
-          correct: ["physical", "social"],
-          rule: "Environment is divided into physical (surroundings) and social (people/culture)."
-        },
-        {
-          id: "sos_2_2",
-          text: "Social Studies is the study of {dash1} in his environment.",
-          dashes: 1,
-          type: "bubble",
-          options: ["man", "plant", "god"],
-          correct: ["man"],
-          rule: "Social Studies examines how humans interact with their environment."
-        },
-        {
-          id: "sos_2_3",
-          text: "We interact with other members of the community in the {dash1}, {dash2} and {dash3}.",
-          dashes: 3,
-          type: "bubble",
-          options: ["school", "church", "market", "room"],
-          correct: ["school", "church", "market"],
-          rule: "Schools, religious centers, and markets are social gathering places."
-        },
-        {
-          id: "sos_2_4",
-          text: "Features of our physical environment include {dash1} and {dash2}.",
-          dashes: 2,
-          type: "bubble",
-          options: ["trees", "rivers", "spirits"],
-          correct: ["trees", "rivers"],
-          rule: "Trees and rivers form part of the observable physical landscape."
-        }
+        qItem("soc2_1", "1. Two types of environment are {dash1} and {dash2}", 2, ["physical", "social", "outer"], ["physical", "social"], "Physical and social."),
+        qItem("soc2_2", "2. Social Studies teaches about {dash1} in his environment.", 1, ["man", "plant", "god"], ["man"], "Man in surroundings."),
+        qItem("soc2_3", "3. We associate with other people in the {dash1} and {dash2}", 2, ["school", "church", "room"], ["school", "church"], "Social institutions."),
+        qItem("soc2_4", "4. Physical things around us include {dash1} and {dash2}", 2, ["trees", "houses", "spirits"], ["trees", "houses"], "Tangible things.")
       ]
     },
     {
-      subjectId: "vr_w2",
-      subjectTitle: "Verbal Reasoning",
-      topic: "Word Formation (Extracting Hidden Words)",
+      subjectId: "verb_week2",
+      subjectTitle: "WEEK 2: VERBAL REASONING",
+      topic: "Word Extraction",
       questions: [
-        {
-          id: "vr_2_1",
-          text: "From 'Shoe' extract {dash1}; from 'Hate' extract {dash2}.",
-          dashes: 2,
-          type: "bubble",
-          options: ["hoe", "ate", "she", "hat"],
-          correct: ["hoe", "ate"],
-          rule: "Removing 's' from 'shoe' leaves 'hoe'; removing 'h' from 'hate' leaves 'ate'."
-        },
-        {
-          id: "vr_2_2",
-          text: "From 'Sear' extract {dash1}; from 'Kiln' extract {dash2}.",
-          dashes: 2,
-          type: "bubble",
-          options: ["ear", "kin", "sea", "ill"],
-          correct: ["ear", "kin"],
-          rule: "'Sear' contains 'ear'; 'kiln' contains 'kin'."
-        },
-        {
-          id: "vr_2_3",
-          text: "From 'Monday' extract {dash1}; from 'Show' extract {dash2}.",
-          dashes: 2,
-          type: "bubble",
-          options: ["day", "how", "mon", "ow"],
-          correct: ["day", "how"],
-          rule: "Monday ends in 'day'; show contains 'how'."
-        },
-        {
-          id: "vr_2_4",
-          text: "From 'Cup' extract {dash1}; from 'Cash' extract {dash2}.",
-          dashes: 2,
-          type: "bubble",
-          options: ["up", "ash", "us", "as"],
-          correct: ["up", "ash"],
-          rule: "Cup ends in 'up'; cash ends in 'ash'."
-        }
+        qItem("vr2_1", "1. Shoe = {dash1}", 1, ["hoe", "he", "she"], ["hoe"], "Letters inside shoe."),
+        qItem("vr2_2", "2. Hate = {dash1}", 1, ["ate", "at", "hat"], ["ate"], "Extract ate."),
+        qItem("vr2_3", "3. Sear = {dash1}", 1, ["ear", "sea", "are"], ["ear"], "Extract ear."),
+        qItem("vr2_4", "4. Kiln = {dash1}", 1, ["kin", "in", "ill"], ["kin"], "Extract kin."),
+        qItem("vr2_5", "5. Monday = {dash1}", 1, ["day", "mon"], ["day"], "Extract day."),
+        qItem("vr2_6", "6. Show = {dash1}", 1, ["how", "who"], ["how"], "Extract how."),
+        qItem("vr2_7", "7. Cup = {dash1}", 1, ["up", "cap"], ["up"], "Extract up."),
+        qItem("vr2_8", "8. Cash = {dash1}", 1, ["ash", "as"], ["ash"], "Extract ash.")
       ]
     },
     {
-      subjectId: "qr_w2",
-      subjectTitle: "Quantitative Reasoning",
-      topic: "Roman Numerals to Arabic Numbers",
+      subjectId: "qr_week2",
+      subjectTitle: "WEEK 2: QUANTITATIVE REASONING",
+      topic: "Roman Numerals",
       questions: [
-        {
-          id: "qr_2_1",
-          text: "Convert to numbers: XI = {dash1}; XL = {dash2}; VIII = {dash3}.",
-          dashes: 3,
-          type: "bubble",
-          options: ["11", "40", "8", "15", "60"],
-          correct: ["11", "40", "8"],
-          rule: "XI = 10+1 = 11; XL = 50-10 = 40; VIII = 5+3 = 8."
-        },
-        {
-          id: "qr_2_2",
-          text: "Convert: IV = {dash1}; XXV = {dash2}; XVI = {dash3}.",
-          dashes: 3,
-          type: "bubble",
-          options: ["4", "25", "16", "6", "24"],
-          correct: ["4", "25", "16"],
-          rule: "IV = 4; XXV = 25; XVI = 16."
-        },
-        {
-          id: "qr_2_3",
-          text: "Convert: IX = {dash1}; XIV = {dash2}.",
-          dashes: 2,
-          type: "bubble",
-          options: ["9", "14", "11", "16"],
-          correct: ["9", "14"],
-          rule: "IX = 9; XIV = 14."
-        }
+        qItem("qr2_1", "1. XI = {dash1}", 1, ["11", "9"], ["11"], "10 + 1 = 11."),
+        qItem("qr2_2", "2. XL = {dash1}", 1, ["40", "60"], ["40"], "50 - 10 = 40."),
+        qItem("qr2_3", "3. VIII = {dash1}", 1, ["8", "7"], ["8"], "5 + 3 = 8."),
+        qItem("qr2_4", "4. IV = {dash1}", 1, ["4", "6"], ["4"], "5 - 1 = 4."),
+        qItem("qr2_5", "5. XXV = {dash1}", 1, ["25", "30"], ["25"], "10 + 10 + 5 = 25."),
+        qItem("qr2_6", "6. XVI = {dash1}", 1, ["16", "14"], ["16"], "10 + 5 + 1 = 16."),
+        qItem("qr2_7", "7. IX = {dash1}", 1, ["9", "11"], ["9"], "10 - 1 = 9."),
+        qItem("qr2_8", "8. XIV = {dash1}", 1, ["14", "16"], ["14"], "10 + 4 = 14.")
       ]
     },
     {
-      subjectId: "fr_w2",
-      subjectTitle: "French Studies",
-      topic: "Les Nombres (Numbers 1 — 20)",
+      subjectId: "fr_week2",
+      subjectTitle: "DEUXIEME SEMAINE: FRENCH",
+      topic: "Les Nombres en Chiffres",
       questions: [
-        {
-          id: "fr_2_1",
-          text: "En chiffres: Dix = {dash1}; Vingt = {dash2}.",
-          dashes: 2,
-          type: "bubble",
-          options: ["10", "20", "15", "16"],
-          correct: ["10", "20"],
-          rule: "Dix = 10; Vingt = 20."
-        },
-        {
-          id: "fr_2_2",
-          text: "En chiffres: Dix-sept = {dash1}; Seize = {dash2}.",
-          dashes: 2,
-          type: "bubble",
-          options: ["17", "16", "11", "18"],
-          correct: ["17", "16"],
-          rule: "Dix-sept = 17; Seize = 16."
-        },
-        {
-          id: "fr_2_3",
-          text: "En chiffres: Quatre = {dash1}; Six = {dash2}.",
-          dashes: 2,
-          type: "bubble",
-          options: ["4", "6", "14", "10"],
-          correct: ["4", "6"],
-          rule: "Quatre = 4; Six = 6."
-        }
+        qItem("fr2_1", "1. Dix = {dash1}", 1, ["10", "15"], ["10"], "10."),
+        qItem("fr2_2", "2. Vingt = {dash1}", 1, ["20", "16"], ["20"], "20."),
+        qItem("fr2_3", "3. Dix-sept = {dash1}", 1, ["17", "11"], ["17"], "17."),
+        qItem("fr2_4", "4. Seize = {dash1}", 1, ["16", "15"], ["16"], "16."),
+        qItem("fr2_5", "5. Quatre = {dash1}", 1, ["4", "14"], ["4"], "4."),
+        qItem("fr2_6", "6. Six = {dash1}", 1, ["6", "10"], ["6"], "6.")
       ]
     }
   ],
 
-  // --------------------------------------------------------------------------
-  // WEEK 3
-  // --------------------------------------------------------------------------
   3: [
     {
-      subjectId: "eng_w3",
-      subjectTitle: "English Studies",
-      topic: "Composition: Myself",
+      subjectId: "eng_week3",
+      subjectTitle: "WEEK 3: ENGLISH STUDIES",
+      topic: "Reading and Writing: Composition",
       questions: [
-        {
-          id: "eng_3_1",
-          text: "When writing about myself, my opening sentence states my {dash1} and my {dash2}.",
-          dashes: 2,
-          type: "bubble",
-          options: ["name", "age", "cooking", "shoe size"],
-          correct: ["name", "age"],
-          rule: "An introduction begins with your name and your age or class."
-        }
+        qItem("eng3_1", "1. In writing 'Myself', I write my {dash1} first.", 1, ["name", "shoe"], ["name"], "Name comes first."),
+        qItem("eng3_2", "2. My class is Basic {dash1}", 1, ["4", "1"], ["4"], "Basic 4.")
       ]
     },
     {
-      subjectId: "math_w3",
-      subjectTitle: "Mathematics",
-      topic: "Number Sequences and Addition Patterns",
+      subjectId: "math_week3",
+      subjectTitle: "WEEK 3: MATHEMATICS",
+      topic: "Whole Numbers Sequence",
       questions: [
-        {
-          id: "math_3_1",
-          text: "Adding ten thousands: 120,000; 130,000; 140,000; {dash1}; {dash2}.",
-          dashes: 2,
-          type: "bubble",
-          options: ["150,000", "160,000", "170,000", "180,000"],
-          correct: ["150,000", "160,000"],
-          rule: "Add 10,000: 140,000 + 10,000 = 150,000; 150,000 + 10,000 = 160,000."
-        },
-        {
-          id: "math_3_2",
-          text: "Subtracting hundred thousands: 900,000; 800,000; {dash1}; 600,000; 500,000.",
-          dashes: 1,
-          type: "bubble",
-          options: ["700,000", "750,000", "650,000"],
-          correct: ["700,000"],
-          rule: "Subtract 100,000: 800,000 - 100,000 = 700,000."
-        },
-        {
-          id: "math_3_3",
-          text: "Tens in words: Twenty, thirty, forty, {dash1}, {dash2}.",
-          dashes: 2,
-          type: "bubble",
-          options: ["fifty", "sixty", "seventy", "eighty"],
-          correct: ["fifty", "sixty"],
-          rule: "40 is followed by 50 (fifty) and 60 (sixty)."
-        },
-        {
-          id: "math_3_4",
-          text: "Add 5 pattern: Three, eight, thirteen, {dash1}, {dash2}.",
-          dashes: 2,
-          type: "bubble",
-          options: ["eighteen", "twenty-three", "sixteen", "twenty"],
-          correct: ["eighteen", "twenty-three"],
-          rule: "13 + 5 = 18; 18 + 5 = 23."
-        },
-        {
-          id: "math_3_5",
-          text: "Add 7 pattern: 755, 762, 769, {dash1}, {dash2}.",
-          dashes: 2,
-          type: "bubble",
-          options: ["776", "783", "775", "780"],
-          correct: ["776", "783"],
-          rule: "769 + 7 = 776; 776 + 7 = 783."
-        },
-        {
-          id: "math_3_6",
-          text: "Add 100 pattern: 225, 325, 425, {dash1}, {dash2}.",
-          dashes: 2,
-          type: "bubble",
-          options: ["525", "625", "550", "650"],
-          correct: ["525", "625"],
-          rule: "425 + 100 = 525; 525 + 100 = 625."
-        }
+        qItem("m3_1", "1. 120,000; 130,000; 140,000; {dash1}; {dash2}", 2, ["150,000", "160,000", "170,000"], ["150,000", "160,000"], "Add 10,000."),
+        qItem("m3_2", "2. 900,000; 800,000; {dash1}; 600,000; 500,000", 1, ["700,000", "750,000"], ["700,000"], "Minus 100,000."),
+        qItem("m3_3", "3. Twenty, thirty, forty, {dash1}, {dash2}", 2, ["fifty", "sixty", "seventy"], ["fifty", "sixty"], "Tens."),
+        qItem("m3_4", "4. Three, eight, thirteen, {dash1}, {dash2}", 2, ["eighteen", "twenty-three"], ["eighteen", "twenty-three"], "Add 5."),
+        qItem("m3_5", "5. 755, 762, 769, {dash1}, {dash2}", 2, ["776", "783", "780"], ["776", "783"], "Add 7."),
+        qItem("m3_6", "6. 225, 325, 425, {dash1}, {dash2}", 2, ["525", "625", "725"], ["525", "625"], "Add 100.")
       ]
     },
     {
-      subjectId: "comp_w3",
-      subjectTitle: "Computer Studies",
-      topic: "Information Transmission",
+      subjectId: "igbo_week3",
+      subjectTitle: "IZU UKA NKE ATO: ASUSU IGBO",
+      topic: "Ejije",
       questions: [
-        {
-          id: "comp_3_1",
-          text: "The result of data processed is called {dash1}.",
-          dashes: 1,
-          type: "bubble",
-          options: ["information", "letter", "mail"],
-          correct: ["information"],
-          rule: "Information is processed and organized data."
-        },
-        {
-          id: "comp_3_2",
-          text: "Electronic media used to transmit information include {dash1}, {dash2} and {dash3}.",
-          dashes: 3,
-          type: "bubble",
-          options: ["television", "radio", "telephone", "town crying", "beating drums"],
-          correct: ["television", "radio", "telephone"],
-          rule: "Electronic media require electric power and communication signals."
-        },
-        {
-          id: "comp_3_3",
-          text: "Examples of non-electronic media are {dash1}, {dash2} and {dash3}.",
-          dashes: 3,
-          type: "bubble",
-          options: ["oral communication", "beating drums", "town crying", "satellite", "telefax"],
-          correct: ["oral communication", "beating drums", "town crying"],
-          rule: "Traditional non-electronic methods do not depend on electrical gadgets."
-        }
+        qItem("ig3_1", "1. Ejije bụ {dash1}", 1, ["egwuregwu nkiri", "ọrụ bekee"], ["egwuregwu nkiri"], "Egwuregwu nkiri."),
+        qItem("ig3_2", "2. Ihe e ji eme ejije na-egosi ọrụ ugbo: {dash1} na {dash2}", 2, ["ọgụ", "mma ọge", "akwụkwọ"], ["ọgụ", "mma ọge"], "Ngwa ọrụ ugbo."),
+        qItem("ig3_3", "3. {dash1}, {dash2} na {dash3} bụ ihe a na-akọpụta n'ubi.", 3, ["ji", "ede", "akpụ", "egbe"], ["ji", "ede", "akpụ"], "Ihe ubi."),
+        qItem("ig3_4", "4. Njirimara onye agha bụ {dash1} na {dash2}", 2, ["egbe", "uwe agha", "ụgbọ"], ["egbe", "uwe agha"], "Ngwa agha.")
+      ]
+    },
+    {
+      subjectId: "comp_week3",
+      subjectTitle: "WEEK 3: COMPUTER STUDIES",
+      topic: "Information & Media",
+      questions: [
+        qItem("cp3_1", "1. The result of data processed is {dash1}", 1, ["information", "mail"], ["information"], "Information."),
+        qItem("cp3_2", "2. Information gives {dash1} to data.", 1, ["meaning", "warning"], ["meaning"], "Meaning."),
+        qItem("cp3_3", "3. Electronic media include {dash1}, {dash2} and {dash3}", 3, ["telephone", "television", "radio", "drum"], ["telephone", "television", "radio"], "Electronic."),
+        qItem("cp3_4", "4. Non-electronic media: {dash1} and {dash2}", 2, ["town crying", "beating of drums", "satellite"], ["town crying", "beating of drums"], "Non-electronic.")
+      ]
+    },
+    {
+      subjectId: "bst_week3",
+      subjectTitle: "WEEK 3: BASIC SCIENCE AND TECHNOLOGY",
+      topic: "Our Weather",
+      questions: [
+        qItem("bst3_1", "1. Types of weather: {dash1}, {dash2} and {dash3}", 3, ["sunny", "rainy", "cloudy", "iron"], ["sunny", "rainy", "cloudy"], "Weather."),
+        qItem("bst3_2", "2. Factors affecting weather: {dash1} and {dash2}", 2, ["temperature", "wind", "sand"], ["temperature", "wind"], "Factors."),
+        qItem("bst3_3", "3. Wind direction is measured using a {dash1}", 1, ["windvane", "metre"], ["windvane"], "Windvane."),
+        qItem("bst3_4", "4. {dash1} measures amount of rainfall.", 1, ["raingauge", "gallon"], ["raingauge"], "Rain gauge.")
       ]
     }
   ],
 
-  // --------------------------------------------------------------------------
-  // WEEK 4
-  // --------------------------------------------------------------------------
   4: [
     {
-      subjectId: "eng_w4",
-      subjectTitle: "English Studies",
-      topic: "Figures of Speech: Similes and Metaphors",
+      subjectId: "eng_week4",
+      subjectTitle: "WEEK 4: ENGLISH STUDIES",
+      topic: "Similes and Metaphors",
       questions: [
-        {
-          id: "eng_4_1",
-          text: "Complete the similes: As cold as {dash1}; As slow as a {dash2}.",
-          dashes: 2,
-          type: "bubble",
-          options: ["ice", "snail", "water", "snake"],
-          correct: ["ice", "snail"],
-          rule: "Standard similes: 'as cold as ice' and 'as slow as a snail'."
-        },
-        {
-          id: "eng_4_2",
-          text: "Complete the similes: As sweet as {dash1}; As easy as {dash2}.",
-          dashes: 2,
-          type: "bubble",
-          options: ["honey", "ABC", "sugar", "maths"],
-          correct: ["honey", "ABC"],
-          rule: "'As sweet as honey' and 'as easy as ABC'."
-        },
-        {
-          id: "eng_4_3",
-          text: "Metaphor: 'Nweke is an elephant' means Nweke is very {dash1}.",
-          dashes: 1,
-          type: "bubble",
-          options: ["big", "small", "dead"],
-          correct: ["big"],
-          rule: "Comparing someone directly to an elephant emphasizes large size."
-        },
-        {
-          id: "eng_4_4",
-          text: "'He is a tortoise' means he is cunning and {dash1}.",
-          dashes: 1,
-          type: "bubble",
-          options: ["tricky", "handsome", "fast"],
-          correct: ["tricky"],
-          rule: "Folklore characterizes the tortoise as clever and tricky."
-        }
+        qItem("eng4_1", "1. As cold as {dash1}", 1, ["ice", "water", "fridge"], ["ice"], "As cold as ice."),
+        qItem("eng4_2", "2. As slow as a {dash1}", 1, ["snail", "snake"], ["snail"], "As slow as a snail."),
+        qItem("eng4_3", "3. As sweet as {dash1}", 1, ["honey", "food"], ["honey"], "As sweet as honey."),
+        qItem("eng4_4", "4. As easy as {dash1}", 1, ["ABC", "maths"], ["ABC"], "As easy as ABC."),
+        qItem("eng4_5", "5. 'Nweke is an elephant' means Nweke is {dash1}", 1, ["big", "small"], ["big"], "Metaphor for big."),
+        qItem("eng4_6", "6. 'He is a tortoise' means he is {dash1}", 1, ["slow", "tricky", "handsome"], ["tricky"], "Tricky/clever."),
+        qItem("eng4_7", "7. 'Women are gold' means women are {dash1}", 1, ["costly", "tall", "beautiful"], ["costly"], "Very precious.")
       ]
     },
     {
-      subjectId: "comp_w4",
-      subjectTitle: "Computer Studies",
-      topic: "Ancient and Modern Sources of Information",
+      subjectId: "qr_week4",
+      subjectTitle: "WEEK 4: QUANTITATIVE REASONING",
+      topic: "Comparison (<, >, =)",
       questions: [
-        {
-          id: "comp_4_1",
-          text: "Sources of information are categorized into {dash1} and {dash2} sources.",
-          dashes: 2,
-          type: "bubble",
-          options: ["ancient", "modern", "country"],
-          correct: ["ancient", "modern"],
-          rule: "Information sources span traditional/ancient and modern tools."
-        },
-        {
-          id: "comp_4_2",
-          text: "Three ancient sources of information are {dash1}, {dash2} and {dash3}.",
-          dashes: 3,
-          type: "bubble",
-          options: ["town crying", "wooden gong", "fire lighting", "computers", "photocopying"],
-          correct: ["town crying", "wooden gong", "fire lighting"],
-          rule: "Ancient societies communicated using drums, fire signals, and town criers."
-        },
-        {
-          id: "comp_4_3",
-          text: "Three modern sources of information are {dash1}, {dash2} and {dash3}.",
-          dashes: 3,
-          type: "bubble",
-          options: ["computers", "radio", "photocopying", "flute", "drums"],
-          correct: ["computers", "radio", "photocopying"],
-          rule: "Modern communications use computers, broadcasts, and digital prints."
-        }
-      ]
-    },
-    {
-      subjectId: "qr_w4",
-      subjectTitle: "Quantitative Reasoning",
-      topic: "Comparing Numbers Using <, >, or =",
-      questions: [
-        {
-          id: "qr_4_1",
-          text: "Compare: 100 {dash1} 200; 80 {dash2} 70.",
-          dashes: 2,
-          type: "bubble",
-          options: ["<", ">", "="],
-          correct: ["<", ">"],
-          rule: "100 is less than 200 (<); 80 is greater than 70 (>)."
-        },
-        {
-          id: "qr_4_2",
-          text: "Compare: 700 {dash1} 420; 52 {dash2} 52.",
-          dashes: 2,
-          type: "bubble",
-          options: [">", "=", "<"],
-          correct: [">", "="],
-          rule: "700 is greater than 420 (>); 52 is equal to 52 (=)."
-        },
-        {
-          id: "qr_4_3",
-          text: "Compare: 120 {dash1} 320; 11 {dash2} 17.",
-          dashes: 2,
-          type: "bubble",
-          options: ["<", ">", "="],
-          correct: ["<", "<"],
-          rule: "120 is less than 320 (<); 11 is less than 17 (<)."
-        }
+        qItem("qr4_1", "1. 100 {dash1} 200", 1, ["<", ">", "="], ["<"], "100 < 200."),
+        qItem("qr4_2", "2. 80 {dash1} 70", 1, ["<", ">", "="], [">"], "80 > 70."),
+        qItem("qr4_3", "3. 700 {dash1} 420", 1, ["<", ">", "="], [">"], "700 > 420."),
+        qItem("qr4_4", "4. 52 {dash1} 52", 1, ["<", ">", "="], ["="], "52 = 52."),
+        qItem("qr4_5", "5. 120 {dash1} 320", 1, ["<", ">", "="], ["<"], "120 < 320."),
+        qItem("qr4_6", "6. 11 {dash1} 17", 1, ["<", ">", "="], ["<"], "11 < 17.")
       ]
     }
   ],
 
-  // --------------------------------------------------------------------------
-  // WEEK 5
-  // --------------------------------------------------------------------------
   5: [
     {
-      subjectId: "eng_w5",
-      subjectTitle: "English Studies",
-      topic: "Comprehension: Jude's Story",
+      subjectId: "eng_week5",
+      subjectTitle: "WEEK 5: ENGLISH STUDIES",
+      topic: "Reading Comprehension: Jude's Story",
       passage: {
-        title: "Story: The Tall Building",
-        text: "Jude told his friends Amechi and Kelechi about a very tall house he saw in Enugu. He compared it to the tall tree near their village stream which birds perched on beyond reach."
+        title: "📖 Reading Passage: Jude and the Tall Tree",
+        text: "Jude was telling his friends the story about the tall house he saw in Enugu. He used a tall tree near the stream in their village to compare to the house. Amechi and Kelechi were Jude's friends. He told them that the tree had grown so tall that the children could not kill any bird perched on it with catapult which they usually came to the stream with. He had also tried to kill any of the birds himself but his stone bullet could not get to the tree top."
       },
       questions: [
-        {
-          id: "eng_5_1",
-          text: "Jude saw the tall building in {dash1}.",
-          dashes: 1,
-          type: "bubble",
-          options: ["Enugu", "Onitsha", "Abuja"],
-          correct: ["Enugu"],
-          rule: "The story states that Jude saw the tall house in Enugu."
-        },
-        {
-          id: "eng_5_2",
-          text: "Jude's two friends in the story are {dash1} and {dash2}.",
-          dashes: 2,
-          type: "bubble",
-          options: ["Amechi", "Kelechi", "Emeka", "Chidi"],
-          correct: ["Amechi", "Kelechi"],
-          rule: "Amechi and Kelechi were Jude's companions."
-        }
+        qItem("eng5_1", "1. Jude saw the house at {dash1}", 1, ["Enugu", "Onitsha", "Abuja"], ["Enugu"], "In Enugu."),
+        qItem("eng5_2", "2. He used a {dash1} near their stream to compare to the house.", 1, ["tall tree", "pole", "bridge"], ["tall tree"], "A tall tree."),
+        qItem("eng5_3", "3. The children usually went to the stream with their {dash1}", 1, ["catapult", "books"], ["catapult"], "Catapult."),
+        qItem("eng5_4", "4. The children usually wanted to kill {dash1} perched on the tree.", 1, ["birds", "frogs"], ["birds"], "Birds on the tree."),
+        qItem("eng5_5", "5. {dash1} and {dash2} were Jude's friends.", 2, ["Amechi", "Kelechi", "Emeka"], ["Amechi", "Kelechi"], "Amechi and Kelechi.")
       ]
     },
     {
-      subjectId: "math_w5",
-      subjectTitle: "Mathematics",
-      topic: "Roman Numerals to Arabic Numbers",
+      subjectId: "math_week5",
+      subjectTitle: "WEEK 5: MATHEMATICS",
+      topic: "Roman Numerals to Arabic Figures",
       questions: [
-        {
-          id: "math_5_1",
-          text: "Convert to numbers: XI = {dash1}; VII = {dash2}; IX = {dash3}.",
-          dashes: 3,
-          type: "bubble",
-          options: ["11", "7", "9", "12", "6"],
-          correct: ["11", "7", "9"],
-          rule: "XI = 11; VII = 7; IX = 9."
-        },
-        {
-          id: "math_5_2",
-          text: "Convert: XIV = {dash1}; L = {dash2}; XXV = {dash3}.",
-          dashes: 3,
-          type: "bubble",
-          options: ["14", "50", "25", "16", "40"],
-          correct: ["14", "50", "25"],
-          rule: "XIV = 14; L = 50; XXV = 25."
-        }
-      ]
-    },
-    {
-      subjectId: "bst_w5",
-      subjectTitle: "Basic Science and Technology",
-      topic: "Simple Machines",
-      questions: [
-        {
-          id: "bst_5_1",
-          text: "The simple machine used to cut overgrown grasses is a {dash1}.",
-          dashes: 1,
-          type: "bubble",
-          options: ["cutlass", "axe", "opener"],
-          correct: ["cutlass"],
-          rule: "A cutlass is used to clear bushes and grasses."
-        },
-        {
-          id: "bst_5_2",
-          text: "We dig holes into the ground using a {dash1} and a {dash2}.",
-          dashes: 2,
-          type: "bubble",
-          options: ["shovel", "hoe", "spanner", "bucket"],
-          correct: ["shovel", "hoe"],
-          rule: "Shovels and hoes are simple excavating tools."
-        }
+        qItem("m5_1", "1. XI = {dash1}", 1, ["11", "9"], ["11"], "11."),
+        qItem("m5_2", "2. VII = {dash1}", 1, ["7", "8"], ["7"], "7."),
+        qItem("m5_3", "3. IX = {dash1}", 1, ["9", "11"], ["9"], "9."),
+        qItem("m5_4", "4. XIV = {dash1}", 1, ["14", "16"], ["14"], "14."),
+        qItem("m5_5", "5. L = {dash1}", 1, ["50", "100"], ["50"], "50."),
+        qItem("m5_6", "6. XXV = {dash1}", 1, ["25", "30"], ["25"], "25."),
+        qItem("m5_7", "7. XIX = {dash1}", 1, ["19", "21"], ["19"], "19."),
+        qItem("m5_8", "8. XL = {dash1}", 1, ["40", "60"], ["40"], "40."),
+        qItem("m5_9", "9. XXX = {dash1}", 1, ["30", "40"], ["30"], "30."),
+        qItem("m5_10", "10. XLV = {dash1}", 1, ["45", "55"], ["45"], "45.")
       ]
     }
   ],
 
-  // --------------------------------------------------------------------------
-  // WEEK 6
-  // --------------------------------------------------------------------------
   6: [
     {
-      subjectId: "eng_w6",
-      subjectTitle: "English Studies",
-      topic: "Comprehension: Adamu, Aremu and Nkem",
+      subjectId: "eng_week6",
+      subjectTitle: "WEEK 6: ENGLISH STUDIES",
+      topic: "Reading Comprehension: Class Prefect Election",
       passage: {
-        title: "Classmates in Primary 4D",
-        text: "Adamu, Aremu, and Nkem were in Primary 4D. Adamu liked the sciences, Aremu was good at English and literature, while Nkem excelled in both. Nkem was chosen by his classmates to be their class prefect."
+        title: "📖 Reading Passage: Adamu, Aremu and Nkem",
+        text: "Adamu, Aremu and Nkem were in the same class. Adamu liked sciences and was doing well in basic science, physical and health education, computer and others. Aremu was better in English language and literature while Nkem was good both in sciences and languages. Because of Nkem's intelligence, he was chosen by his classmates to be their prefect. This was primary 4D."
       },
       questions: [
-        {
-          id: "eng_6_1",
-          text: "Who was chosen as the class prefect? {dash1}.",
-          dashes: 1,
-          type: "bubble",
-          options: ["Nkem", "Adamu", "Aremu"],
-          correct: ["Nkem"],
-          rule: "Nkem was chosen by his classmates as prefect."
-        },
-        {
-          id: "eng_6_2",
-          text: "The three boys were all pupils in Primary {dash1}.",
-          dashes: 1,
-          type: "bubble",
-          options: ["4D", "4A", "5B"],
-          correct: ["4D"],
-          rule: "The passage notes they were in class Primary 4D."
-        },
-        {
-          id: "eng_6_3",
-          text: "{dash1} was especially gifted in English language and literature.",
-          dashes: 1,
-          type: "bubble",
-          options: ["Aremu", "Adamu", "Nkem"],
-          correct: ["Aremu"],
-          rule: "Aremu loved reading and did best in English and literature."
-        }
+        qItem("eng6_1", "1. Who was the class prefect? {dash1}", 1, ["Nkem", "Adamu", "Aremu"], ["Nkem"], "Nkem was chosen."),
+        qItem("eng6_2", "2. The three classmates named here are {dash1}, {dash2} and {dash3}", 3, ["Adamu", "Aremu", "Nkem", "Emeka"], ["Adamu", "Aremu", "Nkem"], "Adamu, Aremu, Nkem."),
+        qItem("eng6_3", "3. They were in primary {dash1}", 1, ["4D", "3B", "5A"], ["4D"], "Primary 4D."),
+        qItem("eng6_4", "4. {dash1} was good in English language and literature.", 1, ["Aremu", "Adamu"], ["Aremu"], "Aremu excelled in English."),
+        qItem("eng6_5", "5. The most intelligent of the classmates was {dash1}", 1, ["Nkem", "Adamu", "Aremu"], ["Nkem"], "Nkem.")
       ]
     },
     {
-      subjectId: "math_w6",
-      subjectTitle: "Mathematics",
-      topic: "Comparing Numbers With '>' and '<'",
+      subjectId: "math_week6",
+      subjectTitle: "WEEK 6: MATHEMATICS",
+      topic: "Ordering Whole Numbers (< or >)",
       questions: [
-        {
-          id: "math_6_1",
-          text: "Compare: 95 {dash1} 85; 100 {dash2} 250.",
-          dashes: 2,
-          type: "bubble",
-          options: [">", "<"],
-          correct: [">", "<"],
-          rule: "95 > 85; 100 < 250."
-        },
-        {
-          id: "math_6_2",
-          text: "Compare: 120 {dash1} 110; 46 {dash2} 36.",
-          dashes: 2,
-          type: "bubble",
-          options: [">", "<"],
-          correct: [">", ">"],
-          rule: "120 > 110; 46 > 36."
-        },
-        {
-          id: "math_6_3",
-          text: "Compare: 300 {dash1} 400; 1,000 {dash2} 600.",
-          dashes: 2,
-          type: "bubble",
-          options: ["<", ">"],
-          correct: ["<", ">"],
-          rule: "300 < 400; 1,000 > 600."
-        }
+        qItem("m6_1", "1. 95 {dash1} 85", 1, [">", "<"], [">"], "95 > 85."),
+        qItem("m6_2", "2. 100 {dash1} 250", 1, ["<", ">"], ["<"], "100 < 250."),
+        qItem("m6_3", "3. 120 {dash1} 110", 1, [">", "<"], [">"], "120 > 110."),
+        qItem("m6_4", "4. 46 {dash1} 36", 1, [">", "<"], [">"], "46 > 36."),
+        qItem("m6_5", "5. 90 {dash1} 65", 1, [">", "<"], [">"], "90 > 65."),
+        qItem("m6_6", "6. 68 {dash1} 78", 1, ["<", ">"], ["<"], "68 < 78."),
+        qItem("m6_7", "7. 300 {dash1} 400", 1, ["<", ">"], ["<"], "300 < 400."),
+        qItem("m6_8", "8. 1000 {dash1} 600", 1, [">", "<"], [">"], "1000 > 600.")
       ]
     },
     {
-      subjectId: "comp_w6",
-      subjectTitle: "Computer Studies",
-      topic: "Input, Processing and Output",
+      subjectId: "vr_week6",
+      subjectTitle: "WEEK 6: VERBAL REASONING",
+      topic: "Odd Word Out",
       questions: [
-        {
-          id: "comp_6_1",
-          text: "Data is fed into the computer system using an {dash1} device.",
-          dashes: 1,
-          type: "bubble",
-          options: ["input", "CPU", "document"],
-          correct: ["input"],
-          rule: "Input devices receive user data and transmit it inward."
-        },
-        {
-          id: "comp_6_2",
-          text: "{dash1}, {dash2} and {dash3} are computer input devices.",
-          dashes: 3,
-          type: "bubble",
-          options: ["mouse", "keyboard", "scanner", "printer", "monitor"],
-          correct: ["mouse", "keyboard", "scanner"],
-          rule: "Keyboards, mice, and scanners feed instructions and images into the computer."
-        },
-        {
-          id: "comp_6_3",
-          text: "Processing of data takes place inside the {dash1}.",
-          dashes: 1,
-          type: "bubble",
-          options: ["CPU", "printer", "paper"],
-          correct: ["CPU"],
-          rule: "The CPU executes and processes program instructions."
-        },
-        {
-          id: "comp_6_4",
-          text: "Two common computer output devices are the {dash1} and {dash2}.",
-          dashes: 2,
-          type: "bubble",
-          options: ["monitor", "printer", "scanner", "light pen"],
-          correct: ["monitor", "printer"],
-          rule: "Monitors and printers output processed results to users."
-        }
+        qItem("vr6_1", "1. leg, hand, head, bag: {dash1} is the odd word.", 1, ["bag", "leg", "hand"], ["bag"], "Bag is non-living."),
+        qItem("vr6_2", "2. teacher, doctor, lawyer, chairman: {dash1} is odd.", 1, ["chairman", "teacher", "doctor"], ["chairman"], "Chairman is political."),
+        qItem("vr6_3", "3. barrow, stove, gas cooker, electric stove: {dash1} is odd.", 1, ["barrow", "stove", "gas cooker"], ["barrow"], "Barrow is a garden tool."),
+        qItem("vr6_4", "4. radio, phone, television, bucket: {dash1} is odd.", 1, ["bucket", "radio", "phone"], ["bucket"], "Bucket is plasticware."),
+        qItem("vr6_5", "5. pen, book, garri, pencil: {dash1} is odd.", 1, ["garri", "pen", "book"], ["garri"], "Garri is food.")
       ]
     }
   ],
 
-  // --------------------------------------------------------------------------
-  // WEEKS 7 - 10 (MID-TERM AND REVISION FALLBACKS)
-  // --------------------------------------------------------------------------
   7: [
     {
-      subjectId: "eng_w7",
-      subjectTitle: "English Studies (Mid-Term)",
-      topic: "Concept of Print and Book Features",
+      subjectId: "eng_week7",
+      subjectTitle: "WEEK 7: MID-TERM TEST: ENGLISH STUDIES",
+      topic: "Concept of Print",
+      passage: {
+        title: "📖 Textbook Features",
+        text: "A textbook contains some features such as title, title page, table of contents, chapters, glossary, etc. Without all or some of these, a book cannot be seen as text book. Another thing, a textbook bears is the author's name and or the publishing company."
+      },
       questions: [
-        {
-          id: "eng_7_1",
-          text: "The person who writes a book is the {dash1}, and the person who draws pictures is the {dash2}.",
-          dashes: 2,
-          type: "bubble",
-          options: ["author", "illustrator", "printer"],
-          correct: ["author", "illustrator"],
-          rule: "Authors write manuscripts; illustrators create the accompanying artwork."
-        }
+        qItem("eng7_1", "1. {dash1}, {dash2} and {dash3} are features of a textbook.", 3, ["title", "table of contents", "glossary", "stove", "knife"], ["title", "table of contents", "glossary"], "Textbook features."),
+        qItem("eng7_2", "2. The name of the book is called {dash1}", 1, ["title", "page", "leaves"], ["title"], "The title."),
+        qItem("eng7_3", "3. Table of contents contains the {dash1}", 1, ["topics", "ink", "paper"], ["topics"], "Topics and chapters."),
+        qItem("eng7_4", "4. Glossary contains the list of new words in the book: {dash1}", 1, ["Yes", "No"], ["Yes"], "Yes."),
+        qItem("eng7_5", "5. The writer of a book is the {dash1}", 1, ["author", "controller", "preacher"], ["author"], "The author.")
       ]
     },
     {
-      subjectId: "math_w7",
-      subjectTitle: "Mathematics (Mid-Term)",
-      topic: "Factors, Multiples & L.C.M",
+      subjectId: "math_week7",
+      subjectTitle: "WEEK 7: MID-TERM TEST: MATHEMATICS",
+      topic: "Lowest Common Multiple (L.C.M)",
       questions: [
-        {
-          id: "math_7_1",
-          text: "The Lowest Common Multiple (L.C.M) of 4 and 6 is {dash1}.",
-          dashes: 1,
-          type: "bubble",
-          options: ["12", "24", "8", "16"],
-          correct: ["12"],
-          rule: "Multiples of 4: 4, 8, 12... Multiples of 6: 6, 12... Lowest shared multiple is 12."
-        }
+        qItem("m7_1", "1. L.C.M of 2 and 4 = {dash1}", 1, ["4", "10", "20"], ["4"], "LCM of 2 and 4 is 4."),
+        qItem("m7_2", "2. L.C.M of 6 and 8 = {dash1}", 1, ["24", "20", "30"], ["24"], "LCM of 6 and 8 is 24."),
+        qItem("m7_3", "3. L.C.M of 3 and 6 = {dash1}", 1, ["6", "8", "10"], ["6"], "LCM of 3 and 6 is 6."),
+        qItem("m7_4", "4. L.C.M of 4 and 7 = {dash1}", 1, ["28", "12", "8"], ["28"], "4 × 7 = 28."),
+        qItem("m7_5", "5. L.C.M of 2 and 8 = {dash1}", 1, ["8", "14", "17"], ["8"], "LCM of 2 and 8 is 8."),
+        qItem("m7_6", "6. L.C.M of 4 and 9 = {dash1}", 1, ["36", "29", "40"], ["36"], "4 × 9 = 36.")
+      ]
+    },
+    {
+      subjectId: "igbo_week7",
+      subjectTitle: "IZU UKA NKE ISII / ISAA: ASUSU IGBO",
+      topic: "Abụ Nwa (Lullaby / Poem)",
+      passage: {
+        title: "🎵 Abụ: Nwanne m ebezila akwa",
+        text: "Nwanne m ebezila akwa na nne gị na-abata.\nNwanne m ebezila akwa na nna gị na-abata.\nZụtara gị okporoko, zụtara gị azụ gbamgbam\nIrichaa ka ị rijuo afọ, kwụrụ gadagaa n'ụkwụ gị."
+      },
+      questions: [
+        qItem("ig7_1", "1. E ji abụ a {dash1}", 1, ["eku nwa", "eriji ohuu", "eme njem"], ["eku nwa"], "E ji ya eku nwa."),
+        qItem("ig7_2", "2. Kedu ndị na-abata n'abụ a? {dash1} na {dash2}", 2, ["nne", "nna", "onye nkuzi"], ["nne", "nna"], "Nne na nna."),
+        qItem("ig7_3", "3. Ha ga-azụtara nwata ahụ {dash1} na {dash2}", 2, ["okporoko", "azụ gbamgbam", "akwụkwọ"], ["okporoko", "azụ gbamgbam"], "Okporoko na azụ gbamgbam.")
+      ]
+    },
+    {
+      subjectId: "fr_week7",
+      subjectTitle: "SEPTIEME SEMAINE: FRENCH",
+      topic: "Les Couleurs (The Colours)",
+      questions: [
+        qItem("fr7_1", "1. Gris = {dash1}", 1, ["ash", "red"], ["ash"], "Gris is ash/grey."),
+        qItem("fr7_2", "2. Noir = {dash1}", 1, ["black", "yellow"], ["black"], "Noir is black."),
+        qItem("fr7_3", "3. Blanc = {dash1}", 1, ["white", "red"], ["white"], "Blanc is white."),
+        qItem("fr7_4", "4. Vert = {dash1}", 1, ["green", "purple"], ["green"], "Vert is green."),
+        qItem("fr7_5", "5. Rouge = {dash1}", 1, ["red", "green"], ["red"], "Rouge is red."),
+        qItem("fr7_6", "6. Bleu = {dash1}", 1, ["blue", "black"], ["blue"], "Bleu is blue.")
+      ]
+    },
+    {
+      subjectId: "comp_week7",
+      subjectTitle: "MID-TERM TEST: COMPUTER STUDIES",
+      topic: "The C.P.U",
+      passage: {
+        title: "💻 The Central Processing Unit",
+        text: "The CPU is the abbreviation for Central Processing Unit. It is also called system unit. It is the brain of the computer where the memory is contained. Data are processed in the CPU of the computer before the information is displayed on the monitor for the user to see."
+      },
+      questions: [
+        qItem("cp7_1", "1. The abbreviation for Central Processing Unit is {dash1}", 1, ["CPU", "ACP", "CPS"], ["CPU"], "C.P.U."),
+        qItem("cp7_2", "2. C.P.U is also called {dash1}", 1, ["system unit", "software", "monitor"], ["system unit"], "System unit."),
+        qItem("cp7_3", "3. Data are {dash1} in the CPU.", 1, ["processed", "wasted", "blocked"], ["processed"], "Processed."),
+        qItem("cp7_4", "4. Two types of memory are {dash1} and {dash2}", 2, ["RAM", "ROM", "CAM"], ["RAM", "ROM"], "RAM and ROM.")
+      ]
+    },
+    {
+      subjectId: "phe_week7",
+      subjectTitle: "MID-TERM TEST: PHYSICAL AND HEALTH EDUCATION",
+      topic: "Ball Games: Football Skills",
+      questions: [
+        qItem("phe7_1", "1. Moving a football accurately to desired player is {dash1}", 1, ["passing", "kick off", "off right"], ["passing"], "Passing."),
+        qItem("phe7_2", "2. {dash1} is stopping a ball to take control of it.", 1, ["trapping", "heading", "catching"], ["trapping"], "Trapping."),
+        qItem("phe7_3", "3. Heading means playing the ball with the {dash1}", 1, ["head", "hand", "leg"], ["head"], "Head."),
+        qItem("phe7_4", "4. Throwing the ball is with the {dash1}", 1, ["hand", "head", "leg"], ["hand"], "Hand throw-in."),
+        qItem("phe7_5", "5. The {dash1} catches the ball at the post.", 1, ["goal keeper", "player", "referee"], ["goal keeper"], "Goal keeper.")
+      ]
+    },
+    {
+      subjectId: "cca_week7",
+      subjectTitle: "MID-TERM TEST: CULTURAL AND CREATIVE ARTS",
+      topic: "Principles of Design",
+      questions: [
+        qItem("cca7_1", "1. Four principles of design: {dash1}, {dash2}, {dash3} and {dash4}", 4, ["balance", "rhythm", "proportion", "harmony", "sleeping"], ["balance", "rhythm", "proportion", "harmony"], "Principles of design."),
+        qItem("cca7_2", "2. Principles of design are {dash1} and {dash2} taken to make design attractive.", 2, ["considerations", "measures", "fights"], ["considerations", "measures"], "Measures taken.")
+      ]
+    },
+    {
+      subjectId: "agric_week7",
+      subjectTitle: "MID-TERM TEST: AGRICULTURAL SCIENCE",
+      topic: "Importance of Agriculture",
+      questions: [
+        qItem("ag7_1", "1. Five benefits of Agriculture: {dash1}, {dash2}, {dash3}, {dash4} and {dash5}", 5, ["food", "money", "raw materials", "clothing", "medicines", "poison"], ["food", "money", "raw materials", "clothing", "medicines"], "Benefits."),
+        qItem("ag7_2", "2. {dash1} is used for cloth making.", 1, ["wool", "rice", "yam"], ["wool"], "Wool."),
+        qItem("ag7_3", "3. Leather is made with animal {dash1}", 1, ["hides and skin", "root and trunk"], ["hides and skin"], "Hides and skin."),
+        qItem("ag7_4", "4. Crops used for producing industrial goods are {dash1}", 1, ["raw materials", "low metals"], ["raw materials"], "Raw materials."),
+        qItem("ag7_5", "5. Export crops are called {dash1} crops.", 1, ["cash", "food", "foreign"], ["cash"], "Cash crops.")
+      ]
+    },
+    {
+      subjectId: "he_week7",
+      subjectTitle: "MID-TERM TEST: HOME ECONOMICS",
+      topic: "Uses of Personal Belongings",
+      questions: [
+        qItem("he7_1", "1. {dash1} protects our bodies.", 1, ["cloth", "car", "soap"], ["cloth"], "Clothing."),
+        qItem("he7_2", "2. Razor blades are used for trimming our {dash1} and {dash2}", 2, ["hairs", "nails", "throat"], ["hairs", "nails"], "Hair and nails."),
+        qItem("he7_3", "3. We dry our body after bathing with a {dash1}", 1, ["towel", "shoe", "pen"], ["towel"], "Towel."),
+        qItem("he7_4", "4. We bathe with {dash1} and {dash2}", 2, ["soap", "water", "sand"], ["soap", "water"], "Soap and water."),
+        qItem("he7_5", "5. Books are carried in a {dash1}", 1, ["school bag", "fridge"], ["school bag"], "School bag.")
+      ]
+    },
+    {
+      subjectId: "crs_week7",
+      subjectTitle: "MID-TERM TEST: CHRISTIAN RELIGIOUS STUDIES",
+      topic: "God Calls Us for a Purpose",
+      questions: [
+        qItem("crs7_1", "1. God calls us for a {dash1}", 1, ["purpose", "killing"], ["purpose"], "A divine purpose."),
+        qItem("crs7_2", "2. Obedience to God brings {dash1}, {dash2} and {dash3}", 3, ["blessing", "protection", "guidance", "sickness"], ["blessing", "protection", "guidance"], "Blessing and protection."),
+        qItem("crs7_3", "3. God told {dash1} to leave his father's land.", 1, ["Abraham", "Peter", "Jesus"], ["Abraham"], "Abraham."),
+        qItem("crs7_4", "4. Jonah was swallowed by a {dash1}", 1, ["fish", "lion", "goat"], ["fish"], "A great fish.")
+      ]
+    },
+    {
+      subjectId: "hist_week7",
+      subjectTitle: "MID-TERM TEST: HISTORY",
+      topic: "State Governors in 1967",
+      questions: [
+        qItem("h7_1", "1. The Head of State of Nigeria in 1967 was {dash1}", 1, ["Gowon", "General Obasanjo", "Buhari"], ["Gowon"], "General Yakubu Gowon."),
+        qItem("h7_2", "2. The administrator of East Central State was {dash1}", 1, ["Ukpabi Asika", "Awolowo"], ["Ukpabi Asika"], "Ukpabi Asika."),
+        qItem("h7_3", "3. {dash1} was the governor of Mid-Western State.", 1, ["Samuel Ogbemudia", "Murtala"], ["Samuel Ogbemudia"], "Samuel Ogbemudia."),
+        qItem("h7_4", "4. The current governor of Kwara State is {dash1}", 1, ["AbdulRahman AbdulRazaq", "Bukola Saraki"], ["AbdulRahman AbdulRazaq"], "Gov AbdulRahman AbdulRazaq.")
+      ]
+    },
+    {
+      subjectId: "civic_week7",
+      subjectTitle: "MID-TERM TEST: CIVIC EDUCATION",
+      topic: "Local Government",
+      questions: [
+        qItem("civ7_1", "1. Local government is the {dash1} tier/level of government.", 1, ["last / third", "first", "only"], ["last / third"], "Third tier / grassroots."),
+        qItem("civ7_2", "2. It is the government nearest to the {dash1}", 1, ["people", "federal"], ["people"], "Nearest to the people."),
+        qItem("civ7_3", "3. Local government provides {dash1} and {dash2}", 2, ["markets", "motor parks", "airports"], ["markets", "motor parks"], "Markets and motor parks."),
+        qItem("civ7_4", "4. Different {dash1} make up a local government.", 1, ["towns / communities", "states"], ["towns / communities"], "Towns and communities.")
+      ]
+    },
+    {
+      subjectId: "soc_week7",
+      subjectTitle: "MID-TERM TEST: SOCIAL STUDIES",
+      topic: "Our Culture",
+      questions: [
+        qItem("soc7_1", "1. Culture is the way of {dash1}", 1, ["life", "planting", "death"], ["life"], "Way of life."),
+        qItem("soc7_2", "2. A group of people living together have one shared {dash1}", 1, ["culture", "car"], ["culture"], "Shared culture."),
+        qItem("soc7_3", "3. Three elements of culture: {dash1}, {dash2} and {dash3}", 3, ["dressing", "language", "greeting", "aeroplane"], ["dressing", "language", "greeting"], "Elements of culture."),
+        qItem("soc7_4", "4. Culture enables us to live together: {dash1}", 1, ["Yes", "No"], ["Yes"], "Yes.")
+      ]
+    },
+    {
+      subjectId: "verb_week7",
+      subjectTitle: "MID-TERM TEST: VERBAL REASONING",
+      topic: "Synonyms",
+      questions: [
+        qItem("vr7_1", "1. Easy = {dash1}", 1, ["simple", "good", "pure"], ["simple"], "Simple."),
+        qItem("vr7_2", "2. Begin = {dash1}", 1, ["start", "come", "try"], ["start"], "Start."),
+        qItem("vr7_3", "3. Wealthy = {dash1}", 1, ["rich", "short", "tall"], ["rich"], "Rich."),
+        qItem("vr7_4", "4. Sincere = {dash1}", 1, ["honest", "old", "normal"], ["honest"], "Honest."),
+        qItem("vr7_5", "5. Mend = {dash1}", 1, ["repair", "move", "cover"], ["repair"], "Repair."),
+        qItem("vr7_6", "6. Shut = {dash1}", 1, ["close", "stop", "cover"], ["close"], "Close.")
       ]
     }
   ],
 
   8: [
     {
-      subjectId: "math_w8",
-      subjectTitle: "Mathematics",
+      subjectId: "math_week8",
+      subjectTitle: "WEEK 8: MATHEMATICS",
       topic: "Highest Common Factor (H.C.F)",
       questions: [
-        {
-          id: "math_8_1",
-          text: "The Highest Common Factor (H.C.F) of 8 and 12 is {dash1}.",
-          dashes: 1,
-          type: "bubble",
-          options: ["4", "2", "6", "8"],
-          correct: ["4"],
-          rule: "Factors of 8 are 1, 2, 4, 8. Factors of 12 are 1, 2, 3, 4, 6, 12. Greatest common is 4."
-        }
+        qItem("m8_1", "1. The H.C.F of 8 and 12 is {dash1}", 1, ["4", "2", "6", "8"], ["4"], "Factors of 8: 1, 2, 4, 8. Factors of 12: 1, 2, 3, 4, 6, 12. Greatest is 4."),
+        qItem("m8_2", "2. The H.C.F of 9 and 15 is {dash1}", 1, ["3", "1", "5", "9"], ["3"], "Common factor is 3.")
+      ]
+    },
+    {
+      subjectId: "eng_week8",
+      subjectTitle: "WEEK 8: ENGLISH STUDIES",
+      topic: "Simple Sentences: Subject and Predicate",
+      questions: [
+        qItem("eng8_1", "1. In 'The swift eagle caught a snake', the Subject is {dash1} and the Predicate is {dash2}.", 2, ["The swift eagle", "caught a snake", "a snake"], ["The swift eagle", "caught a snake"], "Subject is who acts; predicate tells what happened.")
       ]
     }
   ],
 
   9: [
     {
-      subjectId: "eng_w9",
-      subjectTitle: "English Studies",
+      subjectId: "eng_week9",
+      subjectTitle: "WEEK 9: ENGLISH STUDIES",
       topic: "Prepositions of Place",
       questions: [
-        {
-          id: "eng_9_1",
-          text: "The book is {dash1} the table, and the shoes are {dash2} the bed.",
-          dashes: 2,
-          type: "bubble",
-          options: ["on", "under", "inside", "around"],
-          correct: ["on", "under"],
-          rule: "'On' describes surface position; 'under' indicates location beneath."
-        }
+        qItem("eng9_1", "1. The book is {dash1} the table, and the shoes are {dash2} the bed.", 2, ["on", "under", "inside"], ["on", "under"], "Prepositions describe location.")
+      ]
+    },
+    {
+      subjectId: "bst_week9",
+      subjectTitle: "WEEK 9: BASIC SCIENCE AND TECHNOLOGY",
+      topic: "Water and Water Cycle",
+      questions: [
+        qItem("bst9_1", "1. Water changes to vapour by {dash1} and falls as rain by {dash2}.", 2, ["evaporation", "condensation", "freezing"], ["evaporation", "condensation"], "Water cycle processes.")
       ]
     }
   ],
 
   10: [
     {
-      subjectId: "comp_w10",
-      subjectTitle: "Computer Studies",
-      topic: "Input and Output Devices Review",
+      subjectId: "math_week10",
+      subjectTitle: "WEEK 10: MATHEMATICS",
+      topic: "Perimeter and Area",
       questions: [
-        {
-          id: "comp_10_1",
-          text: "A keyboard is an {dash1} device, while a printer is an {dash2} device.",
-          dashes: 2,
-          type: "bubble",
-          options: ["input", "output", "storage"],
-          correct: ["input", "output"],
-          rule: "Keyboards take user input; printers produce physical output."
-        }
+        qItem("m10_1", "1. Perimeter of rectangle (Length=8cm, Width=5cm) = {dash1} cm.", 1, ["26", "40", "13"], ["26"], "2 × (8 + 5) = 26cm."),
+        qItem("m10_2", "2. Area of square of side 6cm = {dash1} cm².", 1, ["36", "24", "12"], ["36"], "Side × Side = 6 × 6 = 36cm².")
+      ]
+    },
+    {
+      subjectId: "comp_week10",
+      subjectTitle: "WEEK 10: COMPUTER STUDIES",
+      topic: "Input and Output Devices",
+      questions: [
+        qItem("cp10_1", "1. Keyboard is an {dash1} device, while printer is an {dash2} device.", 2, ["input", "output", "storage"], ["input", "output"], "Keyboard feeds data in; printer gives physical copies out.")
       ]
     }
   ],
 
-  // --------------------------------------------------------------------------
-  // WEEK 11: END OF TERM TEST
-  // --------------------------------------------------------------------------
   11: [
     {
       subjectId: "exam_phe",
-      subjectTitle: "End of Term Test • Physical and Health Education",
-      topic: "Jumps, Races, First Aid & Match Officials",
+      subjectTitle: "END TERM TEST: PHYSICAL AND HEALTH EDUCATION",
+      topic: "Jumps, Races & First Aid",
       questions: [
-        {
-          id: "exam_phe_1",
-          text: "Two common types of jumps in athletics are {dash1} jump and {dash2} jump.",
-          dashes: 2,
-          type: "bubble",
-          options: ["high", "long", "short", "push"],
-          correct: ["high", "long"],
-          rule: "High jump and long jump are recognized jumping events in track and field."
-        },
-        {
-          id: "exam_phe_2",
-          text: "{dash1} and {dash2} are types of running races in track athletics.",
-          dashes: 2,
-          type: "bubble",
-          options: ["relay", "marathon", "football"],
-          correct: ["relay", "marathon"],
-          rule: "Relays and marathons are competitive races. Football is a team ball sport."
-        },
-        {
-          id: "exam_phe_3",
-          text: "Four medical items found in a first aid box are {dash1}, {dash2}, {dash3} and {dash4}.",
-          dashes: 4,
-          type: "bubble",
-          options: ["cotton wool", "razor", "paracetamol", "GIV", "pen", "stone"],
-          correct: ["cotton wool", "razor", "paracetamol", "GIV"],
-          rule: "First aid kits contain sterile cotton wool, antiseptic (GIV), razor blades, and paracetamol."
-        },
-        {
-          id: "exam_phe_4",
-          text: "The chief official who enforces the rules in a football match is the {dash1}.",
-          dashes: 1,
-          type: "bubble",
-          options: ["referee", "goalkeeper", "trader"],
-          correct: ["referee"],
-          rule: "The referee holds authority to enforce the Laws of the Game during a match."
-        }
+        qItem("ephe_1", "1. Types of jump are {dash1} and {dash2}", 2, ["high", "long", "push", "short"], ["high", "long"], "High jump and long jump."),
+        qItem("ephe_2", "2. {dash1} and {dash2} are types of race.", 2, ["relay", "marathon", "football"], ["relay", "marathon"], "Relay and marathon."),
+        qItem("ephe_3", "3. Four things found in a first aid box: {dash1}, {dash2}, {dash3} and {dash4}", 4, ["cotton wool", "razor", "paracetamol", "GIV", "stone", "pen"], ["cotton wool", "razor", "paracetamol", "GIV"], "First aid supplies."),
+        qItem("ephe_4", "4. The judge in a football match is the {dash1}", 1, ["referee", "goal keeper", "trader"], ["referee"], "The referee.")
       ]
     },
     {
       subjectId: "exam_cca",
-      subjectTitle: "End of Term Test • Cultural and Creative Arts",
-      topic: "Visual Arts, Secondary Colours & Geometric Shapes",
+      subjectTitle: "END TERM TEST: CULTURAL AND CREATIVE ARTS",
+      topic: "Visual Arts, Colours and Shapes",
       questions: [
-        {
-          id: "exam_cca_1",
-          text: "Three examples of visual arts are {dash1}, {dash2} and {dash3}.",
-          dashes: 3,
-          type: "bubble",
-          options: ["drawing", "painting", "graphics", "broadcasting"],
-          correct: ["drawing", "painting", "graphics"],
-          rule: "Drawing, painting, and graphics are visual arts. Broadcasting is media communication."
-        },
-        {
-          id: "exam_cca_2",
-          text: "Examples of secondary colours formed by mixing primary colours are {dash1}, {dash2} and {dash3}.",
-          dashes: 3,
-          type: "bubble",
-          options: ["orange", "green", "purple", "red", "blue"],
-          correct: ["orange", "green", "purple"],
-          rule: "Mixing Red + Yellow = Orange; Blue + Yellow = Green; Red + Blue = Purple."
-        },
-        {
-          id: "exam_cca_3",
-          text: "Four fundamental shapes in design are {dash1}, {dash2}, {dash3} and {dash4}.",
-          dashes: 4,
-          type: "bubble",
-          options: ["circle", "square", "triangle", "rectangle", "water", "sand"],
-          correct: ["circle", "square", "triangle", "rectangle"],
-          rule: "Circles, squares, triangles, and rectangles form standard geometric 2D shapes."
-        }
+        qItem("ecca_1", "1. Examples of visual arts are {dash1}, {dash2} and {dash3}", 3, ["drawing", "painting", "graphics", "broadcasting"], ["drawing", "painting", "graphics"], "Visual arts."),
+        qItem("ecca_2", "2. Secondary colours are {dash1}, {dash2} and {dash3}", 3, ["orange", "green", "purple", "red", "blue"], ["orange", "green", "purple"], "Secondary colours."),
+        qItem("ecca_3", "3. Four types of shapes: {dash1}, {dash2}, {dash3} and {dash4}", 4, ["circle", "square", "triangle", "rectangle", "sand"], ["circle", "square", "triangle", "rectangle"], "Geometric shapes.")
       ]
     },
     {
       subjectId: "exam_agric",
-      subjectTitle: "End of Term Test • Agricultural Science",
-      topic: "Fishing Tools, Fruits, Domestic Animals & Farm Branches",
+      subjectTitle: "END TERM TEST: AGRICULTURAL SCIENCE",
+      topic: "Fishing, Crops and Animals",
       questions: [
-        {
-          id: "exam_agric_1",
-          text: "We use a {dash1} and a {dash2} for catching fish in water.",
-          dashes: 2,
-          type: "bubble",
-          options: ["hook", "net", "hoe", "broom"],
-          correct: ["hook", "net"],
-          rule: "Fishermen use hooks, lines, and fishing nets to catch aquatic fish."
-        },
-        {
-          id: "exam_agric_2",
-          text: "{dash1}, {dash2}, {dash3} and {dash4} are four edible fruits.",
-          dashes: 4,
-          type: "bubble",
-          options: ["orange", "mango", "apple", "banana", "wood", "sand"],
-          correct: ["orange", "mango", "apple", "banana"],
-          rule: "Oranges, mangoes, apples, and bananas are wholesome, edible fruits."
-        },
-        {
-          id: "exam_agric_3",
-          text: "Four examples of domesticated farm animals are {dash1}, {dash2}, {dash3} and {dash4}.",
-          dashes: 4,
-          type: "bubble",
-          options: ["goat", "cow", "sheep", "pig", "lion", "leopard"],
-          correct: ["goat", "cow", "sheep", "pig"],
-          rule: "Goats, cows, sheep, and pigs are livestock kept by farmers."
-        },
-        {
-          id: "exam_agric_4",
-          text: "The two main branches of agriculture are {dash1} and {dash2}.",
-          dashes: 2,
-          type: "bubble",
-          options: ["crops farming", "animals farming", "books farming"],
-          correct: ["crops farming", "animals farming"],
-          rule: "Crop production and livestock (animal) husbandry form the two divisions of agriculture."
-        }
+        qItem("eag_1", "1. We use {dash1} and {dash2} in fishing.", 2, ["hook", "net", "hoe", "broom"], ["hook", "net"], "Fishing equipment."),
+        qItem("eag_2", "2. Fruits I know: {dash1}, {dash2}, {dash3} and {dash4}", 4, ["orange", "mango", "apple", "banana"], ["orange", "mango", "apple", "banana"], "Edible fruits."),
+        qItem("eag_3", "3. Domestic animals: {dash1}, {dash2}, {dash3} and {dash4}", 4, ["goat", "cow", "sheep", "pig"], ["goat", "cow", "sheep", "pig"], "Farm animals."),
+        qItem("eag_4", "4. Two branches of Agriculture: {dash1} and {dash2}", 2, ["crops farming", "animals farming", "books farming"], ["crops farming", "animals farming"], "Crops and livestock.")
       ]
     },
     {
       subjectId: "exam_hec",
-      subjectTitle: "End of Term Test • Home Economics",
-      topic: "Parts of the Body, Cooking Methods & Home Management",
+      subjectTitle: "END TERM TEST: HOME ECONOMICS",
+      topic: "Body Parts, Cooking and Management",
       questions: [
-        {
-          id: "exam_hec_1",
-          text: "The human body is divided into three main parts: the {dash1}, {dash2} and {dash3}.",
-          dashes: 3,
-          type: "bubble",
-          options: ["head", "trunk", "limbs", "eyes"],
-          correct: ["head", "trunk", "limbs"],
-          rule: "The human body consists of the Head, the Trunk (torso), and the Limbs (arms and legs)."
-        },
-        {
-          id: "exam_hec_2",
-          text: "Three healthy and common ways of cooking food are {dash1}, {dash2} and {dash3}.",
-          dashes: 3,
-          type: "bubble",
-          options: ["boiling", "frying", "smoking", "burying"],
-          correct: ["boiling", "frying", "smoking"],
-          rule: "Boiling, frying, and smoking/roasting cook food safely for consumption."
-        },
-        {
-          id: "exam_hec_3",
-          text: "Home management deals with {dash1} and {dash2} of family resources.",
-          dashes: 2,
-          type: "bubble",
-          options: ["care of the home", "budgeting family resources", "wasteful spending"],
-          correct: ["care of the home", "budgeting family resources"],
-          rule: "Home management involves planning, organizing, and maintaining the home efficiently."
-        }
+        qItem("ehe_1", "1. Body is divided into three parts: {dash1}, {dash2} and {dash3}", 3, ["head", "trunk", "limbs", "eyes"], ["head", "trunk", "limbs"], "Head, trunk and limbs."),
+        qItem("ehe_2", "2. Three ways of cooking: {dash1}, {dash2} and {dash3}", 3, ["boiling", "frying", "smoking", "burying"], ["boiling", "frying", "smoking"], "Cooking methods."),
+        qItem("ehe_3", "3. Home management deals with {dash1} and {dash2}", 2, ["care of home", "budgeting resources", "wasting money"], ["care of home", "budgeting resources"], "Care and budgeting.")
       ]
     },
     {
       subjectId: "exam_crs",
-      subjectTitle: "End of Term Test • Christian Religious Studies",
-      topic: "God's Voice, The Good Samaritan & Brotherly Love",
+      subjectTitle: "END TERM TEST: CHRISTIAN RELIGIOUS STUDIES",
+      topic: "God's Word and Love",
       questions: [
-        {
-          id: "exam_crs_1",
-          text: "God speaks to us today through the holy {dash1} and heavenly {dash2}.",
-          dashes: 2,
-          type: "bubble",
-          options: ["Bible", "Angel", "cult"],
-          correct: ["Bible", "Angel"],
-          rule: "God reveals His will through the Holy Scriptures (the Bible) and angel messengers."
-        },
-        {
-          id: "exam_crs_2",
-          text: "In Jesus' parable, the wounded traveller was journeying from Jerusalem to {dash1}.",
-          dashes: 1,
-          type: "bubble",
-          options: ["Jericho", "Israel", "Nigeria"],
-          correct: ["Jericho"],
-          rule: "Luke 10:30 recounts the journey of the man from Jerusalem down to Jericho."
-        },
-        {
-          id: "exam_crs_3",
-          text: "As children of our Heavenly Father, we must {dash1}, {dash2} and {dash3} one another.",
-          dashes: 3,
-          type: "bubble",
-          options: ["love", "care for", "help", "hate", "beat"],
-          correct: ["love", "care for", "help"],
-          rule: "Jesus commanded us to love one another, show kindness, and assist neighbours in need."
-        }
+        qItem("ecrs_1", "1. God talks to us through {dash1} and {dash2}", 2, ["Bible", "Angel", "cult"], ["Bible", "Angel"], "Bible and angels."),
+        qItem("ecrs_2", "2. The good Samaritan went from Jerusalem to {dash1}", 1, ["Jericho", "Nigeria", "Israel"], ["Jericho"], "Jericho."),
+        qItem("ecrs_3", "3. As children of our father, we should {dash1}, {dash2} and {dash3} each other.", 3, ["love", "care for", "help", "hate", "beat"], ["love", "care for", "help"], "Love, care for, and help.")
       ]
     },
     {
       subjectId: "exam_hist",
-      subjectTitle: "End of Term Test • History",
-      topic: "Early Regions, Amalgamation & Major Ethnic Groups",
+      subjectTitle: "END TERM TEST: HISTORY",
+      topic: "Regions and Amalgamation",
       questions: [
-        {
-          id: "exam_hist_1",
-          text: "Four early regions of Nigeria were the {dash1}, {dash2}, {dash3} and {dash4} regions.",
-          dashes: 4,
-          type: "bubble",
-          options: ["Northern", "Eastern", "Western", "Mid-Western", "Lagos", "Kano"],
-          correct: ["Northern", "Eastern", "Western", "Mid-Western"],
-          rule: "Prior to the 12-state creation in 1967, Nigeria had Northern, Eastern, Western, and Mid-Western regions."
-        },
-        {
-          id: "exam_hist_2",
-          text: "{dash1} was the British Governor-General who amalgamated the Northern and Southern protectorates in 1914.",
-          dashes: 1,
-          type: "bubble",
-          options: ["Lord Luggard", "Awolowo", "Azikiwe"],
-          correct: ["Lord Luggard"],
-          rule: "Sir Frederick Lugard (Lord Lugard) issued the proclamation amalgamating Nigeria in 1914."
-        },
-        {
-          id: "exam_hist_3",
-          text: "The three major ethnic groups in Nigeria are the {dash1}, {dash2} and {dash3}.",
-          dashes: 3,
-          type: "bubble",
-          options: ["Hausa", "Yoruba", "Igbo", "Igala", "Igbala"],
-          correct: ["Hausa", "Yoruba", "Igbo"],
-          rule: "Hausa, Yoruba, and Igbo constitute Nigeria's three largest ethnic groups."
-        }
+        qItem("ehist_1", "1. Four former regions: {dash1}, {dash2}, {dash3} and {dash4}", 4, ["Northern", "Eastern", "Western", "Mid-Western", "Lagos"], ["Northern", "Eastern", "Western", "Mid-Western"], "Four early regions."),
+        qItem("ehist_2", "2. {dash1} amalgamated the two protectorates in Nigeria.", 1, ["Lord Luggard", "Awolowo", "Azikiwe"], ["Lord Luggard"], "Lord Lugard in 1914."),
+        qItem("ehist_3", "3. Three major ethnic groups: {dash1}, {dash2} and {dash3}", 3, ["Hausa", "Yoruba", "Igbo", "Igala"], ["Hausa", "Yoruba", "Igbo"], "Major groups.")
       ]
     },
     {
       subjectId: "exam_civic",
-      subjectTitle: "End of Term Test • Civic Education",
-      topic: "Languages, Respect, Elements of Culture & Tiers of Government",
+      subjectTitle: "END TERM TEST: CIVIC EDUCATION",
+      topic: "Languages, Culture and Government",
       questions: [
-        {
-          id: "exam_civic_1",
-          text: "Three indigenous languages spoken in Nigeria are {dash1}, {dash2} and {dash3}.",
-          dashes: 3,
-          type: "bubble",
-          options: ["Efik", "Igala", "Bini", "China"],
-          correct: ["Efik", "Igala", "Bini"],
-          rule: "Efik, Igala, and Bini are Nigerian languages. Chinese is from China."
-        },
-        {
-          id: "exam_civic_2",
-          text: "Places of worship deserving quietness and high respect include the {dash1}, {dash2} and traditional {dash3}.",
-          dashes: 3,
-          type: "bubble",
-          options: ["church", "mosque", "shrine", "car"],
-          correct: ["church", "mosque", "shrine"],
-          rule: "Churches, mosques, and ancestral shrines are sacred religious venues."
-        },
-        {
-          id: "exam_civic_3",
-          text: "Key elements of a people's culture include {dash1}, {dash2} and {dash3}.",
-          dashes: 3,
-          type: "bubble",
-          options: ["language", "food", "clothing", "petrol"],
-          correct: ["language", "food", "clothing"],
-          rule: "Culture includes how people communicate (language), what they eat (food), and wear (clothing)."
-        },
-        {
-          id: "exam_civic_4",
-          text: "The three constitutional levels (tiers) of government in Nigeria are {dash1}, {dash2} and {dash3}.",
-          dashes: 3,
-          type: "bubble",
-          options: ["federal", "state", "local", "town"],
-          correct: ["federal", "state", "local"],
-          rule: "Nigeria is governed at three levels: Federal, State, and Local Government Councils."
-        }
+        qItem("eciv_1", "1. Three languages in Nigeria: {dash1}, {dash2} and {dash3}", 3, ["Efik", "Igala", "Bini", "China"], ["Efik", "Igala", "Bini"], "Nigerian languages."),
+        qItem("eciv_2", "2. Places to respect: {dash1}, {dash2} and {dash3}", 3, ["church", "mosque", "shrine", "car"], ["church", "mosque", "shrine"], "Holy places."),
+        qItem("eciv_3", "3. Elements of culture: {dash1}, {dash2} and {dash3}", 3, ["language", "food", "clothing", "religion"], ["language", "food", "clothing"], "Cultural elements."),
+        qItem("eciv_4", "4. Three levels of government: {dash1}, {dash2} and {dash3}", 3, ["federal", "state", "local", "town"], ["federal", "state", "local"], "Levels of governance.")
       ]
     },
     {
       subjectId: "exam_sos",
-      subjectTitle: "End of Term Test • Social Studies",
-      topic: "Major Religions, Nuclear Family & Social Environments",
+      subjectTitle: "END TERM TEST: SOCIAL STUDIES",
+      topic: "Religion and Social Environment",
       questions: [
-        {
-          id: "exam_sos_1",
-          text: "The three major religions in Nigeria are {dash1}, {dash2} and African {dash3}.",
-          dashes: 3,
-          type: "bubble",
-          options: ["Christianity", "Islam", "Traditional Religion", "Hindu"],
-          correct: ["Christianity", "Islam", "Traditional Religion"],
-          rule: "Christianity, Islam, and African Traditional Religion (ATR) are Nigeria's three primary faiths."
-        },
-        {
-          id: "exam_sos_2",
-          text: "A nuclear family is made up of the {dash1}, {dash2} and their {dash3}.",
-          dashes: 3,
-          type: "bubble",
-          options: ["father", "mother", "children", "uncles"],
-          correct: ["father", "mother", "children"],
-          rule: "A nuclear family consists strictly of parents (father & mother) and their children."
-        },
-        {
-          id: "exam_sos_3",
-          text: "Five public social environments of man are {dash1}, {dash2}, {dash3}, {dash4} and {dash5}.",
-          dashes: 5,
-          type: "bubble",
-          options: ["school", "market", "church", "hospital", "parks", "stadium"],
-          correct: ["school", "market", "church", "hospital", "parks"],
-          rule: "Schools, markets, churches, healthcare hospitals, and public parks are social centres for people."
-        }
+        qItem("esos_1", "1. Three major religions: {dash1}, {dash2} and {dash3}", 3, ["Christian", "Islam", "tradition", "Hindu"], ["Christian", "Islam", "tradition"], "Major religions."),
+        qItem("esos_2", "2. A nuclear family consists of {dash1}, {dash2} and {dash3}", 3, ["father", "mother", "children", "uncles"], ["father", "mother", "children"], "Nuclear family members."),
+        qItem("esos_3", "3. Five social environments: {dash1}, {dash2}, {dash3}, {dash4} and {dash5}", 5, ["school", "market", "church", "hospital", "parks", "stadium"], ["school", "market", "church", "hospital", "parks"], "Social environments.")
       ]
     },
     {
       subjectId: "exam_vr",
-      subjectTitle: "End of Term Test • Verbal Reasoning",
-      topic: "Identifying the Group Name (General Category)",
+      subjectTitle: "END TERM TEST: VERBAL REASONING",
+      topic: "Group Names",
       questions: [
-        {
-          id: "exam_vr_1",
-          text: "In the list (rice, food, beans, garri), the overarching Group Name is {dash1}.",
-          dashes: 1,
-          type: "bubble",
-          options: ["food", "rice", "beans", "garri"],
-          correct: ["food"],
-          rule: "Rice, beans, and garri all belong to the broader category of 'food'."
-        },
-        {
-          id: "exam_vr_2",
-          text: "In the list (circle, square, triangle, shape), the Group Name is {dash1}.",
-          dashes: 1,
-          type: "bubble",
-          options: ["shape", "circle", "square", "triangle"],
-          correct: ["shape"],
-          rule: "Circle, square, and triangle are individual examples of geometric 'shapes'."
-        },
-        {
-          id: "exam_vr_3",
-          text: "In the list (pink, yellow, colour, black), the Group Name is {dash1}.",
-          dashes: 1,
-          type: "bubble",
-          options: ["colour", "pink", "yellow", "black"],
-          correct: ["colour"],
-          rule: "Pink, yellow, and black are specific shades belonging to the family of 'colour'."
-        },
-        {
-          id: "exam_vr_4",
-          text: "In the list (1, 2, 3, number), the Group Name is {dash1}.",
-          dashes: 1,
-          type: "bubble",
-          options: ["number", "1", "2", "3"],
-          correct: ["number"],
-          rule: "1, 2, and 3 are individual digits that belong to the class of 'number'."
-        },
-        {
-          id: "exam_vr_5",
-          text: "In the list (Sunday, week, Monday, Tuesday), the Group Name is {dash1}.",
-          dashes: 1,
-          type: "bubble",
-          options: ["week", "Sunday", "Monday", "Tuesday"],
-          correct: ["week"],
-          rule: "Sunday, Monday, and Tuesday are days that make up a 'week'."
-        },
-        {
-          id: "exam_vr_6",
-          text: "In the list (Imo, Enugu, State, Abia), the Group Name is {dash1}.",
-          dashes: 1,
-          type: "bubble",
-          options: ["State", "Imo", "Enugu", "Abia"],
-          correct: ["State"],
-          rule: "Imo, Enugu, and Abia are specific political territories classified as a 'State'."
-        }
+        qItem("evr_1", "1. rice, food, beans, garri: Group name is {dash1}", 1, ["food", "rice", "beans"], ["food"], "Food is the general category."),
+        qItem("evr_2", "2. circle, square, triangle, shape: Group name is {dash1}", 1, ["shape", "circle", "square"], ["shape"], "Shape."),
+        qItem("evr_3", "3. pink, yellow, colour, black: Group name is {dash1}", 1, ["colour", "pink", "yellow"], ["colour"], "Colour."),
+        qItem("evr_4", "4. 1, 2, 3, number: Group name is {dash1}", 1, ["number", "1", "2"], ["number"], "Number."),
+        qItem("evr_5", "5. Sunday, week, Monday, Tuesday: Group name is {dash1}", 1, ["week", "Sunday", "Monday"], ["week"], "Week."),
+        qItem("evr_6", "6. Imo, Enugu, State, Abia: Group name is {dash1}", 1, ["State", "Imo", "Enugu"], ["State"], "State.")
       ]
     },
     {
       subjectId: "exam_qr",
-      subjectTitle: "End of Term Test • Quantitative Reasoning",
-      topic: "Letter-to-Number Cipher Substitution (R E A S O N = 1 2 3 4 5 6)",
+      subjectTitle: "END TERM TEST: QUANTITATIVE REASONING",
+      topic: "Letter Ciphers (R=1, E=2, A=3, S=4, O=5, N=6)",
       passage: {
-        title: "Cipher Key",
-        text: "R = 1,  E = 2,  A = 3,  S = 4,  O = 5,  N = 6.\nExample: A N = 3 6."
+        title: "🔢 Letter-to-Number Key",
+        text: "R E A S O N = 1 2 3 4 5 6\nExample: AN = 36"
       },
       questions: [
-        {
-          id: "exam_qr_1",
-          text: "Using the cipher key, S O N = {dash1} and E A R N = {dash2}.",
-          dashes: 2,
-          type: "bubble",
-          options: ["456", "2316", "345", "1236"],
-          correct: ["456", "2316"],
-          rule: "SON: S(4) O(5) N(6) = 456. EARN: E(2) A(3) R(1) N(6) = 2316."
-        },
-        {
-          id: "exam_qr_2",
-          text: "Decode: N O R = {dash1} and S O = {dash2}.",
-          dashes: 2,
-          type: "bubble",
-          options: ["651", "45", "561", "54"],
-          correct: ["651", "45"],
-          rule: "NOR: N(6) O(5) R(1) = 651. SO: S(4) O(5) = 45."
-        },
-        {
-          id: "exam_qr_3",
-          text: "Decode: R A N = {dash1} and N E A R = {dash2}.",
-          dashes: 2,
-          type: "bubble",
-          options: ["136", "6231", "316", "2631"],
-          correct: ["136", "6231"],
-          rule: "RAN: R(1) A(3) N(6) = 136. NEAR: N(6) E(2) A(3) R(1) = 6231."
-        },
-        {
-          id: "exam_qr_4",
-          text: "Decode: S E A = {dash1} and A R E = {dash2}.",
-          dashes: 2,
-          type: "bubble",
-          options: ["423", "312", "234", "123"],
-          correct: ["423", "312"],
-          rule: "SEA: S(4) E(2) A(3) = 423. ARE: A(3) R(1) E(2) = 312."
-        }
+        qItem("eqr_1", "1. SON = {dash1}", 1, ["456", "356", "452"], ["456"], "S=4, O=5, N=6 ➔ 456."),
+        qItem("eqr_2", "2. EARN = {dash1}", 1, ["2316", "2315", "1236"], ["2316"], "E=2, A=3, R=1, N=6 ➔ 2316."),
+        qItem("eqr_3", "3. NOR = {dash1}", 1, ["651", "561", "652"], ["651"], "N=6, O=5, R=1 ➔ 651."),
+        qItem("eqr_4", "4. SO = {dash1}", 1, ["45", "54"], ["45"], "S=4, O=5 ➔ 45."),
+        qItem("eqr_5", "5. RAN = {dash1}", 1, ["136", "316"], ["136"], "R=1, A=3, N=6 ➔ 136."),
+        qItem("eqr_6", "6. NEAR = {dash1}", 1, ["6231", "2631"], ["6231"], "N=6, E=2, A=3, R=1 ➔ 6231."),
+        qItem("eqr_7", "7. SEA = {dash1}", 1, ["423", "243"], ["423"], "S=4, E=2, A=3 ➔ 423."),
+        qItem("eqr_8", "8. ARE = {dash1}", 1, ["312", "132"], ["312"], "A=3, R=1, E=2 ➔ 312.")
       ]
     }
+  ]
+};
+
+// =========================================================================
+// LIVE CHALKBOARD ENGINE CURRICULUM
+// =========================================================================
+window.LIVE_CHALK_CURRICULUM = {
+  "english_week1": [
+    { q: "House", a: "Houses", rule: "Regular noun: add -s to form 'Houses'.", tray: ["1 House 🏠", "Many Houses 🏠🏠"] },
+    { q: "Ox", a: "Oxen", rule: "Irregular noun: Ox takes '-en' to become 'Oxen'.", tray: ["1 Ox 🐂", "Many Oxen 🐂🐂"] },
+    { q: "Knife", a: "Knives", rule: "Drop -fe and add -ves to form 'Knives'.", tray: ["1 Knife 🔪", "Set of Knives 🔪🔪"] }
+  ],
+  "math_fractions": [
+    { q: "1/2", num: 1, den: 2, a: "2/4, 3/6, 4/8", rule: "Multiply numerator & denominator by 2, 3, and 4.", multipliers: [2,3,4], tray: ["1/2 = Half", "2/4 = Two Quarters", "3/6 = Three Sixths"] },
+    { q: "1/7", num: 1, den: 7, a: "2/14, 3/21, 4/28", rule: "Multiply top & bottom by 2, 3, and 4.", multipliers: [2,3,4], tray: ["1/7", "2/14", "3/21"] },
+    { q: "2/5", num: 2, den: 5, a: "4/10, 6/15, 8/20", rule: "Multiply top & bottom by 2, 3, and 4.", multipliers: [2,3,4], tray: ["2/5", "4/10", "6/15"] }
+  ],
+  "igbo_week1": [
+    { q: "Ụdaume Igbo dị ole?", a: "Asatọ (8)", rule: "Ụdaume mfe (4) + Ụdaume arọ (4) = Asatọ (8).", tray: ["Ụdaume mfe: a, e, i, o", "Ụdaume arọ: ị, ọ, u, ụ"] }
+  ],
+  "math_week2": [
+    { q: "80, 90, __, __, 120", a: "100, 110", rule: "Count forward in tens (+10).", tray: ["+10 rule", "80+10=90", "90+10=100"] }
+  ],
+  "comp_week2": [
+    { q: "What is Data?", a: "Raw or unprocessed facts.", rule: "Data becomes information when processed by the CPU.", tray: ["Data ➔ CPU ➔ Information"] }
+  ],
+  "math_week7": [
+    { q: "L.C.M of 6 and 8", a: "24", rule: "Multiples of 6: 6, 12, 18, 24. Multiples of 8: 8, 16, 24. Smallest common is 24.", tray: ["Multiples of 6: 6, 12, 18, 24", "Multiples of 8: 8, 16, 24", "L.C.M = 24"] },
+    { q: "L.C.M of 4 and 7", a: "28", rule: "4 and 7 have no common factor, so multiply: 4 × 7 = 28.", tray: ["4 × 7 = 28", "L.C.M = 28"] }
+  ],
+  "english_week7": [
+    { q: "What is a title of a book?", a: "The name given to the textbook.", rule: "The title identifies the book and gives the reader a preview of its contents.", tray: ["Title Page 📖", "Table of Contents 📑", "Glossary 🔤"] }
   ]
 };
