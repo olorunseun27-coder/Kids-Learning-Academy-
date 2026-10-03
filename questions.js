@@ -1,5 +1,6 @@
 // =========================================================================
 // BASIC 4 CURRICULUM & QUESTION BANK (WEEKS 1 — 11)
+// Universal Basic Education (UBE) Standard Curriculum
 // =========================================================================
 
 function qItem(id, text, dashes, options, correct, rule, type = "option", placeholders = null) {
@@ -7,6 +8,9 @@ function qItem(id, text, dashes, options, correct, rule, type = "option", placeh
 }
 
 window.WEEKLY_CURRICULUM = {
+  // =========================================================================
+  // WEEK 1: KICK OFF TESTS
+  // =========================================================================
   1: [
     {
       subjectId: "english_week1",
@@ -58,6 +62,16 @@ window.WEEKLY_CURRICULUM = {
         qItem("fr1_4", "4. Two = {dash1}", 1, ["deux", "sept"], ["deux"], "Two is 'deux'."),
         qItem("fr1_5", "5. Nine = {dash1}", 1, ["neuf", "six"], ["neuf"], "Nine is 'neuf'."),
         qItem("fr1_6", "6. Five = {dash1}", 1, ["cinq", "un"], ["cinq"], "Five is 'cinq'.")
+      ]
+    },
+    {
+      subjectId: "comp_week1",
+      subjectTitle: "WEEK 1: COMPUTER STUDIES",
+      topic: "Kick off Test: Introduction to Computer Hardware",
+      questions: [
+        qItem("cp1_1", "1. A computer mouse is an {dash1} pointing device.", 1, ["input", "output", "storage"], ["input"], "A mouse enters commands into the computer."),
+        qItem("cp1_2", "2. The two main buttons on a mouse are the {dash1} and {dash2} buttons.", 2, ["left", "right", "center", "power"], ["left", "right"], "Mice have left and right click buttons."),
+        qItem("cp1_3", "3. The wheel between the mouse buttons is used for {dash1}.", 1, ["scrolling", "typing", "printing"], ["scrolling"], "The scroll wheel moves pages up and down.")
       ]
     },
     {
@@ -164,6 +178,9 @@ window.WEEKLY_CURRICULUM = {
     }
   ],
 
+  // =========================================================================
+  // WEEK 2
+  // =========================================================================
   2: [
     {
       subjectId: "math_week2",
@@ -348,6 +365,9 @@ window.WEEKLY_CURRICULUM = {
     }
   ],
 
+  // =========================================================================
+  // WEEK 3
+  // =========================================================================
   3: [
     {
       subjectId: "eng_week3",
@@ -406,6 +426,9 @@ window.WEEKLY_CURRICULUM = {
     }
   ],
 
+  // =========================================================================
+  // WEEK 4
+  // =========================================================================
   4: [
     {
       subjectId: "eng_week4",
@@ -419,6 +442,17 @@ window.WEEKLY_CURRICULUM = {
         qItem("eng4_5", "5. 'Nweke is an elephant' means Nweke is {dash1}", 1, ["big", "small"], ["big"], "Metaphor for big."),
         qItem("eng4_6", "6. 'He is a tortoise' means he is {dash1}", 1, ["slow", "tricky", "handsome"], ["tricky"], "Tricky/clever."),
         qItem("eng4_7", "7. 'Women are gold' means women are {dash1}", 1, ["costly", "tall", "beautiful"], ["costly"], "Very precious.")
+      ]
+    },
+    {
+      subjectId: "comp_week4",
+      subjectTitle: "WEEK 4: COMPUTER STUDIES",
+      topic: "Ancient and Modern Sources of Information",
+      questions: [
+        qItem("cp4_1", "1. Sources of information are divided into {dash1} and {dash2} sources.", 2, ["ancient", "modern", "foreign"], ["ancient", "modern"], "Ancient and modern."),
+        qItem("cp4_2", "2. Three ancient sources of information: {dash1}, {dash2} and {dash3}", 3, ["town crying", "wooden gong", "fire lighting", "computer"], ["town crying", "wooden gong", "fire lighting"], "Ancient tools."),
+        qItem("cp4_3", "3. Three modern sources of information: {dash1}, {dash2} and {dash3}", 3, ["computers", "radio", "photocopying", "drums"], ["computers", "radio", "photocopying"], "Modern media."),
+        qItem("cp4_4", "4. Town crying is a modern source of information: {dash1}", 1, ["False", "True"], ["False"], "Town crying is ancient.")
       ]
     },
     {
@@ -436,6 +470,9 @@ window.WEEKLY_CURRICULUM = {
     }
   ],
 
+  // =========================================================================
+  // WEEK 5
+  // =========================================================================
   5: [
     {
       subjectId: "eng_week5",
@@ -451,6 +488,17 @@ window.WEEKLY_CURRICULUM = {
         qItem("eng5_3", "3. The children usually went to the stream with their {dash1}", 1, ["catapult", "books"], ["catapult"], "Catapult."),
         qItem("eng5_4", "4. The children usually wanted to kill {dash1} perched on the tree.", 1, ["birds", "frogs"], ["birds"], "Birds on the tree."),
         qItem("eng5_5", "5. {dash1} and {dash2} were Jude's friends.", 2, ["Amechi", "Kelechi", "Emeka"], ["Amechi", "Kelechi"], "Amechi and Kelechi.")
+      ]
+    },
+    {
+      subjectId: "comp_week5",
+      subjectTitle: "WEEK 5: COMPUTER STUDIES",
+      topic: "Information Processors",
+      questions: [
+        qItem("cp5_1", "1. {dash1} and {dash2} give out information to the public in written form.", 2, ["newspaper", "letter", "sun"], ["newspaper", "letter"], "Printed media."),
+        qItem("cp5_2", "2. We receive spoken news by hearing on the {dash1}.", 1, ["radio", "card", "mouse"], ["radio"], "Audio processor."),
+        qItem("cp5_3", "3. Devices where information is both seen and heard are {dash1} and {dash2}.", 2, ["television", "handset", "notebook"], ["television", "handset"], "Audiovisual media."),
+        qItem("cp5_4", "4. We receive space transmission through communications {dash1}.", 1, ["satellite", "typist"], ["satellite"], "Satellite systems.")
       ]
     },
     {
@@ -472,6 +520,9 @@ window.WEEKLY_CURRICULUM = {
     }
   ],
 
+  // =========================================================================
+  // WEEK 6
+  // =========================================================================
   6: [
     {
       subjectId: "eng_week6",
@@ -487,6 +538,17 @@ window.WEEKLY_CURRICULUM = {
         qItem("eng6_3", "3. They were in primary {dash1}", 1, ["4D", "3B", "5A"], ["4D"], "Primary 4D."),
         qItem("eng6_4", "4. {dash1} was good in English language and literature.", 1, ["Aremu", "Adamu"], ["Aremu"], "Aremu excelled in English."),
         qItem("eng6_5", "5. The most intelligent of the classmates was {dash1}", 1, ["Nkem", "Adamu", "Aremu"], ["Nkem"], "Nkem.")
+      ]
+    },
+    {
+      subjectId: "comp_week6",
+      subjectTitle: "WEEK 6: COMPUTER STUDIES",
+      topic: "Input, Processing and Output",
+      questions: [
+        qItem("cp6_1", "1. Data is fed into the computer system using an {dash1} device.", 1, ["input", "CPU", "document"], ["input"], "Input devices send data inwards."),
+        qItem("cp6_2", "2. Three types of input devices are {dash1}, {dash2} and {dash3}.", 3, ["mouse", "keyboard", "scanner", "printer", "monitor"], ["mouse", "keyboard", "scanner"], "Keyboards, mice and scanners are input."),
+        qItem("cp6_3", "3. Processing of all instructions takes place inside the {dash1}.", 1, ["CPU", "printer", "paper"], ["CPU"], "Central Processing Unit."),
+        qItem("cp6_4", "4. Output devices of a computer include the {dash1} and {dash2}.", 2, ["monitor", "printer", "scanner", "mouse"], ["monitor", "printer"], "Monitors and printers deliver output.")
       ]
     },
     {
@@ -518,6 +580,9 @@ window.WEEKLY_CURRICULUM = {
     }
   ],
 
+  // =========================================================================
+  // WEEK 7: MID-TERM TEST
+  // =========================================================================
   7: [
     {
       subjectId: "eng_week7",
@@ -694,14 +759,31 @@ window.WEEKLY_CURRICULUM = {
     }
   ],
 
+  // =========================================================================
+  // WEEK 8
+  // =========================================================================
   8: [
+    {
+      subjectId: "comp_week8",
+      subjectTitle: "WEEK 8: COMPUTER STUDIES",
+      topic: "Computer Software (System & Application)",
+      questions: [
+        qItem("cp8_1", "1. Computer software is divided into {dash1} and {dash2} software.", 2, ["System", "Application", "Hardware", "Plastic"], ["System", "Application"], "System software controls hardware; Application software does specific tasks."),
+        qItem("cp8_2", "2. An operating system like Windows is an example of {dash1} software.", 1, ["System", "Application", "Drawing"], ["System"], "Windows and Android are System software."),
+        qItem("cp8_3", "3. Microsoft Word and Paint are examples of {dash1} software.", 1, ["Application", "System", "Cable"], ["Application"], "Programs used to do user work are Application software."),
+        qItem("cp8_4", "4. Software cannot be touched with our hands: {dash1}", 1, ["True", "False"], ["True"], "Software is intangible computer programs and instructions.")
+      ]
+    },
     {
       subjectId: "math_week8",
       subjectTitle: "WEEK 8: MATHEMATICS",
       topic: "Highest Common Factor (H.C.F)",
       questions: [
-        qItem("m8_1", "1. The H.C.F of 8 and 12 is {dash1}", 1, ["4", "2", "6", "8"], ["4"], "Factors of 8: 1, 2, 4, 8. Factors of 12: 1, 2, 3, 4, 6, 12. Greatest is 4."),
-        qItem("m8_2", "2. The H.C.F of 9 and 15 is {dash1}", 1, ["3", "1", "5", "9"], ["3"], "Common factor is 3.")
+        qItem("m8_1", "1. Factors of 8: 1, 2, 4, 8. Factors of 12: 1, 2, 3, 4, 6, 12. Their H.C.F is {dash1}", 1, ["4", "2", "6", "8"], ["4"], "The highest common factor between 8 and 12 is 4."),
+        qItem("m8_2", "2. The H.C.F of 9 and 15 is {dash1}", 1, ["3", "1", "5", "9"], ["3"], "Factors of 9: 1, 3, 9. Factors of 15: 1, 3, 5, 15. H.C.F = 3."),
+        qItem("m8_3", "3. The H.C.F of 16 and 24 is {dash1}", 1, ["8", "4", "2", "16"], ["8"], "16 = 8 × 2 and 24 = 8 × 3; H.C.F is 8."),
+        qItem("m8_4", "4. The H.C.F of 10 and 20 is {dash1}", 1, ["10", "5", "2", "20"], ["10"], "10 divides both 10 and 20 evenly."),
+        qItem("m8_5", "5. The H.C.F of 14 and 21 is {dash1}", 1, ["7", "2", "3", "14"], ["7"], "7 × 2 = 14 and 7 × 3 = 21.")
       ]
     },
     {
@@ -709,50 +791,107 @@ window.WEEKLY_CURRICULUM = {
       subjectTitle: "WEEK 8: ENGLISH STUDIES",
       topic: "Simple Sentences: Subject and Predicate",
       questions: [
-        qItem("eng8_1", "1. In 'The swift eagle caught a snake', the Subject is {dash1} and the Predicate is {dash2}.", 2, ["The swift eagle", "caught a snake", "a snake"], ["The swift eagle", "caught a snake"], "Subject is who acts; predicate tells what happened.")
+        qItem("eng8_1", "1. In 'The swift eagle caught a snake', the Subject is {dash1} and the Predicate is {dash2}.", 2, ["The swift eagle", "caught a snake", "a snake"], ["The swift eagle", "caught a snake"], "Subject is who acts; predicate contains the verb."),
+        qItem("eng8_2", "2. In 'Flourish reads her textbook every evening', the Subject is {dash1}.", 1, ["Flourish", "reads her textbook", "every evening"], ["Flourish"], "Flourish is the person performing the action."),
+        qItem("eng8_3", "3. Every complete simple sentence must have a Subject and a {dash1}.", 1, ["Predicate / Verb", "Comma", "Preposition"], ["Predicate / Verb"], "Sentences require a subject and a predicate with a finite verb."),
+        qItem("eng8_4", "4. In 'The dog barked at the stranger', the Predicate is {dash1}.", 1, ["barked at the stranger", "The dog", "stranger"], ["barked at the stranger"], "The predicate begins from the verb 'barked'.")
       ]
     }
   ],
 
+  // =========================================================================
+  // WEEK 9
+  // =========================================================================
   9: [
+    {
+      subjectId: "comp_week9",
+      subjectTitle: "WEEK 9: COMPUTER STUDIES",
+      topic: "Storage Devices (Primary & Secondary Memory)",
+      questions: [
+        qItem("cp9_1", "1. The two main types of computer memory are {dash1} and {dash2}.", 2, ["Primary storage", "Secondary storage", "Screen", "Wire"], ["Primary storage", "Secondary storage"], "Computers use primary (RAM/ROM) and secondary storage."),
+        qItem("cp9_2", "2. A flash drive and a hard disk are examples of {dash1} storage devices.", 1, ["Secondary", "Primary", "Temporary"], ["Secondary"], "External drives provide secondary, permanent storage."),
+        qItem("cp9_3", "3. RAM stands for {dash1}.", 1, ["Random Access Memory", "Read Access Mode", "Run All Memory"], ["Random Access Memory"], "RAM holds temporary data for processing."),
+        qItem("cp9_4", "4. ROM stands for {dash1}.", 1, ["Read Only Memory", "Run Once Mode", "Real Open Memory"], ["Read Only Memory"], "ROM contains permanent instructions built in by the manufacturer.")
+      ]
+    },
     {
       subjectId: "eng_week9",
       subjectTitle: "WEEK 9: ENGLISH STUDIES",
-      topic: "Prepositions of Place",
+      topic: "Prepositions of Place and Direction",
+      passage: {
+        title: "📖 Story: Where Is the Cat?",
+        text: "Chinedu has a playful ginger cat named Simba. In the morning, Simba slept peacefully under the dining table. Later on, he jumped onto the sofa, hid behind the green curtains, and finally crawled into a cardboard box."
+      },
       questions: [
-        qItem("eng9_1", "1. The book is {dash1} the table, and the shoes are {dash2} the bed.", 2, ["on", "under", "inside"], ["on", "under"], "Prepositions describe location.")
+        qItem("eng9_1", "1. Simba slept peacefully {dash1} the table and jumped {dash2} the sofa.", 2, ["under", "onto", "between", "through"], ["under", "onto"], "Prepositions show position and direction."),
+        qItem("eng9_2", "2. Simba was hiding {dash1} the curtains.", 1, ["behind", "in front", "across"], ["behind"], "'Behind' indicates position at the back of something."),
+        qItem("eng9_3", "3. Words like 'in', 'on', 'under', and 'beside' are called {dash1}.", 1, ["Prepositions", "Adjectives", "Nouns"], ["Prepositions"], "Prepositions specify relationships in space or time."),
+        qItem("eng9_4", "4. The cat crawled {dash1} the cardboard box.", 1, ["into", "over", "above"], ["into"], "'Into' indicates movement to the interior of a space.")
       ]
     },
     {
       subjectId: "bst_week9",
       subjectTitle: "WEEK 9: BASIC SCIENCE AND TECHNOLOGY",
-      topic: "Water and Water Cycle",
+      topic: "Water and the Water Cycle",
       questions: [
-        qItem("bst9_1", "1. Water changes to vapour by {dash1} and falls as rain by {dash2}.", 2, ["evaporation", "condensation", "freezing"], ["evaporation", "condensation"], "Water cycle processes.")
+        qItem("bst9_1", "1. Water changes from liquid into vapour by {dash1} and returns as rain through {dash2}.", 2, ["evaporation", "condensation", "freezing"], ["evaporation", "condensation"], "Heat causes evaporation; cooling leads to condensation."),
+        qItem("bst9_2", "2. Pure water has no colour, no taste, and no {dash1}.", 1, ["smell", "weight", "liquid"], ["smell"], "Clean drinking water is colourless, tasteless, and odourless."),
+        qItem("bst9_3", "3. Three sources of natural water are {dash1}, {dash2} and {dash3}.", 3, ["rain", "river", "well", "petrol", "kerosene"], ["rain", "river", "well"], "Rain, rivers, and wells are natural water sources."),
+        qItem("bst9_4", "4. Boiling water kills harmful disease-causing {dash1}.", 1, ["germs", "fish", "salts"], ["germs"], "Boiling sterilizes water by destroying pathogenic bacteria.")
       ]
     }
   ],
 
+  // =========================================================================
+  // WEEK 10
+  // =========================================================================
   10: [
-    {
-      subjectId: "math_week10",
-      subjectTitle: "WEEK 10: MATHEMATICS",
-      topic: "Perimeter and Area",
-      questions: [
-        qItem("m10_1", "1. Perimeter of rectangle (Length=8cm, Width=5cm) = {dash1} cm.", 1, ["26", "40", "13"], ["26"], "2 × (8 + 5) = 26cm."),
-        qItem("m10_2", "2. Area of square of side 6cm = {dash1} cm².", 1, ["36", "24", "12"], ["36"], "Side × Side = 6 × 6 = 36cm².")
-      ]
-    },
     {
       subjectId: "comp_week10",
       subjectTitle: "WEEK 10: COMPUTER STUDIES",
-      topic: "Input and Output Devices",
+      topic: "Input and Output Devices (Full Assessment)",
+      passage: {
+        title: "💻 Computer Hardware: Input vs Output",
+        text: "Computer hardware is divided into input devices and output devices. An input device is any hardware component that allows you to enter data and instructions into a computer. Examples include the keyboard, mouse, scanner, microphone, light pen, and joystick.\n\nAn output device is any hardware component that conveys information from the computer to one or more people. Examples include the monitor (screen), printer, speakers, headphones, and projectors."
+      },
       questions: [
-        qItem("cp10_1", "1. Keyboard is an {dash1} device, while printer is an {dash2} device.", 2, ["input", "output", "storage"], ["input", "output"], "Keyboard feeds data in; printer gives physical copies out.")
+        qItem("cp10_1", "1. A keyboard is an {dash1} device, while a printer is an {dash2} device.", 2, ["input", "output", "storage", "internal"], ["input", "output"], "Keyboard feeds data in; printer gives physical copies out."),
+        qItem("cp10_2", "2. Four examples of input devices are {dash1}, {dash2}, {dash3} and {dash4}.", 4, ["mouse", "keyboard", "scanner", "microphone", "speaker", "printer"], ["mouse", "keyboard", "scanner", "microphone"], "Mouse, keyboard, scanner, and microphone take input inward."),
+        qItem("cp10_3", "3. Three examples of output devices are {dash1}, {dash2} and {dash3}.", 3, ["monitor", "printer", "speakers", "mouse", "light pen"], ["monitor", "printer", "speakers"], "Monitors display images, printers produce paper, and speakers play sound."),
+        qItem("cp10_4", "4. The device used to play audio and listen to music from a computer is the {dash1}.", 1, ["speaker", "scanner", "mouse"], ["speaker"], "Speakers output audible sound waves."),
+        qItem("cp10_5", "5. The display screen of a computer is called the {dash1}.", 1, ["monitor", "CPU", "joystick"], ["monitor"], "The monitor displays visual output to the user."),
+        qItem("cp10_6", "6. An input device commonly used by children to play computer video games is the {dash1}.", 1, ["joystick", "printer", "paper"], ["joystick"], "Joysticks control character movement in games."),
+        qItem("cp10_7", "7. A scanner captures paper documents and photos and converts them into {dash1} format inside the computer.", 1, ["digital", "wooden", "cloth"], ["digital"], "Scanners digitize physical paper copies into the computer system.")
+      ]
+    },
+    {
+      subjectId: "math_week10",
+      subjectTitle: "WEEK 10: MATHEMATICS",
+      topic: "Measurement: Perimeter and Area of Shapes",
+      questions: [
+        qItem("m10_1", "1. The perimeter of a rectangle with Length = 8cm and Width = 5cm is {dash1} cm.", 1, ["26", "40", "13", "30"], ["26"], "Perimeter = 2 × (L + W) = 2 × (8 + 5) = 2 × 13 = 26cm."),
+        qItem("m10_2", "2. The area of a square whose side is 6cm = {dash1} cm².", 1, ["36", "24", "12", "18"], ["36"], "Area of square = Side × Side = 6 × 6 = 36cm²."),
+        qItem("m10_3", "3. Perimeter is the total distance around the {dash1} of a shape.", 1, ["boundary", "inside", "weight"], ["boundary"], "Perimeter measures the total outer boundary."),
+        qItem("m10_4", "4. The area of a rectangle with length 10cm and breadth 4cm is {dash1} cm².", 1, ["40", "28", "14", "50"], ["40"], "Area = Length × Breadth = 10 × 4 = 40cm²."),
+        qItem("m10_5", "5. The perimeter of a square with side 7cm is {dash1} cm.", 1, ["28", "49", "14", "21"], ["28"], "Perimeter = 4 × Side = 4 × 7 = 28cm.")
+      ]
+    },
+    {
+      subjectId: "bst_week10",
+      subjectTitle: "WEEK 10: BASIC SCIENCE AND TECHNOLOGY",
+      topic: "Human Body: Skeletal System and Joints",
+      questions: [
+        qItem("bst10_1", "1. The hard framework of bones supporting our body is called the {dash1}.", 1, ["skeleton", "muscle", "skin"], ["skeleton"], "The skeleton provides structure and protects internal organs."),
+        qItem("bst10_2", "2. The place where two or more bones meet is called a {dash1}.", 1, ["joint", "vein", "flesh"], ["joint"], "Joints allow movement between articulating bones."),
+        qItem("bst10_3", "3. Two examples of joints in the human body are the {dash1} and {dash2}.", 2, ["knee", "elbow", "stomach", "liver"], ["knee", "elbow"], "The knee and elbow are mobile hinge joints."),
+        qItem("bst10_4", "4. The bone that protects the human brain from injury is the {dash1}.", 1, ["skull", "ribs", "backbone"], ["skull"], "The skull encloses and safeguards the brain.")
       ]
     }
   ],
 
+  // =========================================================================
+  // WEEK 11: END OF TERM TEST (COMPREHENSIVE EXAMINATION)
+  // =========================================================================
   11: [
     {
       subjectId: "exam_phe",
