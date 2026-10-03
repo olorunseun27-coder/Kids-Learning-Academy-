@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Basic 4: Live Stroke Chalkboard Teacher & Weekly Portal</title>
+<title>Basic 4: Live Stroke Chalkboard Teacher & Full Term Portal</title>
 
 <!-- FIREBASE SDK COMPAT LIBRARIES FOR PARENT SYNC -->
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
@@ -421,6 +421,10 @@ main{max-width:1200px;margin:auto;padding:16px}
                 <option value="math_week7">Mathematics: Lowest Common Multiple (L.C.M)</option>
                 <option value="english_week7">English: Concept of Print</option>
               </optgroup>
+              <optgroup label="📅 Week 8">
+                <option value="math_week8">Mathematics: Highest Common Factor (H.C.F)</option>
+                <option value="english_week8">English: Simple Sentences</option>
+              </optgroup>
             </select>
 
             <label for="questionSelect" style="font-weight:800;font-size:12px;color:#334155">2. Problem to Teach:</label>
@@ -452,58 +456,25 @@ main{max-width:1200px;margin:auto;padding:16px}
     <section id="practice" class="screen">
       <div class="hero">
         <span class="pill">Complete Term Assessments & Tests</span>
-        <h1 id="practiceHeroTitle">Basic 4 Assessment Portal (Weeks 1 — 7)</h1>
+        <h1 id="practiceHeroTitle">Basic 4 Assessment Portal (Weeks 1 — 10 & Exams)</h1>
         <p>Select any week below. Read comprehension stories and poems carefully, then tap the correct options to fill the dashes!</p>
       </div>
 
-      <!-- WEEK SELECTOR TABS -->
-      <!-- WEEK SELECTOR TABS (WEEKS 1 — 10 & END OF TERM) -->
+      <!-- DYNAMIC WEEK TABS (WEEKS 1 — 10 & END OF TERM) -->
       <div class="week-tab-bar">
-        <button class="week-tab-btn active" id="tabWeek1" onclick="switchAssessmentWeek(1)">
-          <span>📅 Week 1</span>
-          <span class="week-status-badge badge-pending" id="badgeWeek1">In Progress</span>
-        </button>
-        <button class="week-tab-btn" id="tabWeek2" onclick="switchAssessmentWeek(2)">
-          <span>📅 Week 2</span>
-          <span class="week-status-badge badge-pending" id="badgeWeek2">In Progress</span>
-        </button>
-        <button class="week-tab-btn" id="tabWeek3" onclick="switchAssessmentWeek(3)">
-          <span>📅 Week 3</span>
-          <span class="week-status-badge badge-pending" id="badgeWeek3">In Progress</span>
-        </button>
-        <button class="week-tab-btn" id="tabWeek4" onclick="switchAssessmentWeek(4)">
-          <span>📅 Week 4</span>
-          <span class="week-status-badge badge-pending" id="badgeWeek4">In Progress</span>
-        </button>
-        <button class="week-tab-btn" id="tabWeek5" onclick="switchAssessmentWeek(5)">
-          <span>📅 Week 5</span>
-          <span class="week-status-badge badge-pending" id="badgeWeek5">In Progress</span>
-        </button>
-        <button class="week-tab-btn" id="tabWeek6" onclick="switchAssessmentWeek(6)">
-          <span>📅 Week 6</span>
-          <span class="week-status-badge badge-pending" id="badgeWeek6">In Progress</span>
-        </button>
-        <button class="week-tab-btn" id="tabWeek7" onclick="switchAssessmentWeek(7)">
-          <span>📝 Week 7 (Mid-Term)</span>
-          <span class="week-status-badge badge-pending" id="badgeWeek7">In Progress</span>
-        </button>
-        <button class="week-tab-btn" id="tabWeek8" onclick="switchAssessmentWeek(8)">
-          <span>📅 Week 8</span>
-          <span class="week-status-badge badge-pending" id="badgeWeek8">In Progress</span>
-        </button>
-        <button class="week-tab-btn" id="tabWeek9" onclick="switchAssessmentWeek(9)">
-          <span>📅 Week 9</span>
-          <span class="week-status-badge badge-pending" id="badgeWeek9">In Progress</span>
-        </button>
-        <button class="week-tab-btn" id="tabWeek10" onclick="switchAssessmentWeek(10)">
-          <span>📅 Week 10</span>
-          <span class="week-status-badge badge-pending" id="badgeWeek10">In Progress</span>
-        </button>
-        <button class="week-tab-btn" id="tabWeek11" onclick="switchAssessmentWeek(11)">
-          <span>🎓 End of Term Test</span>
-          <span class="week-status-badge badge-pending" id="badgeWeek11">In Progress</span>
-        </button>
+        <button class="week-tab-btn active" id="tabWeek1" onclick="switchAssessmentWeek(1)"><span>📅 Week 1</span><span class="week-status-badge badge-pending" id="badgeWeek1">In Progress</span></button>
+        <button class="week-tab-btn" id="tabWeek2" onclick="switchAssessmentWeek(2)"><span>📅 Week 2</span><span class="week-status-badge badge-pending" id="badgeWeek2">In Progress</span></button>
+        <button class="week-tab-btn" id="tabWeek3" onclick="switchAssessmentWeek(3)"><span>📅 Week 3</span><span class="week-status-badge badge-pending" id="badgeWeek3">In Progress</span></button>
+        <button class="week-tab-btn" id="tabWeek4" onclick="switchAssessmentWeek(4)"><span>📅 Week 4</span><span class="week-status-badge badge-pending" id="badgeWeek4">In Progress</span></button>
+        <button class="week-tab-btn" id="tabWeek5" onclick="switchAssessmentWeek(5)"><span>📅 Week 5</span><span class="week-status-badge badge-pending" id="badgeWeek5">In Progress</span></button>
+        <button class="week-tab-btn" id="tabWeek6" onclick="switchAssessmentWeek(6)"><span>📅 Week 6</span><span class="week-status-badge badge-pending" id="badgeWeek6">In Progress</span></button>
+        <button class="week-tab-btn" id="tabWeek7" onclick="switchAssessmentWeek(7)"><span>📝 Week 7 (Mid-Term)</span><span class="week-status-badge badge-pending" id="badgeWeek7">In Progress</span></button>
+        <button class="week-tab-btn" id="tabWeek8" onclick="switchAssessmentWeek(8)"><span>📅 Week 8</span><span class="week-status-badge badge-pending" id="badgeWeek8">In Progress</span></button>
+        <button class="week-tab-btn" id="tabWeek9" onclick="switchAssessmentWeek(9)"><span>📅 Week 9</span><span class="week-status-badge badge-pending" id="badgeWeek9">In Progress</span></button>
+        <button class="week-tab-btn" id="tabWeek10" onclick="switchAssessmentWeek(10)"><span>📅 Week 10</span><span class="week-status-badge badge-pending" id="badgeWeek10">In Progress</span></button>
+        <button class="week-tab-btn" id="tabWeek11" onclick="switchAssessmentWeek(11)"><span>🎓 End of Term Test</span><span class="week-status-badge badge-pending" id="badgeWeek11">In Progress</span></button>
       </div>
+
       <div id="practiceContainer"></div>
     </section>
 
@@ -511,7 +482,7 @@ main{max-width:1200px;margin:auto;padding:16px}
     <section id="progress" class="screen">
       <div class="hero">
         <h1 id="progressTitle">Pupil's Progress 📈</h1>
-        <p>Track answers and completion status across all 7 weeks.</p>
+        <p>Track answers and completion status across the entire term.</p>
       </div>
       <div class="card" style="margin-top:16px">
         <div class="stats">
@@ -527,7 +498,7 @@ main{max-width:1200px;margin:auto;padding:16px}
 </div>
 
 <!-- =========================================================================
-     LOAD EXTRACTED QUESTION BANK FIRST
+     LOAD EXTRACTED QUESTION BANK (OR LOCAL FALLBACK)
      ========================================================================= -->
 <script src="questions.js"></script>
 
@@ -619,9 +590,13 @@ function numberToWord(n) {
   return String(n);
 }
 
-// Fallback in case questions.js is still loading
-const WEEKLY_CURRICULUM = window.WEEKLY_CURRICULUM || {};
-const LIVE_CHALK_CURRICULUM = window.LIVE_CHALK_CURRICULUM || {};
+// Ensure curriculum is accessed smoothly from window.WEEKLY_CURRICULUM
+function getCurriculum() {
+  return window.WEEKLY_CURRICULUM || {};
+}
+function getLiveCurriculum() {
+  return window.LIVE_CHALK_CURRICULUM || {};
+}
 
 // =========================================================================
 // 4. ENGINE STATE & PROGRESS
@@ -718,7 +693,7 @@ function stopSpeech(){
 }
 
 function updateSubtitle(text){
-  document.getElementById('speechText').innerHTML = text.replace(/(one|two|three|four|five|six|seven|eight|nine|ten|LCM|textbook|title|CPU|Gowon|Flourish|correct)/gi, '<span class="highlight">$1</span>');
+  document.getElementById('speechText').innerHTML = text.replace(/(one|two|three|four|five|six|seven|eight|nine|ten|LCM|HCF|textbook|title|CPU|Gowon|Flourish|correct)/gi, '<span class="highlight">$1</span>');
 }
 
 async function checkWait(token){
@@ -923,7 +898,8 @@ function populateQuestionDropdown(){
   const select = document.getElementById('questionSelect');
   if(!select) return;
   select.innerHTML = '';
-  const list = LIVE_CHALK_CURRICULUM[currentTopic] || [];
+  const cur = getLiveCurriculum();
+  const list = cur[currentTopic] || [];
   list.forEach((item, idx) => {
     const opt = document.createElement('option');
     opt.value = idx;
@@ -994,7 +970,8 @@ async function runContinuousLessons(){
   document.getElementById('playBtn').textContent = '⏸ Pause Teaching';
   KidTracker.pushStatus("studying");
 
-  const list = LIVE_CHALK_CURRICULUM[currentTopic] || [];
+  const cur = getLiveCurriculum();
+  const list = cur[currentTopic] || [];
   if(!list.length){
     alert("Live chalkboard is preparing more lessons for this topic! Assessment questions are fully active in Weekly Exercises.");
     isPlaying = false;
@@ -1032,7 +1009,8 @@ async function runContinuousLessons(){
 }
 
 async function teachCurrentItem(token, num, total){
-  const item = LIVE_CHALK_CURRICULUM[currentTopic][selectedProblemIndex];
+  const cur = getLiveCurriculum();
+  const item = cur[currentTopic][selectedProblemIndex];
   const qBox = document.getElementById('statedQuestion');
   const canvas = document.getElementById('teachCanvas');
   const tBody = document.getElementById('trayBody');
@@ -1120,19 +1098,21 @@ async function teachCurrentItem(token, num, total){
 }
 
 // =========================================================================
-// 7. WEEKLY ASSESSMENTS: RENDERING PASSAGES & QUESTIONS
+// 7. WEEKLY ASSESSMENTS: DYNAMIC TAB SELECTION (WEEKS 1 — 11)
 // =========================================================================
 function switchAssessmentWeek(w){
   activeAssessmentWeek = w;
-  for(let i = 1; i <= 11; i++){
-    const tab = document.getElementById(`tabWeek${i}`);
-    if(tab) tab.classList.toggle('active', i === w);
-  }
+  // Automatically highlights the active tab dynamically, regardless of week count!
+  document.querySelectorAll('.week-tab-btn').forEach(btn => {
+    btn.classList.toggle('active', btn.id === `tabWeek${w}`);
+  });
   renderWeeklyAssessments();
 }
 
 function updateWeekBadges(){
-  for(let w = 1; w <= 11; w++){
+  const fullCurriculum = getCurriculum();
+  const allWeeks = Object.keys(fullCurriculum);
+  allWeeks.forEach(w => {
     const done = checkIsWeekFullyAnswered(w);
     const badge = document.getElementById(`badgeWeek${w}`);
     if(badge){
@@ -1144,10 +1124,12 @@ function updateWeekBadges(){
         badge.textContent = "In Progress";
       }
     }
-  }
+  });
 }
+
 function checkIsWeekFullyAnswered(weekNum){
-  const groups = WEEKLY_CURRICULUM[weekNum] || [];
+  const fullCurriculum = getCurriculum();
+  const groups = fullCurriculum[weekNum] || [];
   let total = 0;
   let answered = 0;
   groups.forEach(sub => {
@@ -1161,10 +1143,21 @@ function checkIsWeekFullyAnswered(weekNum){
 
 function renderWeeklyAssessments(){
   const container = document.getElementById('practiceContainer');
-  const subjectGroups = WEEKLY_CURRICULUM[activeAssessmentWeek] || [];
+  const fullCurriculum = getCurriculum();
+  const subjectGroups = fullCurriculum[activeAssessmentWeek] || [];
   updateWeekBadges();
 
   let html = '';
+
+  if(subjectGroups.length === 0){
+    container.innerHTML = `
+      <div style="text-align:center;padding:40px;background:#fff;border-radius:20px;margin-top:20px;box-shadow:var(--shadow)">
+        <h2 style="color:var(--green-dark)">Loading Questions for Week ${activeAssessmentWeek}...</h2>
+        <p style="color:#64748b">Make sure <code>questions.js</code> is in the same folder as <code>index.html</code>.</p>
+      </div>
+    `;
+    return;
+  }
 
   subjectGroups.forEach(sub => {
     html += `
@@ -1264,8 +1257,10 @@ function escapeId(str){ return String(str).replace(/[^a-zA-Z0-9]/g, '_'); }
 function escapeAttr(str){ return String(str).replace(/'/g, "\\'"); }
 
 function findQuestionConfig(qId){
-  for(let w = 1; w <= 7; w++){
-    for(const sub of (WEEKLY_CURRICULUM[w] || [])){
+  const fullCurriculum = getCurriculum();
+  const allWeeks = Object.keys(fullCurriculum);
+  for(const w of allWeeks){
+    for(const sub of (fullCurriculum[w] || [])){
       const q = sub.questions.find(item => item.id === qId);
       if(q) return q;
     }
@@ -1397,8 +1392,10 @@ function listenToQuestion(qId, weekNum){
 }
 
 function listenToPassage(subjectId){
-  for(let w = 1; w <= 7; w++){
-    for(const sub of (WEEKLY_CURRICULUM[w] || [])){
+  const fullCurriculum = getCurriculum();
+  const allWeeks = Object.keys(fullCurriculum);
+  for(const w of allWeeks){
+    for(const sub of (fullCurriculum[w] || [])){
       if(sub.subjectId === subjectId && sub.passage){
         speakCue(`${sub.passage.title}. ${sub.passage.text}`);
         return;
@@ -1431,7 +1428,7 @@ document.querySelectorAll('.nav button').forEach(b => {
   b.onclick = () => showScreen(b.dataset.screen);
 });
 
-// INITIAL SETUP
+// INITIAL BOOTSTRAP
 populateQuestionDropdown();
 resetBoard();
 renderWeeklyAssessments();
@@ -1439,4 +1436,4 @@ renderProgress();
 KidTracker.init();
 </script>
 </body>
-</html>
+  </html>
