@@ -1305,7 +1305,7 @@ function listenToQuestion(qId, weekNum){
 
   let spokenText = q.text
     .replace(/^(\d+)\.\s*/, "Number $1. ")
-    .replace(/\{dash\d+\}/g, "blank space");
+    .replace(/\{dash\d+\}/g, "dash");
 
   const fullSentence = `${instruction} ${spokenText}`;
   speakCue(fullSentence);
@@ -1480,4 +1480,4 @@ renderProgress();
 KidTracker.init();
 </script>
 </body>
-  </html>
+                </html>
