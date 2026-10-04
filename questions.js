@@ -643,7 +643,7 @@ window.WEEKLY_CURRICULUM = {
 };
 
 // =========================================================================
-// LIVE CHALKBOARD ENGINE CURRICULUM
+// MULTI-SENSORY LIVE CHALKBOARD ENGINE CURRICULUM
 // =========================================================================
 window.LIVE_CHALK_CURRICULUM = {
   "english_week1": [
@@ -651,25 +651,111 @@ window.LIVE_CHALK_CURRICULUM = {
     { q: "What is the plural of Ox?", a: "Oxen", rule: "Irregular noun: Ox takes '-en' to become 'Oxen'.", tray: ["1 Ox 🐂", "Many Oxen 🐂🐂"] },
     { q: "What is the plural of Knife?", a: "Knives", rule: "Drop -fe and add -ves to form 'Knives'.", tray: ["1 Knife 🔪", "Set of Knives 🔪🔪"] }
   ],
+
+  // CONCRETE PICTORIAL EQUIVALENT FRACTIONS
   "math_fractions": [
-    { q: "Find 3 equivalent fractions for 1/2", num: 1, den: 2, a: "2/4, 3/6, 4/8", rule: "Multiply numerator & denominator by 2, 3, and 4.", multipliers: [2,3,4], tray: ["1/2 = Half", "2/4 = Two Quarters", "3/6 = Three Sixths"] },
-    { q: "Find 3 equivalent fractions for 1/7", num: 1, den: 7, a: "2/14, 3/21, 4/28", rule: "Multiply top & bottom by 2, 3, and 4.", multipliers: [2,3,4], tray: ["1/7", "2/14", "3/21"] },
-    { q: "Find 3 equivalent fractions for 2/5", num: 2, den: 5, a: "4/10, 6/15, 8/20", rule: "Multiply top & bottom by 2, 3, and 4.", multipliers: [2,3,4], tray: ["2/5", "4/10", "6/15"] }
+    {
+      q: "Find 3 equivalent fractions for 1/2",
+      num: 1,
+      den: 2,
+      multipliers: [2, 3, 4],
+      tray: ["1/2 = Half a Chocolate Bar 🍫", "2/4 = Two Quarters", "3/6 = Three Sixths", "Rule: Multiply top & bottom by the same number"]
+    },
+    {
+      q: "Find 3 equivalent fractions for 2/5",
+      num: 2,
+      den: 5,
+      multipliers: [2, 3, 4],
+      tray: ["2/5 baseline bar", "4/10 = cut in 2", "6/15 = cut in 3", "Rule: Top × 2, Bottom × 2"]
+    },
+    {
+      q: "Find 3 equivalent fractions for 1/3",
+      num: 1,
+      den: 3,
+      multipliers: [2, 3, 4],
+      tray: ["1/3 of a cake 🍰", "2/6 = 1/3", "3/9 = 1/3", "4/12 = 1/3"]
+    }
   ],
+
   "igbo_week1": [
     { q: "Ụdaume Igbo dị ole?", a: "Asatọ (8)", rule: "Ụdaume mfe (4) + Ụdaume arọ (4) = Asatọ (8).", tray: ["Ụdaume mfe: a, e, i, o", "Ụdaume arọ: ị, ọ, u, ụ"] }
   ],
+
+  // SEQUENCE ENGINE (STEP-BY-STEP ADDITION)
   "math_week2": [
-    { q: "Count in tens: 80, 90, __, __, 120", a: "100, 110", rule: "Count forward in tens (+10).", tray: ["+10 rule", "80+10=90", "90+10=100"] }
+    {
+      q: "80, 90, __, __, 120",
+      type: "sequence",
+      pattern: "80, 90, __, __, 120, 130",
+      step: 10,
+      answer: "100, 110",
+      tray: ["Pattern: Count by Tens", "80 + 10 = 90", "90 + 10 = 100", "100 + 10 = 110"]
+    },
+    {
+      q: "78, 128, 178, __, __",
+      type: "sequence",
+      pattern: "78, 128, 178, __, __",
+      step: 50,
+      answer: "228, 278",
+      tray: ["Pattern: Add 50 each time", "178 + 50 = 228", "228 + 50 = 278"]
+    }
   ],
+
   "comp_week2": [
     { q: "What is Data in computer studies?", a: "Raw or unprocessed facts.", rule: "Data becomes information when processed by the CPU.", tray: ["Data ➔ CPU ➔ Information"] }
   ],
+
+  // FROG JUMP NUMBER LINE (L.C.M)
   "math_week7": [
-    { q: "Find the L.C.M of 6 and 8", a: "24", rule: "Multiples of 6: 6, 12, 18, 24. Multiples of 8: 8, 16, 24. Smallest common is 24.", tray: ["Multiples of 6: 6, 12, 18, 24", "Multiples of 8: 8, 16, 24", "L.C.M = 24"] },
-    { q: "Find the L.C.M of 4 and 7", a: "28", rule: "4 and 7 have no common factor, so multiply: 4 × 7 = 28.", tray: ["4 × 7 = 28", "L.C.M = 28"] }
+    {
+      q: "Find the L.C.M of 4 and 6",
+      type: "lcm",
+      n1: 4,
+      n2: 6,
+      multiples1: [4, 8, 12, 16, 20, 24],
+      multiples2: [6, 12, 18, 24],
+      answer: 12,
+      tray: ["Frog 4 jumps: 4, 8, 12 🐸", "Frog 6 jumps: 6, 12 🐸", "First stone they meet = 12!"]
+    },
+    {
+      q: "Find the L.C.M of 3 and 6",
+      type: "lcm",
+      n1: 3,
+      n2: 6,
+      multiples1: [3, 6, 9, 12],
+      multiples2: [6, 12, 18],
+      answer: 6,
+      tray: ["Multiples of 3: 3, 6, 9", "Multiples of 6: 6, 12", "Smallest shared multiple = 6!"]
+    }
   ],
+
   "english_week7": [
     { q: "What is the title of a textbook?", a: "The official name given to the book.", rule: "The title identifies the book and gives the reader a preview of its contents.", tray: ["Title Page 📖", "Table of Contents 📑", "Glossary 🔤"] }
+  ],
+
+  // SHARED FACTOR KING (H.C.F)
+  "math_week8": [
+    {
+      q: "Find the H.C.F of 8 and 12",
+      type: "hcf",
+      n1: 8,
+      n2: 12,
+      factors1: [1, 2, 4, 8],
+      factors2: [1, 2, 3, 4, 6, 12],
+      commonFactors: [1, 2, 4],
+      answer: 4,
+      tray: ["Factors of 8: 1, 2, 4, 8", "Factors of 12: 1, 2, 3, 4, 6, 12", "Common: 1, 2, 4", "The Biggest Factor is 4! 👑"]
+    },
+    {
+      q: "Find the H.C.F of 9 and 15",
+      type: "hcf",
+      n1: 9,
+      n2: 15,
+      factors1: [1, 3, 9],
+      factors2: [1, 3, 5, 15],
+      commonFactors: [1, 3],
+      answer: 3,
+      tray: ["Factors of 9: 1, 3, 9", "Factors of 15: 1, 3, 5, 15", "Winner = 3! 👑"]
+    }
   ]
 };
