@@ -183,115 +183,6 @@ main{max-width:1200px;margin:auto;padding:16px}
 .highlight{background:#fef08a;color:#991b1b;padding:1px 4px;border-radius:4px;font-weight:800}
 
 /* =========================================================
-   ENHANCED MULTI-SENSORY CONCRETE MATH VISUAL ENGINE
-   ========================================================= */
-.math-visual-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 10px;
-  width: 100%;
-  padding: 10px;
-  background: rgba(0, 0, 0, 0.4);
-  border: 2px solid var(--yellow);
-  border-radius: 14px;
-  margin-top: 10px;
-}
-.math-visual-label {
-  font-size: 14px;
-  font-weight: 900;
-  color: #fde047;
-  letter-spacing: 0.5px;
-  text-align: center;
-}
-.fraction-strip-wrap {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  width: 100%;
-  max-width: 520px;
-}
-.fraction-strip {
-  display: flex;
-  width: 100%;
-  height: 32px;
-  border-radius: 8px;
-  overflow: hidden;
-  border: 2px solid #ffffff;
-  background: rgba(255,255,255,0.1);
-}
-.fraction-cell {
-  flex: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 13px;
-  font-weight: 900;
-  color: #ffffff;
-  border-right: 1.5px dashed rgba(255,255,255,0.4);
-  transition: all 0.4s ease;
-}
-.fraction-cell:last-child { border-right: none; }
-.fraction-cell.shaded {
-  background: linear-gradient(135deg, #f59e0b, #d97706);
-  color: #fff;
-  box-shadow: inset 0 0 8px rgba(0,0,0,0.3);
-}
-
-.number-line-svg {
-  width: 100%;
-  max-width: 550px;
-  height: 90px;
-  overflow: visible;
-}
-.jump-arc {
-  fill: none;
-  stroke-width: 3.5;
-  stroke-linecap: round;
-  stroke-dasharray: 4, 4;
-}
-.frog-4 { stroke: #38bdf8; }
-.frog-6 { stroke: #f43f5e; }
-.meet-circle {
-  fill: #facc15;
-  animation: pulseTarget 1s infinite alternate ease-in-out;
-}
-@keyframes pulseTarget {
-  from { r: 6; }
-  to { r: 9; }
-}
-
-.factor-group {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  flex-wrap: wrap;
-  justify-content: center;
-}
-.factor-pill {
-  padding: 4px 10px;
-  border-radius: 999px;
-  font-size: 13px;
-  font-weight: 900;
-  background: rgba(255, 255, 255, 0.15);
-  border: 1.5px solid #ffffff;
-  color: #fff;
-}
-.factor-pill.match {
-  background: #10b981;
-  border-color: #34d399;
-  color: #fff;
-  transform: scale(1.08);
-}
-.factor-pill.hcf-winner {
-  background: #eab308;
-  border-color: #fde047;
-  color: #000;
-  transform: scale(1.2);
-  box-shadow: 0 0 12px rgba(250, 204, 21, 0.8);
-}
-
-/* =========================================================
    WEEKLY ASSESSMENT STYLES & PASSAGE CARDS
    ========================================================= */
 .week-tab-bar{
@@ -1118,7 +1009,6 @@ async function runContinuousLessons(){
   }
 }
 
-// UPGRADED MULTI-SENSORY VISUAL MATHEMATICS ENGINE
 async function teachCurrentItem(token, num, total){
   const cur = getLiveCurriculum();
   const item = cur[currentTopic][selectedProblemIndex];
@@ -1127,16 +1017,12 @@ async function teachCurrentItem(token, num, total){
   const tBody = document.getElementById('trayBody');
 
   await checkWait(token);
-
-  tBody.innerHTML = '';
   if(item.tray){
     tBody.innerHTML = item.tray.map(t => `<div class="tray-card">${t}</div>`).join('');
   }
 
-  // 1. EQUIVALENT FRACTIONS (CHOCOLATE BAR STRIP MODEL)
-  if(item.multipliers && item.num !== undefined && item.den !== undefined){
-    await teacherWritesText(qBox, `Problem ${num}: Equivalent Fractions of `, `Look here, ${pupilName}! Let's find 3 fractions equal to `, token);
-
+  if(item.multipliers){
+    await teacherWritesText(qBox, "Question: ", `Question ${num}. Watch carefully.`, token);
     const qGivenFrac = createFractionBox(true);
     qBox.appendChild(qGivenFrac);
     await traceChalkStrokeChar(qGivenFrac.querySelector('.f-num'), String(item.num), numberToWord(item.num), token, true);
@@ -1160,28 +1046,7 @@ async function teachCurrentItem(token, num, total){
       }
     });
 
-    const visualBox = document.createElement('div');
-    visualBox.className = 'math-visual-container';
-    visualBox.innerHTML = `
-      <div class="math-visual-label">🍫 Visual Chocolate Bar Model (Equal Amounts Shaded):</div>
-      <div class="fraction-strip-wrap" id="stripWrap"></div>
-    `;
-    canvas.appendChild(visualBox);
-    const stripWrap = visualBox.querySelector('#stripWrap');
-
-    const baseStrip = document.createElement('div');
-    baseStrip.className = 'fraction-strip';
-    for(let c = 0; c < item.den; c++){
-      const cell = document.createElement('div');
-      cell.className = 'fraction-cell' + (c < item.num ? ' shaded' : '');
-      cell.textContent = `${item.num}/${item.den}`;
-      baseStrip.appendChild(cell);
-    }
-    stripWrap.appendChild(baseStrip);
-
-    await speakCue(`Imagine a chocolate bar cut into ${numberToWord(item.den)} slices. You eat ${numberToWord(item.num)} slice.`);
-    await sleep(600);
-    await speakCue(`To keep the exact same amount of chocolate, whatever you do to the top, you must do to the bottom!`);
+    await speakCue(`To find 3 equivalent fractions, multiply both numerator and denominator by 2, 3, and 4!`);
 
     for(let i = 0; i < item.multipliers.length; i++){
       await checkWait(token);
@@ -1193,7 +1058,7 @@ async function teachCurrentItem(token, num, total){
       calcLine.className = 'written-line';
       canvas.appendChild(calcLine);
 
-      await teacherWritesText(calcLine, `Step ${i+1}: Multiply by ${m} ➔ `, `Step ${i+1}: Cut every slice into ${numberToWord(m)} pieces. Top times ${numberToWord(m)}, bottom times ${numberToWord(m)}.`, token, {color:'var(--yellow)'});
+      await teacherWritesText(calcLine, `Dash ${i+1} (Multiply by ${m}): `, `Dash ${i+1}, multiply top and bottom by ${numberToWord(m)}.`, token, {color:'var(--yellow)'});
 
       const stepFrac = createFractionBox();
       calcLine.appendChild(stepFrac);
@@ -1212,16 +1077,6 @@ async function teachCurrentItem(token, num, total){
       await teacherSaysOverAndDrawsBar(resFrac.querySelector('.f-bar'), "over", token);
       await traceChalkStrokeChar(resFrac.querySelector('.f-den'), String(resD), numberToWord(resD), token, true);
 
-      const subStrip = document.createElement('div');
-      subStrip.className = 'fraction-strip';
-      for(let sc = 0; sc < resD; sc++){
-        const cell = document.createElement('div');
-        cell.className = 'fraction-cell' + (sc < resN ? ' shaded' : '');
-        cell.textContent = `${resN}/${resD}`;
-        subStrip.appendChild(cell);
-      }
-      stripWrap.appendChild(subStrip);
-
       dashes[i].className = 'dash-slot filled';
       dashes[i].innerHTML = '';
       const bFrac = createFractionBox(true);
@@ -1229,105 +1084,9 @@ async function teachCurrentItem(token, num, total){
       await traceChalkStrokeChar(bFrac.querySelector('.f-num'), String(resN), "", token, true);
       await teacherSaysOverAndDrawsBar(bFrac.querySelector('.f-bar'), "", token);
       await traceChalkStrokeChar(bFrac.querySelector('.f-den'), String(resD), "", token, true);
-
-      await speakCue(`Look at the bars! ${item.num}/${item.den} is exactly the same size as ${resN}/${resD}!`);
-      await sleep(500);
+      await sleep(200);
     }
-  }
-
-  // 2. LOWEST COMMON MULTIPLE (L.C.M) - FROG JUMP NUMBER LINE
-  else if(item.type === "lcm"){
-    await teacherWritesText(qBox, `Question: Find L.C.M of ${item.n1} and ${item.n2}`, `Let us find the Lowest Common Multiple of ${item.n1} and ${item.n2}, ${pupilName}.`, token);
-
-    const mLine1 = document.createElement('div');
-    mLine1.className = 'written-line';
-    canvas.appendChild(mLine1);
-    await teacherWritesText(mLine1, `Multiples of ${item.n1}: `, `First, count by ${item.n1}s like a blue frog: `, token, {color:'#38bdf8'});
-    await teacherWritesText(mLine1, item.multiples1.join(", "), item.multiples1.join(", "), token);
-
-    const mLine2 = document.createElement('div');
-    mLine2.className = 'written-line';
-    canvas.appendChild(mLine2);
-    await teacherWritesText(mLine2, `Multiples of ${item.n2}: `, `Now count by ${item.n2}s like a red frog: `, token, {color:'#f43f5e'});
-    await teacherWritesText(mLine2, item.multiples2.join(", "), item.multiples2.join(", "), token);
-
-    const lcmVisual = document.createElement('div');
-    lcmVisual.className = 'math-visual-container';
-    lcmVisual.innerHTML = `
-      <div class="math-visual-label">🐸 Frog Jump Number Line: First Stone Where Both Frogs Meet!</div>
-      <svg class="number-line-svg" viewBox="0 0 550 90">
-        <line x1="20" y1="70" x2="530" y2="70" stroke="#cbd5e1" stroke-width="3" />
-        ${Array.from({length: 29}).map((_, idx) => `
-          <circle cx="${25 + idx * 18}" cy="70" r="${idx === item.answer ? '7' : '3'}" fill="${idx === item.answer ? '#facc15' : '#94a3b8'}" class="${idx === item.answer ? 'meet-circle' : ''}" />
-          <text x="${25 + idx * 18}" y="85" font-size="9" fill="#e2e8f0" text-anchor="middle">${idx}</text>
-        `).join('')}
-      </svg>
-    `;
-    canvas.appendChild(lcmVisual);
-
-    await speakCue(`Look at the stones! Where do both frogs land on the exact same stone first?`);
-    await sleep(400);
-
-    const ansLine = document.createElement('div');
-    ansLine.className = 'written-line';
-    canvas.appendChild(ansLine);
-    await teacherWritesText(ansLine, `Smallest Shared Number (L.C.M) = ${item.answer}`, `They both meet at ${item.answer}! So the L.C.M is ${item.answer}!`, token, {color:'var(--yellow)'});
-  }
-
-  // 3. HIGHEST COMMON FACTOR (H.C.F) - SHARED FACTOR MATCHER
-  else if(item.type === "hcf"){
-    await teacherWritesText(qBox, `Question: Find H.C.F of ${item.n1} and ${item.n2}`, `Let us find the Highest Common Factor of ${item.n1} and ${item.n2}.`, token);
-
-    const fLine1 = document.createElement('div');
-    fLine1.className = 'written-line';
-    canvas.appendChild(fLine1);
-    await teacherWritesText(fLine1, `Factors that divide ${item.n1}: `, `Numbers that divide ${item.n1} without remainder: `, token);
-    await teacherWritesText(fLine1, item.factors1.join(", "), item.factors1.join(", "), token);
-
-    const fLine2 = document.createElement('div');
-    fLine2.className = 'written-line';
-    canvas.appendChild(fLine2);
-    await teacherWritesText(fLine2, `Factors that divide ${item.n2}: `, `Numbers that divide ${item.n2} without remainder: `, token);
-    await teacherWritesText(fLine2, item.factors2.join(", "), item.factors2.join(", "), token);
-
-    const hcfVisual = document.createElement('div');
-    hcfVisual.className = 'math-visual-container';
-    hcfVisual.innerHTML = `
-      <div class="math-visual-label">🎯 Shared Factors (The Largest King Factor Wins):</div>
-      <div class="factor-group" id="factorPills">
-        ${item.commonFactors.map(f => `
-          <div class="factor-pill ${f === item.answer ? 'hcf-winner' : 'match'}">${f} ${f === item.answer ? '👑 (Winner: H.C.F)' : '✓'}</div>
-        `).join('')}
-      </div>
-    `;
-    canvas.appendChild(hcfVisual);
-
-    await speakCue(`The shared factors are ${item.commonFactors.join(", ")}. The biggest one of them all is ${item.answer}!`);
-    await sleep(400);
-
-    const ansLine = document.createElement('div');
-    ansLine.className = 'written-line';
-    canvas.appendChild(ansLine);
-    await teacherWritesText(ansLine, `Highest Common Factor (H.C.F) = ${item.answer}`, `So the H.C.F is ${item.answer}!`, token, {color:'var(--yellow)'});
-  }
-
-  // 4. NUMBER SEQUENCES (STEP-UP LADDER)
-  else if(item.type === "sequence"){
-    await teacherWritesText(qBox, `Complete the Sequence: ${item.pattern}`, `Look at the pattern, ${pupilName}: `, token);
-
-    const stepLine = document.createElement('div');
-    stepLine.className = 'written-line';
-    canvas.appendChild(stepLine);
-    await teacherWritesText(stepLine, `Secret Rule: Add ${item.step} each time!`, `The secret rule is to add ${item.step} at every step!`, token, {color:'var(--yellow)'});
-
-    const ansLine = document.createElement('div');
-    ansLine.className = 'written-line';
-    canvas.appendChild(ansLine);
-    await teacherWritesText(ansLine, `Next Numbers: ${item.answer}`, `Adding ${item.step} gives ${item.answer}!`, token, {color:'#34d399'});
-  }
-
-  // 5. DEFAULT SUBJECTS
-  else {
+  } else {
     await teacherWritesText(qBox, item.q, item.q, token);
     const line = document.createElement('div');
     line.className = 'written-line';
@@ -1340,7 +1099,7 @@ async function teachCurrentItem(token, num, total){
 }
 
 // =========================================================================
-// 6. WEEKLY ASSESSMENTS RENDERER & TEACHER READING
+// 6. WEEKLY ASSESSMENTS RENDERER & INTERACTIVE LOGIC
 // =========================================================================
 function switchAssessmentWeek(w){
   activeAssessmentWeek = w;
@@ -1531,7 +1290,7 @@ function findSubjectForQuestion(qId){
   return null;
 }
 
-// FULL NATURAL TEACHER VOICE READING
+// Full, natural teacher speech reading
 function listenToQuestion(qId, weekNum){
   const q = findQuestionConfig(qId);
   if(!q) return;
@@ -1546,7 +1305,7 @@ function listenToQuestion(qId, weekNum){
 
   let spokenText = q.text
     .replace(/^(\d+)\.\s*/, "Number $1. ")
-    .replace(/\{dash\d+\}/g, "blank space");
+    .replace(/\{dash\d+\}/g, "dash");
 
   const fullSentence = `${instruction} ${spokenText}`;
   speakCue(fullSentence);
@@ -1721,5 +1480,4 @@ renderProgress();
 KidTracker.init();
 </script>
 </body>
-</html>
-        
+                </html>
