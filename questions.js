@@ -1,10 +1,10 @@
 // =========================================================================
 // BASIC 4 CURRICULUM & QUESTION BANK (WEEKS 1 — 11)
-// Complete Spoken Instructions & Natural Sentences
+// Complete Spoken Instructions, Natural Sentences & Live Chalkboard Data
 // =========================================================================
 
-function qItem(id, text, dashes, options, correct, rule, type = "option", placeholders = null) {
-  return { id, text, dashes, options, correct, rule, type, placeholders };
+function qItem(id, text, dashes, options, correct, rule, type = "option", placeholders = null, diagram = null) {
+  return { id, text, dashes, options, correct, rule, type, placeholders, diagram };
 }
 
 window.WEEKLY_CURRICULUM = {
@@ -38,6 +38,39 @@ window.WEEKLY_CURRICULUM = {
         qItem("m1_4", "4. Find three equivalent fractions for 1/4: {dash1}, {dash2} and {dash3}", 3, ["2/8", "3/12", "4/16", "2/6", "3/10"], ["2/8", "3/12", "4/16"], "Multiply 1/4 by 2, 3, and 4."),
         qItem("m1_5", "5. Complete the equivalent fractions for 1/3: {dash1}, {dash2} and {dash3}", 3, ["2/6", "3/9", "4/12", "2/5", "3/8"], ["2/6", "3/9", "4/12"], "Multiply 1/3 by 2, 3, and 4."),
         qItem("m1_6", "6. Find three equivalent fractions for 3/4: {dash1}, {dash2} and {dash3}", 3, ["6/8", "9/12", "12/16", "6/10", "5/8"], ["6/8", "9/12", "12/16"], "Multiply 3/4 by 2, 3, and 4.")
+      ]
+    },
+    {
+      subjectId: "vr_week1",
+      subjectTitle: "WEEK 1: VERBAL REASONING",
+      topic: "Kick off Test: Alphabet Pairs Sequence",
+      passage: {
+        title: "🔤 Study the Examples:",
+        text: "Example 1: AC, BD, CE, DF, EG\nExample 2: PT, QU, RV, SW, TX\n\nRule: The first letters move forward by 1 (A, B, C, D, E...). The second letters also move forward by 1 (C, D, E, F, G...)."
+      },
+      questions: [
+        qItem("vr1_1", "1. Complete the letter sequence: GJ, HK, IL, {dash1}, {dash2}", 2, ["JM", "KN", "JN", "KM", "LO"], ["JM", "KN"], "1st letters: G, H, I, J, K. 2nd letters: J, K, L, M, N. Answer: JM, KN."),
+        qItem("vr1_2", "2. Complete the letter sequence: AM, BN, CO, {dash1}, {dash2}", 2, ["DP", "EQ", "DO", "EP", "DQ"], ["DP", "EQ"], "1st letters: A, B, C, D, E. 2nd letters: M, N, O, P, Q. Answer: DP, EQ."),
+        qItem("vr1_3", "3. Complete the letter sequence: EH, FI, {dash1}, {dash2}, IL", 2, ["GJ", "HK", "GK", "HJ", "GI"], ["GJ", "HK"], "1st letters: E, F, G, H, I. 2nd letters: H, I, J, K, L. Answer: GJ, HK."),
+        qItem("vr1_4", "4. Complete the letter sequence: PS, QT, RU, {dash1}, {dash2}", 2, ["SV", "TW", "SW", "TV", "SU"], ["SV", "TW"], "1st letters: P, Q, R, S, T. 2nd letters: S, T, U, V, W. Answer: SV, TW."),
+        qItem("vr1_5", "5. Complete the letter sequence: DB, {dash1}, FD, GE, {dash2}", 2, ["EC", "HF", "EB", "HD", "FC"], ["EC", "HF"], "1st letters: D, E, F, G, H. 2nd letters: B, C, D, E, F. Answer: EC, HF.")
+      ]
+    },
+    {
+      subjectId: "qr_week1",
+      subjectTitle: "WEEK 1: QUANTITATIVE REASONING",
+      topic: "Counting in 30's",
+      passage: {
+        title: "🔢 Rule of the 4-Box Diagram:",
+        text: "Follow the loop: Bottom-Left ➔ Top-Left ➔ Top-Right ➔ Bottom-Right.\nAt each connected box, add 30!"
+      },
+      questions: [
+        qItem("qr1_1", "1. Complete Diagram (1) by finding the missing box: {dash1}", 1, ["110", "100", "90", "120"], ["110"], "20 + 30 = 50; 50 + 30 = 80; 80 + 30 = 110.", "option", null, { tl: "50", tr: "80", bl: "20", br: "?" }),
+        qItem("qr1_2", "2. Complete Diagram (2) by finding the missing box: {dash1}", 1, ["270", "260", "250", "280"], ["270"], "180 + 30 = 210; 210 + 30 = 240; 240 + 30 = 270.", "option", null, { tl: "210", tr: "240", bl: "180", br: "?" }),
+        qItem("qr1_3", "3. Complete Diagram (3) by finding the missing box: {dash1}", 1, ["120", "110", "130", "140"], ["120"], "90 + 30 = 120; 120 + 30 = 150; 150 + 30 = 180.", "option", null, { tl: "?", tr: "150", bl: "90", br: "180" }),
+        qItem("qr1_4", "4. Complete Diagram (4) by finding the missing box: {dash1}", 1, ["60", "50", "70", "80"], ["60"], "30 + 30 = 60; 60 + 30 = 90; 90 + 30 = 120.", "option", null, { tl: "?", tr: "90", bl: "30", br: "120" }),
+        qItem("qr1_5", "5. Complete Diagram (5) by finding the missing box: {dash1}", 1, ["100", "90", "110", "80"], ["100"], "10 + 30 = 40; 40 + 30 = 70; 70 + 30 = 100.", "option", null, { tl: "40", tr: "70", bl: "10", br: "?" }),
+        qItem("qr1_6", "6. Complete Diagram (6) by finding the missing box: {dash1}", 1, ["160", "150", "170", "180"], ["160"], "100 + 30 = 130; 130 + 30 = 160; 160 + 30 = 190.", "option", null, { tl: "130", tr: "?", bl: "100", br: "190" })
       ]
     },
     {
@@ -158,6 +191,21 @@ window.WEEKLY_CURRICULUM = {
   // =========================================================================
   2: [
     {
+      subjectId: "eng_week2",
+      subjectTitle: "WEEK 2: ENGLISH STUDIES",
+      topic: "Aural Discrimination: /æ/ and /ɑː/ Sounds",
+      passage: {
+        title: "🗣️ Word Bank for Vowel Discrimination:",
+        text: "Words: Pat, part, mart, mat, cart, cat, hat, heart, at, art, barn, back, bark\n\n• /æ/ is a short vowel sound (as in 'pat')\n• /ɑː/ is a long vowel sound (as in 'part')"
+      },
+      questions: [
+        qItem("eng2_1", "1. Select five words that share the short /æ/ sound (like 'pat'): {dash1}, {dash2}, {dash3}, {dash4} and {dash5}", 5, ["mat", "cat", "hat", "at", "back", "mart", "cart", "heart", "art", "barn"], ["mat", "cat", "hat", "at", "back"], "Mat, cat, hat, at, and back have the short /æ/ vowel sound."),
+        qItem("eng2_2", "2. Select six words that share the long /ɑː/ sound (like 'part'): {dash1}, {dash2}, {dash3}, {dash4}, {dash5} and {dash6}", 6, ["mart", "cart", "heart", "art", "barn", "bark", "mat", "cat", "hat", "at"], ["mart", "cart", "heart", "art", "barn", "bark"], "Mart, cart, heart, art, barn, and bark have the long /ɑː/ vowel sound."),
+        qItem("eng2_3", "3. Which vowel sound is heard in the word 'heart'? The {dash1} sound.", 1, ["/ɑː/", "/æ/"], ["/ɑː/"], "'Heart' has the long /ɑː/ sound like 'part'."),
+        qItem("eng2_4", "4. Which vowel sound is heard in the word 'back'? The {dash1} sound.", 1, ["/æ/", "/ɑː/"], ["/æ/"], "'Back' has the short /æ/ sound like 'pat'.")
+      ]
+    },
+    {
       subjectId: "math_week2",
       subjectTitle: "WEEK 2: MATHEMATICS",
       topic: "Whole Numbers Sequence",
@@ -207,7 +255,7 @@ window.WEEKLY_CURRICULUM = {
   ],
 
   // =========================================================================
-  // WEEK 3
+  // WEEKS 3 — 11
   // =========================================================================
   3: [
     {
@@ -243,9 +291,6 @@ window.WEEKLY_CURRICULUM = {
     }
   ],
 
-  // =========================================================================
-  // WEEK 4
-  // =========================================================================
   4: [
     {
       subjectId: "eng_week4",
@@ -274,9 +319,6 @@ window.WEEKLY_CURRICULUM = {
     }
   ],
 
-  // =========================================================================
-  // WEEK 5
-  // =========================================================================
   5: [
     {
       subjectId: "eng_week5",
@@ -307,9 +349,6 @@ window.WEEKLY_CURRICULUM = {
     }
   ],
 
-  // =========================================================================
-  // WEEK 6
-  // =========================================================================
   6: [
     {
       subjectId: "eng_week6",
@@ -340,9 +379,6 @@ window.WEEKLY_CURRICULUM = {
     }
   ],
 
-  // =========================================================================
-  // WEEK 7: MID-TERM TEST
-  // =========================================================================
   7: [
     {
       subjectId: "eng_week7",
@@ -390,9 +426,6 @@ window.WEEKLY_CURRICULUM = {
     }
   ],
 
-  // =========================================================================
-  // WEEK 8
-  // =========================================================================
   8: [
     {
       subjectId: "comp_week8",
@@ -430,9 +463,6 @@ window.WEEKLY_CURRICULUM = {
     }
   ],
 
-  // =========================================================================
-  // WEEK 9
-  // =========================================================================
   9: [
     {
       subjectId: "comp_week9",
@@ -473,9 +503,6 @@ window.WEEKLY_CURRICULUM = {
     }
   ],
 
-  // =========================================================================
-  // WEEK 10
-  // =========================================================================
   10: [
     {
       subjectId: "comp_week10",
@@ -520,9 +547,6 @@ window.WEEKLY_CURRICULUM = {
     }
   ],
 
-  // =========================================================================
-  // WEEK 11: END OF TERM COMPREHENSIVE EXAMINATION
-  // =========================================================================
   11: [
     {
       subjectId: "exam_phe",
@@ -652,7 +676,6 @@ window.LIVE_CHALK_CURRICULUM = {
     { q: "What is the plural of Knife?", a: "Knives", rule: "Drop -fe and add -ves to form 'Knives'.", tray: ["1 Knife 🔪", "Set of Knives 🔪🔪"] }
   ],
 
-  // CONCRETE PICTORIAL EQUIVALENT FRACTIONS
   "math_fractions": [
     {
       q: "Find 3 equivalent fractions for 1/2",
@@ -667,13 +690,46 @@ window.LIVE_CHALK_CURRICULUM = {
       den: 5,
       multipliers: [2, 3, 4],
       tray: ["2/5 baseline bar", "4/10 = cut in 2", "6/15 = cut in 3", "Rule: Top × 2, Bottom × 2"]
+    }
+  ],
+
+  // VERBAL REASONING LIVE LESSON (WEEK 1)
+  "vr_week1": [
+    {
+      q: "Find the next two pairs: GJ, HK, IL, __, __",
+      type: "letter_pairs",
+      letters1: ["G", "H", "I", "J", "K"],
+      letters2: ["J", "K", "L", "M", "N"],
+      answer: "JM, KN",
+      tray: ["1st letter: G ➔ H ➔ I ➔ J ➔ K", "2nd letter: J ➔ K ➔ L ➔ M ➔ N", "Match them: JM and KN! 🔤"]
     },
     {
-      q: "Find 3 equivalent fractions for 1/3",
-      num: 1,
-      den: 3,
-      multipliers: [2, 3, 4],
-      tray: ["1/3 of a cake 🍰", "2/6 = 1/3", "3/9 = 1/3", "4/12 = 1/3"]
+      q: "Find the next two pairs: AM, BN, CO, __, __",
+      type: "letter_pairs",
+      letters1: ["A", "B", "C", "D", "E"],
+      letters2: ["M", "N", "O", "P", "Q"],
+      answer: "DP, EQ",
+      tray: ["1st letter: A ➔ B ➔ C ➔ D ➔ E", "2nd letter: M ➔ N ➔ O ➔ P ➔ Q", "Result: DP and EQ! 🔤"]
+    }
+  ],
+
+  // QUANTITATIVE REASONING LIVE LESSON (WEEK 1)
+  "qr_week1": [
+    {
+      q: "Counting in 30's Diagram: 20, 50, 80, __",
+      type: "qr_loop",
+      bl: 20, tl: 50, tr: 80, br: "?",
+      step: 30,
+      answer: 110,
+      tray: ["Start Bottom-Left: 20", "20 + 30 = 50 (Top-Left)", "50 + 30 = 80 (Top-Right)", "80 + 30 = 110 (Bottom-Right) 🎯"]
+    },
+    {
+      q: "Counting in 30's Diagram: 180, 210, 240, __",
+      type: "qr_loop",
+      bl: 180, tl: 210, tr: 240, br: "?",
+      step: 30,
+      answer: 270,
+      tray: ["Start Bottom-Left: 180", "180 + 30 = 210 (Top-Left)", "210 + 30 = 240 (Top-Right)", "240 + 30 = 270 (Bottom-Right) 🎯"]
     }
   ],
 
@@ -681,7 +737,17 @@ window.LIVE_CHALK_CURRICULUM = {
     { q: "Ụdaume Igbo dị ole?", a: "Asatọ (8)", rule: "Ụdaume mfe (4) + Ụdaume arọ (4) = Asatọ (8).", tray: ["Ụdaume mfe: a, e, i, o", "Ụdaume arọ: ị, ọ, u, ụ"] }
   ],
 
-  // SEQUENCE ENGINE (STEP-BY-STEP ADDITION)
+  // ENGLISH AURAL DISCRIMINATION LIVE LESSON (WEEK 2)
+  "eng_week2": [
+    {
+      q: "Vowel Sounds: /æ/ (Short) vs /ɑː/ (Long)",
+      type: "phonics",
+      shortList: ["pat", "mat", "cat", "hat", "at", "back"],
+      longList: ["part", "mart", "cart", "heart", "art", "barn", "bark"],
+      tray: ["/æ/ Short 'a': cat, hat, back 🐱", "/ɑː/ Long 'ar': part, heart, barn ❤️"]
+    }
+  ],
+
   "math_week2": [
     {
       q: "80, 90, __, __, 120",
@@ -690,14 +756,6 @@ window.LIVE_CHALK_CURRICULUM = {
       step: 10,
       answer: "100, 110",
       tray: ["Pattern: Count by Tens", "80 + 10 = 90", "90 + 10 = 100", "100 + 10 = 110"]
-    },
-    {
-      q: "78, 128, 178, __, __",
-      type: "sequence",
-      pattern: "78, 128, 178, __, __",
-      step: 50,
-      answer: "228, 278",
-      tray: ["Pattern: Add 50 each time", "178 + 50 = 228", "228 + 50 = 278"]
     }
   ],
 
@@ -705,7 +763,6 @@ window.LIVE_CHALK_CURRICULUM = {
     { q: "What is Data in computer studies?", a: "Raw or unprocessed facts.", rule: "Data becomes information when processed by the CPU.", tray: ["Data ➔ CPU ➔ Information"] }
   ],
 
-  // FROG JUMP NUMBER LINE (L.C.M)
   "math_week7": [
     {
       q: "Find the L.C.M of 4 and 6",
@@ -716,16 +773,6 @@ window.LIVE_CHALK_CURRICULUM = {
       multiples2: [6, 12, 18, 24],
       answer: 12,
       tray: ["Frog 4 jumps: 4, 8, 12 🐸", "Frog 6 jumps: 6, 12 🐸", "First stone they meet = 12!"]
-    },
-    {
-      q: "Find the L.C.M of 3 and 6",
-      type: "lcm",
-      n1: 3,
-      n2: 6,
-      multiples1: [3, 6, 9, 12],
-      multiples2: [6, 12, 18],
-      answer: 6,
-      tray: ["Multiples of 3: 3, 6, 9", "Multiples of 6: 6, 12", "Smallest shared multiple = 6!"]
     }
   ],
 
@@ -733,7 +780,6 @@ window.LIVE_CHALK_CURRICULUM = {
     { q: "What is the title of a textbook?", a: "The official name given to the book.", rule: "The title identifies the book and gives the reader a preview of its contents.", tray: ["Title Page 📖", "Table of Contents 📑", "Glossary 🔤"] }
   ],
 
-  // SHARED FACTOR KING (H.C.F)
   "math_week8": [
     {
       q: "Find the H.C.F of 8 and 12",
@@ -744,18 +790,18 @@ window.LIVE_CHALK_CURRICULUM = {
       factors2: [1, 2, 3, 4, 6, 12],
       commonFactors: [1, 2, 4],
       answer: 4,
-      tray: ["Factors of 8: 1, 2, 4, 8", "Factors of 12: 1, 2, 3, 4, 6, 12", "Common: 1, 2, 4", "The Biggest Factor is 4! 👑"]
-    },
+      tray: ["Factors of 8: 1, 2, 4, 8", "Factors of 12: 1, 2, 3, 4, 6, 12", "The Biggest Factor is 4! 👑"]
+    }
+  ],
+
+  "english_week8": [
     {
-      q: "Find the H.C.F of 9 and 15",
-      type: "hcf",
-      n1: 9,
-      n2: 15,
-      factors1: [1, 3, 9],
-      factors2: [1, 3, 5, 15],
-      commonFactors: [1, 3],
-      answer: 3,
-      tray: ["Factors of 9: 1, 3, 9", "Factors of 15: 1, 3, 5, 15", "Winner = 3! 👑"]
+      q: "Identify Subject and Predicate: 'The swift eagle caught a snake'",
+      type: "grammar",
+      subject: "The swift eagle",
+      predicate: "caught a snake",
+      rule: "The Subject is who performs the action. The Predicate contains the verb.",
+      tray: ["Subject: The swift eagle 🦅", "Predicate: caught a snake 🐍"]
     }
   ]
 };
