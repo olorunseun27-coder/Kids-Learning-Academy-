@@ -183,265 +183,146 @@ main{max-width:1200px;margin:auto;padding:16px}
 .highlight{background:#fef08a;color:#991b1b;padding:1px 4px;border-radius:4px;font-weight:800}
 
 /* =========================================================
-   ENHANCED MULTI-SENSORY CONCRETE MATH VISUAL ENGINE
+   TEXTBOOK 4-BOX "H" DIAGRAM FOR QUANTITATIVE REASONING
    ========================================================= */
+.qr-h-widget{
+  display:inline-flex;align-items:center;justify-content:center;
+  background:#fff;border:2px solid #cbd5e1;border-radius:16px;
+  padding:14px 20px;margin:10px 0;box-shadow:0 4px 10px rgba(0,0,0,.05);
+}
+.qr-pillar{
+  display:flex;flex-direction:column;align-items:center;gap:12px;
+}
+.qr-box-cell{
+  width:62px;height:42px;border:2.5px solid #0f172a;
+  border-radius:8px;display:flex;align-items:center;justify-content:center;
+  font-family:'Courier New',monospace;font-size:20px;font-weight:900;
+  background:#f8fafc;color:#0f172a;
+}
+.qr-box-cell.missing{
+  background:#eff6ff;border:2.5px dashed #3b82f6;color:#1d4ed8;
+}
+.qr-v-pipe{width:3px;height:14px;background:#0f172a}
+.qr-h-pipe{width:46px;height:3px;background:#0f172a;margin:0 4px}
+
+/* TABLE STYLING FOR AURAL DISCRIMINATION */
+.phonics-table{
+  width:100%;max-width:620px;border-collapse:collapse;
+  margin:12px auto;background:#fff;border-radius:12px;overflow:hidden;
+  box-shadow:0 4px 10px rgba(0,0,0,0.06);
+}
+.phonics-table th, .phonics-table td{
+  border:1.5px solid #cbd5e1;padding:8px 12px;text-align:center;
+  font-weight:800;font-size:15px;
+}
+.phonics-table th{background:#e0e7ff;color:#3730a3}
+
+/* MATH VISUAL ENGINE */
 .math-visual-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 10px;
-  width: 100%;
-  padding: 10px;
-  background: rgba(0, 0, 0, 0.4);
-  border: 2px solid var(--yellow);
-  border-radius: 14px;
-  margin-top: 10px;
+  display: flex;flex-direction: column;align-items: center;gap: 10px;
+  width: 100%;padding: 10px;background: rgba(0, 0, 0, 0.4);
+  border: 2px solid var(--yellow);border-radius: 14px;margin-top: 10px;
 }
 .math-visual-label {
-  font-size: 14px;
-  font-weight: 900;
-  color: #fde047;
-  letter-spacing: 0.5px;
-  text-align: center;
+  font-size: 14px;font-weight: 900;color: #fde047;letter-spacing: 0.5px;text-align: center;
 }
-.fraction-strip-wrap {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  width: 100%;
-  max-width: 520px;
-}
+.fraction-strip-wrap {display: flex;flex-direction: column;gap: 6px;width: 100%;max-width: 520px}
 .fraction-strip {
-  display: flex;
-  width: 100%;
-  height: 32px;
-  border-radius: 8px;
-  overflow: hidden;
-  border: 2px solid #ffffff;
-  background: rgba(255,255,255,0.1);
+  display: flex;width: 100%;height: 32px;border-radius: 8px;overflow: hidden;
+  border: 2px solid #ffffff;background: rgba(255,255,255,0.1);
 }
 .fraction-cell {
-  flex: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 13px;
-  font-weight: 900;
-  color: #ffffff;
+  flex: 1;display: flex;align-items: center;justify-content: center;
+  font-size: 13px;font-weight: 900;color: #ffffff;
   border-right: 1.5px dashed rgba(255,255,255,0.4);
-  transition: all 0.4s ease;
 }
 .fraction-cell:last-child { border-right: none; }
 .fraction-cell.shaded {
-  background: linear-gradient(135deg, #f59e0b, #d97706);
-  color: #fff;
-  box-shadow: inset 0 0 8px rgba(0,0,0,0.3);
+  background: linear-gradient(135deg, #f59e0b, #d97706);color: #fff;
 }
 
-.number-line-svg {
-  width: 100%;
-  max-width: 550px;
-  height: 90px;
-  overflow: visible;
-}
-.jump-arc {
-  fill: none;
-  stroke-width: 3.5;
-  stroke-linecap: round;
-  stroke-dasharray: 4, 4;
-}
-.frog-4 { stroke: #38bdf8; }
-.frog-6 { stroke: #f43f5e; }
-.meet-circle {
-  fill: #facc15;
-  animation: pulseTarget 1s infinite alternate ease-in-out;
-}
-@keyframes pulseTarget {
-  from { r: 6; }
-  to { r: 9; }
-}
+.number-line-svg {width: 100%;max-width: 550px;height: 90px;overflow: visible}
+.meet-circle {fill: #facc15;animation: pulseTarget 1s infinite alternate ease-in-out}
+@keyframes pulseTarget {from { r: 6; } to { r: 9; }}
 
-.factor-group {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  flex-wrap: wrap;
-  justify-content: center;
-}
+.factor-group {display: flex;align-items: center;gap: 8px;flex-wrap: wrap;justify-content: center}
 .factor-pill {
-  padding: 4px 10px;
-  border-radius: 999px;
-  font-size: 13px;
-  font-weight: 900;
-  background: rgba(255, 255, 255, 0.15);
-  border: 1.5px solid #ffffff;
-  color: #fff;
-}
-.factor-pill.match {
-  background: #10b981;
-  border-color: #34d399;
-  color: #fff;
-  transform: scale(1.08);
+  padding: 4px 10px;border-radius: 999px;font-size: 13px;font-weight: 900;
+  background: rgba(255, 255, 255, 0.15);border: 1.5px solid #ffffff;color: #fff;
 }
 .factor-pill.hcf-winner {
-  background: #eab308;
-  border-color: #fde047;
-  color: #000;
-  transform: scale(1.2);
-  box-shadow: 0 0 12px rgba(250, 204, 21, 0.8);
+  background: #eab308;border-color: #fde047;color: #000;transform: scale(1.2);
 }
 
-/* =========================================================
-   WEEKLY ASSESSMENT STYLES & PASSAGE CARDS
-   ========================================================= */
-.week-tab-bar{
-  display:flex;gap:8px;justify-content:center;margin:18px 0;flex-wrap:wrap;
-}
+/* PRACTICE INTERFACE */
+.week-tab-bar{display:flex;gap:8px;justify-content:center;margin:18px 0;flex-wrap:wrap}
 .week-tab-btn{
-  background:white;border:2px solid #cbd5e1;border-radius:12px;
-  padding:8px 16px;font-size:15px;font-weight:900;color:#334155;
-  display:flex;align-items:center;gap:8px;transition:.2s;
+  background:white;border:2px solid #cbd5e1;border-radius:12px;padding:8px 16px;
+  font-size:15px;font-weight:900;color:#334155;display:flex;align-items:center;gap:8px;transition:.2s;
 }
 .week-tab-btn.active{
   background:var(--purple);color:white;border-color:var(--purple-dark);
   box-shadow:0 6px 16px rgba(91,60,196,.3);
 }
-.week-status-badge{
-  font-size:11px;padding:3px 8px;border-radius:999px;font-weight:800;
-}
+.week-status-badge{font-size:11px;padding:3px 8px;border-radius:999px;font-weight:800}
 .badge-completed{background:#dcfce7;color:#15803d;border:1px solid #86efac}
 .badge-pending{background:#fef3c7;color:#92400e;border:1px solid #fde68a}
 
 .subject-divider{
-  background:linear-gradient(90deg,#4338ca,#6366f1);
-  color:white;padding:12px 18px;border-radius:16px;
-  margin:28px 0 16px 0;font-weight:900;font-size:17px;
+  background:linear-gradient(90deg,#4338ca,#6366f1);color:white;padding:12px 18px;
+  border-radius:16px;margin:28px 0 16px 0;font-weight:900;font-size:17px;
   display:flex;align-items:center;justify-content:space-between;
-  box-shadow:0 4px 12px rgba(67,56,202,.15);
 }
-.subject-divider .sub-tag{
-  background:rgba(255,255,255,.2);padding:4px 10px;border-radius:8px;font-size:12px;
-}
+.subject-divider .sub-tag{background:rgba(255,255,255,.2);padding:4px 10px;border-radius:8px;font-size:12px}
 
 .comprehension-card{
-  background:linear-gradient(135deg, #fefce8, #fef9c3);
-  border:2.5px solid #facc15;border-radius:20px;
-  padding:20px;margin:16px 0 22px 0;
-  box-shadow:0 6px 18px rgba(234,179,8,0.12);
+  background:linear-gradient(135deg, #fefce8, #fef9c3);border:2.5px solid #facc15;
+  border-radius:20px;padding:20px;margin:16px 0 22px 0;
 }
-.comprehension-header{
-  display:flex;align-items:center;justify-content:space-between;
-  margin-bottom:12px;flex-wrap:wrap;gap:8px;
-}
-.comprehension-title{
-  font-weight:900;color:#854d0e;font-size:18px;
-  display:flex;align-items:center;gap:8px;
-}
+.comprehension-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;flex-wrap:wrap;gap:8px}
+.comprehension-title{font-weight:900;color:#854d0e;font-size:18px}
 .comprehension-text{
   font-size:16.5px;line-height:1.75;color:#451a03;font-weight:600;
-  background:rgba(255,255,255,0.7);padding:16px;border-radius:14px;
-  border-left:5px solid #eab308;white-space:pre-line;
+  background:rgba(255,255,255,0.7);padding:16px;border-radius:14px;border-left:5px solid #eab308;white-space:pre-line;
 }
 
 .practice-card{
   background:#ffffff;border:1.5px solid #e2e8f0;border-radius:20px;
   padding:20px;margin-bottom:18px;box-shadow:0 4px 14px rgba(0,0,0,.04);
 }
-.practice-qtop{
-  display:flex;align-items:flex-start;gap:12px;margin-bottom:14px;
-}
+.practice-qtop{display:flex;align-items:flex-start;gap:12px;margin-bottom:14px}
 .practice-qnum{
-  min-width:32px;height:32px;border-radius:50%;
-  background:var(--purple);color:#fff;
-  display:flex;align-items:center;justify-content:center;
-  font-weight:900;font-size:14px;
+  min-width:32px;height:32px;border-radius:50%;background:var(--purple);color:#fff;
+  display:flex;align-items:center;justify-content:center;font-weight:900;font-size:14px;
 }
-.practice-qtext{
-  font-size:17px;line-height:1.6;font-weight:800;color:#1e293b;flex:1;
-}
+.practice-qtext{font-size:17px;line-height:1.6;font-weight:800;color:#1e293b;flex:1}
 .btn-listen{
-  border:0;background:#f0edff;color:var(--purple);
-  border-radius:12px;padding:6px 12px;cursor:pointer;
-  font-size:13px;font-weight:800;display:inline-flex;
-  align-items:center;gap:6px;white-space:nowrap;
+  border:0;background:#f0edff;color:var(--purple);border-radius:12px;
+  padding:6px 12px;font-size:13px;font-weight:800;cursor:pointer;
 }
-.btn-listen:hover{background:#e5e0ff}
 
 .dash-display{
-  display:inline-block;padding:2px 10px;margin:2px 4px;
-  min-width:85px;text-align:center;
-  border-bottom:3.5px solid #3b82f6;font-weight:900;
-  color:#1d4ed8;font-size:17px;letter-spacing:0.5px;
+  display:inline-block;padding:2px 10px;margin:2px 4px;min-width:85px;text-align:center;
+  border-bottom:3.5px solid #3b82f6;font-weight:900;color:#1d4ed8;font-size:17px;
   background:#eff6ff;border-radius:4px 4px 0 0;
-  transition:all .2s ease;
 }
-.dash-display.empty{
-  color:#94a3b8;font-style:italic;background:transparent;
-  border-bottom:3.5px dashed #94a3b8;
-}
-.dash-display.correct-placed{
-  border-bottom:3.5px solid #16a34a;color:#15803d;background:#dcfce7;
-  animation:popIn .25s ease-out;
-}
-@keyframes popIn{from{transform:scale(0.85);opacity:0}to{transform:scale(1);opacity:1}}
+.dash-display.empty{color:#94a3b8;border-bottom:3.5px dashed #94a3b8;background:transparent}
+.dash-display.correct-placed{border-bottom:3.5px solid #16a34a;color:#15803d;background:#dcfce7}
 
 .options-bubble-group{
   display:flex;flex-wrap:wrap;gap:10px;margin:14px 0;padding:12px;
   background:#f8fafc;border-radius:14px;border:1.5px dashed #cbd5e1;
 }
-.opt-label{
-  width:100%;font-size:13px;font-weight:900;color:#64748b;margin-bottom:2px;
-}
+.opt-label{width:100%;font-size:13px;font-weight:900;color:#64748b;margin-bottom:2px}
 .opt-btn{
   background:#ffffff;border:2px solid #cbd5e1;border-radius:12px;
-  padding:8px 16px;font-size:15px;font-weight:800;color:#334155;
-  transition:all .18s ease;cursor:pointer;
+  padding:8px 16px;font-size:15px;font-weight:800;color:#334155;cursor:pointer;
 }
-.opt-btn:hover:not(:disabled){
-  border-color:var(--purple);background:#f5f3ff;transform:translateY(-1px);
-}
-.opt-btn.correct{
-  background:#dcfce7 !important;border-color:#16a34a !important;
-  color:#15803d !important;cursor:default;
-}
-.opt-btn.wrong-shake{
-  background:#fee2e2 !important;border-color:#dc2626 !important;
-  color:#991b1b !important;animation:shake 0.35s ease-in-out;
-}
-@keyframes shake{
-  0%,100%{transform:translateX(0)}
-  20%,60%{transform:translateX(-6px)}
-  40%,80%{transform:translateX(6px)}
-}
+.opt-btn.correct{background:#dcfce7 !important;border-color:#16a34a !important;color:#15803d !important}
+.opt-btn.wrong-shake{background:#fee2e2 !important;border-color:#dc2626 !important;color:#991b1b !important;animation:shake 0.35s ease-in-out}
+@keyframes shake{0%,100%{transform:translateX(0)}20%,60%{transform:translateX(-6px)}40%,80%{transform:translateX(6px)}}
 
-.inputs-row{
-  display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin:12px 0;
-}
-.practice-text-input{
-  height:44px;padding:8px 12px;border:2px solid #cbd5e1;
-  border-radius:10px;font-size:16px;font-weight:800;outline:none;
-}
-.practice-text-input:focus{border-color:var(--purple)}
-
-.practice-btn-group{
-  display:flex;gap:10px;margin-top:14px;flex-wrap:wrap;
-}
-.btn-check-ans{
-  background:var(--purple);color:#fff;border:0;
-  border-radius:12px;padding:10px 18px;font-size:14px;
-  font-weight:800;cursor:pointer;
-}
-.btn-check-ans:hover{background:var(--purple-dark)}
-.btn-clear-ans{
-  background:#f1f5f9;color:#1e293b;border:0;
-  border-radius:12px;padding:10px 16px;font-size:14px;
-  font-weight:800;cursor:pointer;
-}
-
-.practice-feedback{
-  margin-top:10px;font-weight:800;font-size:14px;display:none;
-  padding:8px 14px;border-radius:10px;line-height:1.4;
-}
+.practice-feedback{margin-top:10px;font-weight:800;font-size:14px;display:none;padding:8px 14px;border-radius:10px}
 .practice-feedback.show{display:block}
 .practice-feedback.good{background:#dcfce7;color:#15803d;border:1.5px solid #86efac}
 .practice-feedback.bad{background:#fee2e2;color:#b91c1c;border:1.5px solid #fca5a5}
@@ -474,7 +355,7 @@ main{max-width:1200px;margin:auto;padding:16px}
     <input type="text" id="pupilNameInput" class="pupil-input" placeholder="e.g. Flourish" value="Flourish" onchange="updatePupilName(this.value)">
     <button class="btn primary" style="padding:4px 10px;font-size:12px" onclick="savePupilNameBtn()">Save Name</button>
     <span class="pupil-badge" id="currentPupilBadge">Active Pupil: Flourish</span>
-    <span class="sync-badge" id="parentSyncBadge">📡 Parent Live Sync: Standalone</span>
+    <span class="sync-badge" id="parentSyncBadge">📡 Parent Live Sync: Standalone Mode</span>
   </div>
 
   <main>
@@ -520,9 +401,12 @@ main{max-width:1200px;margin:auto;padding:16px}
               <optgroup label="📅 Week 1">
                 <option value="english_week1" selected>English Studies: Plural of Nouns</option>
                 <option value="math_fractions">Mathematics: Equivalent Fractions</option>
+                <option value="vr_week1">Verbal Reasoning: Kick off Test (Pairs)</option>
+                <option value="qr_week1">Quantitative Reasoning: Counting in 30's</option>
                 <option value="igbo_week1">Asụsụ Igbo: Abidii & Ụdaume</option>
               </optgroup>
               <optgroup label="📅 Week 2">
+                <option value="eng_week2">English: Aural Discrimination (/æ/ & /ɑː/)</option>
                 <option value="math_week2">Mathematics: Whole Numbers Sequence</option>
                 <option value="comp_week2">Computer Studies: Data & CPU</option>
               </optgroup>
@@ -565,11 +449,11 @@ main{max-width:1200px;margin:auto;padding:16px}
     <section id="practice" class="screen">
       <div class="hero">
         <span class="pill">Complete Term Assessments & Tests</span>
-        <h1 id="practiceHeroTitle">Basic 4 Assessment Portal (Weeks 1 — 10 & Exams)</h1>
-        <p>Select any week below. Read comprehension stories and poems carefully, then tap the correct options to fill the dashes!</p>
+        <h1 id="practiceHeroTitle">Basic 4 Assessment Portal (Weeks 1 — 11 & Exams)</h1>
+        <p>Select any week below. Read questions and diagrams carefully, then tap the correct options to fill the dashes!</p>
       </div>
 
-      <!-- DYNAMIC WEEK TABS (WEEKS 1 — 10 & END OF TERM) -->
+      <!-- DYNAMIC WEEK TABS (WEEKS 1 — 11) -->
       <div class="week-tab-bar">
         <button class="week-tab-btn active" id="tabWeek1" onclick="switchAssessmentWeek(1)"><span>📅 Week 1</span><span class="week-status-badge badge-pending" id="badgeWeek1">In Progress</span></button>
         <button class="week-tab-btn" id="tabWeek2" onclick="switchAssessmentWeek(2)"><span>📅 Week 2</span><span class="week-status-badge badge-pending" id="badgeWeek2">In Progress</span></button>
@@ -606,9 +490,6 @@ main{max-width:1200px;margin:auto;padding:16px}
   </main>
 </div>
 
-<!-- =========================================================================
-     LOAD EXTRACTED QUESTION BANK (OR LOCAL FALLBACK)
-     ========================================================================= -->
 <script src="questions.js"></script>
 
 <script>
@@ -699,12 +580,8 @@ function numberToWord(n) {
   return String(n);
 }
 
-function getCurriculum() {
-  return window.WEEKLY_CURRICULUM || {};
-}
-function getLiveCurriculum() {
-  return window.LIVE_CHALK_CURRICULUM || {};
-}
+function getCurriculum() { return window.WEEKLY_CURRICULUM || {}; }
+function getLiveCurriculum() { return window.LIVE_CHALK_CURRICULUM || {}; }
 
 // =========================================================================
 // 3. ENGINE STATE & PROGRESS
@@ -768,31 +645,34 @@ function speakCue(speechText){
   return new Promise((resolve) => {
     updateSubtitle(speechText);
     if (!('speechSynthesis' in window)) return resolve();
+
     window.speechSynthesis.cancel();
 
-    const u = new SpeechSynthesisUtterance(speechText);
-    activeUtterance = u;
-    const targetVoice = getTargetVoice(currentVoiceRole);
-    if(targetVoice) u.voice = targetVoice;
+    setTimeout(() => {
+      const u = new SpeechSynthesisUtterance(speechText);
+      activeUtterance = u;
+      const targetVoice = getTargetVoice(currentVoiceRole);
+      if(targetVoice) u.voice = targetVoice;
 
-    if(currentVoiceRole === 'ezinne'){ u.pitch = 1.05; u.rate = 0.86; }
-    else if(currentVoiceRole === 'abeo'){ u.pitch = 0.95; u.rate = 0.85; }
-    else { u.pitch = 1.0; u.rate = 0.88; }
+      if(currentVoiceRole === 'ezinne'){ u.pitch = 1.05; u.rate = 0.86; }
+      else if(currentVoiceRole === 'abeo'){ u.pitch = 0.95; u.rate = 0.85; }
+      else { u.pitch = 1.0; u.rate = 0.88; }
 
-    let resolved = false;
-    const finish = () => {
-      if(!resolved){
-        resolved = true;
-        activeUtterance = null;
-        resolve();
-      }
-    };
-    u.onend = finish;
-    u.onerror = finish;
-    setTimeout(finish, 10000);
+      let resolved = false;
+      const finish = () => {
+        if(!resolved){
+          resolved = true;
+          activeUtterance = null;
+          resolve();
+        }
+      };
+      u.onend = finish;
+      u.onerror = finish;
+      setTimeout(finish, 9000);
 
-    if(window.speechSynthesis.paused) window.speechSynthesis.resume();
-    window.speechSynthesis.speak(u);
+      window.speechSynthesis.resume();
+      window.speechSynthesis.speak(u);
+    }, 40);
   });
 }
 
@@ -803,7 +683,7 @@ function stopSpeech(){
 function updateSubtitle(text){
   const el = document.getElementById('speechText');
   if(!el) return;
-  el.innerHTML = text.replace(/(one|two|three|four|five|six|seven|eight|nine|ten|LCM|HCF|textbook|title|CPU|Gowon|Flourish|correct)/gi, '<span class="highlight">$1</span>');
+  el.innerHTML = text.replace(/(one|two|three|four|five|six|seven|eight|nine|ten|LCM|HCF|textbook|title|CPU|Gowon|Flourish|correct|Subject|Predicate)/gi, '<span class="highlight">$1</span>');
 }
 
 async function checkWait(token){
@@ -1118,7 +998,7 @@ async function runContinuousLessons(){
   }
 }
 
-// UPGRADED MULTI-SENSORY VISUAL MATHEMATICS ENGINE
+// MULTI-SENSORY VISUAL ENGINE FOR ALL TOPICS
 async function teachCurrentItem(token, num, total){
   const cur = getLiveCurriculum();
   const item = cur[currentTopic][selectedProblemIndex];
@@ -1133,7 +1013,7 @@ async function teachCurrentItem(token, num, total){
     tBody.innerHTML = item.tray.map(t => `<div class="tray-card">${t}</div>`).join('');
   }
 
-  // 1. EQUIVALENT FRACTIONS (CHOCOLATE BAR STRIP MODEL)
+  // 1. EQUIVALENT FRACTIONS
   if(item.multipliers && item.num !== undefined && item.den !== undefined){
     await teacherWritesText(qBox, `Problem ${num}: Equivalent Fractions of `, `Look here, ${pupilName}! Let's find 3 fractions equal to `, token);
 
@@ -1143,23 +1023,6 @@ async function teachCurrentItem(token, num, total){
     await teacherSaysOverAndDrawsBar(qGivenFrac.querySelector('.f-bar'), "over", token);
     await traceChalkStrokeChar(qGivenFrac.querySelector('.f-den'), String(item.den), numberToWord(item.den), token, true);
 
-    const eqSpan = document.createElement('span');
-    eqSpan.style.margin = "0 8px";
-    qBox.appendChild(eqSpan);
-    await teacherWritesText(eqSpan, "= ", "equals", token);
-
-    const dashes = [document.createElement('div'), document.createElement('div'), document.createElement('div')];
-    dashes.forEach((d, di) => {
-      d.className = 'dash-slot';
-      d.innerHTML = `<span style="color:#94a3b8">dash ${di+1}</span>`;
-      qBox.appendChild(d);
-      if(di < 2){
-        const comma = document.createElement('span');
-        comma.textContent = ", ";
-        qBox.appendChild(comma);
-      }
-    });
-
     const visualBox = document.createElement('div');
     visualBox.className = 'math-visual-container';
     visualBox.innerHTML = `
@@ -1168,20 +1031,6 @@ async function teachCurrentItem(token, num, total){
     `;
     canvas.appendChild(visualBox);
     const stripWrap = visualBox.querySelector('#stripWrap');
-
-    const baseStrip = document.createElement('div');
-    baseStrip.className = 'fraction-strip';
-    for(let c = 0; c < item.den; c++){
-      const cell = document.createElement('div');
-      cell.className = 'fraction-cell' + (c < item.num ? ' shaded' : '');
-      cell.textContent = `${item.num}/${item.den}`;
-      baseStrip.appendChild(cell);
-    }
-    stripWrap.appendChild(baseStrip);
-
-    await speakCue(`Imagine a chocolate bar cut into ${numberToWord(item.den)} slices. You eat ${numberToWord(item.num)} slice.`);
-    await sleep(600);
-    await speakCue(`To keep the exact same amount of chocolate, whatever you do to the top, you must do to the bottom!`);
 
     for(let i = 0; i < item.multipliers.length; i++){
       await checkWait(token);
@@ -1193,24 +1042,7 @@ async function teachCurrentItem(token, num, total){
       calcLine.className = 'written-line';
       canvas.appendChild(calcLine);
 
-      await teacherWritesText(calcLine, `Step ${i+1}: Multiply by ${m} ➔ `, `Step ${i+1}: Cut every slice into ${numberToWord(m)} pieces. Top times ${numberToWord(m)}, bottom times ${numberToWord(m)}.`, token, {color:'var(--yellow)'});
-
-      const stepFrac = createFractionBox();
-      calcLine.appendChild(stepFrac);
-      await traceChalkStrokeChar(stepFrac.querySelector('.f-num'), `${item.num}×${m}`, `${numberToWord(item.num)} times ${numberToWord(m)}`, token);
-      await teacherSaysOverAndDrawsBar(stepFrac.querySelector('.f-bar'), "over", token);
-      await traceChalkStrokeChar(stepFrac.querySelector('.f-den'), `${item.den}×${m}`, `${numberToWord(item.den)} times ${numberToWord(m)}`, token);
-
-      const eqSign = document.createElement('span');
-      eqSign.style.margin = "0 8px";
-      calcLine.appendChild(eqSign);
-      await traceChalkStrokeChar(eqSign, '=', "equals", token);
-
-      const resFrac = createFractionBox(true);
-      calcLine.appendChild(resFrac);
-      await traceChalkStrokeChar(resFrac.querySelector('.f-num'), String(resN), numberToWord(resN), token, true);
-      await teacherSaysOverAndDrawsBar(resFrac.querySelector('.f-bar'), "over", token);
-      await traceChalkStrokeChar(resFrac.querySelector('.f-den'), String(resD), numberToWord(resD), token, true);
+      await teacherWritesText(calcLine, `Step ${i+1}: Multiply top & bottom by ${m} ➔ ${resN}/${resD}`, `Step ${i+1}: Top times ${m}, bottom times ${m} gives ${resN} over ${resD}.`, token, {color:'var(--yellow)'});
 
       const subStrip = document.createElement('div');
       subStrip.className = 'fraction-strip';
@@ -1221,112 +1053,111 @@ async function teachCurrentItem(token, num, total){
         subStrip.appendChild(cell);
       }
       stripWrap.appendChild(subStrip);
-
-      dashes[i].className = 'dash-slot filled';
-      dashes[i].innerHTML = '';
-      const bFrac = createFractionBox(true);
-      dashes[i].appendChild(bFrac);
-      await traceChalkStrokeChar(bFrac.querySelector('.f-num'), String(resN), "", token, true);
-      await teacherSaysOverAndDrawsBar(bFrac.querySelector('.f-bar'), "", token);
-      await traceChalkStrokeChar(bFrac.querySelector('.f-den'), String(resD), "", token, true);
-
-      await speakCue(`Look at the bars! ${item.num}/${item.den} is exactly the same size as ${resN}/${resD}!`);
-      await sleep(500);
+      await sleep(400);
     }
   }
 
-  // 2. LOWEST COMMON MULTIPLE (L.C.M) - FROG JUMP NUMBER LINE
-  else if(item.type === "lcm"){
-    await teacherWritesText(qBox, `Question: Find L.C.M of ${item.n1} and ${item.n2}`, `Let us find the Lowest Common Multiple of ${item.n1} and ${item.n2}, ${pupilName}.`, token);
+  // 2. QUANTITATIVE REASONING (COUNTING IN 30's 4-BOX LOOP)
+  else if(item.type === "qr_loop"){
+    await teacherWritesText(qBox, `Counting in 30's: Find the missing box`, `Look at the 4-box diagram, ${pupilName}. Follow the loop and add 30!`, token);
 
-    const mLine1 = document.createElement('div');
-    mLine1.className = 'written-line';
-    canvas.appendChild(mLine1);
-    await teacherWritesText(mLine1, `Multiples of ${item.n1}: `, `First, count by ${item.n1}s like a blue frog: `, token, {color:'#38bdf8'});
-    await teacherWritesText(mLine1, item.multiples1.join(", "), item.multiples1.join(", "), token);
-
-    const mLine2 = document.createElement('div');
-    mLine2.className = 'written-line';
-    canvas.appendChild(mLine2);
-    await teacherWritesText(mLine2, `Multiples of ${item.n2}: `, `Now count by ${item.n2}s like a red frog: `, token, {color:'#f43f5e'});
-    await teacherWritesText(mLine2, item.multiples2.join(", "), item.multiples2.join(", "), token);
-
-    const lcmVisual = document.createElement('div');
-    lcmVisual.className = 'math-visual-container';
-    lcmVisual.innerHTML = `
-      <div class="math-visual-label">🐸 Frog Jump Number Line: First Stone Where Both Frogs Meet!</div>
-      <svg class="number-line-svg" viewBox="0 0 550 90">
-        <line x1="20" y1="70" x2="530" y2="70" stroke="#cbd5e1" stroke-width="3" />
-        ${Array.from({length: 29}).map((_, idx) => `
-          <circle cx="${25 + idx * 18}" cy="70" r="${idx === item.answer ? '7' : '3'}" fill="${idx === item.answer ? '#facc15' : '#94a3b8'}" class="${idx === item.answer ? 'meet-circle' : ''}" />
-          <text x="${25 + idx * 18}" y="85" font-size="9" fill="#e2e8f0" text-anchor="middle">${idx}</text>
-        `).join('')}
-      </svg>
-    `;
-    canvas.appendChild(lcmVisual);
-
-    await speakCue(`Look at the stones! Where do both frogs land on the exact same stone first?`);
-    await sleep(400);
-
-    const ansLine = document.createElement('div');
-    ansLine.className = 'written-line';
-    canvas.appendChild(ansLine);
-    await teacherWritesText(ansLine, `Smallest Shared Number (L.C.M) = ${item.answer}`, `They both meet at ${item.answer}! So the L.C.M is ${item.answer}!`, token, {color:'var(--yellow)'});
-  }
-
-  // 3. HIGHEST COMMON FACTOR (H.C.F) - SHARED FACTOR MATCHER
-  else if(item.type === "hcf"){
-    await teacherWritesText(qBox, `Question: Find H.C.F of ${item.n1} and ${item.n2}`, `Let us find the Highest Common Factor of ${item.n1} and ${item.n2}.`, token);
-
-    const fLine1 = document.createElement('div');
-    fLine1.className = 'written-line';
-    canvas.appendChild(fLine1);
-    await teacherWritesText(fLine1, `Factors that divide ${item.n1}: `, `Numbers that divide ${item.n1} without remainder: `, token);
-    await teacherWritesText(fLine1, item.factors1.join(", "), item.factors1.join(", "), token);
-
-    const fLine2 = document.createElement('div');
-    fLine2.className = 'written-line';
-    canvas.appendChild(fLine2);
-    await teacherWritesText(fLine2, `Factors that divide ${item.n2}: `, `Numbers that divide ${item.n2} without remainder: `, token);
-    await teacherWritesText(fLine2, item.factors2.join(", "), item.factors2.join(", "), token);
-
-    const hcfVisual = document.createElement('div');
-    hcfVisual.className = 'math-visual-container';
-    hcfVisual.innerHTML = `
-      <div class="math-visual-label">🎯 Shared Factors (The Largest King Factor Wins):</div>
-      <div class="factor-group" id="factorPills">
-        ${item.commonFactors.map(f => `
-          <div class="factor-pill ${f === item.answer ? 'hcf-winner' : 'match'}">${f} ${f === item.answer ? '👑 (Winner: H.C.F)' : '✓'}</div>
-        `).join('')}
+    const visualBox = document.createElement('div');
+    visualBox.className = 'qr-h-widget';
+    visualBox.style.margin = "12px auto";
+    visualBox.innerHTML = `
+      <div class="qr-pillar">
+        <div class="qr-box-cell" style="background:#fef08a">${item.tl}</div>
+        <div class="qr-v-pipe"></div>
+        <div class="qr-box-cell" style="background:#bbf7d0">${item.bl}</div>
+      </div>
+      <div class="qr-h-pipe"></div>
+      <div class="qr-pillar">
+        <div class="qr-box-cell" style="background:#fed7aa">${item.tr}</div>
+        <div class="qr-v-pipe"></div>
+        <div class="qr-box-cell missing" id="liveQrBrBox">?</div>
       </div>
     `;
-    canvas.appendChild(hcfVisual);
+    canvas.appendChild(visualBox);
 
-    await speakCue(`The shared factors are ${item.commonFactors.join(", ")}. The biggest one of them all is ${item.answer}!`);
-    await sleep(400);
+    const step1 = document.createElement('div');
+    step1.className = 'written-line';
+    canvas.appendChild(step1);
+    await teacherWritesText(step1, `1. Bottom-Left (${item.bl}) + 30 = ${item.tl} (Top-Left)`, `Start at Bottom-Left with ${item.bl}. Add 30 to reach ${item.tl} at Top-Left.`, token);
+
+    const step2 = document.createElement('div');
+    step2.className = 'written-line';
+    canvas.appendChild(step2);
+    await teacherWritesText(step2, `2. Top-Left (${item.tl}) + 30 = ${item.tr} (Top-Right)`, `Move to Top-Right by adding 30 to get ${item.tr}.`, token);
+
+    const step3 = document.createElement('div');
+    step3.className = 'written-line';
+    canvas.appendChild(step3);
+    await teacherWritesText(step3, `3. Top-Right (${item.tr}) + 30 = ${item.answer} (Bottom-Right)`, `Finally, add 30 to ${item.tr} to get ${item.answer} in the missing box!`, token, {color:'var(--yellow)'});
+
+    const liveBox = document.getElementById('liveQrBrBox');
+    if(liveBox){
+      liveBox.textContent = item.answer;
+      liveBox.style.background = "#dcfce7";
+      liveBox.style.borderColor = "#16a34a";
+      liveBox.style.color = "#15803d";
+    }
+  }
+
+  // 3. VERBAL REASONING (LETTER PAIR SEQUENCE)
+  else if(item.type === "letter_pairs"){
+    await teacherWritesText(qBox, item.q, `Look at the two letter chains, ${pupilName}.`, token);
+
+    const l1 = document.createElement('div');
+    l1.className = 'written-line';
+    canvas.appendChild(l1);
+    await teacherWritesText(l1, `First Letters: ${item.letters1.join(' ➔ ')}`, `First letters move forward by 1: ${item.letters1.join(', ')}.`, token, {color:'#38bdf8'});
+
+    const l2 = document.createElement('div');
+    l2.className = 'written-line';
+    canvas.appendChild(l2);
+    await teacherWritesText(l2, `Second Letters: ${item.letters2.join(' ➔ ')}`, `Second letters also move forward by 1: ${item.letters2.join(', ')}.`, token, {color:'#f43f5e'});
 
     const ansLine = document.createElement('div');
     ansLine.className = 'written-line';
     canvas.appendChild(ansLine);
-    await teacherWritesText(ansLine, `Highest Common Factor (H.C.F) = ${item.answer}`, `So the H.C.F is ${item.answer}!`, token, {color:'var(--yellow)'});
+    await teacherWritesText(ansLine, `Result: ${item.answer}`, `Combining them gives: ${item.answer}!`, token, {color:'var(--yellow)'});
   }
 
-  // 4. NUMBER SEQUENCES (STEP-UP LADDER)
-  else if(item.type === "sequence"){
-    await teacherWritesText(qBox, `Complete the Sequence: ${item.pattern}`, `Look at the pattern, ${pupilName}: `, token);
+  // 4. PHONICS / AURAL DISCRIMINATION (WEEK 2)
+  else if(item.type === "phonics"){
+    await teacherWritesText(qBox, item.q, `Listen carefully to the vowel sounds, ${pupilName}.`, token);
 
-    const stepLine = document.createElement('div');
-    stepLine.className = 'written-line';
-    canvas.appendChild(stepLine);
-    await teacherWritesText(stepLine, `Secret Rule: Add ${item.step} each time!`, `The secret rule is to add ${item.step} at every step!`, token, {color:'var(--yellow)'});
+    const pTable = document.createElement('div');
+    pTable.innerHTML = `
+      <table class="phonics-table">
+        <tr><th>Sound</th><th>Words from list</th></tr>
+        <tr><td style="color:#b45309"><b>/æ/</b> (Short)</td><td>${item.shortList.join(', ')}</td></tr>
+        <tr><td style="color:#0369a1"><b>/ɑː/</b> (Long)</td><td>${item.longList.join(', ')}</td></tr>
+      </table>
+    `;
+    canvas.appendChild(pTable);
 
-    const ansLine = document.createElement('div');
-    ansLine.className = 'written-line';
-    canvas.appendChild(ansLine);
-    await teacherWritesText(ansLine, `Next Numbers: ${item.answer}`, `Adding ${item.step} gives ${item.answer}!`, token, {color:'#34d399'});
+    await speakCue("Short sound /æ/ is heard in cat and hat. Long sound /ɑː/ is heard in part and heart.");
   }
 
-  // 5. DEFAULT SUBJECTS
+  // 5. GRAMMAR / SENTENCE STRUCTURE (WEEK 8)
+  else if(item.type === "grammar"){
+    await teacherWritesText(qBox, item.q, item.q, token);
+
+    const sLine = document.createElement('div');
+    sLine.className = 'written-line';
+    canvas.appendChild(sLine);
+    await teacherWritesText(sLine, `Subject: ${item.subject}`, `The Subject is: ${item.subject}.`, token, {color:'#38bdf8'});
+
+    const pLine = document.createElement('div');
+    pLine.className = 'written-line';
+    canvas.appendChild(pLine);
+    await teacherWritesText(pLine, `Predicate: ${item.predicate}`, `The Predicate is: ${item.predicate}.`, token, {color:'var(--yellow)'});
+
+    await speakCue(item.rule);
+  }
+
+  // 6. DEFAULT LESSONS
   else {
     await teacherWritesText(qBox, item.q, item.q, token);
     const line = document.createElement('div');
@@ -1340,7 +1171,7 @@ async function teachCurrentItem(token, num, total){
 }
 
 // =========================================================================
-// 6. WEEKLY ASSESSMENTS RENDERER & TEACHER READING
+// 6. WEEKLY ASSESSMENTS RENDERER WITH VISUAL DIAGRAMS
 // =========================================================================
 function switchAssessmentWeek(w){
   activeAssessmentWeek = w;
@@ -1416,9 +1247,9 @@ function renderWeeklyAssessments(){
       html += `
         <div class="comprehension-card">
           <div class="comprehension-header">
-            <div class="comprehension-title">${sub.passage.title || 'Story'}</div>
+            <div class="comprehension-title">${sub.passage.title || 'Instructions / Story'}</div>
             <button class="btn-listen" onclick="listenToPassage('${sub.subjectId}')">
-              🔊 Listen to Teacher Read Story
+              🔊 Listen to Teacher
             </button>
           </div>
           <div class="comprehension-text">${sub.passage.text || ''}</div>
@@ -1443,31 +1274,46 @@ function renderWeeklyAssessments(){
           renderedText = renderedText.replace(new RegExp(`\\{dash${d}\\}`, 'g'), dashHtml);
         }
 
+        // RENDER 4-BOX H DIAGRAM IF PRESENT IN QUESTION
+        let diagramHtml = '';
+        if(q.diagram){
+          const isTlMissing = q.diagram.tl === "?";
+          const isTrMissing = q.diagram.tr === "?";
+          const isBlMissing = q.diagram.bl === "?";
+          const isBrMissing = q.diagram.br === "?";
+
+          diagramHtml = `
+            <div style="display:flex;justify-content:center;margin:10px 0">
+              <div class="qr-h-widget">
+                <div class="qr-pillar">
+                  <div class="qr-box-cell ${isTlMissing ? 'missing' : ''}">${isTlMissing ? (savedUserAnswers[0] || '?') : q.diagram.tl}</div>
+                  <div class="qr-v-pipe"></div>
+                  <div class="qr-box-cell ${isBlMissing ? 'missing' : ''}">${isBlMissing ? (savedUserAnswers[0] || '?') : q.diagram.bl}</div>
+                </div>
+                <div class="qr-h-pipe"></div>
+                <div class="qr-pillar">
+                  <div class="qr-box-cell ${isTrMissing ? 'missing' : ''}">${isTrMissing ? (savedUserAnswers[0] || '?') : q.diagram.tr}</div>
+                  <div class="qr-v-pipe"></div>
+                  <div class="qr-box-cell ${isBrMissing ? 'missing' : ''}">${isBrMissing ? (savedUserAnswers[0] || '?') : q.diagram.br}</div>
+                </div>
+              </div>
+            </div>
+          `;
+        }
+
         html += `
           <div class="practice-card" id="card_${q.id}">
             <div class="practice-qtop">
               <div class="practice-qnum">${qIndex + 1}</div>
-              <div class="practice-qtext" id="qtext_${q.id}">${renderedText}</div>
+              <div class="practice-qtext" id="qtext_${q.id}">
+                ${renderedText}
+                ${diagramHtml}
+              </div>
               <button class="btn-listen" onclick="listenToQuestion('${q.id}', ${activeAssessmentWeek})">🔊 Listen</button>
             </div>
         `;
 
-        if(q.type === 'input'){
-          html += `
-            <div class="inputs-row">
-              ${Array.from({length: dashesCount}).map((_, di) => `
-                <input type="text" class="practice-text-input" id="input_${q.id}_${di}" 
-                       placeholder="${q.placeholders ? q.placeholders[di] : 'Type answer...'}" 
-                       value="${savedUserAnswers[di] || ''}"
-                       oninput="handleInputDash('${q.id}', ${di}, this.value)">
-              `).join('')}
-            </div>
-            <div class="practice-btn-group">
-              <button class="btn-check-ans" onclick="checkInputQuestion('${q.id}')">Check Answer</button>
-              <button class="btn-clear-ans" onclick="clearQuestion('${q.id}', ${dashesCount})">Clear</button>
-            </div>
-          `;
-        } else if(Array.isArray(q.options) && q.options.length > 0){
+        if(Array.isArray(q.options) && q.options.length > 0){
           html += `
             <div class="options-bubble-group">
               <div class="opt-label">👉 Tap the correct answer to place it on the dash:</div>
@@ -1531,25 +1377,13 @@ function findSubjectForQuestion(qId){
   return null;
 }
 
-// FULL NATURAL TEACHER VOICE READING
 function listenToQuestion(qId, weekNum){
   const q = findQuestionConfig(qId);
   if(!q) return;
-  
   const sub = findSubjectForQuestion(qId);
-  
-  let instruction = "";
-  if(sub && sub.topic){
-    let cleanTopic = sub.topic.replace(/Kick off Test:?/i, "").replace(/\(.*?\)/g, "").trim();
-    instruction = `Topic: ${cleanTopic}. `;
-  }
-
-  let spokenText = q.text
-    .replace(/^(\d+)\.\s*/, "Number $1. ")
-    .replace(/\{dash\d+\}/g, "blank space");
-
-  const fullSentence = `${instruction} ${spokenText}`;
-  speakCue(fullSentence);
+  let instruction = sub && sub.topic ? `Topic: ${sub.topic}. ` : "";
+  let spokenText = q.text.replace(/^(\d+)\.\s*/, "Number $1. ").replace(/\{dash\d+\}/g, "blank space");
+  speakCue(`${instruction} ${spokenText}`);
 }
 
 function listenToPassage(subjectId){
@@ -1573,8 +1407,11 @@ function handleOptionClick(qId, selectedOption){
 
   if(!pupilAnswers[qId]) pupilAnswers[qId] = [];
   const currentAnswers = pupilAnswers[qId];
+  const maxDashes = q.dashes || 1;
 
-  if(currentAnswers.includes(selectedOption)) return;
+  if(currentAnswers.length >= maxDashes || currentAnswers.includes(selectedOption)) {
+    return;
+  }
 
   const correctArr = Array.isArray(q.correct) ? q.correct : [q.correct];
   const isCorrect = correctArr.some(c => String(c).toLowerCase().trim() === String(selectedOption).toLowerCase().trim());
@@ -1583,17 +1420,17 @@ function handleOptionClick(qId, selectedOption){
     if(btn) btn.className = "opt-btn correct";
 
     const targetDashIndex = currentAnswers.length;
-    const maxDashes = q.dashes || 1;
+    currentAnswers.push(selectedOption);
+    localStorage.setItem('b4_answers', JSON.stringify(pupilAnswers));
 
-    if(targetDashIndex < maxDashes){
-      currentAnswers.push(selectedOption);
-      localStorage.setItem('b4_answers', JSON.stringify(pupilAnswers));
+    const dashEl = document.getElementById(`dash_${q.id}_${targetDashIndex}`);
+    if(dashEl){
+      dashEl.className = "dash-display correct-placed";
+      dashEl.textContent = selectedOption;
+    }
 
-      const dashEl = document.getElementById(`dash_${q.id}_${targetDashIndex}`);
-      if(dashEl){
-        dashEl.className = "dash-display correct-placed";
-        dashEl.textContent = selectedOption;
-      }
+    if(q.diagram){
+      renderWeeklyAssessments();
     }
 
     if(currentAnswers.length === maxDashes){
@@ -1606,6 +1443,7 @@ function handleOptionClick(qId, selectedOption){
       }
       speakCue(`Correct, ${pupilName}! Great job!`);
       updateWeekBadges();
+      renderProgress();
     }
   } else {
     if(btn){
@@ -1622,48 +1460,8 @@ function handleOptionClick(qId, selectedOption){
   }
 }
 
-function handleInputDash(qId, dashIdx, val){
-  if(!pupilAnswers[qId]) pupilAnswers[qId] = [];
-  pupilAnswers[qId][dashIdx] = val.trim();
-  localStorage.setItem('b4_answers', JSON.stringify(pupilAnswers));
-  const dashEl = document.getElementById(`dash_${qId}_${dashIdx}`);
-  if(dashEl){
-    if(val.trim()){
-      dashEl.className = "dash-display correct-placed";
-      dashEl.textContent = val.trim();
-    } else {
-      dashEl.className = "dash-display empty";
-      dashEl.textContent = "______";
-    }
-  }
-}
-
-function checkInputQuestion(qId){
-  const q = findQuestionConfig(qId);
-  const fb = document.getElementById(`feed_${qId}`);
-  const userVals = pupilAnswers[qId] || [];
-
-  if(userVals.length < q.dashes || userVals.some(v => !v)){
-    if(fb){
-      fb.className = "practice-feedback bad show";
-      fb.textContent = "⚠️ Please write an answer in all input boxes.";
-    }
-    return;
-  }
-
-  stats.practiceTotal++;
-  stats.practiceCorrect++;
-  saveStats();
-  if(fb){
-    fb.className = "practice-feedback good show";
-    fb.innerHTML = `🌟 Good answer recorded! <b>Note:</b> ${q.rule || 'Well done!'}`;
-  }
-  speakCue(`Well written, ${pupilName}!`);
-  updateWeekBadges();
-}
-
 function clearQuestion(qId, dashesCount){
-  pupilAnswers[qId] = [];
+  delete pupilAnswers[qId];
   localStorage.setItem('b4_answers', JSON.stringify(pupilAnswers));
 
   for(let d = 0; d < dashesCount; d++){
@@ -1672,8 +1470,6 @@ function clearQuestion(qId, dashesCount){
       dashEl.className = "dash-display empty";
       dashEl.textContent = "______";
     }
-    const inputEl = document.getElementById(`input_${qId}_${d}`);
-    if(inputEl) inputEl.value = "";
   }
 
   const card = document.getElementById(`card_${qId}`);
@@ -1687,6 +1483,7 @@ function clearQuestion(qId, dashesCount){
     fb.textContent = "";
   }
   updateWeekBadges();
+  renderProgress();
 }
 
 function saveStats(){
@@ -1695,9 +1492,15 @@ function saveStats(){
 }
 
 function renderProgress(){
+  const answeredCount = Object.keys(pupilAnswers).filter(k => 
+    Array.isArray(pupilAnswers[k]) && pupilAnswers[k].length > 0
+  ).length;
+
   document.getElementById('pCompleted').textContent = stats.completed || 0;
-  document.getElementById('pPractice').textContent = stats.practiceTotal ? Math.round((stats.practiceCorrect / stats.practiceTotal) * 100) + '%' : '100%';
-  document.getElementById('pAnswered').textContent = Object.keys(pupilAnswers).length;
+  document.getElementById('pPractice').textContent = stats.practiceTotal 
+    ? Math.round((stats.practiceCorrect / stats.practiceTotal) * 100) + '%' 
+    : '100%';
+  document.getElementById('pAnswered').textContent = answeredCount;
 }
 
 function showScreen(id){
@@ -1722,4 +1525,3 @@ KidTracker.init();
 </script>
 </body>
 </html>
-        
