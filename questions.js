@@ -1,807 +1,1293 @@
-// =========================================================================
-// BASIC 4 CURRICULUM & QUESTION BANK (WEEKS 1 — 11)
-// Complete Spoken Instructions, Natural Sentences & Live Chalkboard Data
-// =========================================================================
-
-function qItem(id, text, dashes, options, correct, rule, type = "option", placeholders = null, diagram = null) {
-  return { id, text, dashes, options, correct, rule, type, placeholders, diagram };
-}
-
-window.WEEKLY_CURRICULUM = {
-  // =========================================================================
-  // WEEK 1
-  // =========================================================================
-  1: [
-    {
-      subjectId: "english_week1",
-      subjectTitle: "WEEK 1: ENGLISH STUDIES",
-      topic: "Plural of Nouns",
-      questions: [
-        qItem("eng1_1", "1. Write the plural form of the noun 'House': {dash1}", 1, ["Houses", "Housen", "Housies"], ["Houses"], "Regular noun: add -s to form 'Houses'."),
-        qItem("eng1_2", "2. What is the plural form of the noun 'Ox'? {dash1}", 1, ["Oxen", "Oxes", "Oxies"], ["Oxen"], "Irregular noun: Ox takes suffix '-en' to become 'Oxen'."),
-        qItem("eng1_3", "3. Give the plural form of the noun 'Sheep': {dash1}", 1, ["Sheep", "Sheeps", "Sheepes"], ["Sheep"], "Zero plural: 'Sheep' does not change in plural."),
-        qItem("eng1_4", "4. What is the plural form of the noun 'Box'? {dash1}", 1, ["Boxes", "Boxs", "Boxen"], ["Boxes"], "Nouns ending in -x add '-es' to become 'Boxes'."),
-        qItem("eng1_5", "5. Write the plural form of the noun 'Chief': {dash1}", 1, ["Chiefs", "Chieves", "Chiefes"], ["Chiefs"], "Nouns with double vowels before -f add -s to form 'Chiefs'."),
-        qItem("eng1_6", "6. Give the plural form of the word 'Cloth': {dash1}", 1, ["Cloths", "Clothes", "Clothies"], ["Cloths", "Clothes"], "Both 'Cloths' (fabrics) and 'Clothes' (garments) are accepted."),
-        qItem("eng1_7", "7. What is the plural form of the noun 'Book'? {dash1}", 1, ["Books", "Bookes", "Bookies"], ["Books"], "Regular noun: add -s to form 'Books'."),
-        qItem("eng1_8", "8. Write the plural form of the noun 'Knife': {dash1}", 1, ["Knives", "Knifes", "Knifeses"], ["Knives"], "Nouns ending in -fe change to -ves to become 'Knives'.")
-      ]
-    },
-    {
-      subjectId: "math_week1",
-      subjectTitle: "WEEK 1: MATHEMATICS",
-      topic: "Equivalent Fractions",
-      questions: [
-        qItem("m1_1", "1. Find three equivalent fractions for 1/2: {dash1}, {dash2} and {dash3}", 3, ["2/4", "3/6", "4/8", "2/5", "3/8"], ["2/4", "3/6", "4/8"], "Multiply both top and bottom by 2, 3, and 4."),
-        qItem("m1_2", "2. Find three equivalent fractions for 1/7: {dash1}, {dash2} and {dash3}", 3, ["2/14", "3/21", "4/28", "2/10", "3/14"], ["2/14", "3/21", "4/28"], "Multiply numerator and denominator by 2, 3, and 4."),
-        qItem("m1_3", "3. Complete the equivalent fractions for 2/5: {dash1}, {dash2} and {dash3}", 3, ["4/10", "6/15", "8/20", "4/15", "5/10"], ["4/10", "6/15", "8/20"], "Multiply 2/5 by 2, 3, and 4."),
-        qItem("m1_4", "4. Find three equivalent fractions for 1/4: {dash1}, {dash2} and {dash3}", 3, ["2/8", "3/12", "4/16", "2/6", "3/10"], ["2/8", "3/12", "4/16"], "Multiply 1/4 by 2, 3, and 4."),
-        qItem("m1_5", "5. Complete the equivalent fractions for 1/3: {dash1}, {dash2} and {dash3}", 3, ["2/6", "3/9", "4/12", "2/5", "3/8"], ["2/6", "3/9", "4/12"], "Multiply 1/3 by 2, 3, and 4."),
-        qItem("m1_6", "6. Find three equivalent fractions for 3/4: {dash1}, {dash2} and {dash3}", 3, ["6/8", "9/12", "12/16", "6/10", "5/8"], ["6/8", "9/12", "12/16"], "Multiply 3/4 by 2, 3, and 4.")
-      ]
-    },
-    {
-      subjectId: "vr_week1",
-      subjectTitle: "WEEK 1: VERBAL REASONING",
-      topic: "Kick off Test: Alphabet Pairs Sequence",
-      passage: {
-        title: "🔤 Study the Examples:",
-        text: "Example 1: AC, BD, CE, DF, EG\nExample 2: PT, QU, RV, SW, TX\n\nRule: The first letters move forward by 1 (A, B, C, D, E...). The second letters also move forward by 1 (C, D, E, F, G...)."
-      },
-      questions: [
-        qItem("vr1_1", "1. Complete the letter sequence: GJ, HK, IL, {dash1}, {dash2}", 2, ["JM", "KN", "JN", "KM", "LO"], ["JM", "KN"], "1st letters: G, H, I, J, K. 2nd letters: J, K, L, M, N. Answer: JM, KN."),
-        qItem("vr1_2", "2. Complete the letter sequence: AM, BN, CO, {dash1}, {dash2}", 2, ["DP", "EQ", "DO", "EP", "DQ"], ["DP", "EQ"], "1st letters: A, B, C, D, E. 2nd letters: M, N, O, P, Q. Answer: DP, EQ."),
-        qItem("vr1_3", "3. Complete the letter sequence: EH, FI, {dash1}, {dash2}, IL", 2, ["GJ", "HK", "GK", "HJ", "GI"], ["GJ", "HK"], "1st letters: E, F, G, H, I. 2nd letters: H, I, J, K, L. Answer: GJ, HK."),
-        qItem("vr1_4", "4. Complete the letter sequence: PS, QT, RU, {dash1}, {dash2}", 2, ["SV", "TW", "SW", "TV", "SU"], ["SV", "TW"], "1st letters: P, Q, R, S, T. 2nd letters: S, T, U, V, W. Answer: SV, TW."),
-        qItem("vr1_5", "5. Complete the letter sequence: DB, {dash1}, FD, GE, {dash2}", 2, ["EC", "HF", "EB", "HD", "FC"], ["EC", "HF"], "1st letters: D, E, F, G, H. 2nd letters: B, C, D, E, F. Answer: EC, HF.")
-      ]
-    },
-    {
-      subjectId: "qr_week1",
-      subjectTitle: "WEEK 1: QUANTITATIVE REASONING",
-      topic: "Counting in 30's",
-      passage: {
-        title: "🔢 Rule of the 4-Box Diagram:",
-        text: "Follow the loop: Bottom-Left ➔ Top-Left ➔ Top-Right ➔ Bottom-Right.\nAt each connected box, add 30!"
-      },
-      questions: [
-        qItem("qr1_1", "1. Complete Diagram (1) by finding the missing box: {dash1}", 1, ["110", "100", "90", "120"], ["110"], "20 + 30 = 50; 50 + 30 = 80; 80 + 30 = 110.", "option", null, { tl: "50", tr: "80", bl: "20", br: "?" }),
-        qItem("qr1_2", "2. Complete Diagram (2) by finding the missing box: {dash1}", 1, ["270", "260", "250", "280"], ["270"], "180 + 30 = 210; 210 + 30 = 240; 240 + 30 = 270.", "option", null, { tl: "210", tr: "240", bl: "180", br: "?" }),
-        qItem("qr1_3", "3. Complete Diagram (3) by finding the missing box: {dash1}", 1, ["120", "110", "130", "140"], ["120"], "90 + 30 = 120; 120 + 30 = 150; 150 + 30 = 180.", "option", null, { tl: "?", tr: "150", bl: "90", br: "180" }),
-        qItem("qr1_4", "4. Complete Diagram (4) by finding the missing box: {dash1}", 1, ["60", "50", "70", "80"], ["60"], "30 + 30 = 60; 60 + 30 = 90; 90 + 30 = 120.", "option", null, { tl: "?", tr: "90", bl: "30", br: "120" }),
-        qItem("qr1_5", "5. Complete Diagram (5) by finding the missing box: {dash1}", 1, ["100", "90", "110", "80"], ["100"], "10 + 30 = 40; 40 + 30 = 70; 70 + 30 = 100.", "option", null, { tl: "40", tr: "70", bl: "10", br: "?" }),
-        qItem("qr1_6", "6. Complete Diagram (6) by finding the missing box: {dash1}", 1, ["160", "150", "170", "180"], ["160"], "100 + 30 = 130; 130 + 30 = 160; 160 + 30 = 190.", "option", null, { tl: "130", tr: "?", bl: "100", br: "190" })
-      ]
-    },
-    {
-      subjectId: "igbo_week1",
-      subjectTitle: "IZU UKA NKE MBU: ASUSU IGBO",
-      topic: "Abidii na Udaume Igbo",
-      questions: [
-        qItem("ig1_1", "1. Mkpụrụedemede ụdaume Igbo dị ole na ngụkọta? {dash1}", 1, ["Ise", "iri abụọ", "asatọ"], ["asatọ"], "Ụdaume Igbo dị asatọ (8): a, e, i, ị, o, ọ, u, ụ."),
-        qItem("ig1_2", "2. Mkpụrụedemede ole dị n'Abịịdịi Igbo? {dash1}", 1, ["Iri ise", "iri abụọ na otu", "iri atọ na isii"], ["iri atọ na isii"], "Abịịdịi Igbo nwere mkpụrụedemede 36."),
-        qItem("ig1_3", "3. Ụzọ abụọ e kere mkpụrụ edemede Igbo bụ {dash1} na {dash2}", 2, ["ike ume", "ụdaume", "ụmụedemede", "mgbochiume"], ["ụdaume", "mgbochiume"], "E kere abidii Igbo ụzọ abụọ: Ụdaume na Mgbochiume."),
-        qItem("ig1_4", "4. Mkpụrụedemede abụọ bụ myiri ụdaume bụ {dash1} na {dash2}", 2, ["m", "n", "b", "d"], ["m", "n"], "'m' na 'n' bụ myiri ụdaume n'Asụsụ Igbo.")
-      ]
-    },
-    {
-      subjectId: "comp_week1",
-      subjectTitle: "WEEK 1: COMPUTER STUDIES",
-      topic: "Introduction to Computer Hardware",
-      questions: [
-        qItem("cp1_1", "1. A computer mouse is an example of an {dash1} device.", 1, ["input", "output", "storage"], ["input"], "The mouse enters pointer coordinates and clicks into the computer."),
-        qItem("cp1_2", "2. The two primary buttons found on a mouse are the {dash1} and {dash2} buttons.", 2, ["left", "right", "center", "power"], ["left", "right"], "Standard mice feature left and right click buttons."),
-        qItem("cp1_3", "3. What is the wheel between the mouse buttons used for? {dash1}", 1, ["scrolling", "typing", "printing"], ["scrolling"], "The scroll wheel moves pages up and down on the monitor.")
-      ]
-    },
-    {
-      subjectId: "bst_week1",
-      subjectTitle: "WEEK 1: BASIC SCIENCE AND TECHNOLOGY",
-      topic: "Understanding Technology",
-      questions: [
-        qItem("bst1_1", "1. The application of scientific knowledge to solve practical problems is called {dash1}.", 1, ["energy", "technology", "power"], ["technology"], "Technology puts scientific ideas into practical daily use."),
-        qItem("bst1_2", "2. Name three products of modern technology: {dash1}, {dash2} and {dash3}.", 3, ["radio", "phones", "cars", "wood", "sand"], ["radio", "phones", "cars"], "Radios, phones, and motor cars are manufactured technological machines."),
-        qItem("bst1_3", "3. Mention two main stages of technology: {dash1} and {dash2} technology.", 2, ["developed", "undeveloped", "controlled"], ["developed", "undeveloped"], "Technology exists in developed (modern) and undeveloped forms."),
-        qItem("bst1_4", "4. Mobile phones are developed technology used in the area of {dash1}.", 1, ["transportation", "communication", "building"], ["communication"], "Phones allow people to communicate and speak across long distances.")
-      ]
-    },
-    {
-      subjectId: "phe_week1",
-      subjectTitle: "WEEK 1: PHYSICAL AND HEALTH EDUCATION",
-      topic: "First Aid and Safety",
-      questions: [
-        qItem("phe1_1", "1. Name four essential medical items found in a first aid box: {dash1}, {dash2}, {dash3} and {dash4}.", 4, ["cotton wool", "razor", "paracetamol", "GIV", "cigarette", "pepper"], ["cotton wool", "razor", "paracetamol", "GIV"], "First aid kits contain sterile cotton wool, antiseptic, blades, and pain medication."),
-        qItem("phe1_2", "2. What is the universal symbol displayed on a first aid box? A {dash1}.", 1, ["square", "cross", "circle"], ["cross"], "A red or white cross indicates medical first aid."),
-        qItem("phe1_3", "3. True or False: First aid is given to an injured person only after seeing a doctor: {dash1}.", 1, ["False", "True"], ["False"], "First aid is given immediately before the doctor arrives."),
-        qItem("phe1_4", "4. True or False: Anybody with basic emergency knowledge can give first aid: {dash1}.", 1, ["True", "False"], ["True"], "Any responsible bystander can provide immediate first aid."),
-        qItem("phe1_5", "5. True or False: First aid helps to relieve an injured person before medical attention: {dash1}.", 1, ["True", "False"], ["True"], "First aid minimizes pain and stabilizes the patient.")
-      ]
-    },
-    {
-      subjectId: "agric_week1",
-      subjectTitle: "WEEK 1: AGRICULTURAL SCIENCE",
-      topic: "Crops, Tools and Animals",
-      questions: [
-        qItem("ag1_1", "1. Mention four important food crops produced by Nigerian farmers: {dash1}, {dash2}, {dash3} and {dash4}.", 4, ["yam", "cassava", "maize", "rice"], ["yam", "cassava", "maize", "rice"], "Yam, cassava, maize, and rice are essential food staples."),
-        qItem("ag1_2", "2. Name three healthy edible fruits produced by flowering plants: {dash1}, {dash2} and {dash3}.", 3, ["orange", "mango", "apple"], ["orange", "mango", "apple"], "Oranges, mangoes, and apples are nourishing fruits."),
-        qItem("ag1_3", "3. Identify four common hand tools used by farmers: {dash1}, {dash2}, {dash3} and {dash4}.", 4, ["hoe", "cutlass", "rake", "wheelbarrow"], ["hoe", "cutlass", "rake", "wheelbarrow"], "Hoes, cutlasses, rakes, and wheelbarrows are farm tools."),
-        qItem("ag1_4", "4. A goat and a cow are examples of {dash1} animals.", 1, ["domestic", "wild", "aquatic"], ["domestic"], "Goats and cows are domestic livestock raised by humans.")
-      ]
-    },
-    {
-      subjectId: "home_econ_week1",
-      subjectTitle: "WEEK 1: HOME ECONOMICS",
-      topic: "Personal Hygiene and Body Grooming",
-      questions: [
-        qItem("he1_1", "1. We keep our mouth clean and fresh by {dash1} and {dash2}.", 2, ["brushing", "washing", "eating"], ["brushing", "washing"], "Daily brushing and mouth washing remove food bacteria."),
-        qItem("he1_2", "2. Name two items we use to clean our teeth: {dash1} and {dash2}.", 2, ["toothpaste", "brush", "sand", "soap"], ["toothpaste", "brush"], "A toothbrush and toothpaste keep teeth healthy."),
-        qItem("he1_3", "3. What toiletries are used for daily body maintenance? {dash1} and {dash2}.", 2, ["soap", "body cream", "zinc", "cement"], ["soap", "body cream"], "Bathing soap and skin cream maintain skin hygiene."),
-        qItem("he1_4", "4. What part of the body are shoes worn to protect? The {dash1}.", 1, ["head", "eyes", "foot"], ["foot"], "Shoes protect our feet from sharp objects and dirt.")
-      ]
-    },
-    {
-      subjectId: "crs_week1",
-      subjectTitle: "WEEK 1: CHRISTIAN RELIGIOUS STUDIES",
-      topic: "The Parable of the Good Samaritan",
-      questions: [
-        qItem("crs1_1", "1. What virtue does the story of the Good Samaritan teach us? It teaches us {dash1}.", 1, ["prophecy", "prayer", "love"], ["love"], "Jesus taught that loving our neighbour means showing mercy."),
-        qItem("crs1_2", "2. In the parable, the traveller was going down from Jerusalem to {dash1}.", 1, ["Nigeria", "Israel", "Jericho"], ["Jericho"], "Luke 10:30 states the man was travelling down to Jericho."),
-        qItem("crs1_3", "3. Who showed compassion and helped the wounded traveller? A {dash1}.", 1, ["pastor", "governor", "Samaritan"], ["Samaritan"], "The Good Samaritan tended to his wounds."),
-        qItem("crs1_4", "4. On his journey, the traveller was beaten and robbed by {dash1}.", 1, ["king", "robbers", "Pharisees"], ["robbers"], "Robbers attacked him and left him half-dead."),
-        qItem("crs1_5", "5. Jesus teaches us that we should always love our {dash1}.", 1, ["friends", "brothers only", "enemies only"], ["friends"], "We are commanded to love our friends and neighbours.")
-      ]
-    },
-    {
-      subjectId: "social_studies_week1",
-      subjectTitle: "WEEK 1: SOCIAL STUDIES",
-      topic: "Culture and Religions in Nigeria",
-      questions: [
-        qItem("soc1_1", "1. What is the definition of culture? Culture is the people's {dash1}.", 1, ["way of life", "prayer", "singing"], ["way of life"], "Culture is the total lifestyle and belief system of a society."),
-        qItem("soc1_2", "2. Material culture consists of physical objects that can be seen and {dash1}.", 1, ["celebrated", "touched"], ["touched"], "Material culture refers to tangible items like clothes and pots."),
-        qItem("soc1_3", "3. Mention four traditional local foods eaten in Nigeria: {dash1}, {dash2}, {dash3} and {dash4}.", 4, ["amala", "pounded yam", "tuwo", "garri"], ["amala", "pounded yam", "tuwo", "garri"], "Amala, pounded yam, tuwo, and garri are popular Nigerian foods."),
-        qItem("soc1_4", "4. What are the three major religions practiced in Nigeria? {dash1}, {dash2} and {dash3}.", 3, ["Christianity", "Islam", "Traditional", "Buddhism"], ["Christianity", "Islam", "Traditional"], "Christianity, Islam, and African Traditional Religion are Nigeria's three major faiths.")
-      ]
-    },
-    {
-      subjectId: "civic_week1",
-      subjectTitle: "WEEK 1: CIVIC EDUCATION",
-      topic: "National Symbols of Nigeria",
-      questions: [
-        qItem("civ1_1", "1. Mention three important national symbols of Nigeria: {dash1}, {dash2} and {dash3}.", 3, ["flag", "coat of arm", "national anthem", "car", "house"], ["flag", "coat of arm", "national anthem"], "National symbols represent the sovereignty of the nation."),
-        qItem("civ1_2", "2. What are the two official colours of the Nigerian national flag? {dash1} and {dash2}.", 2, ["Green", "White", "Blue", "Red"], ["Green", "White"], "The national flag consists of green and white stripes."),
-        qItem("civ1_3", "3. What is the opening phrase of the Nigerian national anthem? {dash1}.", 1, ["beggars are everywhere", "Arise O Compatriots"], ["Arise O Compatriots"], "'Arise, O Compatriots, Nigeria's call obey...'"),
-        qItem("civ1_4", "4. What two animal figures are featured on Nigeria's Coat of Arms? An {dash1} and two {dash2}.", 2, ["eagle", "horses", "book", "goats"], ["eagle", "horses"], "The red eagle signifies strength; two horses signify dignity."),
-        qItem("civ1_5", "5. What is the colour of the two horses on Nigeria's Coat of Arms? {dash1}.", 1, ["White", "Brown", "Black"], ["White"], "The two horses supporting the shield are white.")
-      ]
-    },
-    {
-      subjectId: "history_week1",
-      subjectTitle: "WEEK 1: HISTORY",
-      topic: "States and Geopolitical Zones",
-      questions: [
-        qItem("hist1_1", "1. Name four states located in the South-Eastern part of Nigeria: {dash1}, {dash2}, {dash3} and {dash4}.", 4, ["Enugu", "Anambra", "Imo", "Abia", "Kano", "Lagos"], ["Enugu", "Anambra", "Imo", "Abia"], "Enugu, Anambra, Imo, and Abia are Eastern states."),
-        qItem("hist1_2", "2. Mention the six geopolitical zones of Nigeria: {dash1}, {dash2}, {dash3}, {dash4}, {dash5} and {dash6}.", 6, ["North west", "North east", "North central", "South south", "south west", "south east", "South north"], ["North west", "North east", "North central", "South south", "south west", "south east"], "Nigeria is structured into six geopolitical zones."),
-        qItem("hist1_3", "3. What are the three largest ethnic groups in Nigeria? {dash1}, {dash2} and {dash3}.", 3, ["Hausa", "Igbo", "Yoruba", "Ogoja", "Efik"], ["Hausa", "Igbo", "Yoruba"], "Hausa, Igbo, and Yoruba are the three major ethnic groups.")
-      ]
-    }
-  ],
-
-  // =========================================================================
-  // WEEK 2
-  // =========================================================================
-  2: [
-    {
-      subjectId: "eng_week2",
-      subjectTitle: "WEEK 2: ENGLISH STUDIES",
-      topic: "Aural Discrimination: /æ/ and /ɑː/ Sounds",
-      passage: {
-        title: "🗣️ Word Bank for Vowel Discrimination:",
-        text: "Words: Pat, part, mart, mat, cart, cat, hat, heart, at, art, barn, back, bark\n\n• /æ/ is a short vowel sound (as in 'pat')\n• /ɑː/ is a long vowel sound (as in 'part')"
-      },
-      questions: [
-        qItem("eng2_1", "1. Select five words that share the short /æ/ sound (like 'pat'): {dash1}, {dash2}, {dash3}, {dash4} and {dash5}", 5, ["mat", "cat", "hat", "at", "back", "mart", "cart", "heart", "art", "barn"], ["mat", "cat", "hat", "at", "back"], "Mat, cat, hat, at, and back have the short /æ/ vowel sound."),
-        qItem("eng2_2", "2. Select six words that share the long /ɑː/ sound (like 'part'): {dash1}, {dash2}, {dash3}, {dash4}, {dash5} and {dash6}", 6, ["mart", "cart", "heart", "art", "barn", "bark", "mat", "cat", "hat", "at"], ["mart", "cart", "heart", "art", "barn", "bark"], "Mart, cart, heart, art, barn, and bark have the long /ɑː/ vowel sound."),
-        qItem("eng2_3", "3. Which vowel sound is heard in the word 'heart'? The {dash1} sound.", 1, ["/ɑː/", "/æ/"], ["/ɑː/"], "'Heart' has the long /ɑː/ sound like 'part'."),
-        qItem("eng2_4", "4. Which vowel sound is heard in the word 'back'? The {dash1} sound.", 1, ["/æ/", "/ɑː/"], ["/æ/"], "'Back' has the short /æ/ sound like 'pat'.")
-      ]
-    },
-    {
-      subjectId: "math_week2",
-      subjectTitle: "WEEK 2: MATHEMATICS",
-      topic: "Whole Numbers Sequence",
-      questions: [
-        qItem("m2_1", "1. Count forward in tens to find the missing numbers: 80, 90, {dash1}, {dash2}, 120, 130", 2, ["100", "110", "115"], ["100", "110"], "Add 10 each time: 90+10=100; 100+10=110."),
-        qItem("m2_2", "2. Count by adding 50 each time: 78, 128, 178, {dash1}, {dash2}", 2, ["228", "278", "258"], ["228", "278"], "Add 50: 178+50=228; 228+50=278."),
-        qItem("m2_3", "3. Complete the pattern counting in hundreds: 800, 900, {dash1}, 1,100, 1,200", 1, ["1,000", "1,050", "950"], ["1,000"], "Add 100: 900+100=1,000."),
-        qItem("m2_4", "4. Find the missing numbers by adding 100: 760, 860, {dash1}, 1,060, 1,160, {dash2}", 2, ["960", "1,260", "980"], ["960", "1,260"], "860+100=960; 1,160+100=1,260."),
-        qItem("m2_5", "5. Count in hundred-thousands: 200,000; 300,000; 400,000; {dash1}; {dash2}; 700,000", 2, ["500,000", "600,000", "550,000"], ["500,000", "600,000"], "Add 100,000 each step."),
-        qItem("m2_6", "6. Count forward by adding 3,000: 15,000; 18,000; 21,000; {dash1}; 27,000; {dash2}", 2, ["24,000", "30,000", "25,000"], ["24,000", "30,000"], "21,000+3,000=24,000; 27,000+3,000=30,000."),
-        qItem("m2_7", "7. Add 30 to complete the series: 970, 1,000, 1,030, {dash1}, {dash2}, 1,120, 1,150", 2, ["1,060", "1,090", "1,080"], ["1,060", "1,090"], "1,030+30=1,060; 1,060+30=1,090.")
-      ]
-    },
-    {
-      subjectId: "comp_week2",
-      subjectTitle: "WEEK 2: COMPUTER STUDIES",
-      topic: "Data and the Central Processing Unit",
-      questions: [
-        qItem("cp2_1", "1. Raw facts and unprocessed computer figures are called {dash1}.", 1, ["data", "news", "fake"], ["data"], "Data is raw, unorganized facts."),
-        qItem("cp2_2", "2. Digital data is keyed in and saved inside the {dash1}.", 1, ["computer", "radio", "sun"], ["computer"], "Computers store data in memory and drives."),
-        qItem("cp2_3", "3. What component processes all raw data inside the computer? The {dash1}.", 1, ["CPU", "mouse", "cable"], ["CPU"], "The Central Processing Unit processes all data."),
-        qItem("cp2_4", "4. What is another common name for the CPU? The {dash1}.", 1, ["System unit", "Area unit", "Control board"], ["System unit"], "The main computer unit is also called the System Unit.")
-      ]
-    },
-    {
-      subjectId: "bst_week2",
-      subjectTitle: "WEEK 2: BASIC SCIENCE AND TECHNOLOGY",
-      topic: "Temporary and Permanent Changes",
-      questions: [
-        qItem("bst2_1", "1. What are the two types of change in nature? {dash1} and {dash2} change.", 2, ["temporal", "permanent", "transfer"], ["temporal", "permanent"], "Changes are either temporal (reversible) or permanent (irreversible)."),
-        qItem("bst2_2", "2. A change that can be reversed back into its original form is called a {dash1} change.", 1, ["temporal", "permanent"], ["temporal"], "Temporal changes, like melting ice, can be reversed."),
-        qItem("bst2_3", "3. A child growing up to become an adult man is an example of a {dash1} change.", 1, ["permanent", "transfer"], ["permanent"], "Living growth cannot be reversed; it is permanent."),
-        qItem("bst2_4", "4. A small young kitten grows up to become an adult {dash1}.", 1, ["cat", "dog", "goat"], ["cat"], "A kitten is the offspring of a cat.")
-      ]
-    },
-    {
-      subjectId: "phe_week2",
-      subjectTitle: "WEEK 2: PHYSICAL AND HEALTH EDUCATION",
-      topic: "Table Tennis Rules",
-      questions: [
-        qItem("phe2_1", "1. How many players compete in a game of singles table tennis? {dash1} players.", 1, ["2", "7", "4"], ["2"], "Singles table tennis is played by 2 people."),
-        qItem("phe2_2", "2. What geometric shape is a standard table tennis board? It is {dash1}.", 1, ["rectangular", "circle", "square"], ["rectangular"], "Table tennis tables are rectangular."),
-        qItem("phe2_3", "3. Name two pieces of equipment used to play table tennis: a {dash1} and a {dash2}.", 2, ["bat", "ball", "tyre"], ["bat", "ball"], "Players use a rubber bat and a ball."),
-        qItem("phe2_4", "4. To begin a rally, what does the player make? A legal {dash1}.", 1, ["service", "play out", "punch"], ["service"], "Every game starts with a service.")
-      ]
-    }
-  ],
-
-  // =========================================================================
-  // WEEKS 3 — 11
-  // =========================================================================
-  3: [
-    {
-      subjectId: "eng_week3",
-      subjectTitle: "WEEK 3: ENGLISH STUDIES",
-      topic: "Composition: Myself",
-      questions: [
-        qItem("eng3_1", "1. When writing a short composition about myself, I introduce my {dash1} first.", 1, ["name", "shoe"], ["name"], "A composition about oneself begins with your name."),
-        qItem("eng3_2", "2. State your class: I am a pupil in Basic {dash1}.", 1, ["4", "1"], ["4"], "The pupil is in Basic 4.")
-      ]
-    },
-    {
-      subjectId: "comp_week3",
-      subjectTitle: "WEEK 3: COMPUTER STUDIES",
-      topic: "Information & Media",
-      questions: [
-        qItem("cp3_1", "1. What is the processed outcome of data called? It is called {dash1}.", 1, ["information", "mail"], ["information"], "Information is organized, meaningful data."),
-        qItem("cp3_2", "2. Processing data gives clear {dash1} to facts.", 1, ["meaning", "warning"], ["meaning"], "Information interprets raw data into understandable facts."),
-        qItem("cp3_3", "3. Mention three electronic media used to transmit information: {dash1}, {dash2} and {dash3}.", 3, ["telephone", "television", "radio", "drum"], ["telephone", "television", "radio"], "Electronic media rely on electrical power and broadcasts."),
-        qItem("cp3_4", "4. Name two traditional non-electronic media: {dash1} and {dash2}.", 2, ["town crying", "beating of drums", "satellite"], ["town crying", "beating of drums"], "Drums and town criers do not require electricity.")
-      ]
-    },
-    {
-      subjectId: "bst_week3",
-      subjectTitle: "WEEK 3: BASIC SCIENCE AND TECHNOLOGY",
-      topic: "Weather Conditions and Instruments",
-      questions: [
-        qItem("bst3_1", "1. Mention three common types of weather: {dash1}, {dash2} and {dash3} weather.", 3, ["sunny", "rainy", "cloudy", "iron"], ["sunny", "rainy", "cloudy"], "Weather varies between sunny, rainy, and cloudy."),
-        qItem("bst3_2", "2. Name two natural factors that affect the weather: {dash1} and {dash2}.", 2, ["temperature", "wind", "sand"], ["temperature", "wind"], "Air temperature and wind speed affect weather."),
-        qItem("bst3_3", "3. Which weather instrument is used to show the direction of the wind? A {dash1}.", 1, ["windvane", "metre"], ["windvane"], "A windvane points into the wind."),
-        qItem("bst3_4", "4. What instrument measures the amount of rainfall? A {dash1}.", 1, ["raingauge", "gallon"], ["raingauge"], "Rain gauges measure fallen rainwater in millimeters.")
-      ]
-    }
-  ],
-
-  4: [
-    {
-      subjectId: "eng_week4",
-      subjectTitle: "WEEK 4: ENGLISH STUDIES",
-      topic: "Similes and Metaphors",
-      questions: [
-        qItem("eng4_1", "1. Complete the simile: As cold as {dash1}.", 1, ["ice", "water", "fridge"], ["ice"], "'As cold as ice'."),
-        qItem("eng4_2", "2. Complete the simile: As slow as a {dash1}.", 1, ["snail", "snake"], ["snail"], "'As slow as a snail'."),
-        qItem("eng4_3", "3. Complete the simile: As sweet as {dash1}.", 1, ["honey", "food"], ["honey"], "'As sweet as honey'."),
-        qItem("eng4_4", "4. Complete the simile: As easy as {dash1}.", 1, ["ABC", "maths"], ["ABC"], "'As easy as ABC'."),
-        qItem("eng4_5", "5. The metaphor 'Nweke is an elephant' means Nweke is very {dash1}.", 1, ["big", "small"], ["big"], "Elephants represent large physical size."),
-        qItem("eng4_6", "6. The metaphor 'He is a tortoise' means he is very {dash1}.", 1, ["slow", "tricky", "handsome"], ["tricky"], "Tortoises in folklore represent cunning tricksters."),
-        qItem("eng4_7", "7. The metaphor 'Women are gold' means women are highly {dash1}.", 1, ["costly", "tall", "beautiful"], ["costly"], "Gold signifies exceptional, precious value.")
-      ]
-    },
-    {
-      subjectId: "comp_week4",
-      subjectTitle: "WEEK 4: COMPUTER STUDIES",
-      topic: "Ancient and Modern Information Sources",
-      questions: [
-        qItem("cp4_1", "1. Sources of information are broadly divided into {dash1} and {dash2} sources.", 2, ["ancient", "modern", "foreign"], ["ancient", "modern"], "Information sources span historical and modern eras."),
-        qItem("cp4_2", "2. Mention three ancient sources of information: {dash1}, {dash2} and {dash3}.", 3, ["town crying", "wooden gong", "fire lighting", "computer"], ["town crying", "wooden gong", "fire lighting"], "Early people communicated using fire, gongs, and criers."),
-        qItem("cp4_3", "3. Mention three modern sources of information: {dash1}, {dash2} and {dash3}.", 3, ["computers", "radio", "photocopying", "drums"], ["computers", "radio", "photocopying"], "Modern media uses computers, broadcasts, and print."),
-        qItem("cp4_4", "4. True or False: Town crying is a modern source of information: {dash1}.", 1, ["False", "True"], ["False"], "Town crying is an ancient traditional method.")
-      ]
-    }
-  ],
-
-  5: [
-    {
-      subjectId: "eng_week5",
-      subjectTitle: "WEEK 5: ENGLISH STUDIES",
-      topic: "Reading Comprehension: Jude's Story",
-      passage: {
-        title: "📖 Reading Passage: Jude and the Tall Tree",
-        text: "Jude was telling his friends the story about the tall house he saw in Enugu. He used a tall tree near the stream in their village to compare to the house. Amechi and Kelechi were Jude's friends. He told them that the tree had grown so tall that the children could not kill any bird perched on it with catapult which they usually came to the stream with. He had also tried to kill any of the birds himself but his stone bullet could not get to the tree top."
-      },
-      questions: [
-        qItem("eng5_1", "1. Where did Jude see the extraordinarily tall house? In {dash1}.", 1, ["Enugu", "Onitsha", "Abuja"], ["Enugu"], "The passage states Jude saw the house in Enugu."),
-        qItem("eng5_2", "2. What did Jude compare the tall house to? A {dash1} near their stream.", 1, ["tall tree", "pole", "bridge"], ["tall tree"], "He compared its height to a tall village tree."),
-        qItem("eng5_3", "3. What tool did the children bring to the stream to hunt birds? A {dash1}.", 1, ["catapult", "books"], ["catapult"], "The children carried catapults to hunt."),
-        qItem("eng5_4", "4. What did the children try to shoot with their catapults? {dash1} on the branches.", 1, ["birds", "frogs"], ["birds"], "They tried to shoot birds on the tree."),
-        qItem("eng5_5", "5. Name Jude's two good friends from the story: {dash1} and {dash2}.", 2, ["Amechi", "Kelechi", "Emeka"], ["Amechi", "Kelechi"], "Amechi and Kelechi were Jude's friends.")
-      ]
-    },
-    {
-      subjectId: "comp_week5",
-      subjectTitle: "WEEK 5: COMPUTER STUDIES",
-      topic: "Information Processors",
-      questions: [
-        qItem("cp5_1", "1. Name two media that publish news in written format: {dash1} and {dash2}.", 2, ["newspaper", "letter", "sun"], ["newspaper", "letter"], "Newspapers and letters convey written information."),
-        qItem("cp5_2", "2. What audio device do we use to listen to broadcast news? A {dash1}.", 1, ["radio", "card", "mouse"], ["radio"], "Radios broadcast sound to listeners."),
-        qItem("cp5_3", "3. Name two electronic gadgets where we both see and hear information: {dash1} and {dash2}.", 2, ["television", "handset", "notebook"], ["television", "handset"], "Televisions and phones are audiovisual devices."),
-        qItem("cp5_4", "4. Global wireless broadcast data is transmitted via communications {dash1}.", 1, ["satellite", "typist"], ["satellite"], "Satellites relay signals around the globe.")
-      ]
-    }
-  ],
-
-  6: [
-    {
-      subjectId: "eng_week6",
-      subjectTitle: "WEEK 6: ENGLISH STUDIES",
-      topic: "Reading Comprehension: Class Prefect Election",
-      passage: {
-        title: "📖 Reading Passage: Adamu, Aremu and Nkem",
-        text: "Adamu, Aremu and Nkem were in the same class. Adamu liked sciences and was doing well in basic science, physical and health education, computer and others. Aremu was better in English language and literature while Nkem was good both in sciences and languages. Because of Nkem's intelligence, he was chosen by his classmates to be their prefect. This was primary 4D."
-      },
-      questions: [
-        qItem("eng6_1", "1. Who was elected as the class prefect? {dash1}.", 1, ["Nkem", "Adamu", "Aremu"], ["Nkem"], "Nkem was chosen by his classmates."),
-        qItem("eng6_2", "2. Name the three classmates described in the passage: {dash1}, {dash2} and {dash3}.", 3, ["Adamu", "Aremu", "Nkem", "Emeka"], ["Adamu", "Aremu", "Nkem"], "The three classmates are Adamu, Aremu, and Nkem."),
-        qItem("eng6_3", "3. What specific class were the three pupils attending? Primary {dash1}.", 1, ["4D", "3B", "5A"], ["4D"], "The passage specifies Primary 4D."),
-        qItem("eng6_4", "4. Which of the boys was particularly talented in English language and literature? {dash1}.", 1, ["Aremu", "Adamu"], ["Aremu"], "Aremu loved reading literature."),
-        qItem("eng6_5", "5. Who was recognized as the most all-around intelligent pupil in the class? {dash1}.", 1, ["Nkem", "Adamu", "Aremu"], ["Nkem"], "Nkem was good in both science and language.")
-      ]
-    },
-    {
-      subjectId: "comp_week6",
-      subjectTitle: "WEEK 6: COMPUTER STUDIES",
-      topic: "Input, Processing and Output",
-      questions: [
-        qItem("cp6_1", "1. Through which type of device is data entered into a computer? An {dash1} device.", 1, ["input", "CPU", "document"], ["input"], "Input devices send data inwards."),
-        qItem("cp6_2", "2. Mention three essential input devices: {dash1}, {dash2} and {dash3}.", 3, ["mouse", "keyboard", "scanner", "printer", "monitor"], ["mouse", "keyboard", "scanner"], "Keyboards, mice, and scanners enter data."),
-        qItem("cp6_3", "3. Where does the actual processing of all calculations take place? In the {dash1}.", 1, ["CPU", "printer", "paper"], ["CPU"], "The CPU processes instructions."),
-        qItem("cp6_4", "4. Mention two common computer output devices: the {dash1} and the {dash2}.", 2, ["monitor", "printer", "scanner", "mouse"], ["monitor", "printer"], "Monitors and printers output results.")
-      ]
-    }
-  ],
-
-  7: [
-    {
-      subjectId: "eng_week7",
-      subjectTitle: "WEEK 7: MID-TERM TEST: ENGLISH STUDIES",
-      topic: "Concept of Print and Book Features",
-      passage: {
-        title: "📖 Textbook Features",
-        text: "A textbook contains some features such as title, title page, table of contents, chapters, glossary, etc. Without all or some of these, a book cannot be seen as text book. Another thing, a textbook bears is the author's name and or the publishing company."
-      },
-      questions: [
-        qItem("eng7_1", "1. Mention three important features of a textbook: {dash1}, {dash2} and {dash3}.", 3, ["title", "table of contents", "glossary", "stove", "knife"], ["title", "table of contents", "glossary"], "Textbooks feature titles, contents, and glossaries."),
-        qItem("eng7_2", "2. What is the official name given to a book called? The {dash1}.", 1, ["title", "page", "leaves"], ["title"], "The title identifies the book."),
-        qItem("eng7_3", "3. What part of the textbook lists all topics and page numbers? The {dash1}.", 1, ["table of contents", "ink", "paper"], ["table of contents"], "The Table of Contents outlines the chapters."),
-        qItem("eng7_4", "4. True or False: A glossary contains definitions of difficult new words: {dash1}.", 1, ["Yes", "No"], ["Yes"], "Yes, glossaries define key terms."),
-        qItem("eng7_5", "5. The person who writes the content of a book is called the {dash1}.", 1, ["author", "controller", "preacher"], ["author"], "The author is the writer.")
-      ]
-    },
-    {
-      subjectId: "math_week7",
-      subjectTitle: "WEEK 7: MID-TERM TEST: MATHEMATICS",
-      topic: "Lowest Common Multiple (L.C.M)",
-      questions: [
-        qItem("m7_1", "1. Find the Lowest Common Multiple (L.C.M) of 2 and 4: {dash1}", 1, ["4", "10", "20"], ["4"], "Multiples of 2: 2, 4. Multiples of 4: 4. L.C.M = 4."),
-        qItem("m7_2", "2. Calculate the L.C.M of 6 and 8: {dash1}", 1, ["24", "20", "30"], ["24"], "Multiples of 6: 6, 12, 18, 24. Multiples of 8: 8, 16, 24. L.C.M = 24."),
-        qItem("m7_3", "3. Find the L.C.M of 3 and 6: {dash1}", 1, ["6", "8", "10"], ["6"], "Multiples of 3: 3, 6. L.C.M = 6."),
-        qItem("m7_4", "4. Calculate the L.C.M of 4 and 7: {dash1}", 1, ["28", "12", "8"], ["28"], "4 × 7 = 28."),
-        qItem("m7_5", "5. Find the L.C.M of 2 and 8: {dash1}", 1, ["8", "14", "17"], ["8"], "Multiples of 2 include 8; L.C.M = 8."),
-        qItem("m7_6", "6. Calculate the L.C.M of 4 and 9: {dash1}", 1, ["36", "29", "40"], ["36"], "4 × 9 = 36.")
-      ]
-    },
-    {
-      subjectId: "comp_week7",
-      subjectTitle: "MID-TERM TEST: COMPUTER STUDIES",
-      topic: "The Central Processing Unit",
-      passage: {
-        title: "💻 The Central Processing Unit",
-        text: "The CPU is the abbreviation for Central Processing Unit. It is also called system unit. It is the brain of the computer where the memory is contained. Data are processed in the CPU of the computer before the information is displayed on the monitor for the user to see."
-      },
-      questions: [
-        qItem("cp7_1", "1. What does the abbreviation CPU stand for? {dash1}.", 1, ["Central Processing Unit", "ACP", "CPS"], ["Central Processing Unit"], "Central Processing Unit."),
-        qItem("cp7_2", "2. What is another name for the CPU? The {dash1}.", 1, ["system unit", "software", "monitor"], ["system unit"], "It is commonly known as the System Unit."),
-        qItem("cp7_3", "3. Before information is displayed, raw data must be {dash1} in the CPU.", 1, ["processed", "wasted", "blocked"], ["processed"], "Data must be processed into information."),
-        qItem("cp7_4", "4. Name the two primary types of computer memory: {dash1} and {dash2}.", 2, ["RAM", "ROM", "CAM"], ["RAM", "ROM"], "RAM and ROM are the two primary memory types.")
-      ]
-    }
-  ],
-
-  8: [
-    {
-      subjectId: "comp_week8",
-      subjectTitle: "WEEK 8: COMPUTER STUDIES",
-      topic: "Computer Software",
-      questions: [
-        qItem("cp8_1", "1. Computer software is divided into {dash1} and {dash2} software.", 2, ["System", "Application", "Hardware", "Plastic"], ["System", "Application"], "System software controls hardware; Application software performs specific user tasks."),
-        qItem("cp8_2", "2. An operating system like Microsoft Windows is an example of {dash1} software.", 1, ["System", "Application", "Drawing"], ["System"], "Windows and Android are System software."),
-        qItem("cp8_3", "3. Programs like Microsoft Word and Paint are examples of {dash1} software.", 1, ["Application", "System", "Cable"], ["Application"], "Programs used to do user work are Application software."),
-        qItem("cp8_4", "4. True or False: Software programs cannot be touched with our physical hands: {dash1}.", 1, ["True", "False"], ["True"], "Software is intangible computer programs and instructions.")
-      ]
-    },
-    {
-      subjectId: "math_week8",
-      subjectTitle: "WEEK 8: MATHEMATICS",
-      topic: "Highest Common Factor (H.C.F)",
-      questions: [
-        qItem("m8_1", "1. Find the Highest Common Factor (H.C.F) of 8 and 12: {dash1}", 1, ["4", "2", "6", "8"], ["4"], "Factors of 8: 1, 2, 4, 8. Factors of 12: 1, 2, 3, 4, 6, 12. Highest common is 4."),
-        qItem("m8_2", "2. What is the H.C.F of 9 and 15? {dash1}", 1, ["3", "1", "5", "9"], ["3"], "Factors of 9: 1, 3, 9. Factors of 15: 1, 3, 5, 15. H.C.F = 3."),
-        qItem("m8_3", "3. Calculate the H.C.F of 16 and 24: {dash1}", 1, ["8", "4", "2", "16"], ["8"], "16 = 8 × 2 and 24 = 8 × 3; H.C.F is 8."),
-        qItem("m8_4", "4. Find the H.C.F of 10 and 20: {dash1}", 1, ["10", "5", "2", "20"], ["10"], "10 divides both 10 and 20 evenly."),
-        qItem("m8_5", "5. What is the H.C.F of 14 and 21? {dash1}", 1, ["7", "2", "3", "14"], ["7"], "7 × 2 = 14 and 7 × 3 = 21.")
-      ]
-    },
-    {
-      subjectId: "eng_week8",
-      subjectTitle: "WEEK 8: ENGLISH STUDIES",
-      topic: "Subject and Predicate in Simple Sentences",
-      questions: [
-        qItem("eng8_1", "1. In 'The swift eagle caught a snake', identify the Subject: {dash1} and Predicate: {dash2}.", 2, ["The swift eagle", "caught a snake", "a snake"], ["The swift eagle", "caught a snake"], "Subject is who performs the action; predicate contains the verb."),
-        qItem("eng8_2", "2. In 'Flourish reads her textbook every evening', identify the Subject: {dash1}.", 1, ["Flourish", "reads her textbook", "every evening"], ["Flourish"], "Flourish is the subject performing the action."),
-        qItem("eng8_3", "3. Every complete simple sentence must have a Subject and a {dash1}.", 1, ["Predicate / Verb", "Comma", "Preposition"], ["Predicate / Verb"], "Sentences require a subject and a predicate with a finite verb."),
-        qItem("eng8_4", "4. In 'The dog barked at the stranger', identify the Predicate: {dash1}.", 1, ["barked at the stranger", "The dog", "stranger"], ["barked at the stranger"], "The predicate begins from the verb 'barked'.")
-      ]
-    }
-  ],
-
-  9: [
-    {
-      subjectId: "comp_week9",
-      subjectTitle: "WEEK 9: COMPUTER STUDIES",
-      topic: "Computer Storage Devices",
-      questions: [
-        qItem("cp9_1", "1. Computer storage is divided into {dash1} and {dash2} storage.", 2, ["Primary storage", "Secondary storage", "Screen", "Wire"], ["Primary storage", "Secondary storage"], "Computers use primary (RAM/ROM) and secondary storage."),
-        qItem("cp9_2", "2. A flash drive and a hard disk are examples of {dash1} storage devices.", 1, ["Secondary", "Primary", "Temporary"], ["Secondary"], "External drives provide secondary, permanent storage."),
-        qItem("cp9_3", "3. What does RAM stand for? {dash1}.", 1, ["Random Access Memory", "Read Access Mode", "Run All Memory"], ["Random Access Memory"], "RAM holds temporary data for processing."),
-        qItem("cp9_4", "4. What does ROM stand for? {dash1}.", 1, ["Read Only Memory", "Run Once Mode", "Real Open Memory"], ["Read Only Memory"], "ROM contains permanent instructions built in by the manufacturer.")
-      ]
-    },
-    {
-      subjectId: "eng_week9",
-      subjectTitle: "WEEK 9: ENGLISH STUDIES",
-      topic: "Prepositions of Place",
-      passage: {
-        title: "📖 Story: Where Is the Cat?",
-        text: "Chinedu has a playful ginger cat named Simba. In the morning, Simba slept peacefully under the dining table. Later on, he jumped onto the sofa, hid behind the green curtains, and finally crawled into a cardboard box."
-      },
-      questions: [
-        qItem("eng9_1", "1. Where did Simba sleep and jump? He slept {dash1} the table and jumped {dash2} the sofa.", 2, ["under", "onto", "between", "through"], ["under", "onto"], "Prepositions show position and direction."),
-        qItem("eng9_2", "2. Where was Simba hiding? He hid {dash1} the curtains.", 1, ["behind", "in front", "across"], ["behind"], "'Behind' indicates position at the back of something."),
-        qItem("eng9_3", "3. Words that show position, such as 'in', 'on', 'under', are called {dash1}.", 1, ["Prepositions", "Adjectives", "Nouns"], ["Prepositions"], "Prepositions specify relationships in space or time."),
-        qItem("eng9_4", "4. Simba crawled {dash1} the cardboard box.", 1, ["into", "over", "above"], ["into"], "'Into' indicates movement to the interior of a space.")
-      ]
-    },
-    {
-      subjectId: "bst_week9",
-      subjectTitle: "WEEK 9: BASIC SCIENCE AND TECHNOLOGY",
-      topic: "Water and the Water Cycle",
-      questions: [
-        qItem("bst9_1", "1. Water changes to vapour by {dash1} and falls back as rain through {dash2}.", 2, ["evaporation", "condensation", "freezing"], ["evaporation", "condensation"], "Heat causes evaporation; cooling leads to condensation."),
-        qItem("bst9_2", "2. Clean drinking water is odourless, tasteless, and has no {dash1}.", 1, ["colour", "weight", "liquid"], ["colour"], "Clean drinking water is colourless, tasteless, and odourless."),
-        qItem("bst9_3", "3. Name three natural sources of fresh water: {dash1}, {dash2} and {dash3}.", 3, ["rain", "river", "well", "petrol", "kerosene"], ["rain", "river", "well"], "Rain, rivers, and wells are natural water sources."),
-        qItem("bst9_4", "4. Boiling drinking water is necessary because it kills harmful {dash1}.", 1, ["germs", "fish", "salts"], ["germs"], "Boiling sterilizes water by destroying pathogenic bacteria.")
-      ]
-    }
-  ],
-
-  10: [
-    {
-      subjectId: "comp_week10",
-      subjectTitle: "WEEK 10: COMPUTER STUDIES",
-      topic: "Hardware: Input and Output Devices",
-      passage: {
-        title: "💻 Computer Hardware: Input vs Output",
-        text: "Computer hardware is divided into input devices and output devices. An input device is any hardware component that allows you to enter data and instructions into a computer. Examples include the keyboard, mouse, scanner, microphone, light pen, and joystick.\n\nAn output device is any hardware component that conveys information from the computer to one or more people. Examples include the monitor (screen), printer, speakers, headphones, and projectors."
-      },
-      questions: [
-        qItem("cp10_1", "1. A keyboard is an {dash1} device, while a printer is an {dash2} device.", 2, ["input", "output", "storage", "internal"], ["input", "output"], "Keyboard feeds data in; printer gives physical copies out."),
-        qItem("cp10_2", "2. Mention four examples of input devices: {dash1}, {dash2}, {dash3} and {dash4}.", 4, ["mouse", "keyboard", "scanner", "microphone", "speaker", "printer"], ["mouse", "keyboard", "scanner", "microphone"], "Mouse, keyboard, scanner, and microphone take input inward."),
-        qItem("cp10_3", "3. Mention three examples of output devices: {dash1}, {dash2} and {dash3}.", 3, ["monitor", "printer", "speakers", "mouse", "light pen"], ["monitor", "printer", "speakers"], "Monitors display images, printers produce paper, and speakers play sound."),
-        qItem("cp10_4", "4. What output device is used to play music and sounds from a computer? A {dash1}.", 1, ["speaker", "scanner", "mouse"], ["speaker"], "Speakers output audible sound waves."),
-        qItem("cp10_5", "5. What is the display visual screen of a computer called? The {dash1}.", 1, ["monitor", "CPU", "joystick"], ["monitor"], "The monitor displays visual output to the user."),
-        qItem("cp10_6", "6. Which input device is commonly used by children to play computer games? A {dash1}.", 1, ["joystick", "printer", "paper"], ["joystick"], "Joysticks control character movement in games."),
-        qItem("cp10_7", "7. Which device converts printed paper photos into digital files? A {dash1}.", 1, ["scanner", "wooden box", "speaker"], ["scanner"], "Scanners digitize physical paper copies into the computer system.")
-      ]
-    },
-    {
-      subjectId: "math_week10",
-      subjectTitle: "WEEK 10: MATHEMATICS",
-      topic: "Perimeter and Area of Shapes",
-      questions: [
-        qItem("m10_1", "1. Calculate the perimeter of a rectangle with length 8cm and width 5cm: {dash1} cm.", 1, ["26", "40", "13", "30"], ["26"], "Perimeter = 2 × (L + W) = 2 × (8 + 5) = 2 × 13 = 26cm."),
-        qItem("m10_2", "2. What is the area of a square whose side is 6cm? {dash1} square centimeters.", 1, ["36", "24", "12", "18"], ["36"], "Area of square = Side × Side = 6 × 6 = 36cm²."),
-        qItem("m10_3", "3. Perimeter is defined as the total distance around the {dash1} of a shape.", 1, ["boundary", "inside", "weight"], ["boundary"], "Perimeter measures the total outer boundary."),
-        qItem("m10_4", "4. Calculate the area of a rectangle with length 10cm and breadth 4cm: {dash1} cm².", 1, ["40", "28", "14", "50"], ["40"], "Area = Length × Breadth = 10 × 4 = 40cm²."),
-        qItem("m10_5", "5. What is the perimeter of a square with each side measuring 7cm? {dash1} cm.", 1, ["28", "49", "14", "21"], ["28"], "Perimeter = 4 × Side = 4 × 7 = 28cm.")
-      ]
-    },
-    {
-      subjectId: "bst_week10",
-      subjectTitle: "WEEK 10: BASIC SCIENCE AND TECHNOLOGY",
-      topic: "The Human Skeletal System",
-      questions: [
-        qItem("bst10_1", "1. The internal bony framework supporting the human body is the {dash1}.", 1, ["skeleton", "muscle", "skin"], ["skeleton"], "The skeleton provides structure and protects internal organs."),
-        qItem("bst10_2", "2. A point where two or more bones connect is called a {dash1}.", 1, ["joint", "vein", "flesh"], ["joint"], "Joints allow movement between articulating bones."),
-        qItem("bst10_3", "3. Mention two mobile joints found in human limbs: the {dash1} and {dash2}.", 2, ["knee", "elbow", "stomach", "liver"], ["knee", "elbow"], "The knee and elbow are mobile hinge joints."),
-        qItem("bst10_4", "4. Which bone protects the delicate human brain from injuries? The {dash1}.", 1, ["skull", "ribs", "backbone"], ["skull"], "The skull encloses and safeguards the brain.")
-      ]
-    }
-  ],
-
-  11: [
-    {
-      subjectId: "exam_phe",
-      subjectTitle: "END TERM TEST: PHYSICAL AND HEALTH EDUCATION",
-      topic: "Jumps, Races & First Aid",
-      questions: [
-        qItem("ephe_1", "1. Name two standard jumping events in field athletics: {dash1} jump and {dash2} jump.", 2, ["high", "long", "push", "short"], ["high", "long"], "High jump and long jump are recognized athletic field events."),
-        qItem("ephe_2", "2. Name two competitive running races in athletics: {dash1} and {dash2} race.", 2, ["relay", "marathon", "football"], ["relay", "marathon"], "Relays and marathons are track and road running races."),
-        qItem("ephe_3", "3. Identify four essential supplies in a first aid box: {dash1}, {dash2}, {dash3} and {dash4}.", 4, ["cotton wool", "razor", "paracetamol", "GIV", "stone", "pen"], ["cotton wool", "razor", "paracetamol", "GIV"], "First aid supplies include cotton wool, blades, paracetamol, and antiseptics."),
-        qItem("ephe_4", "4. What is the official title of the person who referees a football match? The {dash1}.", 1, ["referee", "goal keeper", "trader"], ["referee"], "The referee enforces all rules during a football match.")
-      ]
-    },
-    {
-      subjectId: "exam_cca",
-      subjectTitle: "END TERM TEST: CULTURAL AND CREATIVE ARTS",
-      topic: "Visual Arts, Colours and Shapes",
-      questions: [
-        qItem("ecca_1", "1. Mention three branches of visual arts: {dash1}, {dash2} and {dash3}.", 3, ["drawing", "painting", "graphics", "broadcasting"], ["drawing", "painting", "graphics"], "Drawing, painting, and graphics are visual arts."),
-        qItem("ecca_2", "2. Name three secondary colours formed by mixing primary colours: {dash1}, {dash2} and {dash3}.", 3, ["orange", "green", "purple", "red", "blue"], ["orange", "green", "purple"], "Orange, green, and purple are secondary colours."),
-        qItem("ecca_3", "3. Identify four fundamental geometric shapes in design: {dash1}, {dash2}, {dash3} and {dash4}.", 4, ["circle", "square", "triangle", "rectangle", "sand"], ["circle", "square", "triangle", "rectangle"], "Circles, squares, triangles, and rectangles are basic shapes.")
-      ]
-    },
-    {
-      subjectId: "exam_agric",
-      subjectTitle: "END TERM TEST: AGRICULTURAL SCIENCE",
-      topic: "Fishing, Crops and Farm Animals",
-      questions: [
-        qItem("eag_1", "1. Name two simple tools used for catching fish: a {dash1} and a {dash2}.", 2, ["hook", "net", "hoe", "broom"], ["hook", "net"], "Hooks, lines, and nets are fishing tools."),
-        qItem("eag_2", "2. Mention four edible fruits harvested from plants: {dash1}, {dash2}, {dash3} and {dash4}.", 4, ["orange", "mango", "apple", "banana"], ["orange", "mango", "apple", "banana"], "Oranges, mangoes, apples, and bananas are wholesome fruits."),
-        qItem("eag_3", "3. Identify four common domestic farm animals: {dash1}, {dash2}, {dash3} and {dash4}.", 4, ["goat", "cow", "sheep", "pig"], ["goat", "cow", "sheep", "pig"], "Goats, cows, sheep, and pigs are domestic livestock."),
-        qItem("eag_4", "4. What are the two primary divisions of agriculture? {dash1} and {dash2}.", 2, ["crops farming", "animals farming", "books farming"], ["crops farming", "animals farming"], "Crops farming and livestock production.")
-      ]
-    },
-    {
-      subjectId: "exam_hec",
-      subjectTitle: "END TERM TEST: HOME ECONOMICS",
-      topic: "Anatomy, Cooking and Management",
-      questions: [
-        qItem("ehe_1", "1. The human body is divided into three main anatomical parts: the {dash1}, {dash2} and {dash3}.", 3, ["head", "trunk", "limbs", "eyes"], ["head", "trunk", "limbs"], "The body is divided into head, trunk, and limbs."),
-        qItem("ehe_2", "2. Mention three common culinary ways to cook food: {dash1}, {dash2} and {dash3}.", 3, ["boiling", "frying", "smoking", "burying"], ["boiling", "frying", "smoking"], "Boiling, frying, and smoking/roasting cook food safely."),
-        qItem("ehe_3", "3. Home management involves proper {dash1} and {dash2} of family resources.", 2, ["care of home", "budgeting resources", "wasting money"], ["care of home", "budgeting resources"], "Care of the home and wise budgeting are key skills.")
-      ]
-    },
-    {
-      subjectId: "exam_crs",
-      subjectTitle: "END TERM TEST: CHRISTIAN RELIGIOUS STUDIES",
-      topic: "God's Word, Parables and Christian Conduct",
-      questions: [
-        qItem("ecrs_1", "1. In what two ways does God speak to His people today? Through the Holy {dash1} and heavenly {dash2}.", 2, ["Bible", "Angel", "cult"], ["Bible", "Angel"], "God speaks through the Holy Bible and angels."),
-        qItem("ecrs_2", "2. In the parable of mercy, the Good Samaritan was travelling down from Jerusalem to {dash1}.", 1, ["Jericho", "Nigeria", "Israel"], ["Jericho"], "Luke 10:30 specifies the man was on the road to Jericho."),
-        qItem("ecrs_3", "3. As children of God, we are commanded to {dash1}, {dash2} and {dash3} one another.", 3, ["love", "care for", "help", "hate", "beat"], ["love", "care for", "help"], "Believers must love, care for, and help others.")
-      ]
-    },
-    {
-      subjectId: "exam_hist",
-      subjectTitle: "END TERM TEST: HISTORY",
-      topic: "Colonial Amalgamation and Early Regions",
-      questions: [
-        qItem("ehist_1", "1. Name the four early administrative regions of Nigeria: {dash1}, {dash2}, {dash3} and {dash4}.", 4, ["Northern", "Eastern", "Western", "Mid-Western", "Lagos"], ["Northern", "Eastern", "Western", "Mid-Western"], "Nigeria formerly had Northern, Eastern, Western, and Mid-Western regions."),
-        qItem("ehist_2", "2. Who was the British Governor-General who amalgamated Nigeria in 1914? {dash1}.", 1, ["Lord Luggard", "Awolowo", "Azikiwe"], ["Lord Luggard"], "Lord Frederick Lugard amalgamated the protectorates."),
-        qItem("ehist_3", "3. Mention Nigeria's three major ethnic groups: {dash1}, {dash2} and {dash3}.", 3, ["Hausa", "Yoruba", "Igbo", "Igala"], ["Hausa", "Yoruba", "Igbo"], "Hausa, Yoruba, and Igbo form the three largest groups.")
-      ]
-    },
-    {
-      subjectId: "exam_civic",
-      subjectTitle: "END TERM TEST: CIVIC EDUCATION",
-      topic: "National Languages, Culture and Governance",
-      questions: [
-        qItem("eciv_1", "1. Mention three indigenous languages spoken in Nigeria: {dash1}, {dash2} and {dash3}.", 3, ["Efik", "Igala", "Bini", "China"], ["Efik", "Igala", "Bini"], "Efik, Igala, and Bini are Nigerian native languages."),
-        qItem("eciv_2", "2. Mention three sacred worship places deserving quietness and respect: the {dash1}, {dash2} and traditional {dash3}.", 3, ["church", "mosque", "shrine", "car"], ["church", "mosque", "shrine"], "Churches, mosques, and shrines are sacred sites."),
-        qItem("eciv_3", "3. Name three key cultural elements of any society: {dash1}, {dash2} and {dash3}.", 3, ["language", "food", "clothing", "religion"], ["language", "food", "clothing"], "Culture includes native language, food, and dress."),
-        qItem("eciv_4", "4. What are the three tiers of government in Nigeria? The {dash1}, {dash2} and {dash3} governments.", 3, ["federal", "state", "local", "town"], ["federal", "state", "local"], "Nigeria operates Federal, State, and Local tiers of government.")
-      ]
-    },
-    {
-      subjectId: "exam_sos",
-      subjectTitle: "END TERM TEST: SOCIAL STUDIES",
-      topic: "Religions, Family and Public Institutions",
-      questions: [
-        qItem("esos_1", "1. What are the three major religions recognized in Nigeria? {dash1}, {dash2} and African {dash3}.", 3, ["Christian", "Islam", "tradition", "Hindu"], ["Christian", "Islam", "tradition"], "Christianity, Islam, and African Traditional Religion are major faiths."),
-        qItem("esos_2", "2. Who are the three members of a nuclear family? The {dash1}, {dash2} and {dash3}.", 3, ["father", "mother", "children", "uncles"], ["father", "mother", "children"], "A nuclear family consists strictly of parents and their children."),
-        qItem("esos_3", "3. Name five public social environments where humans meet: {dash1}, {dash2}, {dash3}, {dash4} and {dash5}.", 5, ["school", "market", "church", "hospital", "parks", "stadium"], ["school", "market", "church", "hospital", "parks"], "Schools, markets, churches, hospitals, and parks are public social hubs.")
-      ]
-    },
-    {
-      subjectId: "exam_vr",
-      subjectTitle: "END TERM TEST: VERBAL REASONING",
-      topic: "Identifying the General Group Category",
-      questions: [
-        qItem("evr_1", "1. In the list (rice, food, beans, garri), what is the overarching Group Name? {dash1}.", 1, ["food", "rice", "beans"], ["food"], "'Food' is the overarching category."),
-        qItem("evr_2", "2. In the list (circle, square, triangle, shape), identify the general Group Name: {dash1}.", 1, ["shape", "circle", "square"], ["shape"], "'Shape' is the general category."),
-        qItem("evr_3", "3. In the list (pink, yellow, colour, black), identify the Group Name: {dash1}.", 1, ["colour", "pink", "yellow"], ["colour"], "'Colour' is the general category."),
-        qItem("evr_4", "4. In the list (1, 2, 3, number), identify the Group Name: {dash1}.", 1, ["number", "1", "2"], ["number"], "'Number' is the category."),
-        qItem("evr_5", "5. In the list (Sunday, week, Monday, Tuesday), what is the Group Name? {dash1}.", 1, ["week", "Sunday", "Monday"], ["week"], "The days of the week make up a 'week'."),
-        qItem("evr_6", "6. In the list (Imo, Enugu, State, Abia), what is the general Group Name? {dash1}.", 1, ["State", "Imo", "Enugu"], ["State"], "Imo, Enugu, and Abia are specific 'States'.")
-      ]
-    },
-    {
-      subjectId: "exam_qr",
-      subjectTitle: "END TERM TEST: QUANTITATIVE REASONING",
-      topic: "Letter Ciphers",
-      passage: {
-        title: "🔢 Letter-to-Number Key",
-        text: "R E A S O N = 1 2 3 4 5 6\nExample: AN = 36"
-      },
-      questions: [
-        qItem("eqr_1", "1. Decode the word S O N: {dash1}", 1, ["456", "356", "452"], ["456"], "S=4, O=5, N=6. S O N = 456."),
-        qItem("eqr_2", "2. Decode the word E A R N: {dash1}", 1, ["2316", "2315", "1236"], ["2316"], "E=2, A=3, R=1, N=6. E A R N = 2316."),
-        qItem("eqr_3", "3. Decode the word N O R: {dash1}", 1, ["651", "561", "652"], ["651"], "N=6, O=5, R=1. N O R = 651."),
-        qItem("eqr_4", "4. Decode the word S O: {dash1}", 1, ["45", "54"], ["45"], "S=4, O=5. S O = 45."),
-        qItem("eqr_5", "5. Decode the word R A N: {dash1}", 1, ["136", "316"], ["136"], "R=1, A=3, N=6. R A N = 136."),
-        qItem("eqr_6", "6. Decode the word N E A R: {dash1}", 1, ["6231", "2631"], ["6231"], "N=6, E=2, A=3, R=1. N E A R = 6231."),
-        qItem("eqr_7", "7. Decode the word S E A: {dash1}", 1, ["423", "243"], ["423"], "S=4, E=2, A=3. S E A = 423."),
-        qItem("eqr_8", "8. Decode the word A R E: {dash1}", 1, ["312", "132"], ["312"], "A=3, R=1, E=2. A R E = 312.")
-      ]
-    }
-  ]
-};
+/**
+ * Nigerian Basic 4 (Primary 4) Complete Term Curriculum
+ * Contains:
+ * 1. window.LIVE_CHALK_CURRICULUM - Interactive stroke chalkboard lessons
+ * 2. window.WEEKLY_CURRICULUM    - Complete assessment bank for Weeks 1 to 11
+ */
 
 // =========================================================================
-// MULTI-SENSORY LIVE CHALKBOARD ENGINE CURRICULUM
+// 1. LIVE CHALKBOARD LESSON CURRICULUM
 // =========================================================================
 window.LIVE_CHALK_CURRICULUM = {
-  "english_week1": [
-    { q: "What is the plural of House?", a: "Houses", rule: "Regular noun: add -s to form 'Houses'.", tray: ["1 House 🏠", "Many Houses 🏠🏠"] },
-    { q: "What is the plural of Ox?", a: "Oxen", rule: "Irregular noun: Ox takes '-en' to become 'Oxen'.", tray: ["1 Ox 🐂", "Many Oxen 🐂🐂"] },
-    { q: "What is the plural of Knife?", a: "Knives", rule: "Drop -fe and add -ves to form 'Knives'.", tray: ["1 Knife 🔪", "Set of Knives 🔪🔪"] }
+  english_week1: [
+    {
+      q: "Singular to Plural: What is the plural of 'baby'?",
+      a: "babies",
+      tray: ["Rule: For nouns ending in a consonant + 'y', drop 'y' and add '-ies'."]
+    },
+    {
+      q: "Singular to Plural: What is the plural of 'leaf'?",
+      a: "leaves",
+      tray: ["Rule: Most nouns ending in '-f' or '-fe' change to '-ves' in the plural."]
+    },
+    {
+      q: "Irregular Plurals: What is the plural of 'child'?",
+      a: "children",
+      tray: ["Rule: Irregular nouns change spelling completely without adding '-s'."]
+    }
   ],
 
-  "math_fractions": [
+  math_fractions: [
     {
       q: "Find 3 equivalent fractions for 1/2",
       num: 1,
       den: 2,
       multipliers: [2, 3, 4],
-      tray: ["1/2 = Half a Chocolate Bar 🍫", "2/4 = Two Quarters", "3/6 = Three Sixths", "Rule: Multiply top & bottom by the same number"]
+      tray: ["Equivalent Fraction Rule: Multiply both numerator and denominator by the same number."]
     },
     {
-      q: "Find 3 equivalent fractions for 2/5",
+      q: "Find 3 equivalent fractions for 2/3",
       num: 2,
-      den: 5,
+      den: 3,
       multipliers: [2, 3, 4],
-      tray: ["2/5 baseline bar", "4/10 = cut in 2", "6/15 = cut in 3", "Rule: Top × 2, Bottom × 2"]
-    }
-  ],
-
-  // VERBAL REASONING LIVE LESSON (WEEK 1)
-  "vr_week1": [
-    {
-      q: "Find the next two pairs: GJ, HK, IL, __, __",
-      type: "letter_pairs",
-      letters1: ["G", "H", "I", "J", "K"],
-      letters2: ["J", "K", "L", "M", "N"],
-      answer: "JM, KN",
-      tray: ["1st letter: G ➔ H ➔ I ➔ J ➔ K", "2nd letter: J ➔ K ➔ L ➔ M ➔ N", "Match them: JM and KN! 🔤"]
+      tray: ["2/3 multiplied by 2/2 = 4/6, by 3/3 = 6/9, by 4/4 = 8/12."]
     },
     {
-      q: "Find the next two pairs: AM, BN, CO, __, __",
-      type: "letter_pairs",
-      letters1: ["A", "B", "C", "D", "E"],
-      letters2: ["M", "N", "O", "P", "Q"],
-      answer: "DP, EQ",
-      tray: ["1st letter: A ➔ B ➔ C ➔ D ➔ E", "2nd letter: M ➔ N ➔ O ➔ P ➔ Q", "Result: DP and EQ! 🔤"]
+      q: "Find 3 equivalent fractions for 3/4",
+      num: 3,
+      den: 4,
+      multipliers: [2, 3, 4],
+      tray: ["Multiplying top and bottom preserves the exact proportion."]
     }
   ],
 
-  // QUANTITATIVE REASONING LIVE LESSON (WEEK 1)
-  "qr_week1": [
+  vr_week1: [
     {
-      q: "Counting in 30's Diagram: 20, 50, 80, __",
-      type: "qr_loop",
-      bl: 20, tl: 50, tr: 80, br: "?",
-      step: 30,
-      answer: 110,
-      tray: ["Start Bottom-Left: 20", "20 + 30 = 50 (Top-Left)", "50 + 30 = 80 (Top-Right)", "80 + 30 = 110 (Bottom-Right) 🎯"]
+      q: "Letter Pair Sequence: AB, BC, CD, ?",
+      type: "letter_pairs",
+      letters1: ["A", "B", "C", "D"],
+      letters2: ["B", "C", "D", "E"],
+      answer: "DE",
+      tray: ["Step: First letters move forward (+1). Second letters move forward (+1)."]
     },
     {
-      q: "Counting in 30's Diagram: 180, 210, 240, __",
-      type: "qr_loop",
-      bl: 180, tl: 210, tr: 240, br: "?",
-      step: 30,
-      answer: 270,
-      tray: ["Start Bottom-Left: 180", "180 + 30 = 210 (Top-Left)", "210 + 30 = 240 (Top-Right)", "240 + 30 = 270 (Bottom-Right) 🎯"]
+      q: "Letter Pair Sequence: ZA, YB, XC, ?",
+      type: "letter_pairs",
+      letters1: ["Z", "Y", "X", "W"],
+      letters2: ["A", "B", "C", "D"],
+      answer: "WD",
+      tray: ["Step: Left letter steps backward, right letter steps forward."]
     }
   ],
 
-  "igbo_week1": [
-    { q: "Ụdaume Igbo dị ole?", a: "Asatọ (8)", rule: "Ụdaume mfe (4) + Ụdaume arọ (4) = Asatọ (8).", tray: ["Ụdaume mfe: a, e, i, o", "Ụdaume arọ: ị, ọ, u, ụ"] }
+  qr_week1: [
+    {
+      q: "Counting in 30's 4-Box Pattern",
+      type: "qr_loop",
+      bl: 0,
+      tl: 30,
+      tr: 60,
+      answer: 90,
+      tray: ["Loop Pattern: Bottom-Left + 30 ➔ Top-Left + 30 ➔ Top-Right + 30 ➔ Bottom-Right."]
+    },
+    {
+      q: "Counting in 30's (Starting from 30)",
+      type: "qr_loop",
+      bl: 30,
+      tl: 60,
+      tr: 90,
+      answer: 120,
+      tray: ["Loop Pattern: 30 ➔ 60 ➔ 90 ➔ 120."]
+    }
   ],
 
-  // ENGLISH AURAL DISCRIMINATION LIVE LESSON (WEEK 2)
-  "eng_week2": [
+  igbo_week1: [
     {
-      q: "Vowel Sounds: /æ/ (Short) vs /ɑː/ (Long)",
+      q: "Gịnị bụ ụdaume dị n'okwu 'Aka'?",
+      a: "A",
+      tray: ["Ụdaume asatọ dị n'asụsụ Igbo: a, e, i, ị, o, ọ, u, ụ."]
+    },
+    {
+      q: "Kedụ mkpụrụokwu na-amalite na mgbochiume?",
+      a: "Bata",
+      tray: ["Mgbochiume bụ mkpụrụedemede na-abụghị ụdaume (b, ch, d, f, g, gb...)."]
+    }
+  ],
+
+  eng_week2: [
+    {
+      q: "Aural Discrimination: Separate words with short /æ/ and long /ɑː/",
       type: "phonics",
-      shortList: ["pat", "mat", "cat", "hat", "at", "back"],
-      longList: ["part", "mart", "cart", "heart", "art", "barn", "bark"],
-      tray: ["/æ/ Short 'a': cat, hat, back 🐱", "/ɑː/ Long 'ar': part, heart, barn ❤️"]
+      shortList: ["cat", "hat", "black", "apple"],
+      longList: ["cart", "farm", "father", "part"],
+      tray: ["/æ/ is short and sharp (cat). /ɑː/ is long and deep (father/cart)."]
     }
   ],
 
-  "math_week2": [
+  math_week2: [
     {
-      q: "80, 90, __, __, 120",
-      type: "sequence",
-      pattern: "80, 90, __, __, 120, 130",
-      step: 10,
-      answer: "100, 110",
-      tray: ["Pattern: Count by Tens", "80 + 10 = 90", "90 + 10 = 100", "100 + 10 = 110"]
+      q: "Sequence of Thousands: 1000, 2000, 3000, ?",
+      a: "4000",
+      tray: ["Place value counting: Adding one thousand (1,000) at every step."]
+    },
+    {
+      q: "Write 5,420 in words:",
+      a: "Five thousand, four hundred and twenty",
+      tray: ["Thousands ➔ Hundreds ➔ Tens ➔ Units."]
     }
   ],
 
-  "comp_week2": [
-    { q: "What is Data in computer studies?", a: "Raw or unprocessed facts.", rule: "Data becomes information when processed by the CPU.", tray: ["Data ➔ CPU ➔ Information"] }
-  ],
-
-  "math_week7": [
+  comp_week2: [
     {
-      q: "Find the L.C.M of 4 and 6",
-      type: "lcm",
-      n1: 4,
-      n2: 6,
-      multiples1: [4, 8, 12, 16, 20, 24],
-      multiples2: [6, 12, 18, 24],
-      answer: 12,
-      tray: ["Frog 4 jumps: 4, 8, 12 🐸", "Frog 6 jumps: 6, 12 🐸", "First stone they meet = 12!"]
+      q: "The CPU is known as the ______ of the computer.",
+      a: "brain",
+      tray: ["CPU stands for Central Processing Unit."]
+    },
+    {
+      q: "Unprocessed facts and figures are called ______.",
+      a: "data",
+      tray: ["Data becomes information after processing by the CPU."]
     }
   ],
 
-  "english_week7": [
-    { q: "What is the title of a textbook?", a: "The official name given to the book.", rule: "The title identifies the book and gives the reader a preview of its contents.", tray: ["Title Page 📖", "Table of Contents 📑", "Glossary 🔤"] }
-  ],
-
-  "math_week8": [
+  math_week7: [
     {
-      q: "Find the H.C.F of 8 and 12",
-      type: "hcf",
-      n1: 8,
-      n2: 12,
-      factors1: [1, 2, 4, 8],
-      factors2: [1, 2, 3, 4, 6, 12],
-      commonFactors: [1, 2, 4],
-      answer: 4,
-      tray: ["Factors of 8: 1, 2, 4, 8", "Factors of 12: 1, 2, 3, 4, 6, 12", "The Biggest Factor is 4! 👑"]
+      q: "Find the Lowest Common Multiple (L.C.M) of 4 and 6",
+      a: "12",
+      tray: ["Multiples of 4: 4, 8, 12, 16. Multiples of 6: 6, 12, 18. Lowest shared is 12."]
+    },
+    {
+      q: "Find the L.C.M of 3 and 5",
+      a: "15",
+      tray: ["Since 3 and 5 are prime numbers, their LCM = 3 × 5 = 15."]
     }
   ],
 
-  "english_week8": [
+  english_week7: [
     {
-      q: "Identify Subject and Predicate: 'The swift eagle caught a snake'",
+      q: "The person who writes a book is called the ______.",
+      a: "author",
+      tray: ["Concept of Print: An author writes; an illustrator draws the pictures."]
+    },
+    {
+      q: "The title of a book is usually printed on the ______ cover.",
+      a: "front",
+      tray: ["Front cover displays the Title, Author, and Publisher."]
+    }
+  ],
+
+  math_week8: [
+    {
+      q: "Find the Highest Common Factor (H.C.F) of 8 and 12",
+      a: "4",
+      tray: ["Factors of 8: 1, 2, 4, 8. Factors of 12: 1, 2, 3, 4, 6, 12. Greatest common is 4."]
+    },
+    {
+      q: "Find the H.C.F of 9 and 15",
+      a: "3",
+      tray: ["Factors of 9: 1, 3, 9. Factors of 15: 1, 3, 5, 15. The common factor is 3."]
+    }
+  ],
+
+  english_week8: [
+    {
+      q: "Identify the parts: 'The diligent pupil passed all tests.'",
       type: "grammar",
-      subject: "The swift eagle",
-      predicate: "caught a snake",
-      rule: "The Subject is who performs the action. The Predicate contains the verb.",
-      tray: ["Subject: The swift eagle 🦅", "Predicate: caught a snake 🐍"]
+      subject: "The diligent pupil",
+      predicate: "passed all tests",
+      rule: "The subject names the doer; the predicate begins with the verb and tells what happened.",
+      tray: ["Subject: The diligent pupil | Predicate: passed all tests."]
+    }
+  ]
+};
+
+// =========================================================================
+// 2. COMPLETE WEEKLY ASSESSMENTS (WEEKS 1 — 11)
+// =========================================================================
+window.WEEKLY_CURRICULUM = {
+  // -----------------------------------------------------------------------
+  // WEEK 1
+  // -----------------------------------------------------------------------
+  1: [
+    {
+      subjectId: "eng_w1",
+      subjectTitle: "English Studies",
+      topic: "Plurals of Nouns (-s, -es, -ies, -ves)",
+      passage: {
+        title: "Rules for Plural Nouns",
+        text: "Most English nouns form their plurals by adding '-s' or '-es'. For nouns ending in a consonant + 'y', change the 'y' to 'ies'. For nouns ending in 'f' or 'fe', change them to 'ves'. Irregular nouns change form completely."
+      },
+      questions: [
+        {
+          id: "w1_eng_q1",
+          text: "The mother bought three {dash1} from the local market.",
+          dashes: 1,
+          options: ["babies", "babys", "babyies", "babyes"],
+          correct: ["babies"],
+          rule: "Consonant + 'y' becomes '-ies'."
+        },
+        {
+          id: "w1_eng_q2",
+          text: "The cook sharpened both kitchen {dash1}.",
+          dashes: 1,
+          options: ["knifes", "knives", "knivs", "knifees"],
+          correct: ["knives"],
+          rule: "Nouns ending in '-fe' change to '-ves'."
+        },
+        {
+          id: "w1_eng_q3",
+          text: "All the {dash1} were playing happily in the school garden.",
+          dashes: 1,
+          options: ["children", "childs", "childes", "childrens"],
+          correct: ["children"],
+          rule: "'Child' has an irregular plural form: 'children'."
+        },
+        {
+          id: "w1_eng_q4",
+          text: "Five hungry {dash1} attacked the flock of sheep.",
+          dashes: 1,
+          options: ["wolfs", "wolves", "wolfes", "wolvs"],
+          correct: ["wolves"],
+          rule: "'-f' changes to '-ves'."
+        }
+      ]
+    },
+    {
+      subjectId: "math_w1",
+      subjectTitle: "Mathematics",
+      topic: "Equivalent Fractions",
+      questions: [
+        {
+          id: "w1_math_q1",
+          text: "The equivalent fraction of 1/2 with denominator 6 is {dash1}.",
+          dashes: 1,
+          options: ["2/6", "3/6", "4/6", "5/6"],
+          correct: ["3/6"],
+          rule: "Multiply both numerator and denominator by 3: (1×3)/(2×3) = 3/6."
+        },
+        {
+          id: "w1_math_q2",
+          text: "2/5 is equivalent to {dash1}/20.",
+          dashes: 1,
+          options: ["4", "6", "8", "10"],
+          correct: ["8"],
+          rule: "5 × 4 = 20, so 2 × 4 = 8."
+        },
+        {
+          id: "w1_math_q3",
+          text: "Complete the pair: 3/4 = {dash1}/12.",
+          dashes: 1,
+          options: ["6", "8", "9", "10"],
+          correct: ["9"],
+          rule: "4 × 3 = 12, so 3 × 3 = 9."
+        }
+      ]
+    },
+    {
+      subjectId: "qr_w1",
+      subjectTitle: "Quantitative Reasoning",
+      topic: "Counting in 30's (4-Box H-Diagram)",
+      questions: [
+        {
+          id: "w1_qr_q1",
+          text: "Study the sample diagram. Find the missing value in the bottom-right box: {dash1}",
+          dashes: 1,
+          diagram: { tl: 60, bl: 30, tr: 90, br: "?" },
+          options: ["100", "110", "120", "150"],
+          correct: ["120"],
+          rule: "Bottom-Left + 30 = Top-Left (30+30=60). Top-Left + 30 = Top-Right (60+30=90). Top-Right + 30 = Bottom-Right (90+30=120)."
+        },
+        {
+          id: "w1_qr_q2",
+          text: "Find the missing number in the top-left box: {dash1}",
+          dashes: 1,
+          diagram: { tl: "?", bl: 90, tr: 150, br: 180 },
+          options: ["110", "120", "130", "140"],
+          correct: ["120"],
+          rule: "Bottom-Left 90 + 30 = 120."
+        }
+      ]
+    },
+    {
+      subjectId: "vr_w1",
+      subjectTitle: "Verbal Reasoning",
+      topic: "Letter Pairs and Sequences",
+      questions: [
+        {
+          id: "w1_vr_q1",
+          text: "Find the next pair in the series: AB, BC, CD, DE, {dash1}.",
+          dashes: 1,
+          options: ["EF", "FG", "EG", "DF"],
+          correct: ["EF"],
+          rule: "Both letters advance by 1 consecutively."
+        },
+        {
+          id: "w1_vr_q2",
+          text: "Choose the word that means the opposite of 'GENEROUS': {dash1}.",
+          dashes: 1,
+          options: ["Kind", "Selfish", "Happy", "Polite"],
+          correct: ["Selfish"],
+          rule: "The antonym of generous is selfish or stingy."
+        }
+      ]
+    }
+  ],
+
+  // -----------------------------------------------------------------------
+  // WEEK 2
+  // -----------------------------------------------------------------------
+  2: [
+    {
+      subjectId: "eng_w2",
+      subjectTitle: "English Studies",
+      topic: "Aural Discrimination: /æ/ vs /ɑː/",
+      questions: [
+        {
+          id: "w2_eng_q1",
+          text: "Which of the following words contains the short vowel sound /æ/? {dash1}",
+          dashes: 1,
+          options: ["Cart", "Cat", "Father", "Farm"],
+          correct: ["Cat"],
+          rule: "'Cat' has the short vowel sound /æ/."
+        },
+        {
+          id: "w2_eng_q2",
+          text: "Which of the following words contains the long vowel sound /ɑː/? {dash1}",
+          dashes: 1,
+          options: ["Bat", "Hat", "Star", "Mat"],
+          correct: ["Star"],
+          rule: "'Star' has the deep long vowel sound /ɑː/."
+        },
+        {
+          id: "w2_eng_q3",
+          text: "In the sentence 'The cat sat on the mat', the vowel sound is {dash1}.",
+          dashes: 1,
+          options: ["/æ/", "/ɑː/", "/iː/", "/e/"],
+          correct: ["/æ/"],
+          rule: "'Cat', 'sat', and 'mat' share the /æ/ sound."
+        }
+      ]
+    },
+    {
+      subjectId: "math_w2",
+      subjectTitle: "Mathematics",
+      topic: "Whole Numbers up to 10,000",
+      questions: [
+        {
+          id: "w2_math_q1",
+          text: "What is the place value of 7 in 7,452? {dash1}",
+          dashes: 1,
+          options: ["Units", "Tens", "Hundreds", "Thousands"],
+          correct: ["Thousands"],
+          rule: "In 7,452, 7 represents 7 thousands (7,000)."
+        },
+        {
+          id: "w2_math_q2",
+          text: "Write in figures: Six thousand, five hundred and eight = {dash1}.",
+          dashes: 1,
+          options: ["6580", "6508", "6058", "6588"],
+          correct: ["6508"],
+          rule: "6 thousands + 5 hundreds + 0 tens + 8 units = 6508."
+        },
+        {
+          id: "w2_math_q3",
+          text: "What number comes immediately after 4,999? {dash1}",
+          dashes: 1,
+          options: ["4990", "5000", "5001", "5999"],
+          correct: ["5000"],
+          rule: "4,999 + 1 = 5,000."
+        }
+      ]
+    },
+    {
+      subjectId: "comp_w2",
+      subjectTitle: "Computer Studies",
+      topic: "Data, Information and the CPU",
+      questions: [
+        {
+          id: "w2_comp_q1",
+          text: "Raw, unprocessed facts entered into a computer are called {dash1}.",
+          dashes: 1,
+          options: ["Data", "Information", "Output", "Software"],
+          correct: ["Data"],
+          rule: "Data is unprocessed material."
+        },
+        {
+          id: "w2_comp_q2",
+          text: "The main processing unit that acts as the computer's brain is the {dash1}.",
+          dashes: 1,
+          options: ["Monitor", "CPU", "Keyboard", "Mouse"],
+          correct: ["CPU"],
+          rule: "CPU = Central Processing Unit."
+        }
+      ]
+    }
+  ],
+
+  // -----------------------------------------------------------------------
+  // WEEK 3
+  // -----------------------------------------------------------------------
+  3: [
+    {
+      subjectId: "eng_w3",
+      subjectTitle: "English Studies",
+      topic: "Types of Pronouns (Personal and Possessive)",
+      questions: [
+        {
+          id: "w3_eng_q1",
+          text: "Flourish forgot {dash1} notebook on the desk.",
+          dashes: 1,
+          options: ["her", "hers", "him", "she"],
+          correct: ["her"],
+          rule: "'Her' is the possessive adjective qualifying the noun 'notebook'."
+        },
+        {
+          id: "w3_eng_q2",
+          text: "This green pencil is not mine, it is {dash1}.",
+          dashes: 1,
+          options: ["yours", "your", "you", "mine"],
+          correct: ["yours"],
+          rule: "'Yours' is a possessive pronoun used independently."
+        },
+        {
+          id: "w3_eng_q3",
+          text: "Emeka and {dash1} went to the science laboratory.",
+          dashes: 1,
+          options: ["me", "I", "him", "us"],
+          correct: ["I"],
+          rule: "Use the subject pronoun 'I' as part of the compound subject."
+        }
+      ]
+    },
+    {
+      subjectId: "math_w3",
+      subjectTitle: "Mathematics",
+      topic: "Addition and Subtraction of Fractions",
+      questions: [
+        {
+          id: "w3_math_q1",
+          text: "Calculate: 2/7 + 3/7 = {dash1}.",
+          dashes: 1,
+          options: ["5/14", "5/7", "6/7", "1/7"],
+          correct: ["5/7"],
+          rule: "When denominators are equal, add the numerators directly: 2 + 3 = 5."
+        },
+        {
+          id: "w3_math_q2",
+          text: "Calculate: 7/9 - 4/9 = {dash1}.",
+          dashes: 1,
+          options: ["3/9", "3/18", "11/9", "1/9"],
+          correct: ["3/9"],
+          rule: "7 - 4 = 3, so the result is 3/9 (or 1/3)."
+        },
+        {
+          id: "w3_math_q3",
+          text: "Simplify: 5/8 - 1/8 = {dash1}.",
+          dashes: 1,
+          options: ["4/8", "4/16", "6/8", "3/8"],
+          correct: ["4/8"],
+          rule: "5 - 1 = 4 over 8."
+        }
+      ]
+    },
+    {
+      subjectId: "bsci_w3",
+      subjectTitle: "Basic Science",
+      topic: "Living and Non-Living Things",
+      questions: [
+        {
+          id: "w3_sci_q1",
+          text: "The process by which living organisms produce young ones of their kind is {dash1}.",
+          dashes: 1,
+          options: ["Respiration", "Reproduction", "Excretion", "Nutrition"],
+          correct: ["Reproduction"],
+          rule: "Reproduction ensures the continuity of living species."
+        },
+        {
+          id: "w3_sci_q2",
+          text: "Plants take in {dash1} gas during photosynthesis.",
+          dashes: 1,
+          options: ["Oxygen", "Carbon dioxide", "Nitrogen", "Hydrogen"],
+          correct: ["Carbon dioxide"],
+          rule: "Plants absorb carbon dioxide and release oxygen."
+        }
+      ]
+    }
+  ],
+
+  // -----------------------------------------------------------------------
+  // WEEK 4
+  // -----------------------------------------------------------------------
+  4: [
+    {
+      subjectId: "eng_w4",
+      subjectTitle: "English Studies",
+      topic: "Verbs and Tenses: Present Continuous Tense",
+      questions: [
+        {
+          id: "w4_eng_q1",
+          text: "The teacher is {dash1} on the chalkboard right now.",
+          dashes: 1,
+          options: ["write", "wrote", "writing", "written"],
+          correct: ["writing"],
+          rule: "Present continuous tense uses 'is' + verb-ing."
+        },
+        {
+          id: "w4_eng_q2",
+          text: "The boys {dash1} playing football in the field.",
+          dashes: 1,
+          options: ["is", "are", "was", "has"],
+          correct: ["are"],
+          rule: "Plural subject 'boys' takes the plural auxiliary 'are'."
+        },
+        {
+          id: "w4_eng_q3",
+          text: "I am {dash1} my homework before dinner.",
+          dashes: 1,
+          options: ["do", "did", "doing", "done"],
+          correct: ["doing"],
+          rule: "Auxiliary 'am' is followed by 'doing'."
+        }
+      ]
+    },
+    {
+      subjectId: "math_w4",
+      subjectTitle: "Mathematics",
+      topic: "Multiplication of Whole Numbers by 2-Digit Numbers",
+      questions: [
+        {
+          id: "w4_math_q1",
+          text: "Solve: 25 × 12 = {dash1}.",
+          dashes: 1,
+          options: ["250", "280", "300", "320"],
+          correct: ["300"],
+          rule: "25 × 10 = 250; 25 × 2 = 50; 250 + 50 = 300."
+        },
+        {
+          id: "w4_math_q2",
+          text: "A box contains 14 pencils. How many pencils are in 10 such boxes? {dash1}",
+          dashes: 1,
+          options: ["104", "140", "144", "150"],
+          correct: ["140"],
+          rule: "14 × 10 = 140."
+        },
+        {
+          id: "w4_math_q3",
+          text: "Calculate: 40 × 30 = {dash1}.",
+          dashes: 1,
+          options: ["120", "700", "1200", "12000"],
+          correct: ["1200"],
+          rule: "4 × 3 = 12, then append two zeros = 1,200."
+        }
+      ]
+    },
+    {
+      subjectId: "qr_w4",
+      subjectTitle: "Quantitative Reasoning",
+      topic: "Number Relationships and Missing Products",
+      questions: [
+        {
+          id: "w4_qr_q1",
+          text: "If 4 * 5 = 20 and 6 * 3 = 18, then 7 * 4 = {dash1}.",
+          dashes: 1,
+          options: ["24", "26", "28", "30"],
+          correct: ["28"],
+          rule: "The operation represents standard multiplication: 7 × 4 = 28."
+        },
+        {
+          id: "w4_qr_q2",
+          text: "If 20 # 4 = 5 and 30 # 6 = 5, then 45 # 5 = {dash1}.",
+          dashes: 1,
+          options: ["7", "8", "9", "10"],
+          correct: ["9"],
+          rule: "The operation represents division: 45 ÷ 5 = 9."
+        }
+      ]
+    }
+  ],
+
+  // -----------------------------------------------------------------------
+  // WEEK 5
+  // -----------------------------------------------------------------------
+  5: [
+    {
+      subjectId: "eng_w5",
+      subjectTitle: "English Studies",
+      topic: "Adjectives and Degrees of Comparison",
+      questions: [
+        {
+          id: "w5_eng_q1",
+          text: "An elephant is {dash1} than a horse.",
+          dashes: 1,
+          options: ["big", "bigger", "biggest", "more big"],
+          correct: ["bigger"],
+          rule: "Comparative degree compares two animals: 'bigger'."
+        },
+        {
+          id: "w5_eng_q2",
+          text: "Mount Everest is the {dash1} mountain in the world.",
+          dashes: 1,
+          options: ["high", "higher", "highest", "most high"],
+          correct: ["highest"],
+          rule: "Superlative degree uses '-est' after 'the'."
+        },
+        {
+          id: "w5_eng_q3",
+          text: "This mango is sweet, but that pawpaw is {dash1}.",
+          dashes: 1,
+          options: ["sweetest", "sweeter", "sweet", "more sweet"],
+          correct: ["sweeter"],
+          rule: "Comparing two items requires the comparative degree."
+        }
+      ]
+    },
+    {
+      subjectId: "math_w5",
+      subjectTitle: "Mathematics",
+      topic: "Division of Whole Numbers and Remainders",
+      questions: [
+        {
+          id: "w5_math_q1",
+          text: "Divide 84 by 4 = {dash1}.",
+          dashes: 1,
+          options: ["20", "21", "22", "24"],
+          correct: ["21"],
+          rule: "80 ÷ 4 = 20, and 4 ÷ 4 = 1. Total = 21."
+        },
+        {
+          id: "w5_math_q2",
+          text: "Share 47 oranges equally among 5 children. The remainder is {dash1}.",
+          dashes: 1,
+          options: ["1", "2", "3", "4"],
+          correct: ["2"],
+          rule: "5 × 9 = 45; 47 - 45 = remainder 2."
+        },
+        {
+          id: "w5_math_q3",
+          text: "What is 100 ÷ 5? {dash1}",
+          dashes: 1,
+          options: ["10", "15", "20", "25"],
+          correct: ["20"],
+          rule: "100 divided by 5 equals 20."
+        }
+      ]
+    },
+    {
+      subjectId: "soc_w5",
+      subjectTitle: "Social Studies",
+      topic: "Our Culture and Values",
+      questions: [
+        {
+          id: "w5_soc_q1",
+          text: "The total way of life of a group of people is called {dash1}.",
+          dashes: 1,
+          options: ["Culture", "Tradition", "Religion", "Education"],
+          correct: ["Culture"],
+          rule: "Culture includes beliefs, food, language, and customs."
+        },
+        {
+          id: "w5_soc_q2",
+          text: "In Yoruba culture, male children show respect by {dash1}.",
+          dashes: 1,
+          options: ["Prostrating", "Kneeling", "Shaking hands", "Jumping"],
+          correct: ["Prostrating"],
+          rule: "Prostration (dobale) is the traditional greeting for boys/men."
+        }
+      ]
+    }
+  ],
+
+  // -----------------------------------------------------------------------
+  // WEEK 6
+  // -----------------------------------------------------------------------
+  6: [
+    {
+      subjectId: "eng_w6",
+      subjectTitle: "English Studies",
+      topic: "Adverbs of Manner and Time",
+      questions: [
+        {
+          id: "w6_eng_q1",
+          text: "The tortoise walked {dash1} across the road.",
+          dashes: 1,
+          options: ["slowly", "slow", "slowness", "slower"],
+          correct: ["slowly"],
+          rule: "Adverb of manner describes how the action was performed."
+        },
+        {
+          id: "w6_eng_q2",
+          text: "We shall travel to Abuja {dash1}.",
+          dashes: 1,
+          options: ["tomorrow", "yesterday", "sweetly", "carefully"],
+          correct: ["tomorrow"],
+          rule: "'Tomorrow' is an adverb of time referring to the future."
+        },
+        {
+          id: "w6_eng_q3",
+          text: "She sang {dash1} at the school inter-house choir competition.",
+          dashes: 1,
+          options: ["beautifully", "beauty", "beautify", "beautiful"],
+          correct: ["beautifully"],
+          rule: "Use 'beautifully' to describe how she sang."
+        }
+      ]
+    },
+    {
+      subjectId: "math_w6",
+      subjectTitle: "Mathematics",
+      topic: "Multiples and Factors of Numbers",
+      questions: [
+        {
+          id: "w6_math_q1",
+          text: "Which of the following is a multiple of 6? {dash1}",
+          dashes: 1,
+          options: ["14", "18", "22", "26"],
+          correct: ["18"],
+          rule: "6 × 3 = 18."
+        },
+        {
+          id: "w6_math_q2",
+          text: "The factors of 12 are: 1, 2, 3, 4, {dash1}, and 12.",
+          dashes: 1,
+          options: ["5", "6", "8", "10"],
+          correct: ["6"],
+          rule: "12 ÷ 2 = 6, so 6 is a factor of 12."
+        },
+        {
+          id: "w6_math_q3",
+          text: "Every number has {dash1} as its smallest factor.",
+          dashes: 1,
+          options: ["0", "1", "2", "itself"],
+          correct: ["1"],
+          rule: "1 is a universal factor of all natural numbers."
+        }
+      ]
+    },
+    {
+      subjectId: "vr_w6",
+      subjectTitle: "Verbal Reasoning",
+      topic: "Analogies and Word Associations",
+      questions: [
+        {
+          id: "w6_vr_q1",
+          text: "Bird is to Fly as Fish is to {dash1}.",
+          dashes: 1,
+          options: ["Walk", "Swim", "Crawl", "Run"],
+          correct: ["Swim"],
+          rule: "A bird moves by flying; a fish moves by swimming."
+        },
+        {
+          id: "w6_vr_q2",
+          text: "Doctor is to Hospital as Teacher is to {dash1}.",
+          dashes: 1,
+          options: ["School", "Court", "Bank", "Market"],
+          correct: ["School"],
+          rule: "A teacher's place of work is the school."
+        }
+      ]
+    }
+  ],
+
+  // -----------------------------------------------------------------------
+  // WEEK 7 (MID-TERM ASSESSMENT)
+  // -----------------------------------------------------------------------
+  7: [
+    {
+      subjectId: "eng_w7",
+      subjectTitle: "English Studies (Mid-Term)",
+      topic: "Concept of Print and Reading Comprehension",
+      passage: {
+        title: "The Smart Farmer of Ibadan",
+        text: "Mr. Ade was a hardworking farmer in Ibadan. He woke up every morning before sunrise to tend his maize fields. When the harvest arrived, he stored his grains properly in silos to protect them from insects. Because of his careful planning, he never ran out of food throughout the dry season."
+      },
+      questions: [
+        {
+          id: "w7_eng_q1",
+          text: "Where did Mr. Ade live and farm? {dash1}",
+          dashes: 1,
+          options: ["Kano", "Ibadan", "Lagos", "Enugu"],
+          correct: ["Ibadan"],
+          rule: "The passage states that Mr. Ade was a hardworking farmer in Ibadan."
+        },
+        {
+          id: "w7_eng_q2",
+          text: "Mr. Ade stored his grains in {dash1} to protect them.",
+          dashes: 1,
+          options: ["baskets", "silos", "open sacks", "the kitchen"],
+          correct: ["silos"],
+          rule: "The passage says he stored his grains in silos."
+        },
+        {
+          id: "w7_eng_q3",
+          text: "The person who creates the drawings in a textbook is the {dash1}.",
+          dashes: 1,
+          options: ["Author", "Illustrator", "Publisher", "Printer"],
+          correct: ["Illustrator"],
+          rule: "Concept of print: The illustrator draws the pictures."
+        }
+      ]
+    },
+    {
+      subjectId: "math_w7",
+      subjectTitle: "Mathematics (Mid-Term)",
+      topic: "Lowest Common Multiple (L.C.M)",
+      questions: [
+        {
+          id: "w7_math_q1",
+          text: "Find the L.C.M of 4 and 6: {dash1}.",
+          dashes: 1,
+          options: ["10", "12", "16", "24"],
+          correct: ["12"],
+          rule: "Multiples of 4: 4, 8, 12. Multiples of 6: 6, 12. Smallest common is 12."
+        },
+        {
+          id: "w7_math_q2",
+          text: "The L.C.M of 2, 3, and 5 is {dash1}.",
+          dashes: 1,
+          options: ["15", "20", "30", "60"],
+          correct: ["30"],
+          rule: "Since 2, 3, and 5 are prime: 2 × 3 × 5 = 30."
+        },
+        {
+          id: "w7_math_q3",
+          text: "What is the L.C.M of 8 and 12? {dash1}",
+          dashes: 1,
+          options: ["16", "24", "32", "48"],
+          correct: ["24"],
+          rule: "Multiples of 8: 8, 16, 24; multiples of 12: 12, 24."
+        }
+      ]
+    },
+    {
+      subjectId: "qr_w7",
+      subjectTitle: "Quantitative Reasoning (Mid-Term)",
+      topic: "Mid-Term Mixed Patterns",
+      questions: [
+        {
+          id: "w7_qr_q1",
+          text: "Complete the 4-box loop with pattern (+20): {dash1}",
+          dashes: 1,
+          diagram: { tl: 40, bl: 20, tr: 60, br: "?" },
+          options: ["70", "80", "90", "100"],
+          correct: ["80"],
+          rule: "60 + 20 = 80."
+        },
+        {
+          id: "w7_qr_q2",
+          text: "Find the missing value: 50 -> 40 -> 30 -> {dash1}.",
+          dashes: 1,
+          options: ["10", "15", "20", "25"],
+          correct: ["20"],
+          rule: "Decreasing sequence by 10."
+        }
+      ]
+    }
+  ],
+
+  // -----------------------------------------------------------------------
+  // WEEK 8
+  // -----------------------------------------------------------------------
+  8: [
+    {
+      subjectId: "eng_w8",
+      subjectTitle: "English Studies",
+      topic: "Simple Sentences (Subject and Predicate)",
+      questions: [
+        {
+          id: "w8_eng_q1",
+          text: "In 'The brave fireman rescued the cat', the Subject is {dash1}.",
+          dashes: 1,
+          options: ["The brave fireman", "rescued", "the cat", "fireman rescued"],
+          correct: ["The brave fireman"],
+          rule: "The subject is the person or thing performing the action."
+        },
+        {
+          id: "w8_eng_q2",
+          text: "In 'The little bird sang sweetly', the Predicate is {dash1}.",
+          dashes: 1,
+          options: ["The little bird", "sang sweetly", "bird sang", "sweetly"],
+          correct: ["sang sweetly"],
+          rule: "The predicate contains the verb and all words that follow it."
+        },
+        {
+          id: "w8_eng_q3",
+          text: "A complete simple sentence must have a Subject and a {dash1}.",
+          dashes: 1,
+          options: ["Predicate", "Comma", "Question mark", "Pronoun"],
+          correct: ["Predicate"],
+          rule: "A sentence consists of a subject and a predicate."
+        }
+      ]
+    },
+    {
+      subjectId: "math_w8",
+      subjectTitle: "Mathematics",
+      topic: "Highest Common Factor (H.C.F)",
+      questions: [
+        {
+          id: "w8_math_q1",
+          text: "The H.C.F of 8 and 12 is {dash1}.",
+          dashes: 1,
+          options: ["2", "4", "6", "8"],
+          correct: ["4"],
+          rule: "Factors of 8: 1, 2, 4, 8. Factors of 12: 1, 2, 3, 4, 6, 12. Greatest common is 4."
+        },
+        {
+          id: "w8_math_q2",
+          text: "The H.C.F of 15 and 25 is {dash1}.",
+          dashes: 1,
+          options: ["3", "5", "10", "15"],
+          correct: ["5"],
+          rule: "Common factors of 15 and 25 is 5."
+        },
+        {
+          id: "w8_math_q3",
+          text: "Find the H.C.F of 18 and 24: {dash1}.",
+          dashes: 1,
+          options: ["3", "4", "6", "8"],
+          correct: ["6"],
+          rule: "6 divides both 18 and 24 completely."
+        }
+      ]
+    },
+    {
+      subjectId: "bsci_w8",
+      subjectTitle: "Basic Science",
+      topic: "States of Matter",
+      questions: [
+        {
+          id: "w8_sci_q1",
+          text: "Water changes into ice through the process of {dash1}.",
+          dashes: 1,
+          options: ["Boiling", "Freezing", "Evaporation", "Melting"],
+          correct: ["Freezing"],
+          rule: "Freezing cools liquid water into solid ice."
+        },
+        {
+          id: "w8_sci_q2",
+          text: "The three states of matter are Solid, Liquid, and {dash1}.",
+          dashes: 1,
+          options: ["Gas", "Vapour", "Steam", "Ice"],
+          correct: ["Gas"],
+          rule: "The standard fundamental states of matter are solid, liquid, gas."
+        }
+      ]
+    }
+  ],
+
+  // -----------------------------------------------------------------------
+  // WEEK 9
+  // -----------------------------------------------------------------------
+  9: [
+    {
+      subjectId: "eng_w9",
+      subjectTitle: "English Studies",
+      topic: "Prepositions of Place and Direction",
+      questions: [
+        {
+          id: "w9_eng_q1",
+          text: "The dog jumped {dash1} the low fence.",
+          dashes: 1,
+          options: ["over", "under", "in", "between"],
+          correct: ["over"],
+          rule: "'Over' indicates movement above and across."
+        },
+        {
+          id: "w9_eng_q2",
+          text: "Put your books {dash1} your school bag.",
+          dashes: 1,
+          options: ["inside", "on", "at", "against"],
+          correct: ["inside"],
+          rule: "'Inside' or 'into' indicates enclosing space."
+        },
+        {
+          id: "w9_eng_q3",
+          text: "Chidi sat {dash1} Musa and Emeka.",
+          dashes: 1,
+          options: ["among", "between", "under", "through"],
+          correct: ["between"],
+          rule: "Use 'between' when referring to two persons or items."
+        }
+      ]
+    },
+    {
+      subjectId: "math_w9",
+      subjectTitle: "Mathematics",
+      topic: "Introduction to Decimals",
+      questions: [
+        {
+          id: "w9_math_q1",
+          text: "Express 7/10 as a decimal number: {dash1}.",
+          dashes: 1,
+          options: ["0.07", "0.7", "7.0", "0.77"],
+          correct: ["0.7"],
+          rule: "Seven tenths = 0.7."
+        },
+        {
+          id: "w9_math_q2",
+          text: "What is the value of 5 in 12.5? {dash1}",
+          dashes: 1,
+          options: ["5 Units", "5 Tens", "5 Tenths", "5 Hundredths"],
+          correct: ["5 Tenths"],
+          rule: "The first digit after the decimal point is the tenths place."
+        },
+        {
+          id: "w9_math_q3",
+          text: "Add: 2.3 + 1.4 = {dash1}.",
+          dashes: 1,
+          options: ["3.5", "3.7", "4.0", "3.12"],
+          correct: ["3.7"],
+          rule: "2.3 + 1.4 = 3.7."
+        }
+      ]
+    },
+    {
+      subjectId: "qr_w9",
+      subjectTitle: "Quantitative Reasoning",
+      topic: "Fractional and Decimal Relations",
+      questions: [
+        {
+          id: "w9_qr_q1",
+          text: "1/2 is to 0.5 as 1/4 is to {dash1}.",
+          dashes: 1,
+          options: ["0.2", "0.25", "0.4", "0.75"],
+          correct: ["0.25"],
+          rule: "1/4 expressed in decimal form is 0.25."
+        },
+        {
+          id: "w9_qr_q2",
+          text: "If 1/5 = 0.2, then 3/5 = {dash1}.",
+          dashes: 1,
+          options: ["0.4", "0.5", "0.6", "0.8"],
+          correct: ["0.6"],
+          rule: "3 × 0.2 = 0.6."
+        }
+      ]
+    }
+  ],
+
+  // -----------------------------------------------------------------------
+  // WEEK 10
+  // -----------------------------------------------------------------------
+  10: [
+    {
+      subjectId: "eng_w10",
+      subjectTitle: "English Studies",
+      topic: "Conjunctions (and, but, because, although)",
+      questions: [
+        {
+          id: "w10_eng_q1",
+          text: "She did not come to school {dash1} she was sick.",
+          dashes: 1,
+          options: ["because", "but", "so", "and"],
+          correct: ["because"],
+          rule: "'Because' gives the reason for an action."
+        },
+        {
+          id: "w10_eng_q2",
+          text: "He studied hard, {dash1} he still failed the difficult test.",
+          dashes: 1,
+          options: ["and", "but", "because", "so"],
+          correct: ["but"],
+          rule: "'But' shows a contrast or unexpected outcome."
+        },
+        {
+          id: "w10_eng_q3",
+          text: "Do you prefer tea {dash1} coffee for breakfast?",
+          dashes: 1,
+          options: ["or", "and", "but", "if"],
+          correct: ["or"],
+          rule: "'Or' presents a choice between options."
+        }
+      ]
+    },
+    {
+      subjectId: "math_w10",
+      subjectTitle: "Mathematics",
+      topic: "Perimeter of Regular Shapes (Rectangles and Squares)",
+      questions: [
+        {
+          id: "w10_math_q1",
+          text: "Find the perimeter of a rectangle of length 8cm and breadth 5cm: {dash1} cm.",
+          dashes: 1,
+          options: ["13", "26", "40", "52"],
+          correct: ["26"],
+          rule: "Perimeter = 2 × (L + B) = 2 × (8 + 5) = 2 × 13 = 26cm."
+        },
+        {
+          id: "w10_math_q2",
+          text: "A square has sides of 6cm. Its perimeter is {dash1} cm.",
+          dashes: 1,
+          options: ["12", "18", "24", "36"],
+          correct: ["24"],
+          rule: "Perimeter of square = 4 × length = 4 × 6 = 24cm."
+        },
+        {
+          id: "w10_math_q3",
+          text: "Perimeter means the total distance {dash1} a shape.",
+          dashes: 1,
+          options: ["inside", "around", "across", "under"],
+          correct: ["around"],
+          rule: "Perimeter is the boundary distance around a 2D shape."
+        }
+      ]
+    },
+    {
+      subjectId: "comp_w10",
+      subjectTitle: "Computer Studies",
+      topic: "Input and Output Devices",
+      questions: [
+        {
+          id: "w10_comp_q1",
+          text: "Which of the following is an input device? {dash1}",
+          dashes: 1,
+          options: ["Monitor", "Printer", "Keyboard", "Speaker"],
+          correct: ["Keyboard"],
+          rule: "A keyboard is used to enter text and data into the computer."
+        },
+        {
+          id: "w10_comp_q2",
+          text: "Which device produces hard copies on paper? {dash1}",
+          dashes: 1,
+          options: ["Monitor", "Printer", "Scanner", "Mouse"],
+          correct: ["Printer"],
+          rule: "Printers produce physical output (hard copy)."
+        }
+      ]
+    }
+  ],
+
+  // -----------------------------------------------------------------------
+  // WEEK 11 (END OF TERM COMPREHENSIVE EXAMINATION)
+  // -----------------------------------------------------------------------
+  11: [
+    {
+      subjectId: "eng_w11",
+      subjectTitle: "English Studies (Terminal Examination)",
+      topic: "General Grammar, Comprehension and Vocabulary",
+      passage: {
+        title: "The National Festival of Arts and Culture",
+        text: "Nigeria is a nation blessed with diverse traditions and ethnic groups. Every year, people gather to celebrate the National Festival of Arts and Culture. Pupils perform traditional dances, exhibit pottery, and recite folk tales. This festival teaches young citizens unity, mutual respect, and love for national heritage."
+      },
+      questions: [
+        {
+          id: "w11_eng_q1",
+          text: "What do young pupils learn from the National Festival? {dash1}",
+          dashes: 1,
+          options: ["Greed", "Unity and respect", "Idleness", "Fighting"],
+          correct: ["Unity and respect"],
+          rule: "The passage notes it teaches young citizens unity, mutual respect, and love."
+        },
+        {
+          id: "w11_eng_q2",
+          text: "Choose the correct spelling: The girl received an {dash1} for excellence.",
+          dashes: 1,
+          options: ["aword", "award", "awarde", "awad"],
+          correct: ["award"],
+          rule: "Correct spelling is 'award'."
+        },
+        {
+          id: "w11_eng_q3",
+          text: "The past tense of 'drive' is {dash1}.",
+          dashes: 1,
+          options: ["drived", "drove", "driven", "driving"],
+          correct: ["drove"],
+          rule: "'Drive' is an irregular verb: past tense is 'drove'."
+        },
+        {
+          id: "w11_eng_q4",
+          text: "Which punctuation mark ends an interrogative sentence? {dash1}",
+          dashes: 1,
+          options: ["Period (.)", "Question mark (?)", "Comma (,)", "Exclamation mark (!)"],
+          correct: ["Question mark (?)"],
+          rule: "Questions (interrogative sentences) end with a question mark."
+        }
+      ]
+    },
+    {
+      subjectId: "math_w11",
+      subjectTitle: "Mathematics (Terminal Examination)",
+      topic: "Full Term Mathematics Test",
+      questions: [
+        {
+          id: "w11_math_q1",
+          text: "Find the sum of 3,450 and 2,150 = {dash1}.",
+          dashes: 1,
+          options: ["5,500", "5,600", "5,700", "5,800"],
+          correct: ["5,600"],
+          rule: "3,450 + 2,150 = 5,600."
+        },
+        {
+          id: "w11_math_q2",
+          text: "What is 3/4 - 1/4 in simplest form? {dash1}",
+          dashes: 1,
+          options: ["2/4", "1/2", "1/4", "4/4"],
+          correct: ["1/2"],
+          rule: "3/4 - 1/4 = 2/4, which simplifies to 1/2."
+        },
+        {
+          id: "w11_math_q3",
+          text: "Find the L.C.M of 6 and 9: {dash1}.",
+          dashes: 1,
+          options: ["15", "18", "27", "36"],
+          correct: ["18"],
+          rule: "Multiples of 6: 6, 12, 18. Multiples of 9: 9, 18. Smallest is 18."
+        },
+        {
+          id: "w11_math_q4",
+          text: "Find the H.C.F of 12 and 18: {dash1}.",
+          dashes: 1,
+          options: ["2", "3", "6", "12"],
+          correct: ["6"],
+          rule: "The largest number dividing both 12 and 18 without remainder is 6."
+        },
+        {
+          id: "w11_math_q5",
+          text: "The perimeter of a rectangle with length 10cm and width 4cm is {dash1} cm.",
+          dashes: 1,
+          options: ["14", "24", "28", "40"],
+          correct: ["28"],
+          rule: "2 × (10 + 4) = 2 × 14 = 28cm."
+        }
+      ]
+    },
+    {
+      subjectId: "qr_w11",
+      subjectTitle: "Quantitative Reasoning (Terminal Examination)",
+      topic: "Terminal Revision of Diagram Patterns",
+      questions: [
+        {
+          id: "w11_qr_q1",
+          text: "Find the missing number in this 4-box diagram: {dash1}",
+          dashes: 1,
+          diagram: { tl: 90, bl: 60, tr: 120, br: "?" },
+          options: ["130", "140", "150", "160"],
+          correct: ["150"],
+          rule: "Loop adds 30: 120 + 30 = 150."
+        },
+        {
+          id: "w11_qr_q2",
+          text: "Find the missing value in the bottom-left box: {dash1}",
+          dashes: 1,
+          diagram: { tl: 150, bl: "?", tr: 180, br: 210 },
+          options: ["100", "110", "120", "130"],
+          correct: ["120"],
+          rule: "Top-Left 150 - 30 = 120."
+        }
+      ]
+    },
+    {
+      subjectId: "gen_w11",
+      subjectTitle: "General Studies & Science (Terminal Examination)",
+      topic: "Computer & Basic Science Revision",
+      questions: [
+        {
+          id: "w11_gen_q1",
+          text: "Which part of the computer displays results on the screen? {dash1}",
+          dashes: 1,
+          options: ["Mouse", "Monitor", "Keyboard", "UPS"],
+          correct: ["Monitor"],
+          rule: "The monitor is the visual display unit."
+        },
+        {
+          id: "w11_gen_q2",
+          text: "Animals that eat only plants are called {dash1}.",
+          dashes: 1,
+          options: ["Carnivores", "Herbivores", "Omnivores", "Parasites"],
+          correct: ["Herbivores"],
+          rule: "Herbivores feed directly on plant materials."
+        }
+      ]
     }
   ]
 };
