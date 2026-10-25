@@ -1732,21 +1732,62 @@ window.WEEKLY_CURRICULUM = {
           correct: ["9"],
           rule: "10 - 1 = 9."
         },
-        {
+{
           id: "w5_math_q4",
+          text: "Xiv = {dash1}",
+          dashes: 1,
+          options: ["14", "24", "40"],
+          correct: ["14"],
+          rule: "L is the Roman symbol for 50."
+        },
+        {
+          id: "w5_math_q5",
           text: "L = {dash1}",
           dashes: 1,
           options: ["50", "100", "40"],
           correct: ["50"],
           rule: "L is the Roman symbol for 50."
         },
-        {
-          id: "w5_math_q5",
+{
+          id: "w5_math_q6",
+          text: "L = {dash1}",
+          dashes: 1,
+          options: ["50", "25", "40"],
+          correct: ["25"],
+          rule: "xxv is the Roman symbol for 50."
+        },
+{
+          id: "w5_math_q7",
+          text: "xix = {dash1}",
+          dashes: 1,
+          options: ["50", "19", "80"],
+          correct: ["19"],
+          rule: "xix is the Roman symbol for 50."
+        },
+{
+          id: "w5_math_q9",
           text: "XL = {dash1}",
           dashes: 1,
-          options: ["40", "60", "90"],
+          options: ["50", "45", "40"],
           correct: ["40"],
-          rule: "50 - 10 = 40."
+          rule: "XL is the Roman symbol for 50."
+        },
+{
+          id: "w5_math_q9",
+          text: "XXX = {dash1}",
+          dashes: 1,
+          options: ["50", "20", "30"],
+          correct: ["30"],
+          rule: "XXX is the Roman symbol for 50."
+        },
+
+        {
+          id: "w5_math_q10",
+          text: "XLV = {dash1}",
+          dashes: 1,
+          options: ["40", "45", "90"],
+          correct: ["45"],
+          rule: "50 - 5 = 40."
         }
       ]
     },
