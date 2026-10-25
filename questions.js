@@ -1742,7 +1742,7 @@ window.WEEKLY_CURRICULUM = {
         },
         {
           id: "w5_math_q5",
-          text: "L = {dash1}",
+          text: "L= {dash1}",
           dashes: 1,
           options: ["50", "100", "40"],
           correct: ["50"],
@@ -1750,7 +1750,7 @@ window.WEEKLY_CURRICULUM = {
         },
 {
           id: "w5_math_q6",
-          text: "L = {dash1}",
+          text: "xxv= {dash1}",
           dashes: 1,
           options: ["50", "25", "40"],
           correct: ["25"],
@@ -1765,7 +1765,7 @@ window.WEEKLY_CURRICULUM = {
           rule: "xix is the Roman symbol for 50."
         },
 {
-          id: "w5_math_q9",
+          id: "w5_math_q8",
           text: "XL = {dash1}",
           dashes: 1,
           options: ["50", "45", "40"],
@@ -1774,11 +1774,11 @@ window.WEEKLY_CURRICULUM = {
         },
 {
           id: "w5_math_q9",
-          text: "XXX = {dash1}",
+          text: "xxx = {dash1}",
           dashes: 1,
-          options: ["50", "20", "30"],
+          options: ["50", "45", "30"],
           correct: ["30"],
-          rule: "XXX is the Roman symbol for 50."
+          rule: "xxx is the Roman symbol for 50."
         },
 
         {
